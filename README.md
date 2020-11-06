@@ -2,6 +2,10 @@
 
 GoSpace Manager - Manage Google Workspace resources using a simple CLI written in Go.
 
+### Documentation
+
+View complete documentation at https://gsm.hayashi-ke.online/
+
 ### Introduction
 
 I created this tool first and foremost for myself for the following reasons:
