@@ -21,7 +21,7 @@ On the plus-side, you can usually look at the Google API documentation that is l
 
 ### License and Copyright
 
-GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online) as free software.
+GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.
 Copyright © 2020 Hannes Hayashi.
 
 ### Third Party Libraries
