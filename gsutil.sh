@@ -18,4 +18,4 @@ gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-x64.tar.gz' gs://build
 gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-arm64.tar.gz' gs://build-arts/gsm/gsm_linux-arm64.tar.gz
 gsutil setmeta -h 'Content-Disposition:filename=gsm_mac-x64.tar.gz' gs://build-arts/gsm/gsm_mac-x64.tar.gz
 
-gsutil -m acl ch -r -g AllUsers:R gs://build-arts/gsm/*
+# gsutil -m acl ch -r -g AllUsers:R gs://build-arts/gsm/*
