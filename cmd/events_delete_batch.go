@@ -68,15 +68,16 @@ var eventsDeleteBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["eventId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.DeleteEvent(m["calendarId"].GetString(), m["eventId"].GetString(), m["sendUpdates"].GetString())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- resultStruct{CalendarID: m["calendarId"].GetString(), EventID: m["eventId"].GetString(), Result: result}
@@ -84,7 +85,7 @@ var eventsDeleteBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

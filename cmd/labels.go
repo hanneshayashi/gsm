@@ -45,6 +45,7 @@ var labelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create", "patch"},
 		Type:         "string",
 		Description:  "The display name of the label.",
+		Required:     []string{"create"},
 	},
 	"messageListVisibility": {
 		AvailableFor: []string{"create", "patch"},

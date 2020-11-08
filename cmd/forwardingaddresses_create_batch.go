@@ -22,6 +22,8 @@ import (
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
+	"sync"
+	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/gmail/v1"
@@ -29,34 +31,80 @@ import (
 
 // forwardingAddressesCreateBatchCmd represents the batch command
 var forwardingAddressesCreateBatchCmd = &cobra.Command{
-	Use: "batch",
-	Short: `Creates a forwarding address.
-If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to pending;
-otherwise, the resource will be created with verification status set to accepted.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create",
+	Use:   "batch",
+	Short: "Batch creates forwarding addresses using a CSV file as input.",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		cmd.Flags().VisitAll(gsmhelpers.CheckBatchFlags)
 		csv, err := gsmhelpers.GetCSV(flags)
-
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
 		}
-		results := []*gmail.ForwardingAddress{}
-		for _, line := range csv {
-			m := gsmhelpers.BatchFlagsToMap(flags, forwardingAddressFlags, line, "create")
-			f, err := mapToForwardingAddress(m)
-			if err != nil {
-				log.Printf("Error building forwarding address object: %v\n", err)
-				continue
+		l := len(csv)
+		results := make(chan *gmail.ForwardingAddress, l)
+		maps := make(chan map[string]*gsmhelpers.Value, l)
+		final := []*gmail.ForwardingAddress{}
+		var wg1 sync.WaitGroup
+		var wg2 sync.WaitGroup
+		var wg3 sync.WaitGroup
+		wg1.Add(1)
+		go func() {
+			for _, line := range csv {
+				m := gsmhelpers.BatchFlagsToMap(flags, forwardingAddressFlags, line, "create")
+				maps <- m
 			}
-			result, err := gsmgmail.CreateForwardingAddress(m["userId"].GetString(), m["fields"].GetString(), f)
-			if err != nil {
-				log.Printf("Error creating forwarding address for user %s: %v", m["userId"].GetString(), err)
-			}
-			results = append(results, result)
+			close(maps)
+			wg1.Done()
+		}()
+		wg2.Add(1)
+		retrier := gsmhelpers.NewStandardRetrier()
+		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
+			wg2.Add(1)
+			go func() {
+				for m := range maps {
+					var err error
+					f, err := mapToForwardingAddress(m)
+					if err != nil {
+						log.Fatalf("Error building forwarding address object: %v", err)
+					}
+					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), f.ForwardingEmail)
+					operation := func() error {
+						result, err := gsmgmail.CreateForwardingAddress(flags["userId"].GetString(), flags["fields"].GetString(), f)
+						if err != nil {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println(errKey, "Retrying after", err)
+								return err
+							}
+							log.Println(errKey, "Giving up after", err)
+							return nil
+						}
+						results <- result
+						return nil
+					}
+					err = retrier.Run(operation)
+					if err != nil {
+						log.Println(errKey, "Max retries reached. Giving up after", err)
+					}
+					time.Sleep(200 * time.Millisecond)
+				}
+				wg2.Done()
+			}()
 		}
-		fmt.Println(gsmhelpers.PrettyPrint(results, "json"))
+		wg3.Add(1)
+		go func() {
+			for res := range results {
+				final = append(final, res)
+			}
+			wg3.Done()
+		}()
+		wg2.Done()
+		wg1.Wait()
+		wg2.Wait()
+		close(results)
+		wg3.Wait()
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }
 

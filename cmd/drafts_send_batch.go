@@ -64,7 +64,8 @@ var draftsSendBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					draft, err := gsmgmail.GetDraft(m["userId"].GetString(), m["id"].GetString(), "FULL", m["fields"].GetString())
+					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["id"].GetString())
+					draft, err := gsmgmail.GetDraft(m["userId"].GetString(), m["id"].GetString(), "FULL", "*")
 					if err != nil {
 						log.Printf("Error getting draft: %v\n", err)
 						continue
@@ -74,10 +75,10 @@ var draftsSendBatchCmd = &cobra.Command{
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var draftsSendBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

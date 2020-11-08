@@ -32,7 +32,7 @@ import (
 // licenseAssignmentsPatchBatchCmd represents the batch command
 var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Patch patchs users' license asignments using a CSV file as input.",
+	Short: "Patch patches users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -75,15 +75,16 @@ var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building licenseAssignmentPatch object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s - %s:", m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString())
 					operation := func() error {
 						result, err := gsmlicensing.PatchLicenseAssignment(m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString(), m["fields"].GetString(), licenseAssignmentPatch)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -91,7 +92,7 @@ var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

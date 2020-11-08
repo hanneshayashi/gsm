@@ -32,7 +32,7 @@ import (
 // orgUnitsPatchBatchCmd represents the batch command
 var orgUnitsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patchs organizational units using a CSV file as input.",
+	Short: "Batch patches organizational units using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -69,15 +69,16 @@ var orgUnitsPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building org unit object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["customerId"].GetString(), m["orgUnitPath"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.PatchOrgUnit(m["customerId"].GetString(), m["orgUnitPath"].GetString(), m["fields"].GetString(), o)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var orgUnitsPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

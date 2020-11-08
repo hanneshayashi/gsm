@@ -68,15 +68,16 @@ var eventsPatchBatchCmd = &cobra.Command{
 					if err != nil {
 						log.Printf("Error building event object: %v", err)
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["eventId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.PatchEvent(m["calendarId"].GetString(), m["eventId"].GetString(), m["sendUpdates"].GetString(), m["fields"].GetString(), event, m["conferenceDataVersion"].GetInt64(), m["maxAttendees"].GetInt64(), m["supportsAttachments"].GetBool())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -84,7 +85,7 @@ var eventsPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

@@ -86,7 +86,7 @@ For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:u
 		Description:  `Include drafts from SPAM and TRASH in the results.`,
 	},
 	"fields": {
-		AvailableFor: []string{"create", "get", "list", "send", "update"},
+		AvailableFor: []string{"create", "get", "list", "update"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,

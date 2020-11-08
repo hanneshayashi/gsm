@@ -69,14 +69,15 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 						log.Printf("Error building shared contact object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s:", m["domain"].GetString())
 					operation := func() error {
 						result, statusCode, err := gsmadmin.CreateSharedContact(m["domain"].GetString(), s)
 						if err != nil {
 							if statusCode == 403 {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -84,7 +85,7 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

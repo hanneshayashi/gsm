@@ -32,7 +32,7 @@ import (
 // membersPatchBatchCmd represents the batch command
 var membersPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patchs members using a CSV file as input.",
+	Short: "Batch patches members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -51,7 +51,7 @@ var membersPatchBatchCmd = &cobra.Command{
 		wg1.Add(1)
 		go func() {
 			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, memberFlags, line, "patchs")
+				m := gsmhelpers.BatchFlagsToMap(flags, memberFlags, line, "patch")
 				maps <- m
 			}
 			close(maps)
@@ -69,15 +69,16 @@ var membersPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building member object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["groupKey"].GetString(), m["memberKey"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.PatchMember(m["groupKey"].GetString(), m["memberKey"].GetString(), m["fields"].GetString(), member)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var membersPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

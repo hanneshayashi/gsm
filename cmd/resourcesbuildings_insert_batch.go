@@ -69,15 +69,16 @@ var resourcesBuildingsInsertBatchCmd = &cobra.Command{
 						log.Printf("Error building resourcesBuilding object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(), b.BuildingId)
 					operation := func() error {
 						result, err := gsmadmin.InsertResourcesBuilding(m["customer"].GetString(), m["coordinatesSource"].GetString(), m["fields"].GetString(), b)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var resourcesBuildingsInsertBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

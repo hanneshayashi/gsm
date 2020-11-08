@@ -29,7 +29,7 @@ import (
 // calendarACLPatchCmd represents the patch command
 var calendarACLPatchCmd = &cobra.Command{
 	Use:   "patch",
-	Short: "Patchs an access control rule.",
+	Short: "Updates an access control rule. This method supports patch semantics.",
 	Long:  `https://developers.google.com/calendar/v3/reference/acl/patch`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

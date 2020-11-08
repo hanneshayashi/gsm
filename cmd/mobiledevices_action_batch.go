@@ -73,15 +73,16 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 						log.Printf("Error building mobile device action object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s - %s:", m["customerId"].GetString(), m["resourceId"].GetString(), a.Action)
 					operation := func() error {
 						result, err := gsmadmin.TakeActionOnMobileDevice(m["customerId"].GetString(), m["resourceId"].GetString(), a)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- resultStruct{CustomerID: m["customerId"].GetString(), ResourceID: m["resourceId"].GetString(), Result: result}
@@ -89,7 +90,7 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

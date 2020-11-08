@@ -37,9 +37,8 @@ var calendarSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 	"setting": {
 		AvailableFor: []string{"get"},
 		Type:         "string",
-		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
-If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Required: []string{"get"},
+		Description:  `The id of the user setting.`,
+		Required:     []string{"get"},
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},

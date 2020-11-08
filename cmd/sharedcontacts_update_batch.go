@@ -63,6 +63,7 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s:", m["url"].GetString())
 					operation := func() error {
 						s, _, err := gsmadmin.GetSharedContact(m["url"].GetString())
 						if err != nil {
@@ -77,10 +78,10 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 						result, statusCode, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
 						if err != nil {
 							if statusCode == 403 {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -88,7 +89,7 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

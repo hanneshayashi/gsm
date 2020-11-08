@@ -33,7 +33,7 @@ import (
 var peopleCreateContactBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch create contacts using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/createContact",
+	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		cmd.Flags().VisitAll(gsmhelpers.CheckBatchFlags)
@@ -69,15 +69,16 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 						log.Printf("Error building person object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s:", "")
 					operation := func() error {
 						result, err := gsmpeople.CreateContact(p, m["personFields"].GetString(), m["sources"].GetString(), m["fields"].GetString())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

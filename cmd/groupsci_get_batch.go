@@ -64,6 +64,7 @@ var groupsCiGetBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s/%s:", m["name"].GetString(), m["email"].GetString())
 					operation := func() error {
 						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
 						if err != nil {
@@ -74,10 +75,10 @@ var groupsCiGetBatchCmd = &cobra.Command{
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var groupsCiGetBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

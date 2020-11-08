@@ -31,7 +31,7 @@ import (
 // groupsCiPatchBatchCmd represents the batch command
 var groupsCiPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patchs groups using a CSV file as input.",
+	Short: "Batch patches groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -63,6 +63,7 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s/%s:", m["name"].GetString(), m["email"].GetString())
 					operation := func() error {
 						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
 						if err != nil {
@@ -78,10 +79,10 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -89,7 +90,7 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

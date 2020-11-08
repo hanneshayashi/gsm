@@ -108,6 +108,7 @@ For Google-managed entities, the id must be the email address of an existing gro
 For external-identity-mapped entities, the id must be a string conforming to the Identity Source's requirements.
 
 Must be unique within a namespace.`,
+		Required: []string{"create"},
 	},
 	"namespace": {
 		AvailableFor: []string{"create"},

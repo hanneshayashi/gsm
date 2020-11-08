@@ -68,15 +68,16 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s - %s:", m["fileId"].GetString(), m["permissionId"].GetString())
 					operation := func() error {
 						result, err := gsmdrive.DeletePermission(m["fileId"].GetString(), m["permissionId"].GetString(), m["useDomainAdminAccess"].GetBool())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- resultStruct{FileID: m["fileId"].GetString(), PermissionID: m["permissionId"].GetString(), Result: result}
@@ -84,7 +85,7 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

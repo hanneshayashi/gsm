@@ -33,7 +33,7 @@ var draftsSendCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		draft, err := gsmgmail.GetDraft(flags["userId"].GetString(), flags["id"].GetString(), "FULL", flags["fields"].GetString())
+		draft, err := gsmgmail.GetDraft(flags["userId"].GetString(), flags["id"].GetString(), "FULL", "*")
 		if err != nil {
 			log.Fatalf("Error getting draft: %v", err)
 		}

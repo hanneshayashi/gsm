@@ -69,15 +69,16 @@ var calendarACLPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building acl rule object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["ruleId"].GetInt64())
 					operation := func() error {
 						result, err := gsmcalendar.PatchACL(m["calendarId"].GetString(), m["ruleId"].GetString(), m["fields"].GetString(), a, m["sendNotifications"].GetBool())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var calendarACLPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

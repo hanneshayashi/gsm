@@ -32,7 +32,7 @@ import (
 // calendarsPatchBatchCmd represents the batch command
 var calendarsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patchs secondary calendars using a CSV file as input.",
+	Short: "Batch patches secondary calendars using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendar/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -69,15 +69,16 @@ var calendarsPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building calendar object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s:", m["calendarId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.PatchCalendar(m["calendarId"].GetString(), m["fields"].GetString(), c)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var calendarsPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

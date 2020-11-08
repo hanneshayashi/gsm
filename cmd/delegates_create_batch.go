@@ -77,15 +77,16 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 						log.Printf("Error building delegate object: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), d.DelegateEmail)
 					operation := func() error {
 						result, err := gsmgmail.CreateDelegate(m["userId"].GetString(), m["fields"].GetString(), d)
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -93,7 +94,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

@@ -68,15 +68,16 @@ var messagesGetBatchCmd = &cobra.Command{
 						log.Printf("%s is not a valid format", m["format"].GetString())
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["id"].GetString())
 					operation := func() error {
 						result, err := gsmgmail.GetMessage(m["userId"].GetString(), m["id"].GetString(), m["format"].GetString(), m["metadataHeadersString"].GetString(), m["fields"].GetString())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -84,7 +85,7 @@ var messagesGetBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

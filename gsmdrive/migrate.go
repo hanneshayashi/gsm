@@ -45,15 +45,16 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 		Name:     folder.Name,
 	}
 	f := &drive.File{}
+	errKey := fmt.Sprintf("%s:", file.Name)
 	operation := func() error {
 		newFile, err := CreateFile(file, nil, false, false, false, "", "", fields)
 		if err != nil {
 			retryable := gsmhelpers.ErrorIsRetryable(err)
 			if retryable {
-				log.Println("Retrying after", err)
+				log.Println(errKey, "Retrying after", err)
 				return err
 			}
-			log.Println("Giving up after", err)
+			log.Println(errKey, "Giving up after", err)
 			return nil
 		}
 		f = newFile
@@ -61,18 +62,21 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	}
 	err := retrier.Run(operation)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(errKey, "Max retries reached. Giving up after", err)
+		return
 	}
+	time.Sleep(200 * time.Millisecond)
 	log.Println(folder.Name, "'s new id is", f.Id)
+	errKey = fmt.Sprintf("%s:", f.Id)
 	operation = func() error {
 		ci, err := ListFiles(fmt.Sprintf("'%s' in parents", folder.Id), "", "", "", "", "", fields, false)
 		if err != nil {
 			retryable := gsmhelpers.ErrorIsRetryable(err)
 			if retryable {
-				log.Println("Retrying after", err)
+				log.Println(errKey, "Retrying after", err)
 				return err
 			}
-			log.Println("Giving up after", err)
+			log.Println(errKey, "Giving up after", err)
 			return nil
 		}
 		if len(ci) > 0 {
@@ -83,8 +87,9 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	}
 	err = retrier.Run(operation)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(errKey, "Max retries reached. Giving up after", err)
 	}
+	time.Sleep(200 * time.Millisecond)
 }
 
 // Migrate migrates a folder to a drive
@@ -117,23 +122,24 @@ func Migrate(file *drive.File, destination, driveID string) {
 						wgFolders.Add(1)
 						folders <- parent{Parent: p.Parent, Folder: c}
 					} else {
+						errKey := fmt.Sprintf("%s:", c.Id)
 						operation := func() error {
 							u := &drive.File{}
 							_, err := UpdateFile(c.Id, p.Parent, c.Parents[0], "", "", "", u, nil, false, false)
 							if err != nil {
 								retryable := gsmhelpers.ErrorIsRetryable(err)
 								if retryable {
-									log.Println("Retrying after", err)
+									log.Println(errKey, "Retrying after", err)
 									return err
 								}
-								log.Println("Giving up after", err)
+								log.Println(errKey, "Giving up after", err)
 								return nil
 							}
 							return nil
 						}
 						err = retrier.Run(operation)
 						if err != nil {
-							log.Println("Max retry reached. Giving up after", err)
+							log.Println(errKey, "Max retries reached. Giving up after", err)
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

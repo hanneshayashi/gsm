@@ -69,15 +69,16 @@ var eventsImportBatchCmd = &cobra.Command{
 						log.Printf("Error getting source event: %v\n", err)
 						continue
 					}
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), e.Id)
 					operation := func() error {
 						result, err := gsmcalendar.ImportEvent(m["destination"].GetString(), m["fields"].GetString(), e, m["conferenceDataVersion"].GetInt64(), m["supportsAttachments"].GetBool())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -85,7 +86,7 @@ var eventsImportBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}

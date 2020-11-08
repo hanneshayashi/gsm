@@ -67,15 +67,16 @@ var userAliasesListBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
+					errKey := fmt.Sprintf("%s:", m["userKey"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.ListUserAliases(m["userKey"].GetString(), m["fields"].GetString())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
-								log.Println("Retrying after", err)
+								log.Println(errKey, "Retrying after", err)
 								return err
 							}
-							log.Println("Giving up after", err)
+							log.Println(errKey, "Giving up after", err)
 							return nil
 						}
 						results <- resultStruct{UserKey: m["userKey"].GetString(), Aliases: result}
@@ -83,7 +84,7 @@ var userAliasesListBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Println("Max retry reached. Giving up after", err)
+						log.Println(errKey, "Max retries reached. Giving up after", err)
 					}
 					time.Sleep(200 * time.Millisecond)
 				}
