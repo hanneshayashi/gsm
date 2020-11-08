@@ -24,6 +24,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/api/drive/v3"
 )
 
 // changesListCmd represents the list command
@@ -37,8 +38,15 @@ var changesListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing changes: %v", err)
 		}
-		fmt.Println(nextStartPageToken)
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		type resultStruct struct {
+			Changes            []*drive.Change `json:"changes,omitempty"`
+			NextStartPageToken string          `json:"nextStartPageToken"`
+		}
+		r := resultStruct{
+			Changes:            result,
+			NextStartPageToken: nextStartPageToken,
+		}
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(r, "json"))
 	},
 }
 
