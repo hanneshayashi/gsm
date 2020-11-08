@@ -64,7 +64,7 @@ var calendarACLGetBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["ruleId"].GetInt64())
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["ruleId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.GetACL(m["calendarId"].GetString(), m["ruleId"].GetString(), m["fields"].GetString())
 						if err != nil {

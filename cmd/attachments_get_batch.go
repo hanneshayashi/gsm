@@ -64,7 +64,7 @@ var attachmentsGetBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					errKey := fmt.Sprintf("%s - %s - %s:", m["userId"].GetString(), m["messageId"].GetInt64(), m["id"].GetInt64())
+					errKey := fmt.Sprintf("%s - %s - %s:", m["userId"].GetString(), m["messageId"].GetString(), m["id"].GetString())
 					operation := func() error {
 						result, err := gsmgmail.GetAttachment(m["userId"].GetString(), m["messageId"].GetString(), m["id"].GetString(), m["fields"].GetString())
 						if err != nil {

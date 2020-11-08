@@ -69,7 +69,7 @@ var roleAssignmentsInsertBatchCmd = &cobra.Command{
 						log.Printf("Error building role assignment object: %v\n", err)
 						continue
 					}
-					errKey := fmt.Sprintf("%s - %s - %s:", m["customer"].GetString(), r.AssignedTo, r.RoleId)
+					errKey := fmt.Sprintf("%s - %s - %d:", m["customer"].GetString(), r.AssignedTo, r.RoleId)
 					operation := func() error {
 						result, err := gsmadmin.InsertRoleAssignment(m["customer"].GetString(), m["fields"].GetString(), r)
 						if err != nil {

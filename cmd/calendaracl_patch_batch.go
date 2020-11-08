@@ -69,7 +69,7 @@ var calendarACLPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building acl rule object: %v\n", err)
 						continue
 					}
-					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["ruleId"].GetInt64())
+					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["ruleId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.PatchACL(m["calendarId"].GetString(), m["ruleId"].GetString(), m["fields"].GetString(), a, m["sendNotifications"].GetBool())
 						if err != nil {

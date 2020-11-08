@@ -68,7 +68,7 @@ var eventsListBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString())
+					errKey := fmt.Sprintf("%s:", m["calendarId"].GetString())
 					operation := func() error {
 						result, err := gsmcalendar.ListEvents(m["calendarId"].GetString(), m["iCalUID"].GetString(), m["orderBy"].GetString(), m["q"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["updatedMin"].GetString(), m["fields"].GetString(), m["privateExtendedProperty"].GetStringSlice(), m["sharedExtendedProperty"].GetStringSlice(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool(), m["showHiddenInvitations"].GetBool(), m["singleEvents"].GetBool())
 						if err != nil {
