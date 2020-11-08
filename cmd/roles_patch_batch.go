@@ -25,10 +25,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
-	"google.golang.org/api/googleapi"
 )
 
 // rolesPatchBatchCmd represents the batch command
@@ -60,7 +58,7 @@ var rolesPatchBatchCmd = &cobra.Command{
 			wg1.Done()
 		}()
 		wg2.Add(1)
-		retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+		retrier := gsmhelpers.NewStandardRetrier()
 		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
 			wg2.Add(1)
 			go func() {
@@ -74,11 +72,12 @@ var rolesPatchBatchCmd = &cobra.Command{
 					operation := func() error {
 						result, err := gsmadmin.PatchRole(m["customer"].GetString(), m["roleId"].GetString(), m["fields"].GetString(), r)
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -86,8 +85,9 @@ var rolesPatchBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Fatal(err)
+						log.Println("Max retry reached. Giving up after", err)
 					}
+					time.Sleep(200 * time.Millisecond)
 				}
 				wg2.Done()
 			}()

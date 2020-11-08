@@ -25,9 +25,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
 	"github.com/spf13/cobra"
-	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
 
@@ -60,7 +58,7 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 			wg1.Done()
 		}()
 		wg2.Add(1)
-		retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+		retrier := gsmhelpers.NewStandardRetrier()
 		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
 			wg2.Add(1)
 			go func() {
@@ -69,11 +67,12 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 					operation := func() error {
 						p, err := gsmpeople.GetContact(m["resourceName"].GetString(), m["personFields"].GetString(), m["sources"].GetString(), "*")
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						p, err = mapToPerson(m, p)
@@ -83,11 +82,12 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 						}
 						result, err := gsmpeople.UpdateContact(m["resourceName"].GetString(), m["updatePersonFields"].GetString(), m["personFields"].GetString(), m["sources"].GetString(), m["fields"].GetString(), p)
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -95,8 +95,9 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Fatal(err)
+						log.Println("Max retry reached. Giving up after", err)
 					}
+					time.Sleep(200 * time.Millisecond)
 				}
 				wg2.Done()
 			}()

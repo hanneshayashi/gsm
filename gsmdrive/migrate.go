@@ -23,9 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
+	"github.com/eapache/go-resiliency/retrier"
 	drive "google.golang.org/api/drive/v3"
-	"google.golang.org/api/googleapi"
 )
 
 type parentChildren struct {
@@ -38,7 +37,7 @@ type parent struct {
 	Folder *drive.File
 }
 
-func folder(folder *drive.File, destination, driveID, fields string, pc chan parentChildren, wg *sync.WaitGroup, retrier *retry.Retrier) {
+func folder(folder *drive.File, destination, driveID, fields string, pc chan parentChildren, wg *sync.WaitGroup, retrier *retrier.Retrier) {
 	file := &drive.File{
 		MimeType: "application/vnd.google-apps.folder",
 		DriveId:  driveID,
@@ -49,12 +48,12 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	operation := func() error {
 		newFile, err := CreateFile(file, nil, false, false, false, "", "", fields)
 		if err != nil {
-			gerr := err.(*googleapi.Error)
-			if gerr.Code == 403 {
-				log.Println(err)
+			retryable := gsmhelpers.ErrorIsRetryable(err)
+			if retryable {
+				log.Println("Retrying after", err)
 				return err
 			}
-			log.Println(err)
+			log.Println("Giving up after", err)
 			return nil
 		}
 		f = newFile
@@ -68,12 +67,12 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	operation = func() error {
 		ci, err := ListFiles(fmt.Sprintf("'%s' in parents", folder.Id), "", "", "", "", "", fields, false)
 		if err != nil {
-			gerr := err.(*googleapi.Error)
-			if gerr.Code == 403 {
-				log.Println(err)
+			retryable := gsmhelpers.ErrorIsRetryable(err)
+			if retryable {
+				log.Println("Retrying after", err)
 				return err
 			}
-			log.Println(err)
+			log.Println("Giving up after", err)
 			return nil
 		}
 		if len(ci) > 0 {
@@ -99,7 +98,7 @@ func Migrate(file *drive.File, destination, driveID string) {
 	wgFolders.Add(1)
 	wgGor.Add(1)
 	folders <- parent{Parent: destination, Folder: file}
-	retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+	retrier := gsmhelpers.NewStandardRetrier()
 	go func() {
 		for f := range folders {
 			folder(f.Folder, f.Parent, driveID, fields, pc, &wgPc, retrier)
@@ -122,20 +121,21 @@ func Migrate(file *drive.File, destination, driveID string) {
 							u := &drive.File{}
 							_, err := UpdateFile(c.Id, p.Parent, c.Parents[0], "", "", "", u, nil, false, false)
 							if err != nil {
-								gerr := err.(*googleapi.Error)
-								if gerr.Code == 403 {
-									log.Println(err)
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println("Retrying after", err)
 									return err
 								}
-								log.Println(err)
+								log.Println("Giving up after", err)
 								return nil
 							}
 							return nil
 						}
 						err = retrier.Run(operation)
 						if err != nil {
-							log.Fatal(err)
+							log.Println("Max retry reached. Giving up after", err)
 						}
+						time.Sleep(200 * time.Millisecond)
 					}
 				}
 				log.Println(i, "has moved", len(p.Children), "children to", p.Parent)

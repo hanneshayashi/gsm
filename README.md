@@ -35,8 +35,6 @@ GSM is based on open source technology and would not exist without the incredibl
   - https://github.com/googleapis/google-api-go-client
 - GSM uses Cobra and Viper for command and configuration management
   - https://github.com/spf13/cobra
-- Even though there are many alternatives, I found the simple and elegant library by flowchartsman for exponential backoff and retry to be just perfect (it even supports concurrency!)
-  - https://github.com/flowchartsman/retry
 
 ### Features
 

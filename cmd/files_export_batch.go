@@ -25,9 +25,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
 	"github.com/spf13/cobra"
-	"google.golang.org/api/googleapi"
 )
 
 // filesExportBatchCmd represents the batch command
@@ -60,7 +58,7 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 			wg1.Done()
 		}()
 		wg2.Add(1)
-		retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+		retrier := gsmhelpers.NewStandardRetrier()
 		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
 			wg2.Add(1)
 			go func() {
@@ -69,11 +67,12 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 					operation := func() error {
 						result, err := gsmdrive.ExportFile(m["fileId"].GetString(), m["mimeType"].GetString())
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -81,8 +80,9 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Fatal(err)
+						log.Println("Max retry reached. Giving up after", err)
 					}
+					time.Sleep(200 * time.Millisecond)
 				}
 				wg2.Done()
 			}()

@@ -25,9 +25,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
 	"github.com/spf13/cobra"
-	"google.golang.org/api/googleapi"
 )
 
 // revisionsDeleteBatchCmd represents the batch command
@@ -64,7 +62,7 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 			wg1.Done()
 		}()
 		wg2.Add(1)
-		retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+		retrier := gsmhelpers.NewStandardRetrier()
 		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
 			wg2.Add(1)
 			go func() {
@@ -73,11 +71,12 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 					operation := func() error {
 						result, err := gsmdrive.DeleteRevision(m["fileId"].GetString(), m["revisionId"].GetString())
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						results <- resultStruct{FileID: m["fileId"].GetString(), RevisionID: m["revisionId"].GetString(), Result: result}
@@ -85,8 +84,9 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Fatal(err)
+						log.Println("Max retry reached. Giving up after", err)
 					}
+					time.Sleep(200 * time.Millisecond)
 				}
 				wg2.Done()
 			}()

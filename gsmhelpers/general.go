@@ -28,9 +28,12 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 
+	"github.com/eapache/go-resiliency/retrier"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
+	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v2"
 )
 
@@ -65,6 +68,23 @@ func GetCSV(flags map[string]*Value) ([][]string, error) {
 		return nil, err
 	}
 	return csv, nil
+}
+
+// ErrorIsRetryable checks if a Google API response returned a retryable error
+func ErrorIsRetryable(err error) bool {
+	gerr := err.(*googleapi.Error)
+	if gerr.Code == 403 && (strings.Contains(gerr.Message, "quota") || strings.Contains(gerr.Message, "limit") || strings.Contains(gerr.Message, "rate")) {
+		return true
+	}
+	return false
+}
+
+// NewStandardRetrier returns a retrier with default values
+func NewStandardRetrier() *retrier.Retrier {
+	// class := retrier.WhitelistClassifier{
+	// 	&googleapi.Error{Code: 403},
+	// }
+	return retrier.New(retrier.ExponentialBackoff(4, 20*time.Second), nil)
 }
 
 // GetCustomerID returns either your own customer ID or the provided one

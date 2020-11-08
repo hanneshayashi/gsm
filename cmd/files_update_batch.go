@@ -27,10 +27,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flowchartsman/retry"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/drive/v3"
-	"google.golang.org/api/googleapi"
 )
 
 // filesUpdateBatchCmd represents the batch command
@@ -62,7 +60,7 @@ var filesUpdateBatchCmd = &cobra.Command{
 			wg1.Done()
 		}()
 		wg2.Add(1)
-		retrier := retry.NewRetrier(10, 250*time.Millisecond, 60*time.Second)
+		retrier := gsmhelpers.NewStandardRetrier()
 		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
 			wg2.Add(1)
 			go func() {
@@ -94,11 +92,12 @@ var filesUpdateBatchCmd = &cobra.Command{
 					operation := func() error {
 						result, err := gsmdrive.UpdateFile(m["fileId"].GetString(), m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString(), f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
 						if err != nil {
-							log.Println(err)
-							gerr := err.(*googleapi.Error)
-							if gerr.Code == 403 {
+							retryable := gsmhelpers.ErrorIsRetryable(err)
+							if retryable {
+								log.Println("Retrying after", err)
 								return err
 							}
+							log.Println("Giving up after", err)
 							return nil
 						}
 						results <- result
@@ -106,8 +105,9 @@ var filesUpdateBatchCmd = &cobra.Command{
 					}
 					err = retrier.Run(operation)
 					if err != nil {
-						log.Fatal(err)
+						log.Println("Max retry reached. Giving up after", err)
 					}
+					time.Sleep(200 * time.Millisecond)
 				}
 				wg2.Done()
 			}()
