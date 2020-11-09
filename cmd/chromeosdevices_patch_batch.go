@@ -69,7 +69,7 @@ var chromeOsDevicesPatchBatchCmd = &cobra.Command{
 						log.Printf("Error building chromeOsDevice object: %v\n", err)
 						continue
 					}
-					errKey := fmt.Sprintf("%s:", m["deviceId"].GetString())
+					errKey := fmt.Sprintf("%s - %s:", m["customerId"].GetString(), m["deviceId"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.PatchChromeOsDevice(m["customerId"].GetString(), m["deviceId"].GetString(), m["fields"].GetString(), m["projection"].GetString(), c)
 						if err != nil {

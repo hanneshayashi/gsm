@@ -64,7 +64,7 @@ var chromeOsDevicesGetBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					errKey := fmt.Sprintf("%s:", m["deviceId"].GetString())
+					errKey := fmt.Sprintf("%s - %s:", m["customerId"].GetString(), m["deviceId"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.GetChromeOsDevice(m["customerId"].GetString(), m["deviceId"].GetString(), m["fields"].GetString(), m["projection"].GetString())
 						if err != nil {

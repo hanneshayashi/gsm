@@ -69,7 +69,7 @@ var commentsUpdateBatchCmd = &cobra.Command{
 						log.Printf("Error building comment object: %v", err)
 						continue
 					}
-					errKey := fmt.Sprintf("%s:", m["fileId"].GetString())
+					errKey := fmt.Sprintf("%s - %s:", m["fileId"].GetString(), m["commentId"].GetString())
 					operation := func() error {
 						result, err := gsmdrive.UpdateComment(m["fileId"].GetString(), m["commentId"].GetString(), m["fields"].GetString(), c)
 						if err != nil {

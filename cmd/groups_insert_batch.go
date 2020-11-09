@@ -69,7 +69,7 @@ var groupsInsertBatchCmd = &cobra.Command{
 						log.Printf("Error building group object: %v", err)
 						continue
 					}
-					errKey := fmt.Sprintf("%s:", m["groupKey"].GetString())
+					errKey := fmt.Sprintf("%s:", g.Email)
 					operation := func() error {
 						result, err := gsmadmin.InsertGroup(g, m["fields"].GetString())
 						if err != nil {
