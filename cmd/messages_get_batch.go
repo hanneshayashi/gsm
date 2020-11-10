@@ -64,13 +64,14 @@ var messagesGetBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					if !gsmgmail.FormatIsValid(m["format"].GetString()) {
-						log.Printf("%s is not a valid format", m["format"].GetString())
+					format := m["format"].GetString()
+					if !gsmgmail.FormatIsValid(format) {
+						log.Printf("%s is not a valid format\n", format)
 						continue
 					}
 					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["id"].GetString())
 					operation := func() error {
-						result, err := gsmgmail.GetMessage(m["userId"].GetString(), m["id"].GetString(), m["format"].GetString(), m["metadataHeadersString"].GetString(), m["fields"].GetString())
+						result, err := gsmgmail.GetMessage(m["userId"].GetString(), m["id"].GetString(), format, m["metadataHeaders"].GetString(), m["fields"].GetString())
 						if err != nil {
 							retryable := gsmhelpers.ErrorIsRetryable(err)
 							if retryable {
