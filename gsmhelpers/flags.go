@@ -84,6 +84,16 @@ func InterfaceToStringSlice(i interface{}) []string {
 	return nil
 }
 
+// BatchFlagToStringArray returns a string slice with the column as a single field
+func BatchFlagToStringArray(line []string, index int64) (value []string) {
+	if index != 0 {
+		value = []string{line[index-1]}
+	} else {
+		value = nil
+	}
+	return value
+}
+
 // BatchFlagToStringSlice returns a value from a slice based on an index and default value
 func BatchFlagToStringSlice(line []string, index int64) (value []string) {
 	if index != 0 {
@@ -307,6 +317,8 @@ func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 			m[k].Value, err = BatchFlagToFloat64(line, flags[k].GetInt64(), def)
 		case "stringSlice":
 			m[k].Value = BatchFlagToStringSlice(line, flags[k].GetInt64())
+		case "stringArray":
+			m[k].Value = BatchFlagToStringArray(line, flags[k].GetInt64())
 		default:
 			m[k].Value = BatchFlagToString(line, flags[k].GetInt64(), def)
 		}
