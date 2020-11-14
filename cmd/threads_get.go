@@ -33,10 +33,9 @@ var threadsGetCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/get",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		id, _ := cmd.Flags().GetString("id")
 		result, err := gsmgmail.GetThread(flags["userId"].GetString(), flags["id"].GetString(), flags["format"].GetString(), flags["metadataHeaders"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting thread %s: %v", id, err)
+			log.Fatalf("Error getting thread %s: %v", flags["id"].GetString(), err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
