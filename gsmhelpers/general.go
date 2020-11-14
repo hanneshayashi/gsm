@@ -37,7 +37,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const version = "0.1.13"
+const version = "0.1.14"
 
 // GetVersion returns the current version
 func GetVersion() string {
