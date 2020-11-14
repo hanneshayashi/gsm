@@ -30,6 +30,7 @@ import (
 	"gsm/gsmhelpers"
 	"gsm/gsmlicensing"
 	"gsm/gsmpeople"
+	"gsm/gsmsheets"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -167,6 +168,7 @@ func auth() {
 		gsmcalendar.SetClient(client)
 		gsmlicensing.SetClient(client)
 		gsmpeople.SetClient(client)
+		gsmsheets.SetClient(client)
 	}
 }
 

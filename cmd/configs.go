@@ -30,6 +30,7 @@ import (
 	"google.golang.org/api/groupssettings/v1"
 	"google.golang.org/api/licensing/v1"
 	"google.golang.org/api/people/v1"
+	"google.golang.org/api/sheets/v4"
 )
 
 // configsCmd represents the config command
@@ -69,6 +70,7 @@ var defaultScopes = []string{admin.AdminDirectoryUserScope,
 	licensing.AppsLicensingScope,
 	people.DirectoryReadonlyScope,
 	people.ContactsOtherReadonlyScope,
+	sheets.SpreadsheetsScope,
 }
 
 var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{

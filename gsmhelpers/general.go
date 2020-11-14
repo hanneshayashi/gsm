@@ -44,16 +44,8 @@ func GetVersion() string {
 	return version
 }
 
-// GetCSV uses a FlagSet to read a CSV file and parse it accordingliny
-func GetCSV(flags map[string]*Value) ([][]string, error) {
-	path := flags["path"].GetString()
-	var delimiter rune
-	if flags["delimiter"].Changed {
-		delimiter = flags["delimiter"].GetRune()
-	} else {
-		delimiter = ';'
-	}
-	skipHeader := flags["skipHeader"].GetBool()
+// GetCSVContent gets the content of a CSV file as [][]string
+func GetCSVContent(path string, delimiter rune, skipHeader bool) ([][]string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -64,6 +56,23 @@ func GetCSV(flags map[string]*Value) ([][]string, error) {
 	if skipHeader {
 		csv = csv[1:]
 	}
+	if err != nil {
+		return nil, err
+	}
+	return csv, nil
+}
+
+// GetCSV uses a FlagSet to read a CSV file and parse it accordingly
+func GetCSV(flags map[string]*Value) ([][]string, error) {
+	path := flags["path"].GetString()
+	var delimiter rune
+	if flags["delimiter"].Changed {
+		delimiter = flags["delimiter"].GetRune()
+	} else {
+		delimiter = ';'
+	}
+	skipHeader := flags["skipHeader"].GetBool()
+	csv, err := GetCSVContent(path, delimiter, skipHeader)
 	if err != nil {
 		return nil, err
 	}
