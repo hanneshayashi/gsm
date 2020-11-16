@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"gsm/gsmadmin"
+	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
@@ -42,6 +43,19 @@ const version = "0.1.14"
 // GetVersion returns the current version
 func GetVersion() string {
 	return version
+}
+
+// GetFileContentAsString returns the content of a file as a string
+func GetFileContentAsString(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	content, err := ioutil.ReadAll(f)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
 }
 
 // GetCSVContent gets the content of a CSV file as [][]string

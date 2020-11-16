@@ -19,6 +19,9 @@ package cmd
 
 import (
 	"gsm/gsmhelpers"
+	"gsm/gsmsheets"
+	"math/rand"
+	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/sheets/v4"
@@ -48,11 +51,22 @@ var spreadsheetFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Required:     []string{"create"},
 	},
 	"csvFileToUpload": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"batchUpdate", "create"},
 		Type:         "stringSlice",
 		Description: `A list of CSV files that should be added to the spreadsheet as new sheets.
 Can be used multiple times in the form of "--csvFileToUpload "title=Some Title;path=./path/to/file.csv""
 Delimiter must be ","`,
+	},
+	"ranges": {
+		AvailableFor: []string{"get"},
+		Type:         "stringSlice",
+		Description:  `The ranges to retrieve from the spreadsheet.`,
+	},
+	"includeGridData": {
+		AvailableFor: []string{"get"},
+		Type:         "bool",
+		Description: `True if grid data should be returned.
+This parameter is ignored if a field mask was set in the request.`,
 	},
 	"fields": {
 		AvailableFor: []string{"batchUpdate", "create", "get", "getByDateFilter"},
@@ -113,4 +127,52 @@ func mapToSpreadsheet(flags map[string]*gsmhelpers.Value) (*sheets.Spreadsheet, 
 		}
 	}
 	return spreadsheet, nil
+}
+
+func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sheets.BatchUpdateSpreadsheetRequest, error) {
+	batchUpdateSpreadsheetRequest := &sheets.BatchUpdateSpreadsheetRequest{}
+	spreadsheet, err := gsmsheets.GetSpreadsheet(flags["spreadsheetId"].GetString(), "sheets(properties(title,sheetId))", nil, false)
+	if err != nil {
+		return nil, err
+	}
+	sheetMap := make(map[string]int64)
+	for _, s := range spreadsheet.Sheets {
+		sheetMap[s.Properties.Title] = s.Properties.SheetId
+	}
+	if flags["csvFileToUpload"].IsSet() {
+		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
+		if len(csvFilesToUpload) > 0 {
+			rand.Seed(time.Now().UnixNano())
+			batchUpdateSpreadsheetRequest.Requests = []*sheets.Request{}
+			for _, c := range csvFilesToUpload {
+				m := gsmhelpers.FlagToMap(c)
+				data, err := gsmhelpers.GetFileContentAsString(m["path"])
+				if err != nil {
+					return nil, err
+				}
+				sheetID, ok := sheetMap[m["title"]]
+				if !ok {
+					r := &sheets.Request{}
+					sheetID = int64(rand.Int31())
+					r.AddSheet = &sheets.AddSheetRequest{}
+					r.AddSheet.Properties = &sheets.SheetProperties{
+						Title:   m["title"],
+						SheetId: sheetID,
+					}
+					batchUpdateSpreadsheetRequest.Requests = append(batchUpdateSpreadsheetRequest.Requests, r)
+				}
+				r := &sheets.Request{}
+				r.PasteData = &sheets.PasteDataRequest{
+					Coordinate: &sheets.GridCoordinate{
+						SheetId: sheetID,
+					},
+					Data:      data,
+					Delimiter: ",",
+					Type:      "PASTE_NORMAL",
+				}
+				batchUpdateSpreadsheetRequest.Requests = append(batchUpdateSpreadsheetRequest.Requests, r)
+			}
+		}
+	}
+	return batchUpdateSpreadsheetRequest, nil
 }
