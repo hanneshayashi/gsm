@@ -35,10 +35,13 @@ var threadsDeleteBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		cmd.Flags().VisitAll(gsmhelpers.CheckBatchFlags)
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
+		}
+		err = gsmhelpers.CheckBatchFlags(flags, threadFlags, int64(len(csv[0])))
+		if err != nil {
+			log.Fatalf("Error with batch flag index: %v\n", err)
 		}
 		l := len(csv)
 		type resultStruct struct {

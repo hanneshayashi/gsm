@@ -210,10 +210,21 @@ func BatchFlagToBool(line []string, index int64, def interface{}) (value bool, e
 	return value, nil
 }
 
-func CheckBatchFlags(flag *pflag.Flag) {
-	if flag.Changed && flag.Value.String() == "0" {
-		log.Fatalf("Columns must be 1-indexed (don't use 0 to reference columns)")
+// CheckBatchFlags checks if the supplied flag values for a batch command are valid in regards to the supplied CSV file
+func CheckBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, length int64) error {
+	for k := range flags {
+		if defaultFlags[k] == nil || !flags[k].Changed {
+			continue
+		}
+		flags[k].Index = flags[k].GetInt64()
+		if flags[k].Index == 0 {
+			return fmt.Errorf("Columns must be 1-indexed (don't use 0 to reference columns)")
+		}
+		if flags[k].Index > length {
+			return fmt.Errorf("Index used for %s is out of range. %d > %d. Did you set the delimiter correctly?", k, flags[k].Index, length)
+		}
 	}
+	return nil
 }
 
 //FlagToMap first splits a string by ";" to get the attributes, then each attribute is
@@ -310,20 +321,20 @@ func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 		def := defaultFlags[k].Defaults[command]
 		switch defaultFlags[k].Type {
 		case "int64":
-			m[k].Value, err = BatchFlagToInt64(line, flags[k].GetInt64(), def)
+			m[k].Value, err = BatchFlagToInt64(line, flags[k].Index, def)
 		case "bool":
-			m[k].Value, err = BatchFlagToBool(line, flags[k].GetInt64(), def)
+			m[k].Value, err = BatchFlagToBool(line, flags[k].Index, def)
 		case "float64":
-			m[k].Value, err = BatchFlagToFloat64(line, flags[k].GetInt64(), def)
+			m[k].Value, err = BatchFlagToFloat64(line, flags[k].Index, def)
 		case "stringSlice":
-			m[k].Value = BatchFlagToStringSlice(line, flags[k].GetInt64())
+			m[k].Value = BatchFlagToStringSlice(line, flags[k].Index)
 		case "stringArray":
-			m[k].Value = BatchFlagToStringArray(line, flags[k].GetInt64())
+			m[k].Value = BatchFlagToStringArray(line, flags[k].Index)
 		default:
-			m[k].Value = BatchFlagToString(line, flags[k].GetInt64(), def)
+			m[k].Value = BatchFlagToString(line, flags[k].Index, def)
 		}
 		if err != nil {
-			fmt.Printf("Error paring %s: %v\n", defaultFlags[k].Type, err)
+			log.Fatalf("Error paring %s: %v\n", defaultFlags[k].Type, err)
 		}
 	}
 	return m

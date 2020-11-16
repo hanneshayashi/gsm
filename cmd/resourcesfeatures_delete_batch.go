@@ -35,10 +35,13 @@ var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		cmd.Flags().VisitAll(gsmhelpers.CheckBatchFlags)
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
+		}
+		err = gsmhelpers.CheckBatchFlags(flags, resourcesFeatureFlags, int64(len(csv[0])))
+		if err != nil {
+			log.Fatalf("Error with batch flag index: %v\n", err)
 		}
 		l := len(csv)
 		type resultStruct struct {
@@ -68,7 +71,7 @@ var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
 			go func() {
 				for m := range maps {
 					var err error
-					errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(),  m["featureKey"].GetString())
+					errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(), m["featureKey"].GetString())
 					operation := func() error {
 						result, err := gsmadmin.DeleteResourcesFeature(m["customer"].GetString(), m["featureKey"].GetString())
 						if err != nil {
