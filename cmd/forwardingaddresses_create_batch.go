@@ -112,10 +112,5 @@ var forwardingAddressesCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	forwardingAddressesCreateCmd.AddCommand(forwardingAddressesCreateBatchCmd)
-	flags := forwardingAddressesCreateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(forwardingAddressFlags, flags, "create")
-	markFlagsRequired(forwardingAddressesCreateBatchCmd, forwardingAddressFlags, "create")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(forwardingAddressesCreateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(forwardingAddressesCreateCmd, forwardingAddressesCreateBatchCmd, forwardingAddressFlags, batchFlags)
 }

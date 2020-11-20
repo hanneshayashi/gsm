@@ -108,10 +108,5 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	contactGroupsGetCmd.AddCommand(contactGroupsGetBatchCmd)
-	flags := contactGroupsGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(contactGroupFlags, flags, "get")
-	markFlagsRequired(contactGroupsGetBatchCmd, contactGroupFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(contactGroupsGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(contactGroupsGetCmd, contactGroupsGetBatchCmd, contactGroupFlags, batchFlags)
 }

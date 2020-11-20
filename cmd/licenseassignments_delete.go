@@ -42,7 +42,5 @@ var licenseAssignmentsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	licenseAssignmentsCmd.AddCommand(licenseAssignmentsDeleteCmd)
-	gsmhelpers.AddFlags(licenseAssignmentFlags, licenseAssignmentsDeleteCmd.Flags(), licenseAssignmentsDeleteCmd.Use)
-	markFlagsRequired(licenseAssignmentsDeleteCmd, licenseAssignmentFlags, "")
+	gsmhelpers.InitCommand(licenseAssignmentsCmd, licenseAssignmentsDeleteCmd, licenseAssignmentFlags)
 }

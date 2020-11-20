@@ -49,7 +49,5 @@ https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships
 }
 
 func init() {
-	groupMembershipsCiCmd.AddCommand(groupMembershipsCiCheckTransitiveMembershipCmd)
-	gsmhelpers.AddFlags(groupMembershipCiFlags, groupMembershipsCiCheckTransitiveMembershipCmd.Flags(), groupMembershipsCiCheckTransitiveMembershipCmd.Use)
-	markFlagsRequired(groupMembershipsCiCheckTransitiveMembershipCmd, groupMembershipCiFlags, "")
+	gsmhelpers.InitCommand(groupMembershipsCiCmd, groupMembershipsCiCheckTransitiveMembershipCmd, groupMembershipCiFlags)
 }

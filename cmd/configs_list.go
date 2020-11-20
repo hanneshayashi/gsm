@@ -51,7 +51,5 @@ var configsListCmd = &cobra.Command{
 }
 
 func init() {
-	configsCmd.AddCommand(configsListCmd)
-	gsmhelpers.AddFlags(configFlags, configsListCmd.Flags(), configsListCmd.Use)
-	markFlagsRequired(configsListCmd, configFlags, "")
+	gsmhelpers.InitCommand(configsCmd, configsListCmd, configFlags)
 }

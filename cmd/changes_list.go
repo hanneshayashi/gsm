@@ -51,7 +51,5 @@ var changesListCmd = &cobra.Command{
 }
 
 func init() {
-	changesCmd.AddCommand(changesListCmd)
-	gsmhelpers.AddFlags(changeFlags, changesListCmd.Flags(), changesListCmd.Use)
-	markFlagsRequired(changesListCmd, changeFlags, "")
+	gsmhelpers.InitCommand(changesCmd, changesListCmd, changeFlags)
 }

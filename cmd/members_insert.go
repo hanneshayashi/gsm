@@ -46,7 +46,5 @@ var membersInsertCmd = &cobra.Command{
 }
 
 func init() {
-	membersCmd.AddCommand(membersInsertCmd)
-	gsmhelpers.AddFlags(memberFlags, membersInsertCmd.Flags(), membersInsertCmd.Use)
-	markFlagsRequired(membersInsertCmd, memberFlags, "")
+	gsmhelpers.InitCommand(membersCmd, membersInsertCmd, memberFlags)
 }

@@ -108,10 +108,5 @@ var eventsInstancesBatchCmd = &cobra.Command{
 }
 
 func init() {
-	eventsInstancesCmd.AddCommand(eventsInstancesBatchCmd)
-	flags := eventsInstancesBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(eventFlags, flags, "instances")
-	markFlagsRequired(eventsInstancesBatchCmd, eventFlags, "instances")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(eventsInstancesBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(eventsInstancesCmd, eventsInstancesBatchCmd, eventFlags, batchFlags)
 }

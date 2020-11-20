@@ -51,7 +51,5 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 }
 
 func init() {
-	sharedContactsCmd.AddCommand(sharedContactsCreateCmd)
-	gsmhelpers.AddFlags(sharedContactFlags, sharedContactsCreateCmd.Flags(), sharedContactsCreateCmd.Use)
-	markFlagsRequired(sharedContactsCreateCmd, sharedContactFlags, "")
+	gsmhelpers.InitCommand(sharedContactsCmd, sharedContactsCreateCmd, sharedContactFlags)
 }

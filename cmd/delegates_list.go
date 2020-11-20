@@ -42,7 +42,5 @@ var delegatesListCmd = &cobra.Command{
 }
 
 func init() {
-	delegatesCmd.AddCommand(delegatesListCmd)
-	gsmhelpers.AddFlags(delegateFlags, delegatesListCmd.Flags(), delegatesListCmd.Use)
-	markFlagsRequired(delegatesListCmd, delegateFlags, "")
+	gsmhelpers.InitCommand(delegatesCmd, delegatesListCmd, delegateFlags)
 }

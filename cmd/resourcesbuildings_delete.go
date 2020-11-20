@@ -42,7 +42,5 @@ var resourcesBuildingsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesBuildingsCmd.AddCommand(resourcesBuildingsDeleteCmd)
-	gsmhelpers.AddFlags(resourcesBuildingFlags, resourcesBuildingsDeleteCmd.Flags(), resourcesBuildingsDeleteCmd.Use)
-	markFlagsRequired(resourcesBuildingsDeleteCmd, resourcesBuildingFlags, "")
+	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsDeleteCmd, resourcesBuildingFlags)
 }

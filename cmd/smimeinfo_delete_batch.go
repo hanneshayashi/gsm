@@ -113,10 +113,5 @@ var smimeInfoDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	smimeInfoDeleteCmd.AddCommand(smimeInfoDeleteBatchCmd)
-	flags := smimeInfoDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(smimeInfoFlags, flags, "delete")
-	markFlagsRequired(smimeInfoDeleteBatchCmd, smimeInfoFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(smimeInfoDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(smimeInfoDeleteCmd, smimeInfoDeleteBatchCmd, smimeInfoFlags, batchFlags)
 }

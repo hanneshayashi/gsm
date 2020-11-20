@@ -42,7 +42,5 @@ var resourcesBuildingsListCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesBuildingsCmd.AddCommand(resourcesBuildingsListCmd)
-	gsmhelpers.AddFlags(resourcesBuildingFlags, resourcesBuildingsListCmd.Flags(), resourcesBuildingsListCmd.Use)
-	markFlagsRequired(resourcesBuildingsListCmd, resourcesBuildingFlags, "")
+	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsListCmd, resourcesBuildingFlags)
 }

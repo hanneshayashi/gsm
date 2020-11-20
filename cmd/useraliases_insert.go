@@ -46,7 +46,5 @@ var userAliasesInsertCmd = &cobra.Command{
 }
 
 func init() {
-	userAliasesCmd.AddCommand(userAliasesInsertCmd)
-	gsmhelpers.AddFlags(userAliasFlags, userAliasesInsertCmd.Flags(), userAliasesInsertCmd.Use)
-	markFlagsRequired(userAliasesInsertCmd, userAliasFlags, "")
+	gsmhelpers.InitCommand(userAliasesCmd, userAliasesInsertCmd, userAliasFlags)
 }

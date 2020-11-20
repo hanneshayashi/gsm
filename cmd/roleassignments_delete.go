@@ -42,7 +42,5 @@ var roleAssignmentsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	roleAssignmentsCmd.AddCommand(roleAssignmentsDeleteCmd)
-	gsmhelpers.AddFlags(roleAssignmentFlags, roleAssignmentsDeleteCmd.Flags(), roleAssignmentsDeleteCmd.Use)
-	markFlagsRequired(roleAssignmentsDeleteCmd, roleAssignmentFlags, "")
+	gsmhelpers.InitCommand(roleAssignmentsCmd, roleAssignmentsDeleteCmd, roleAssignmentFlags)
 }

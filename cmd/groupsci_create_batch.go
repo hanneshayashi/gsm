@@ -112,10 +112,5 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiCreateCmd.AddCommand(groupsCiCreateBatchCmd)
-	flags := groupsCiCreateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(groupCiFlags, flags, "create")
-	markFlagsRequired(groupsCiCreateBatchCmd, groupCiFlags, "create")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(groupsCiCreateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(groupsCiCreateCmd, groupsCiCreateBatchCmd, groupCiFlags, batchFlags)
 }

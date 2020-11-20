@@ -43,7 +43,5 @@ This operation deletes all events associated with the primary calendar of an acc
 }
 
 func init() {
-	calendarsCmd.AddCommand(calendarsClearCmd)
-	gsmhelpers.AddFlags(calendarFlags, calendarsClearCmd.Flags(), calendarsClearCmd.Use)
-	markFlagsRequired(calendarsClearCmd, calendarFlags, "")
+	gsmhelpers.InitCommand(calendarsCmd, calendarsClearCmd, calendarFlags)
 }

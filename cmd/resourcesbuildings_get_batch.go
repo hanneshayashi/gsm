@@ -108,10 +108,5 @@ var resourcesBuildingsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesBuildingsGetCmd.AddCommand(resourcesBuildingsGetBatchCmd)
-	flags := resourcesBuildingsGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(resourcesBuildingFlags, flags, "get")
-	markFlagsRequired(resourcesBuildingsGetBatchCmd, resourcesBuildingFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(resourcesBuildingsGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(resourcesBuildingsGetCmd, resourcesBuildingsGetBatchCmd, resourcesBuildingFlags, batchFlags)
 }

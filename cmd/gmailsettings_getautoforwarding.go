@@ -42,7 +42,5 @@ var gmailSettingsGetAutoForwardingCmd = &cobra.Command{
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsGetAutoForwardingCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsGetAutoForwardingCmd.Flags(), gmailSettingsGetAutoForwardingCmd.Use)
-	markFlagsRequired(gmailSettingsGetAutoForwardingCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsGetAutoForwardingCmd, gmailSettingFlags)
 }

@@ -42,7 +42,5 @@ var gmailUsersGetProfileCmd = &cobra.Command{
 }
 
 func init() {
-	gmailUsersCmd.AddCommand(gmailUsersGetProfileCmd)
-	gsmhelpers.AddFlags(gmailUserFlags, gmailUsersGetProfileCmd.Flags(), gmailUsersGetProfileCmd.Use)
-	markFlagsRequired(gmailUsersGetProfileCmd, gmailUserFlags, "")
+	gsmhelpers.InitCommand(gmailUsersCmd, gmailUsersGetProfileCmd, gmailUserFlags)
 }

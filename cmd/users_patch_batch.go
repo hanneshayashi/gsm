@@ -113,10 +113,5 @@ var usersPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	usersPatchCmd.AddCommand(usersPatchBatchCmd)
-	flags := usersPatchBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(userFlags, flags, "patch")
-	markFlagsRequired(usersPatchBatchCmd, userFlags, "patch")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(usersPatchBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(usersPatchCmd, usersPatchBatchCmd, userFlags, batchFlags)
 }

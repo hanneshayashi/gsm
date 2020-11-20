@@ -48,7 +48,5 @@ otherwise, the resource will be created with verification status set to accepted
 }
 
 func init() {
-	forwardingAddressesCmd.AddCommand(forwardingAddressesCreateCmd)
-	gsmhelpers.AddFlags(forwardingAddressFlags, forwardingAddressesCreateCmd.Flags(), forwardingAddressesCreateCmd.Use)
-	markFlagsRequired(forwardingAddressesCreateCmd, forwardingAddressFlags, "")
+	gsmhelpers.InitCommand(forwardingAddressesCmd, forwardingAddressesCreateCmd, forwardingAddressFlags)
 }

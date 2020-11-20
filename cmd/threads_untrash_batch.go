@@ -108,10 +108,5 @@ var threadsUntrashBatchCmd = &cobra.Command{
 }
 
 func init() {
-	threadsUntrashCmd.AddCommand(threadsUntrashBatchCmd)
-	flags := threadsUntrashBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(threadFlags, flags, "untrash")
-	markFlagsRequired(threadsUntrashBatchCmd, threadFlags, "untrash")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(threadsUntrashBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(threadsUntrashCmd, threadsUntrashBatchCmd, threadFlags, batchFlags)
 }

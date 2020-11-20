@@ -180,14 +180,3 @@ func initLog() {
 
 	log.SetOutput(file)
 }
-
-func markFlagsRequired(cmd *cobra.Command, flags map[string]*gsmhelpers.Flag, command string) {
-	if command == "" {
-		command = cmd.Use
-	}
-	for k := range flags {
-		if gsmhelpers.Contains(command, flags[k].Required) {
-			cmd.MarkFlagRequired(k)
-		}
-	}
-}

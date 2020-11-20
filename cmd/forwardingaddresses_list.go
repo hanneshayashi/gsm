@@ -42,7 +42,5 @@ var forwardingAddressesListCmd = &cobra.Command{
 }
 
 func init() {
-	forwardingAddressesCmd.AddCommand(forwardingAddressesListCmd)
-	gsmhelpers.AddFlags(forwardingAddressFlags, forwardingAddressesListCmd.Flags(), forwardingAddressesListCmd.Use)
-	markFlagsRequired(forwardingAddressesListCmd, forwardingAddressFlags, "")
+	gsmhelpers.InitCommand(forwardingAddressesCmd, forwardingAddressesListCmd, forwardingAddressFlags)
 }

@@ -46,7 +46,5 @@ var revisionsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	revisionsCmd.AddCommand(revisionsUpdateCmd)
-	gsmhelpers.AddFlags(revisionFlags, revisionsUpdateCmd.Flags(), revisionsUpdateCmd.Use)
-	markFlagsRequired(revisionsUpdateCmd, revisionFlags, "")
+	gsmhelpers.InitCommand(revisionsCmd, revisionsUpdateCmd, revisionFlags)
 }

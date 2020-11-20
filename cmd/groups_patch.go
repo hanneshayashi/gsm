@@ -46,7 +46,5 @@ var groupsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCmd.AddCommand(groupsPatchCmd)
-	gsmhelpers.AddFlags(groupFlags, groupsPatchCmd.Flags(), groupsPatchCmd.Use)
-	markFlagsRequired(groupsPatchCmd, groupFlags, "")
+	gsmhelpers.InitCommand(groupsCmd, groupsPatchCmd, groupFlags)
 }

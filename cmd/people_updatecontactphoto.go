@@ -46,7 +46,5 @@ var peopleUpdateContactPhotoCmd = &cobra.Command{
 }
 
 func init() {
-	peopleCmd.AddCommand(peopleUpdateContactPhotoCmd)
-	gsmhelpers.AddFlags(peopleFlags, peopleUpdateContactPhotoCmd.Flags(), peopleUpdateContactPhotoCmd.Use)
-	markFlagsRequired(peopleUpdateContactPhotoCmd, peopleFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleUpdateContactPhotoCmd, peopleFlags)
 }

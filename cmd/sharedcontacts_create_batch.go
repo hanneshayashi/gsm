@@ -112,10 +112,5 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 }
 
 func init() {
-	sharedContactsCreateCmd.AddCommand(sharedContactsCreateBatchCmd)
-	flags := sharedContactsCreateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(sharedContactFlags, flags, "create")
-	markFlagsRequired(sharedContactsCreateBatchCmd, sharedContactFlags, "create")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(sharedContactsCreateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(sharedContactsCreateCmd, sharedContactsCreateBatchCmd, sharedContactFlags, batchFlags)
 }

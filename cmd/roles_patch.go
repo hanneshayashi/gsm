@@ -46,7 +46,5 @@ var rolesPatchCmd = &cobra.Command{
 }
 
 func init() {
-	rolesCmd.AddCommand(rolesPatchCmd)
-	gsmhelpers.AddFlags(roleFlags, rolesPatchCmd.Flags(), rolesPatchCmd.Use)
-	markFlagsRequired(rolesPatchCmd, roleFlags, "")
+	gsmhelpers.InitCommand(rolesCmd, rolesPatchCmd, roleFlags)
 }

@@ -42,7 +42,5 @@ var changesGetStartPageTokenCmd = &cobra.Command{
 }
 
 func init() {
-	changesCmd.AddCommand(changesGetStartPageTokenCmd)
-	gsmhelpers.AddFlags(changeFlags, changesGetStartPageTokenCmd.Flags(), changesGetStartPageTokenCmd.Use)
-	markFlagsRequired(changesGetStartPageTokenCmd, changeFlags, "")
+	gsmhelpers.InitCommand(changesCmd, changesGetStartPageTokenCmd, changeFlags)
 }

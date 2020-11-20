@@ -46,7 +46,5 @@ var sharedContactsGetCmd = &cobra.Command{
 }
 
 func init() {
-	sharedContactsCmd.AddCommand(sharedContactsGetCmd)
-	gsmhelpers.AddFlags(sharedContactFlags, sharedContactsGetCmd.Flags(), sharedContactsGetCmd.Use)
-	markFlagsRequired(sharedContactsGetCmd, sharedContactFlags, "")
+	gsmhelpers.InitCommand(sharedContactsCmd, sharedContactsGetCmd, sharedContactFlags)
 }

@@ -46,7 +46,5 @@ var spreadsheetsCreateCmd = &cobra.Command{
 }
 
 func init() {
-	spreadsheetsCmd.AddCommand(spreadsheetsCreateCmd)
-	gsmhelpers.AddFlags(spreadsheetFlags, spreadsheetsCreateCmd.Flags(), spreadsheetsCreateCmd.Use)
-	markFlagsRequired(spreadsheetsCreateCmd, spreadsheetFlags, "")
+	gsmhelpers.InitCommand(spreadsheetsCmd, spreadsheetsCreateCmd, spreadsheetFlags)
 }

@@ -55,7 +55,5 @@ Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;l
 }
 
 func init() {
-	sharedContactsCmd.AddCommand(sharedContactsUpdateCmd)
-	gsmhelpers.AddFlags(sharedContactFlags, sharedContactsUpdateCmd.Flags(), sharedContactsUpdateCmd.Use)
-	markFlagsRequired(sharedContactsUpdateCmd, sharedContactFlags, "")
+	gsmhelpers.InitCommand(sharedContactsCmd, sharedContactsUpdateCmd, sharedContactFlags)
 }

@@ -111,10 +111,5 @@ var userAliasesListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	userAliasesListCmd.AddCommand(userAliasesListBatchCmd)
-	flags := userAliasesListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(userAliasFlags, flags, "list")
-	markFlagsRequired(userAliasesListBatchCmd, userAliasFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(userAliasesListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(userAliasesListCmd, userAliasesListBatchCmd, userAliasFlags, batchFlags)
 }

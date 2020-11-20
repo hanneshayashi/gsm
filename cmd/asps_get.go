@@ -42,7 +42,5 @@ var aspsGetCmd = &cobra.Command{
 }
 
 func init() {
-	aspsCmd.AddCommand(aspsGetCmd)
-	gsmhelpers.AddFlags(aspFlags, aspsGetCmd.Flags(), aspsGetCmd.Use)
-	markFlagsRequired(aspsGetCmd, aspFlags, "")
+	gsmhelpers.InitCommand(aspsCmd, aspsGetCmd, aspFlags)
 }

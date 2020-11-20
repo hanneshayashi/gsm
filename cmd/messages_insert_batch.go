@@ -113,10 +113,5 @@ var messagesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	messagesInsertCmd.AddCommand(messagesInsertBatchCmd)
-	flags := messagesInsertBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(messageFlags, flags, "insert")
-	markFlagsRequired(messagesInsertBatchCmd, messageFlags, "insert")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(messagesInsertBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(messagesInsertCmd, messagesInsertBatchCmd, messageFlags, batchFlags)
 }

@@ -46,7 +46,5 @@ var draftsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	draftsCmd.AddCommand(draftsUpdateCmd)
-	gsmhelpers.AddFlags(draftFlags, draftsUpdateCmd.Flags(), draftsUpdateCmd.Use)
-	markFlagsRequired(draftsUpdateCmd, draftFlags, "")
+	gsmhelpers.InitCommand(draftsCmd, draftsUpdateCmd, draftFlags)
 }

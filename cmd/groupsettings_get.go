@@ -45,7 +45,5 @@ var groupSettingsGetCmd = &cobra.Command{
 }
 
 func init() {
-	groupSettingsCmd.AddCommand(groupSettingsGetCmd)
-	gsmhelpers.AddFlags(groupSettingFlags, groupSettingsGetCmd.Flags(), groupSettingsGetCmd.Use)
-	markFlagsRequired(groupSettingsGetCmd, groupSettingFlags, "")
+	gsmhelpers.InitCommand(groupSettingsCmd, groupSettingsGetCmd, groupSettingFlags)
 }

@@ -42,7 +42,5 @@ var privilegesListCmd = &cobra.Command{
 }
 
 func init() {
-	privilegesCmd.AddCommand(privilegesListCmd)
-	gsmhelpers.AddFlags(privilegeFlags, privilegesListCmd.Flags(), privilegesListCmd.Use)
-	markFlagsRequired(privilegesListCmd, privilegeFlags, "")
+	gsmhelpers.InitCommand(privilegesCmd, privilegesListCmd, privilegeFlags)
 }

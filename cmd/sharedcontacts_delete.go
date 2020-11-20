@@ -42,7 +42,5 @@ var sharedContactsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	sharedContactsCmd.AddCommand(sharedContactsDeleteCmd)
-	gsmhelpers.AddFlags(sharedContactFlags, sharedContactsDeleteCmd.Flags(), sharedContactsDeleteCmd.Use)
-	markFlagsRequired(sharedContactsDeleteCmd, sharedContactFlags, "")
+	gsmhelpers.InitCommand(sharedContactsCmd, sharedContactsDeleteCmd, sharedContactFlags)
 }

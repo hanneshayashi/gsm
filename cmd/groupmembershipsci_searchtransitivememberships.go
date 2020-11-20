@@ -46,7 +46,5 @@ var groupMembershipsCiSearchTransitiveMembershipsCmd = &cobra.Command{
 }
 
 func init() {
-	groupMembershipsCiCmd.AddCommand(groupMembershipsCiSearchTransitiveMembershipsCmd)
-	gsmhelpers.AddFlags(groupMembershipCiFlags, groupMembershipsCiSearchTransitiveMembershipsCmd.Flags(), groupMembershipsCiSearchTransitiveMembershipsCmd.Use)
-	markFlagsRequired(groupMembershipsCiSearchTransitiveMembershipsCmd, groupMembershipCiFlags, "")
+	gsmhelpers.InitCommand(groupMembershipsCiCmd, groupMembershipsCiSearchTransitiveMembershipsCmd, groupMembershipCiFlags)
 }

@@ -112,10 +112,5 @@ var permissionsListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	permissionsListCmd.AddCommand(permissionsListBatchCmd)
-	flags := permissionsListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(permissionFlags, flags, "list")
-	markFlagsRequired(permissionsListBatchCmd, permissionFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(permissionsListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(permissionsListCmd, permissionsListBatchCmd, permissionFlags, batchFlags)
 }

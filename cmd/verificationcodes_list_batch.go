@@ -108,10 +108,5 @@ var verificationCodesListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	verificationCodesListCmd.AddCommand(verificationCodesListBatchCmd)
-	flags := verificationCodesListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(verificationCodeFlags, flags, "list")
-	markFlagsRequired(verificationCodesListBatchCmd, verificationCodeFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(verificationCodesListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(verificationCodesListCmd, verificationCodesListBatchCmd, verificationCodeFlags, batchFlags)
 }

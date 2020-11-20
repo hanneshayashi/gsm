@@ -108,10 +108,5 @@ var roleAssignmentsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	roleAssignmentsGetCmd.AddCommand(roleAssignmentsGetBatchCmd)
-	flags := roleAssignmentsGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(roleAssignmentFlags, flags, "get")
-	markFlagsRequired(roleAssignmentsGetBatchCmd, roleAssignmentFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(roleAssignmentsGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(roleAssignmentsGetCmd, roleAssignmentsGetBatchCmd, roleAssignmentFlags, batchFlags)
 }

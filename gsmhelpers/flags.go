@@ -1,4 +1,5 @@
 /*
+Package gsmhelpers contains helper functions to GSM
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -22,9 +23,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
+// Flag represents a flag configuration that can be easily reused for multiple commands
 type Flag struct {
 	Defaults     map[string]interface{}
 	Type         string
@@ -33,6 +36,7 @@ type Flag struct {
 	AvailableFor []string
 }
 
+// Value is the value representation of a flag
 type Value struct {
 	Index   int64
 	Value   interface{}
@@ -40,6 +44,7 @@ type Value struct {
 	Changed bool
 }
 
+// IsSet returns a true or false, depending on if a flag has been set by a user
 func (v *Value) IsSet() bool {
 	if v != nil && v.Changed {
 		return true
@@ -47,30 +52,37 @@ func (v *Value) IsSet() bool {
 	return false
 }
 
+// GetStringSlice returns the value of the flag as a []string
 func (v Value) GetStringSlice() []string {
 	return InterfaceToStringSlice(v.Value)
 }
 
+// GetBool returns the value of the flag as a bool
 func (v Value) GetBool() bool {
 	return InterfaceToBool(v.Value)
 }
 
+// GetRune returns the value of the flag as a rune
 func (v Value) GetRune() rune {
 	return InterfaceToRune(v.Value)
 }
 
+// GetString returns the value of the flag as a string
 func (v Value) GetString() string {
 	return InterfaceToString(v.Value)
 }
 
+// GetUint64 returns the value of the flag as a uint64
 func (v Value) GetUint64() uint64 {
 	return InterfaceToUint64(v.Value)
 }
 
+// GetInt64 returns the value of the flag as an int64
 func (v Value) GetInt64() int64 {
 	return InterfaceToInt64(v.Value)
 }
 
+// GetFloat64 returns the value of the flag as a float64
 func (v Value) GetFloat64() float64 {
 	return InterfaceToFloat64(v.Value)
 }
@@ -198,6 +210,7 @@ func InterfaceToBool(i interface{}) bool {
 	return false
 }
 
+// BatchFlagToBool returns a value from a slice based on an index and default value
 func BatchFlagToBool(line []string, index int64, def interface{}) (value bool, err error) {
 	if index != 0 {
 		value, err = strconv.ParseBool(line[index-1])
@@ -274,6 +287,7 @@ func FlagsToMap(flags *pflag.FlagSet) (m map[string]*Value) {
 	return m
 }
 
+// AddFlagsBatch adds a Int64 flag for all normal flags of a command to be used to reference the column index in a CSV file
 func AddFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 	for f := range m {
 		if Contains(command, m[f].AvailableFor) {
@@ -282,6 +296,7 @@ func AddFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 	}
 }
 
+// AddFlags adds flags to a command
 func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 	for f := range m {
 		if !Contains(command, m[f].AvailableFor) {
@@ -338,4 +353,29 @@ func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 		}
 	}
 	return m
+}
+
+func markFlagsRequired(cmd *cobra.Command, flags map[string]*Flag, command string) {
+	for k := range flags {
+		if Contains(command, flags[k].Required) {
+			cmd.MarkFlagRequired(k)
+		}
+	}
+}
+
+// InitBatchCommand sets flags for a batch command appropriately
+func InitBatchCommand(parentCmd, childCmd *cobra.Command, cmdFlags, batchFlags map[string]*Flag) {
+	parentCmd.AddCommand(childCmd)
+	flags := childCmd.Flags()
+	AddFlagsBatch(cmdFlags, flags, parentCmd.Use)
+	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
+	AddFlags(batchFlags, flags, childCmd.Use)
+	markFlagsRequired(childCmd, batchFlags, childCmd.Use)
+}
+
+// InitCommand sets flags for a command appropriately
+func InitCommand(parentCmd, childCmd *cobra.Command, cmdFlags map[string]*Flag) {
+	parentCmd.AddCommand(childCmd)
+	AddFlags(cmdFlags, childCmd.Flags(), childCmd.Use)
+	markFlagsRequired(childCmd, cmdFlags, childCmd.Use)
 }

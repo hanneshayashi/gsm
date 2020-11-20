@@ -42,7 +42,5 @@ var userAliasesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	userAliasesCmd.AddCommand(userAliasesDeleteCmd)
-	gsmhelpers.AddFlags(userAliasFlags, userAliasesDeleteCmd.Flags(), userAliasesDeleteCmd.Use)
-	markFlagsRequired(userAliasesDeleteCmd, userAliasFlags, "")
+	gsmhelpers.InitCommand(userAliasesCmd, userAliasesDeleteCmd, userAliasFlags)
 }

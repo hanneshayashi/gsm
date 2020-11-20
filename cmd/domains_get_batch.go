@@ -108,10 +108,5 @@ var domainsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	domainsGetCmd.AddCommand(domainsGetBatchCmd)
-	flags := domainsGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(domainFlags, flags, "get")
-	markFlagsRequired(domainsGetBatchCmd, domainFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(domainsGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(domainsGetCmd, domainsGetBatchCmd, domainFlags, batchFlags)
 }

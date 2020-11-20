@@ -42,7 +42,5 @@ var filesGenerateIdsCmd = &cobra.Command{
 }
 
 func init() {
-	filesCmd.AddCommand(filesGenerateIdsCmd)
-	gsmhelpers.AddFlags(fileFlags, filesGenerateIdsCmd.Flags(), filesGenerateIdsCmd.Use)
-	markFlagsRequired(filesGenerateIdsCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesGenerateIdsCmd, fileFlags)
 }

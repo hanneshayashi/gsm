@@ -42,7 +42,5 @@ var forwardingAddressesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	forwardingAddressesCmd.AddCommand(forwardingAddressesDeleteCmd)
-	gsmhelpers.AddFlags(forwardingAddressFlags, forwardingAddressesDeleteCmd.Flags(), forwardingAddressesDeleteCmd.Use)
-	markFlagsRequired(forwardingAddressesDeleteCmd, forwardingAddressFlags, "")
+	gsmhelpers.InitCommand(forwardingAddressesCmd, forwardingAddressesDeleteCmd, forwardingAddressFlags)
 }

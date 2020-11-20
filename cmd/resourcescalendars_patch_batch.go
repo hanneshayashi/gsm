@@ -113,10 +113,5 @@ var resourcesCalendarsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesCalendarsPatchCmd.AddCommand(resourcesCalendarsPatchBatchCmd)
-	flags := resourcesCalendarsPatchBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(resourcesCalendarFlags, flags, "patch")
-	markFlagsRequired(resourcesCalendarsPatchBatchCmd, resourcesCalendarFlags, "patch")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(resourcesCalendarsPatchBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(resourcesCalendarsPatchCmd, resourcesCalendarsPatchBatchCmd, resourcesCalendarFlags, batchFlags)
 }

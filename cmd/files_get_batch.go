@@ -109,10 +109,5 @@ var filesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	filesGetCmd.AddCommand(filesGetBatchCmd)
-	flags := filesGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(fileFlags, flags, "get")
-	markFlagsRequired(filesGetBatchCmd, fileFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(filesGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(filesGetCmd, filesGetBatchCmd, fileFlags, batchFlags)
 }

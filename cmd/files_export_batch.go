@@ -108,10 +108,5 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 }
 
 func init() {
-	filesExportCmd.AddCommand(filesExportBatchCmd)
-	flags := filesExportBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(fileFlags, flags, "export")
-	markFlagsRequired(filesExportBatchCmd, fileFlags, "export")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(filesExportBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(filesExportCmd, filesExportBatchCmd, fileFlags, batchFlags)
 }

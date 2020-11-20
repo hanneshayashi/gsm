@@ -117,10 +117,5 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 }
 
 func init() {
-	mobileDevicesActionCmd.AddCommand(mobileDevicesActionBatchCmd)
-	flags := mobileDevicesActionBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(mobileDeviceFlags, flags, "action")
-	markFlagsRequired(mobileDevicesActionBatchCmd, mobileDeviceFlags, "action")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(mobileDevicesActionBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(mobileDevicesActionCmd, mobileDevicesActionBatchCmd, mobileDeviceFlags, batchFlags)
 }

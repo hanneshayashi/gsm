@@ -42,7 +42,5 @@ var drivesHideCmd = &cobra.Command{
 }
 
 func init() {
-	drivesCmd.AddCommand(drivesHideCmd)
-	gsmhelpers.AddFlags(driveFlags, drivesHideCmd.Flags(), drivesHideCmd.Use)
-	markFlagsRequired(drivesHideCmd, driveFlags, "")
+	gsmhelpers.InitCommand(drivesCmd, drivesHideCmd, driveFlags)
 }

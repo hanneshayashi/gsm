@@ -42,7 +42,5 @@ var sendAsGetCmd = &cobra.Command{
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsGetCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsGetCmd.Flags(), sendAsGetCmd.Use)
-	markFlagsRequired(sendAsGetCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsGetCmd, sendAsFlags)
 }

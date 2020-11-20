@@ -47,7 +47,5 @@ Note that pkcs12 format is required for the key.`,
 }
 
 func init() {
-	smimeInfoCmd.AddCommand(smimeInfoInsertCmd)
-	gsmhelpers.AddFlags(smimeInfoFlags, smimeInfoInsertCmd.Flags(), smimeInfoInsertCmd.Use)
-	markFlagsRequired(smimeInfoInsertCmd, smimeInfoFlags, "")
+	gsmhelpers.InitCommand(smimeInfoCmd, smimeInfoInsertCmd, smimeInfoFlags)
 }

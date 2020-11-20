@@ -42,7 +42,5 @@ var groupsCiLookupCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiCmd.AddCommand(groupsCiLookupCmd)
-	gsmhelpers.AddFlags(groupCiFlags, groupsCiLookupCmd.Flags(), groupsCiLookupCmd.Use)
-	markFlagsRequired(groupsCiLookupCmd, groupCiFlags, "")
+	gsmhelpers.InitCommand(groupsCiCmd, groupsCiLookupCmd, groupCiFlags)
 }

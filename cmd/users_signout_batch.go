@@ -111,10 +111,5 @@ var usersSignOutBatchCmd = &cobra.Command{
 }
 
 func init() {
-	usersSignOutCmd.AddCommand(usersSignOutBatchCmd)
-	flags := usersSignOutBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(userFlags, flags, "signOut")
-	markFlagsRequired(usersSignOutBatchCmd, userFlags, "signOut")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(usersSignOutBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(usersSignOutCmd, usersSignOutBatchCmd, userFlags, batchFlags)
 }

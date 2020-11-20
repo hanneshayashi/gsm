@@ -47,7 +47,5 @@ A verified forwarding address must be specified when auto-forwarding is enabled.
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsUpdateAutoForwardingCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsUpdateAutoForwardingCmd.Flags(), gmailSettingsUpdateAutoForwardingCmd.Use)
-	markFlagsRequired(gmailSettingsUpdateAutoForwardingCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsUpdateAutoForwardingCmd, gmailSettingFlags)
 }

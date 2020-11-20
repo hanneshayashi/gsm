@@ -46,7 +46,5 @@ var commentsCreateCmd = &cobra.Command{
 }
 
 func init() {
-	commentsCmd.AddCommand(commentsCreateCmd)
-	gsmhelpers.AddFlags(commentFlags, commentsCreateCmd.Flags(), commentsCreateCmd.Use)
-	markFlagsRequired(commentsCreateCmd, commentFlags, "")
+	gsmhelpers.InitCommand(commentsCmd, commentsCreateCmd, commentFlags)
 }

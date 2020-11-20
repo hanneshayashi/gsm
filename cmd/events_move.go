@@ -42,7 +42,5 @@ var eventsMoveCmd = &cobra.Command{
 }
 
 func init() {
-	eventsCmd.AddCommand(eventsMoveCmd)
-	gsmhelpers.AddFlags(eventFlags, eventsMoveCmd.Flags(), eventsMoveCmd.Use)
-	markFlagsRequired(eventsMoveCmd, eventFlags, "")
+	gsmhelpers.InitCommand(eventsCmd, eventsMoveCmd, eventFlags)
 }

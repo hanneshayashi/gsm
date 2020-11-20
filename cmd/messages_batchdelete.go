@@ -42,7 +42,5 @@ var messagesBatchDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	messagesCmd.AddCommand(messagesBatchDeleteCmd)
-	gsmhelpers.AddFlags(messageFlags, messagesBatchDeleteCmd.Flags(), messagesBatchDeleteCmd.Use)
-	markFlagsRequired(messagesBatchDeleteCmd, messageFlags, "")
+	gsmhelpers.InitCommand(messagesCmd, messagesBatchDeleteCmd, messageFlags)
 }

@@ -42,7 +42,5 @@ var gmailSettingsGetPopCmd = &cobra.Command{
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsGetPopCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsGetPopCmd.Flags(), gmailSettingsGetPopCmd.Use)
-	markFlagsRequired(gmailSettingsGetPopCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsGetPopCmd, gmailSettingFlags)
 }

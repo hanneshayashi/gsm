@@ -111,10 +111,5 @@ var drivesDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	drivesDeleteCmd.AddCommand(drivesDeleteBatchCmd)
-	flags := drivesDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(driveFlags, flags, "delete")
-	markFlagsRequired(drivesDeleteBatchCmd, driveFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(drivesDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(drivesDeleteCmd, drivesDeleteBatchCmd, driveFlags, batchFlags)
 }

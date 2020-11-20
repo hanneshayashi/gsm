@@ -106,10 +106,5 @@ var sharedContactsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	sharedContactsDeleteCmd.AddCommand(sharedContactsDeleteBatchCmd)
-	flags := sharedContactsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(sharedContactFlags, flags, "delete")
-	markFlagsRequired(sharedContactsDeleteBatchCmd, sharedContactFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(sharedContactsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(sharedContactsDeleteCmd, sharedContactsDeleteBatchCmd, sharedContactFlags, batchFlags)
 }

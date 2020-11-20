@@ -113,10 +113,5 @@ var orgUnitsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsPatchCmd.AddCommand(orgUnitsPatchBatchCmd)
-	flags := orgUnitsPatchBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(orgUnitFlags, flags, "patch")
-	markFlagsRequired(orgUnitsPatchBatchCmd, orgUnitFlags, "patch")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(orgUnitsPatchBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(orgUnitsPatchCmd, orgUnitsPatchBatchCmd, orgUnitFlags, batchFlags)
 }

@@ -42,7 +42,5 @@ var peopleSearchDirectoryPeopleCmd = &cobra.Command{
 }
 
 func init() {
-	peopleCmd.AddCommand(peopleSearchDirectoryPeopleCmd)
-	gsmhelpers.AddFlags(peopleFlags, peopleSearchDirectoryPeopleCmd.Flags(), peopleSearchDirectoryPeopleCmd.Use)
-	markFlagsRequired(peopleSearchDirectoryPeopleCmd, peopleFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleSearchDirectoryPeopleCmd, peopleFlags)
 }

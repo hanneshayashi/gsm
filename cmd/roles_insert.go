@@ -46,7 +46,5 @@ var rolesInsertCmd = &cobra.Command{
 }
 
 func init() {
-	rolesCmd.AddCommand(rolesInsertCmd)
-	gsmhelpers.AddFlags(roleFlags, rolesInsertCmd.Flags(), rolesInsertCmd.Use)
-	markFlagsRequired(rolesInsertCmd, roleFlags, "")
+	gsmhelpers.InitCommand(rolesCmd, rolesInsertCmd, roleFlags)
 }

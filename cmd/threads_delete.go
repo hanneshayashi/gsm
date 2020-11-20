@@ -43,7 +43,5 @@ This operation cannot be undone. Prefer threads trash instead.`,
 }
 
 func init() {
-	threadsCmd.AddCommand(threadsDeleteCmd)
-	gsmhelpers.AddFlags(threadFlags, threadsDeleteCmd.Flags(), threadsDeleteCmd.Use)
-	markFlagsRequired(threadsDeleteCmd, threadFlags, "")
+	gsmhelpers.InitCommand(threadsCmd, threadsDeleteCmd, threadFlags)
 }

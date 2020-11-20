@@ -46,7 +46,5 @@ var drivesUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	drivesCmd.AddCommand(drivesUpdateCmd)
-	gsmhelpers.AddFlags(driveFlags, drivesUpdateCmd.Flags(), drivesUpdateCmd.Use)
-	markFlagsRequired(drivesUpdateCmd, driveFlags, "")
+	gsmhelpers.InitCommand(drivesCmd, drivesUpdateCmd, driveFlags)
 }

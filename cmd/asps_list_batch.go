@@ -112,10 +112,5 @@ var aspsListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	aspsListCmd.AddCommand(aspsListBatchCmd)
-	flags := aspsListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(aspFlags, flags, "list")
-	markFlagsRequired(aspsListBatchCmd, aspFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(aspsListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(aspsListCmd, aspsListBatchCmd, aspFlags, batchFlags)
 }

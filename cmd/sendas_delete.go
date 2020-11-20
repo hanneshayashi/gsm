@@ -42,7 +42,5 @@ var sendAsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsDeleteCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsDeleteCmd.Flags(), sendAsDeleteCmd.Use)
-	markFlagsRequired(sendAsDeleteCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsDeleteCmd, sendAsFlags)
 }

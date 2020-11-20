@@ -42,7 +42,5 @@ var filesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	filesCmd.AddCommand(filesDeleteCmd)
-	gsmhelpers.AddFlags(fileFlags, filesDeleteCmd.Flags(), filesDeleteCmd.Use)
-	markFlagsRequired(filesDeleteCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesDeleteCmd, fileFlags)
 }

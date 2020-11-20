@@ -42,7 +42,5 @@ var permissionsListCmd = &cobra.Command{
 }
 
 func init() {
-	permissionsCmd.AddCommand(permissionsListCmd)
-	gsmhelpers.AddFlags(permissionFlags, permissionsListCmd.Flags(), permissionsListCmd.Use)
-	markFlagsRequired(permissionsListCmd, permissionFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, permissionsListCmd, peopleFlags)
 }

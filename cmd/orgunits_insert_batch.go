@@ -113,10 +113,5 @@ var orgUnitsInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsInsertCmd.AddCommand(orgUnitsInsertBatchCmd)
-	flags := orgUnitsInsertBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(orgUnitFlags, flags, "insert")
-	markFlagsRequired(orgUnitsInsertBatchCmd, orgUnitFlags, "insert")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(orgUnitsInsertBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(orgUnitsInsertCmd, orgUnitsInsertBatchCmd, orgUnitFlags, batchFlags)
 }

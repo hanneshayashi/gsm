@@ -42,7 +42,5 @@ var resourcesFeaturesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesFeaturesCmd.AddCommand(resourcesFeaturesDeleteCmd)
-	gsmhelpers.AddFlags(resourcesFeatureFlags, resourcesFeaturesDeleteCmd.Flags(), resourcesFeaturesDeleteCmd.Use)
-	markFlagsRequired(resourcesFeaturesDeleteCmd, resourcesFeatureFlags, "")
+	gsmhelpers.InitCommand(resourcesCalendarsCmd, resourcesFeaturesDeleteCmd, resourcesCalendarFlags)
 }

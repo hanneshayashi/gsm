@@ -42,7 +42,5 @@ var tokensListCmd = &cobra.Command{
 }
 
 func init() {
-	tokensCmd.AddCommand(tokensListCmd)
-	gsmhelpers.AddFlags(tokenFlags, tokensListCmd.Flags(), tokensListCmd.Use)
-	markFlagsRequired(tokensListCmd, tokenFlags, "")
+	gsmhelpers.InitCommand(tokensCmd, tokensListCmd, tokenFlags)
 }

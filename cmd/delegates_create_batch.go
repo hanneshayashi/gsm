@@ -121,10 +121,5 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 }
 
 func init() {
-	delegatesCreateCmd.AddCommand(delegatesCreateBatchCmd)
-	flags := delegatesCreateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(delegateFlags, flags, "create")
-	markFlagsRequired(delegatesCreateBatchCmd, delegateFlags, "create")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(delegatesCreateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(delegatesCreateCmd, delegatesCreateBatchCmd, delegateFlags, batchFlags)
 }

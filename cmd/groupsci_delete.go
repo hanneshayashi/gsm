@@ -46,7 +46,5 @@ var groupsCiDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiCmd.AddCommand(groupsCiDeleteCmd)
-	gsmhelpers.AddFlags(groupCiFlags, groupsCiDeleteCmd.Flags(), groupsCiDeleteCmd.Use)
-	markFlagsRequired(groupsCiDeleteCmd, groupCiFlags, "")
+	gsmhelpers.InitCommand(groupsCiCmd, groupsCiDeleteCmd, groupCiFlags)
 }

@@ -42,7 +42,5 @@ var filtersListCmd = &cobra.Command{
 }
 
 func init() {
-	filtersCmd.AddCommand(filtersListCmd)
-	gsmhelpers.AddFlags(filterFlags, filtersListCmd.Flags(), filtersListCmd.Use)
-	markFlagsRequired(filtersListCmd, filterFlags, "")
+	gsmhelpers.InitCommand(filtersCmd, filtersListCmd, filterFlags)
 }

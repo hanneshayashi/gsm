@@ -46,7 +46,5 @@ var groupsInsertCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCmd.AddCommand(groupsInsertCmd)
-	gsmhelpers.AddFlags(groupFlags, groupsInsertCmd.Flags(), groupsInsertCmd.Use)
-	markFlagsRequired(groupsInsertCmd, groupFlags, "")
+	gsmhelpers.InitCommand(groupsCmd, groupsInsertCmd, groupFlags)
 }

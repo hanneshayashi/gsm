@@ -43,7 +43,5 @@ var otherContactsListCmd = &cobra.Command{
 }
 
 func init() {
-	otherContactsCmd.AddCommand(otherContactsListCmd)
-	gsmhelpers.AddFlags(otherContactFlags, otherContactsListCmd.Flags(), otherContactsListCmd.Use)
-	markFlagsRequired(otherContactsListCmd, otherContactFlags, "")
+	gsmhelpers.InitCommand(otherContactsCmd, otherContactsListCmd, otherContactFlags)
 }

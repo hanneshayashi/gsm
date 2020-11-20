@@ -44,7 +44,5 @@ https://developers.google.com/drive/api/v3/reference/revisions/delete`,
 }
 
 func init() {
-	revisionsCmd.AddCommand(revisionsDeleteCmd)
-	gsmhelpers.AddFlags(revisionFlags, revisionsDeleteCmd.Flags(), revisionsDeleteCmd.Use)
-	markFlagsRequired(revisionsDeleteCmd, revisionFlags, "")
+	gsmhelpers.InitCommand(revisionsCmd, revisionsDeleteCmd, revisionFlags)
 }

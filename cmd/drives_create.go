@@ -46,7 +46,5 @@ var drivesCreateCmd = &cobra.Command{
 }
 
 func init() {
-	drivesCmd.AddCommand(drivesCreateCmd)
-	gsmhelpers.AddFlags(driveFlags, drivesCreateCmd.Flags(), drivesCreateCmd.Use)
-	markFlagsRequired(drivesCreateCmd, driveFlags, "")
+	gsmhelpers.InitCommand(drivesCmd, drivesCreateCmd, driveFlags)
 }

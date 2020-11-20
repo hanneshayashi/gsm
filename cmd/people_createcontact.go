@@ -46,7 +46,5 @@ var peopleCreateContactCmd = &cobra.Command{
 }
 
 func init() {
-	peopleCmd.AddCommand(peopleCreateContactCmd)
-	gsmhelpers.AddFlags(peopleFlags, peopleCreateContactCmd.Flags(), peopleCreateContactCmd.Use)
-	markFlagsRequired(peopleCreateContactCmd, peopleFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleCreateContactCmd, peopleFlags)
 }

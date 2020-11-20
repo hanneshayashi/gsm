@@ -50,7 +50,5 @@ var historyListCmd = &cobra.Command{
 }
 
 func init() {
-	historyCmd.AddCommand(historyListCmd)
-	gsmhelpers.AddFlags(historyFlags, historyListCmd.Flags(), historyListCmd.Use)
-	markFlagsRequired(historyListCmd, historyFlags, "")
+	gsmhelpers.InitCommand(historyCmd, historyListCmd, historyFlags)
 }

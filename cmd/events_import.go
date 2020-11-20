@@ -47,7 +47,5 @@ This operation is used to add a private copy of an existing event to a calendar.
 }
 
 func init() {
-	eventsCmd.AddCommand(eventsImportCmd)
-	gsmhelpers.AddFlags(eventFlags, eventsImportCmd.Flags(), eventsImportCmd.Use)
-	markFlagsRequired(eventsImportCmd, eventFlags, "")
+	gsmhelpers.InitCommand(eventsCmd, eventsImportCmd, eventFlags)
 }

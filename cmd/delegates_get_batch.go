@@ -109,10 +109,5 @@ var delegatesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	delegatesGetCmd.AddCommand(delegatesGetBatchCmd)
-	flags := delegatesGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(delegateFlags, flags, "get")
-	markFlagsRequired(delegatesGetBatchCmd, delegateFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(delegatesGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(delegatesGetCmd, delegatesGetBatchCmd, delegateFlags, batchFlags)
 }

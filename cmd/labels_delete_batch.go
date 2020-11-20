@@ -112,10 +112,5 @@ var labelsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	labelsDeleteCmd.AddCommand(labelsDeleteBatchCmd)
-	flags := labelsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(labelFlags, flags, "delete")
-	markFlagsRequired(labelsDeleteBatchCmd, labelFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(labelsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(labelsDeleteCmd, labelsDeleteBatchCmd, labelFlags, batchFlags)
 }

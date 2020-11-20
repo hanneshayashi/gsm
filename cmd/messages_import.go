@@ -53,7 +53,5 @@ Does not send a message.`,
 }
 
 func init() {
-	messagesCmd.AddCommand(messagesImportCmd)
-	gsmhelpers.AddFlags(messageFlags, messagesImportCmd.Flags(), messagesImportCmd.Use)
-	markFlagsRequired(messagesImportCmd, messageFlags, "")
+	gsmhelpers.InitCommand(messagesCmd, messagesImportCmd, messageFlags)
 }

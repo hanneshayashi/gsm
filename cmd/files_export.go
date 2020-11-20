@@ -43,7 +43,5 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 }
 
 func init() {
-	filesCmd.AddCommand(filesExportCmd)
-	gsmhelpers.AddFlags(fileFlags, filesExportCmd.Flags(), filesExportCmd.Use)
-	markFlagsRequired(filesExportCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesExportCmd, fileFlags)
 }

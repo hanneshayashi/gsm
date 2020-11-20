@@ -44,7 +44,5 @@ Credential files and tokens will not be removed!`,
 }
 
 func init() {
-	configsCmd.AddCommand(configsRemoveCmd)
-	gsmhelpers.AddFlags(configFlags, configsRemoveCmd.Flags(), configsRemoveCmd.Use)
-	markFlagsRequired(configsRemoveCmd, configFlags, "")
+	gsmhelpers.InitCommand(configsCmd, configsRemoveCmd, configFlags)
 }

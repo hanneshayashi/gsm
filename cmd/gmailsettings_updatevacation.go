@@ -46,7 +46,5 @@ var gmailSettingsUpdateVacationCmd = &cobra.Command{
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsUpdateVacationCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsUpdateVacationCmd.Flags(), gmailSettingsUpdateVacationCmd.Use)
-	markFlagsRequired(gmailSettingsUpdateVacationCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsUpdateVacationCmd, gmailSettingFlags)
 }

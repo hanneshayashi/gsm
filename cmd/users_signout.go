@@ -43,7 +43,5 @@ User will have to sign in by authenticating again.`,
 }
 
 func init() {
-	usersCmd.AddCommand(usersSignOutCmd)
-	gsmhelpers.AddFlags(userFlags, usersSignOutCmd.Flags(), usersSignOutCmd.Use)
-	markFlagsRequired(usersSignOutCmd, userFlags, "")
+	gsmhelpers.InitCommand(usersCmd, usersSignOutCmd, userFlags)
 }

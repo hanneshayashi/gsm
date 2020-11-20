@@ -46,7 +46,5 @@ var gmailSettingsUpdateImapCmd = &cobra.Command{
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsUpdateImapCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsUpdateImapCmd.Flags(), gmailSettingsUpdateImapCmd.Use)
-	markFlagsRequired(gmailSettingsUpdateImapCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsUpdateImapCmd, gmailSettingFlags)
 }

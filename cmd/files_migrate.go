@@ -45,7 +45,5 @@ The original folders will be preserved at the source!`,
 }
 
 func init() {
-	filesCmd.AddCommand(filesMigrateCmd)
-	gsmhelpers.AddFlags(fileFlags, filesMigrateCmd.Flags(), filesMigrateCmd.Use)
-	markFlagsRequired(filesMigrateCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesMigrateCmd, fileFlags)
 }

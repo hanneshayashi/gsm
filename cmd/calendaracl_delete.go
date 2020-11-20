@@ -42,7 +42,5 @@ var calendarACLDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	calendarACLCmd.AddCommand(calendarACLDeleteCmd)
-	gsmhelpers.AddFlags(calendarACLFlags, calendarACLDeleteCmd.Flags(), calendarACLDeleteCmd.Use)
-	markFlagsRequired(calendarACLDeleteCmd, calendarACLFlags, "")
+	gsmhelpers.InitCommand(calendarACLCmd, calendarACLDeleteCmd, calendarACLFlags)
 }

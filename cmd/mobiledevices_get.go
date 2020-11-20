@@ -42,7 +42,5 @@ var mobileDevicesGetCmd = &cobra.Command{
 }
 
 func init() {
-	mobileDevicesCmd.AddCommand(mobileDevicesGetCmd)
-	gsmhelpers.AddFlags(mobileDeviceFlags, mobileDevicesGetCmd.Flags(), mobileDevicesGetCmd.Use)
-	markFlagsRequired(mobileDevicesGetCmd, mobileDeviceFlags, "")
+	gsmhelpers.InitCommand(mobileDevicesCmd, mobileDevicesGetCmd, mobileDeviceFlags)
 }

@@ -42,7 +42,5 @@ var eventsListCmd = &cobra.Command{
 }
 
 func init() {
-	eventsCmd.AddCommand(eventsListCmd)
-	gsmhelpers.AddFlags(eventFlags, eventsListCmd.Flags(), eventsListCmd.Use)
-	markFlagsRequired(eventsListCmd, eventFlags, "")
+	gsmhelpers.InitCommand(eventsCmd, eventsListCmd, eventFlags)
 }

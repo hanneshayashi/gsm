@@ -112,10 +112,5 @@ var domainsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	domainsDeleteCmd.AddCommand(domainsDeleteBatchCmd)
-	flags := domainsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(domainFlags, flags, "delete")
-	markFlagsRequired(domainsDeleteBatchCmd, domainFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(domainsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(domainsDeleteCmd, domainsDeleteBatchCmd, domainFlags, batchFlags)
 }

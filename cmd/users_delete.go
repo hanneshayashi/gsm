@@ -42,7 +42,5 @@ var usersDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	usersCmd.AddCommand(usersDeleteCmd)
-	gsmhelpers.AddFlags(userFlags, usersDeleteCmd.Flags(), usersDeleteCmd.Use)
-	markFlagsRequired(usersDeleteCmd, userFlags, "")
+	gsmhelpers.InitCommand(usersCmd, usersDeleteCmd, userFlags)
 }

@@ -43,7 +43,5 @@ The result includes the primary send-as address associated with the account as w
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsListCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsListCmd.Flags(), sendAsListCmd.Use)
-	markFlagsRequired(sendAsListCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsListCmd, sendAsFlags)
 }

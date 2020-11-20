@@ -46,7 +46,5 @@ var freeBusyQueryCmd = &cobra.Command{
 }
 
 func init() {
-	freeBusyCmd.AddCommand(freeBusyQueryCmd)
-	gsmhelpers.AddFlags(freeBusyFlags, freeBusyQueryCmd.Flags(), freeBusyQueryCmd.Use)
-	markFlagsRequired(freeBusyQueryCmd, freeBusyFlags, "")
+	gsmhelpers.InitCommand(freeBusyCmd, freeBusyQueryCmd, freeBusyFlags)
 }

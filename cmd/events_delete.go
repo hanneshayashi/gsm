@@ -42,7 +42,5 @@ var eventsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	eventsCmd.AddCommand(eventsDeleteCmd)
-	gsmhelpers.AddFlags(eventFlags, eventsDeleteCmd.Flags(), eventsDeleteCmd.Use)
-	markFlagsRequired(eventsDeleteCmd, eventFlags, "")
+	gsmhelpers.InitCommand(eventsCmd, eventsDeleteCmd, eventFlags)
 }

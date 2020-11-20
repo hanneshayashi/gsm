@@ -42,7 +42,5 @@ var verificationCodesGenerateCmd = &cobra.Command{
 }
 
 func init() {
-	verificationCodesCmd.AddCommand(verificationCodesGenerateCmd)
-	gsmhelpers.AddFlags(verificationCodeFlags, verificationCodesGenerateCmd.Flags(), verificationCodesGenerateCmd.Use)
-	markFlagsRequired(verificationCodesGenerateCmd, verificationCodeFlags, "")
+	gsmhelpers.InitCommand(verificationCodesCmd, verificationCodesGenerateCmd, verificationCodeFlags)
 }

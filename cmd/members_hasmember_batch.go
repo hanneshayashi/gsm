@@ -112,10 +112,5 @@ var membersHasMemberBatchCmd = &cobra.Command{
 }
 
 func init() {
-	membersHasMemberCmd.AddCommand(membersHasMemberBatchCmd)
-	flags := membersHasMemberBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(memberFlags, flags, "hasMember")
-	markFlagsRequired(membersHasMemberBatchCmd, memberFlags, "hasMember")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(membersHasMemberBatchCmd, batchFlags, "")
+	gsmhelpers.InitCommand(membersHasMemberCmd, membersHasMemberBatchCmd, memberFlags)
 }

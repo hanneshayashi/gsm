@@ -42,7 +42,5 @@ var sendAsVerifyCmd = &cobra.Command{
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsVerifyCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsVerifyCmd.Flags(), sendAsVerifyCmd.Use)
-	markFlagsRequired(sendAsVerifyCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsVerifyCmd, sendAsFlags)
 }

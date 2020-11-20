@@ -42,7 +42,5 @@ var peopleDeleteContactCmd = &cobra.Command{
 }
 
 func init() {
-	peopleCmd.AddCommand(peopleDeleteContactCmd)
-	gsmhelpers.AddFlags(peopleFlags, peopleDeleteContactCmd.Flags(), peopleDeleteContactCmd.Use)
-	markFlagsRequired(peopleDeleteContactCmd, peopleFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleDeleteContactCmd, peopleFlags)
 }

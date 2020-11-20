@@ -112,10 +112,5 @@ var forwardingAddressesDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	forwardingAddressesDeleteCmd.AddCommand(forwardingAddressesDeleteBatchCmd)
-	flags := forwardingAddressesDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(forwardingAddressFlags, flags, "delete")
-	markFlagsRequired(forwardingAddressesDeleteBatchCmd, forwardingAddressFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(forwardingAddressesDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(forwardingAddressesDeleteCmd, forwardingAddressesDeleteBatchCmd, forwardingAddressFlags, batchFlags)
 }

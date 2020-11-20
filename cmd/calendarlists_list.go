@@ -47,7 +47,5 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	calendarListsCmd.AddCommand(calendarListsListCmd)
-	gsmhelpers.AddFlags(calendarListFlags, calendarListsListCmd.Flags(), calendarListsListCmd.Use)
-	markFlagsRequired(calendarListsListCmd, calendarListFlags, "")
+	gsmhelpers.InitCommand(calendarListsCmd, calendarListsListCmd, calendarListFlags)
 }

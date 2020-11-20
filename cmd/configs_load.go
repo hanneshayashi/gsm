@@ -44,7 +44,5 @@ The current default config will be renamed to '<name>.yaml' and the loaded confi
 }
 
 func init() {
-	configsCmd.AddCommand(configsLoadCmd)
-	gsmhelpers.AddFlags(configFlags, configsLoadCmd.Flags(), configsLoadCmd.Use)
-	markFlagsRequired(configsLoadCmd, configFlags, "")
+	gsmhelpers.InitCommand(configsCmd, configsLoadCmd, configFlags)
 }

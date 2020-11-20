@@ -111,10 +111,5 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 }
 
 func init() {
-	usersMakeAdminCmd.AddCommand(usersMakeAdminBatchCmd)
-	flags := usersMakeAdminBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(userFlags, flags, "makeAdmin")
-	markFlagsRequired(usersMakeAdminBatchCmd, userFlags, "makeAdmin")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(usersMakeAdminBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(usersMakeAdminCmd, usersMakeAdminBatchCmd, userFlags, batchFlags)
 }

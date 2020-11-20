@@ -42,7 +42,5 @@ var aspsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	aspsCmd.AddCommand(aspsDeleteCmd)
-	gsmhelpers.AddFlags(aspFlags, aspsDeleteCmd.Flags(), aspsDeleteCmd.Use)
-	markFlagsRequired(aspsDeleteCmd, aspFlags, "")
+	gsmhelpers.InitCommand(aspsCmd, aspsDeleteCmd, aspFlags)
 }

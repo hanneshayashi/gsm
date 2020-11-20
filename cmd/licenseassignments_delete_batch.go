@@ -113,10 +113,5 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	licenseAssignmentsDeleteCmd.AddCommand(licenseAssignmentsDeleteBatchCmd)
-	flags := licenseAssignmentsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(licenseAssignmentFlags, flags, "delete")
-	markFlagsRequired(licenseAssignmentsDeleteBatchCmd, licenseAssignmentFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(licenseAssignmentsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(licenseAssignmentsDeleteCmd, licenseAssignmentsDeleteBatchCmd, licenseAssignmentFlags, batchFlags)
 }

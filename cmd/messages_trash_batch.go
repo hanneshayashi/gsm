@@ -108,10 +108,5 @@ var messagesTrashBatchCmd = &cobra.Command{
 }
 
 func init() {
-	messagesTrashCmd.AddCommand(messagesTrashBatchCmd)
-	flags := messagesTrashBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(messageFlags, flags, "trash")
-	markFlagsRequired(messagesTrashBatchCmd, messageFlags, "trash")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(messagesTrashBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(messagesTrashCmd, messagesTrashBatchCmd, messageFlags, batchFlags)
 }

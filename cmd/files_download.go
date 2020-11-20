@@ -42,7 +42,5 @@ var filesDownloadCmd = &cobra.Command{
 }
 
 func init() {
-	filesCmd.AddCommand(filesDownloadCmd)
-	gsmhelpers.AddFlags(fileFlags, filesDownloadCmd.Flags(), filesDownloadCmd.Use)
-	markFlagsRequired(filesDownloadCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesDownloadCmd, fileFlags)
 }

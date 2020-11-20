@@ -112,10 +112,5 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	roleAssignmentsDeleteCmd.AddCommand(roleAssignmentsDeleteBatchCmd)
-	flags := roleAssignmentsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(roleAssignmentFlags, flags, "delete")
-	markFlagsRequired(roleAssignmentsDeleteBatchCmd, roleAssignmentFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(roleAssignmentsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(roleAssignmentsDeleteCmd, roleAssignmentsDeleteBatchCmd, roleAssignmentFlags, batchFlags)
 }

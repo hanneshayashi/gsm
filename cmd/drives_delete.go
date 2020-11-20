@@ -43,7 +43,5 @@ The shared drive cannot contain any untrashed items.`,
 }
 
 func init() {
-	drivesCmd.AddCommand(drivesDeleteCmd)
-	gsmhelpers.AddFlags(driveFlags, drivesDeleteCmd.Flags(), drivesDeleteCmd.Use)
-	markFlagsRequired(drivesDeleteCmd, driveFlags, "")
+	gsmhelpers.InitCommand(drivesCmd, drivesDeleteCmd, driveFlags)
 }

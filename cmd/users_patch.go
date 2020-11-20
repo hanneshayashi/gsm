@@ -46,7 +46,5 @@ var usersPatchCmd = &cobra.Command{
 }
 
 func init() {
-	usersCmd.AddCommand(usersPatchCmd)
-	gsmhelpers.AddFlags(userFlags, usersPatchCmd.Flags(), usersPatchCmd.Use)
-	markFlagsRequired(usersPatchCmd, userFlags, "")
+	gsmhelpers.InitCommand(usersCmd, usersPatchCmd, userFlags)
 }

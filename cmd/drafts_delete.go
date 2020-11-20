@@ -42,7 +42,5 @@ var draftsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	draftsCmd.AddCommand(draftsDeleteCmd)
-	gsmhelpers.AddFlags(draftFlags, draftsDeleteCmd.Flags(), draftsDeleteCmd.Use)
-	markFlagsRequired(draftsDeleteCmd, draftFlags, "")
+	gsmhelpers.InitCommand(draftsCmd, draftsDeleteCmd, draftFlags)
 }

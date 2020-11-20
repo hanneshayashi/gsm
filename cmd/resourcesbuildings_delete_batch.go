@@ -112,10 +112,5 @@ var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesBuildingsDeleteCmd.AddCommand(resourcesBuildingsDeleteBatchCmd)
-	flags := resourcesBuildingsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(resourcesBuildingFlags, flags, "delete")
-	markFlagsRequired(resourcesBuildingsDeleteBatchCmd, resourcesBuildingFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(resourcesBuildingsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(resourcesBuildingsDeleteCmd, resourcesBuildingsDeleteBatchCmd, resourcesBuildingFlags, batchFlags)
 }

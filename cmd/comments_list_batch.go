@@ -112,10 +112,5 @@ var commentsListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	commentsListCmd.AddCommand(commentsListBatchCmd)
-	flags := commentsListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(commentFlags, flags, "list")
-	markFlagsRequired(commentsListBatchCmd, commentFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(commentsListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(commentsListCmd, commentsListBatchCmd, commentFlags, batchFlags)
 }

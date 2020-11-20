@@ -48,7 +48,5 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateL
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsUpdateLanguageCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsUpdateLanguageCmd.Flags(), gmailSettingsUpdateLanguageCmd.Use)
-	markFlagsRequired(gmailSettingsUpdateLanguageCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsUpdateLanguageCmd, gmailSettingFlags)
 }

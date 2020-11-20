@@ -46,7 +46,5 @@ var otherContactsCopyOtherContactToMyContactsGroupCmd = &cobra.Command{
 }
 
 func init() {
-	otherContactsCmd.AddCommand(otherContactsCopyOtherContactToMyContactsGroupCmd)
-	gsmhelpers.AddFlags(otherContactFlags, otherContactsCopyOtherContactToMyContactsGroupCmd.Flags(), otherContactsCopyOtherContactToMyContactsGroupCmd.Use)
-	markFlagsRequired(otherContactsCopyOtherContactToMyContactsGroupCmd, otherContactFlags, "")
+	gsmhelpers.InitCommand(otherContactsCmd, otherContactsCopyOtherContactToMyContactsGroupCmd, otherContactFlags)
 }

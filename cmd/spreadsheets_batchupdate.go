@@ -46,7 +46,5 @@ var spreadsheetsBatchUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	spreadsheetsCmd.AddCommand(spreadsheetsBatchUpdateCmd)
-	gsmhelpers.AddFlags(spreadsheetFlags, spreadsheetsBatchUpdateCmd.Flags(), spreadsheetsBatchUpdateCmd.Use)
-	markFlagsRequired(spreadsheetsBatchUpdateCmd, spreadsheetFlags, "")
+	gsmhelpers.InitCommand(spreadsheetsCmd, spreadsheetsBatchUpdateCmd, spreadsheetFlags)
 }

@@ -42,7 +42,5 @@ var permissionsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	permissionsCmd.AddCommand(permissionsDeleteCmd)
-	gsmhelpers.AddFlags(permissionFlags, permissionsDeleteCmd.Flags(), permissionsDeleteCmd.Use)
-	markFlagsRequired(permissionsDeleteCmd, permissionFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, permissionsDeleteCmd, peopleFlags)
 }

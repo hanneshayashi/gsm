@@ -42,7 +42,5 @@ var smimeInfoListCmd = &cobra.Command{
 }
 
 func init() {
-	smimeInfoCmd.AddCommand(smimeInfoListCmd)
-	gsmhelpers.AddFlags(smimeInfoFlags, smimeInfoListCmd.Flags(), smimeInfoListCmd.Use)
-	markFlagsRequired(smimeInfoListCmd, smimeInfoFlags, "")
+	gsmhelpers.InitCommand(smimeInfoCmd, smimeInfoListCmd, smimeInfoFlags)
 }

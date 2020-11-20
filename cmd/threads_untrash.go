@@ -42,7 +42,5 @@ var threadsUntrashCmd = &cobra.Command{
 }
 
 func init() {
-	threadsCmd.AddCommand(threadsUntrashCmd)
-	gsmhelpers.AddFlags(threadFlags, threadsUntrashCmd.Flags(), threadsUntrashCmd.Use)
-	markFlagsRequired(threadsUntrashCmd, threadFlags, "")
+	gsmhelpers.InitCommand(threadsCmd, threadsUntrashCmd, threadFlags)
 }

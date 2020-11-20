@@ -42,7 +42,5 @@ var rolesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	rolesCmd.AddCommand(rolesDeleteCmd)
-	gsmhelpers.AddFlags(roleFlags, rolesDeleteCmd.Flags(), rolesDeleteCmd.Use)
-	markFlagsRequired(rolesDeleteCmd, roleFlags, "")
+	gsmhelpers.InitCommand(rolesCmd, rolesDeleteCmd, roleFlags)
 }

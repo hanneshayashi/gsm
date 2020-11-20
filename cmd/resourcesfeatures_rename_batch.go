@@ -117,10 +117,5 @@ var resourcesFeaturesRenameBatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesFeaturesRenameCmd.AddCommand(resourcesFeaturesRenameBatchCmd)
-	flags := resourcesFeaturesRenameBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(resourcesFeatureFlags, flags, "rename")
-	markFlagsRequired(resourcesFeaturesRenameBatchCmd, resourcesFeatureFlags, "rename")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(resourcesFeaturesRenameBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(resourcesFeaturesRenameCmd, resourcesFeaturesRenameBatchCmd, resourcesFeatureFlags, batchFlags)
 }

@@ -42,7 +42,5 @@ var membersListCmd = &cobra.Command{
 }
 
 func init() {
-	membersCmd.AddCommand(membersListCmd)
-	gsmhelpers.AddFlags(memberFlags, membersListCmd.Flags(), membersListCmd.Use)
-	markFlagsRequired(membersListCmd, memberFlags, "")
+	gsmhelpers.InitCommand(membersCmd, membersListCmd, memberFlags)
 }

@@ -115,10 +115,5 @@ var groupsCiDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiDeleteCmd.AddCommand(groupsCiDeleteBatchCmd)
-	flags := groupsCiDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(groupCiFlags, flags, "delete")
-	markFlagsRequired(groupsCiDeleteBatchCmd, groupCiFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(groupsCiDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(groupsCiDeleteCmd, groupsCiDeleteBatchCmd, groupCiFlags, batchFlags)
 }

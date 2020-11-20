@@ -108,10 +108,5 @@ var eventsQuickAddBatchCmd = &cobra.Command{
 }
 
 func init() {
-	eventsQuickAddCmd.AddCommand(eventsQuickAddBatchCmd)
-	flags := eventsQuickAddBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(eventFlags, flags, "quickAdd")
-	markFlagsRequired(eventsQuickAddBatchCmd, eventFlags, "quickAdd")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(eventsQuickAddBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(eventsQuickAddCmd, eventsQuickAddBatchCmd, eventFlags, batchFlags)
 }

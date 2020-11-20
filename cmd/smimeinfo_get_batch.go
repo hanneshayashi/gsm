@@ -108,10 +108,5 @@ var smimeInfoGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	smimeInfoGetCmd.AddCommand(smimeInfoGetBatchCmd)
-	flags := smimeInfoGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(smimeInfoFlags, flags, "get")
-	markFlagsRequired(smimeInfoGetBatchCmd, smimeInfoFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(smimeInfoGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(smimeInfoGetCmd, smimeInfoGetBatchCmd, smimeInfoFlags, batchFlags)
 }

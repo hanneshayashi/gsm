@@ -108,10 +108,5 @@ var calendarListsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	calendarListsGetCmd.AddCommand(calendarListsGetBatchCmd)
-	flags := calendarListsGetBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(calendarListFlags, flags, "get")
-	markFlagsRequired(calendarListsGetBatchCmd, calendarListFlags, "get")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(calendarListsGetBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(calendarListsGetCmd, calendarListsGetBatchCmd, calendarListFlags, batchFlags)
 }

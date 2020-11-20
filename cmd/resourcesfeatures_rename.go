@@ -47,7 +47,5 @@ var resourcesFeaturesRenameCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesFeaturesCmd.AddCommand(resourcesFeaturesRenameCmd)
-	gsmhelpers.AddFlags(resourcesFeatureFlags, resourcesFeaturesRenameCmd.Flags(), resourcesFeaturesRenameCmd.Use)
-	markFlagsRequired(resourcesFeaturesRenameCmd, resourcesFeatureFlags, "")
+	gsmhelpers.InitCommand(resourcesFeaturesCmd, resourcesFeaturesRenameCmd, resourcesFeatureFlags)
 }

@@ -111,10 +111,5 @@ var usersUndeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	usersUndeleteCmd.AddCommand(usersUndeleteBatchCmd)
-	flags := usersUndeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(userFlags, flags, "undelete")
-	markFlagsRequired(usersUndeleteBatchCmd, userFlags, "undelete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(usersUndeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(usersUndeleteCmd, usersUndeleteBatchCmd, userFlags, batchFlags)
 }

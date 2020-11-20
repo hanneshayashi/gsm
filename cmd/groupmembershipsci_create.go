@@ -50,7 +50,5 @@ var groupMembershipsCiCreateCmd = &cobra.Command{
 }
 
 func init() {
-	groupMembershipsCiCmd.AddCommand(groupMembershipsCiCreateCmd)
-	gsmhelpers.AddFlags(groupMembershipCiFlags, groupMembershipsCiCreateCmd.Flags(), groupMembershipsCiCreateCmd.Use)
-	markFlagsRequired(groupMembershipsCiCreateCmd, groupMembershipCiFlags, "")
+	gsmhelpers.InitCommand(groupMembershipsCiCmd, groupMembershipsCiCreateCmd, groupMembershipCiFlags)
 }

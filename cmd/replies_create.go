@@ -46,7 +46,5 @@ var repliesCreateCmd = &cobra.Command{
 }
 
 func init() {
-	repliesCmd.AddCommand(repliesCreateCmd)
-	gsmhelpers.AddFlags(replyFlags, repliesCreateCmd.Flags(), repliesCreateCmd.Use)
-	markFlagsRequired(repliesCreateCmd, replyFlags, "")
+	gsmhelpers.InitCommand(repliesCmd, repliesCreateCmd, replyFlags)
 }

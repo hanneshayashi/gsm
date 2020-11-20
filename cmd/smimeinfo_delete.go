@@ -42,7 +42,5 @@ var smimeInfoDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	smimeInfoCmd.AddCommand(smimeInfoDeleteCmd)
-	gsmhelpers.AddFlags(smimeInfoFlags, smimeInfoDeleteCmd.Flags(), smimeInfoDeleteCmd.Use)
-	markFlagsRequired(smimeInfoDeleteCmd, smimeInfoFlags, "")
+	gsmhelpers.InitCommand(smimeInfoCmd, smimeInfoDeleteCmd, smimeInfoFlags)
 }

@@ -42,7 +42,5 @@ var tokensDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	tokensCmd.AddCommand(tokensDeleteCmd)
-	gsmhelpers.AddFlags(tokenFlags, tokensDeleteCmd.Flags(), tokensDeleteCmd.Use)
-	markFlagsRequired(tokensDeleteCmd, tokenFlags, "")
+	gsmhelpers.InitCommand(tokensCmd, tokensDeleteCmd, tokenFlags)
 }

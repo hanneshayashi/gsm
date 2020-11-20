@@ -42,7 +42,5 @@ var customersGetCmd = &cobra.Command{
 }
 
 func init() {
-	customersCmd.AddCommand(customersGetCmd)
-	gsmhelpers.AddFlags(customerFlags, customersGetCmd.Flags(), customersGetCmd.Use)
-	markFlagsRequired(customersGetCmd, customerFlags, "")
+	gsmhelpers.InitCommand(customersCmd, customersGetCmd, customerFlags)
 }

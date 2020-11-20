@@ -111,10 +111,5 @@ var peopleDeleteContactBatchCmd = &cobra.Command{
 }
 
 func init() {
-	peopleDeleteContactCmd.AddCommand(peopleDeleteContactBatchCmd)
-	flags := peopleDeleteContactBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(peopleFlags, flags, "deleteContact")
-	markFlagsRequired(peopleDeleteContactBatchCmd, peopleFlags, "deleteContact")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(peopleDeleteContactBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(peopleDeleteContactCmd, peopleDeleteContactBatchCmd, peopleFlags, batchFlags)
 }

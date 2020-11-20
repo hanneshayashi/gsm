@@ -42,7 +42,5 @@ var calendarSettingsGetCmd = &cobra.Command{
 }
 
 func init() {
-	calendarSettingsCmd.AddCommand(calendarSettingsGetCmd)
-	gsmhelpers.AddFlags(calendarSettingFlags, calendarSettingsGetCmd.Flags(), calendarSettingsGetCmd.Use)
-	markFlagsRequired(calendarSettingsGetCmd, calendarSettingFlags, "")
+	gsmhelpers.InitCommand(calendarSettingsCmd, calendarSettingsGetCmd, calendarSettingFlags)
 }

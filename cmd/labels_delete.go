@@ -42,7 +42,5 @@ var labelsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	labelsCmd.AddCommand(labelsDeleteCmd)
-	gsmhelpers.AddFlags(labelFlags, labelsDeleteCmd.Flags(), labelsDeleteCmd.Use)
-	markFlagsRequired(labelsDeleteCmd, labelFlags, "")
+	gsmhelpers.InitCommand(labelsCmd, labelsDeleteCmd, labelFlags)
 }

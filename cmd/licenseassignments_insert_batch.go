@@ -119,10 +119,5 @@ var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	licenseAssignmentsInsertCmd.AddCommand(licenseAssignmentsInsertBatchCmd)
-	flags := licenseAssignmentsInsertBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(licenseAssignmentFlags, flags, "insert")
-	markFlagsRequired(licenseAssignmentsInsertBatchCmd, licenseAssignmentFlags, "insert")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(licenseAssignmentsInsertBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(licenseAssignmentsInsertCmd, licenseAssignmentsInsertBatchCmd, licenseAssignmentFlags, batchFlags)
 }

@@ -42,7 +42,5 @@ var drivesUnhideCmd = &cobra.Command{
 }
 
 func init() {
-	drivesCmd.AddCommand(drivesUnhideCmd)
-	gsmhelpers.AddFlags(driveFlags, drivesUnhideCmd.Flags(), drivesUnhideCmd.Use)
-	markFlagsRequired(drivesUnhideCmd, driveFlags, "")
+	gsmhelpers.InitCommand(drivesCmd, drivesUnhideCmd, driveFlags)
 }

@@ -53,7 +53,5 @@ Examples:
 }
 
 func init() {
-	groupsCiCmd.AddCommand(groupsCiPatchCmd)
-	gsmhelpers.AddFlags(groupCiFlags, groupsCiPatchCmd.Flags(), groupsCiPatchCmd.Use)
-	markFlagsRequired(groupsCiPatchCmd, groupCiFlags, "")
+	gsmhelpers.InitCommand(groupsCiCmd, groupsCiPatchCmd, groupCiFlags)
 }

@@ -47,7 +47,5 @@ var resourcesFeaturesInsertCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesFeaturesCmd.AddCommand(resourcesFeaturesInsertCmd)
-	gsmhelpers.AddFlags(resourcesFeatureFlags, resourcesFeaturesInsertCmd.Flags(), resourcesFeaturesInsertCmd.Use)
-	markFlagsRequired(resourcesFeaturesInsertCmd, resourcesFeatureFlags, "")
+	gsmhelpers.InitCommand(resourcesFeaturesCmd, resourcesFeaturesInsertCmd, resourcesFeatureFlags)
 }

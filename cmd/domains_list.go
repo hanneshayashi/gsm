@@ -42,7 +42,5 @@ var domainListCmd = &cobra.Command{
 }
 
 func init() {
-	domainsCmd.AddCommand(domainListCmd)
-	gsmhelpers.AddFlags(domainAliasFlags, domainListCmd.Flags(), domainListCmd.Use)
-	markFlagsRequired(domainListCmd, domainAliasFlags, "")
+	gsmhelpers.InitCommand(domainsCmd, domainListCmd, domainFlags)
 }

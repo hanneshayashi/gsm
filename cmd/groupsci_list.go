@@ -51,7 +51,5 @@ var groupsCiListCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiCmd.AddCommand(groupsCiListCmd)
-	gsmhelpers.AddFlags(groupCiFlags, groupsCiListCmd.Flags(), groupsCiListCmd.Use)
-	markFlagsRequired(groupsCiListCmd, groupCiFlags, "")
+	gsmhelpers.InitCommand(groupsCiCmd, groupsCiListCmd, groupCiFlags)
 }

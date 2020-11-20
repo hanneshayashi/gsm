@@ -113,10 +113,5 @@ var resourcesFeaturesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesFeaturesInsertCmd.AddCommand(resourcesFeaturesInsertBatchCmd)
-	flags := resourcesFeaturesInsertBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(resourcesFeatureFlags, flags, "insert")
-	markFlagsRequired(resourcesFeaturesInsertBatchCmd, resourcesFeatureFlags, "insert")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(resourcesFeaturesInsertBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(resourcesFeaturesInsertCmd, resourcesFeaturesInsertBatchCmd, resourcesFeatureFlags, batchFlags)
 }

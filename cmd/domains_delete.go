@@ -42,7 +42,5 @@ var domainsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	domainsCmd.AddCommand(domainsDeleteCmd)
-	gsmhelpers.AddFlags(domainFlags, domainsDeleteCmd.Flags(), domainsDeleteCmd.Use)
-	markFlagsRequired(domainsDeleteCmd, domainFlags, "")
+	gsmhelpers.InitCommand(domainsCmd, domainsDeleteCmd, domainFlags)
 }

@@ -46,7 +46,5 @@ var calendarsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	calendarsCmd.AddCommand(calendarsPatchCmd)
-	gsmhelpers.AddFlags(calendarFlags, calendarsPatchCmd.Flags(), calendarsPatchCmd.Use)
-	markFlagsRequired(calendarsPatchCmd, calendarFlags, "")
+	gsmhelpers.InitCommand(calendarsCmd, calendarsPatchCmd, calendarFlags)
 }

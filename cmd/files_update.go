@@ -64,7 +64,5 @@ var filesUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	filesCmd.AddCommand(filesUpdateCmd)
-	gsmhelpers.AddFlags(fileFlags, filesUpdateCmd.Flags(), filesUpdateCmd.Use)
-	markFlagsRequired(filesUpdateCmd, fileFlags, "")
+	gsmhelpers.InitCommand(filesCmd, filesUpdateCmd, fileFlags)
 }

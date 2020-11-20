@@ -42,7 +42,5 @@ var contactGroupsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	contactGroupsCmd.AddCommand(contactGroupsDeleteCmd)
-	gsmhelpers.AddFlags(contactGroupFlags, contactGroupsDeleteCmd.Flags(), contactGroupsDeleteCmd.Use)
-	markFlagsRequired(contactGroupsDeleteCmd, contactGroupFlags, "")
+	gsmhelpers.InitCommand(contactGroupsCmd, contactGroupsDeleteCmd, contactGroupFlags)
 }

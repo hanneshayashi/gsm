@@ -42,7 +42,5 @@ var threadsListCmd = &cobra.Command{
 }
 
 func init() {
-	threadsCmd.AddCommand(threadsListCmd)
-	gsmhelpers.AddFlags(threadFlags, threadsListCmd.Flags(), threadsListCmd.Use)
-	markFlagsRequired(threadsListCmd, threadFlags, "")
+	gsmhelpers.InitCommand(threadsCmd, threadsListCmd, threadFlags)
 }

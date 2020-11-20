@@ -112,10 +112,5 @@ var tokensListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	tokensListCmd.AddCommand(tokensListBatchCmd)
-	flags := tokensListBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(tokenFlags, flags, "list")
-	markFlagsRequired(tokensListBatchCmd, tokenFlags, "list")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(tokensListBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(tokensListCmd, tokensListBatchCmd, tokenFlags, batchFlags)
 }

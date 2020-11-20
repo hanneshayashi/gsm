@@ -50,7 +50,5 @@ var contactGroupsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	contactGroupsCmd.AddCommand(contactGroupsUpdateCmd)
-	gsmhelpers.AddFlags(contactGroupFlags, contactGroupsUpdateCmd.Flags(), contactGroupsUpdateCmd.Use)
-	markFlagsRequired(contactGroupsUpdateCmd, contactGroupFlags, "")
+	gsmhelpers.InitCommand(contactGroupsCmd, contactGroupsUpdateCmd, contactGroupFlags)
 }

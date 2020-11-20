@@ -46,7 +46,5 @@ var licenseAssignmentsInsertCmd = &cobra.Command{
 }
 
 func init() {
-	licenseAssignmentsCmd.AddCommand(licenseAssignmentsInsertCmd)
-	gsmhelpers.AddFlags(licenseAssignmentFlags, licenseAssignmentsInsertCmd.Flags(), licenseAssignmentsInsertCmd.Use)
-	markFlagsRequired(licenseAssignmentsInsertCmd, licenseAssignmentFlags, "")
+	gsmhelpers.InitCommand(licenseAssignmentsCmd, licenseAssignmentsInsertCmd, licenseAssignmentFlags)
 }

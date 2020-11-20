@@ -42,7 +42,5 @@ var gmailSettingsGetLanguageCmd = &cobra.Command{
 }
 
 func init() {
-	gmailSettingsCmd.AddCommand(gmailSettingsGetLanguageCmd)
-	gsmhelpers.AddFlags(gmailSettingFlags, gmailSettingsGetLanguageCmd.Flags(), gmailSettingsGetLanguageCmd.Use)
-	markFlagsRequired(gmailSettingsGetLanguageCmd, gmailSettingFlags, "")
+	gsmhelpers.InitCommand(gmailSettingsCmd, gmailSettingsGetLanguageCmd, gmailSettingFlags)
 }

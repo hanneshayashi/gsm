@@ -133,10 +133,5 @@ var filesUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	filesUpdateCmd.AddCommand(filesUpdateBatchCmd)
-	flags := filesUpdateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(fileFlags, flags, "update")
-	markFlagsRequired(filesUpdateBatchCmd, fileFlags, "update")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(filesUpdateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(filesUpdateCmd, filesUpdateBatchCmd, fileFlags, batchFlags)
 }

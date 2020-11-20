@@ -42,7 +42,5 @@ var usersMakeAdminCmd = &cobra.Command{
 }
 
 func init() {
-	usersCmd.AddCommand(usersMakeAdminCmd)
-	gsmhelpers.AddFlags(userFlags, usersMakeAdminCmd.Flags(), usersMakeAdminCmd.Use)
-	markFlagsRequired(usersMakeAdminCmd, userFlags, "")
+	gsmhelpers.InitCommand(usersCmd, usersMakeAdminCmd, userFlags)
 }

@@ -42,7 +42,5 @@ var attachmentsGetCmd = &cobra.Command{
 }
 
 func init() {
-	attachmentsCmd.AddCommand(attachmentsGetCmd)
-	gsmhelpers.AddFlags(attachmentFlags, attachmentsGetCmd.Flags(), attachmentsGetCmd.Use)
-	markFlagsRequired(attachmentsGetCmd, attachmentFlags, "")
+	gsmhelpers.InitCommand(attachmentsCmd, attachmentsGetCmd, attachmentFlags)
 }

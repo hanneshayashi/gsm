@@ -112,10 +112,5 @@ var orgUnitsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsDeleteCmd.AddCommand(orgUnitsDeleteBatchCmd)
-	flags := orgUnitsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(orgUnitFlags, flags, "delete")
-	markFlagsRequired(orgUnitsDeleteBatchCmd, orgUnitFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(orgUnitsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(orgUnitsDeleteCmd, orgUnitsDeleteBatchCmd, orgUnitFlags, batchFlags)
 }

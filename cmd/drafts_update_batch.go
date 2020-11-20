@@ -113,10 +113,5 @@ var draftsUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	draftsUpdateCmd.AddCommand(draftsUpdateBatchCmd)
-	flags := draftsUpdateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(draftFlags, flags, "update")
-	markFlagsRequired(draftsUpdateBatchCmd, draftFlags, "update")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(draftsUpdateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(draftsUpdateCmd, draftsUpdateBatchCmd, draftFlags, batchFlags)
 }

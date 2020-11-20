@@ -43,7 +43,5 @@ Use calendars.clear for clearing all events on primary calendars.`,
 }
 
 func init() {
-	calendarsCmd.AddCommand(calendarsDeleteCmd)
-	gsmhelpers.AddFlags(calendarFlags, calendarsDeleteCmd.Flags(), calendarsDeleteCmd.Use)
-	markFlagsRequired(calendarsDeleteCmd, calendarFlags, "")
+	gsmhelpers.InitCommand(calendarsCmd, calendarsDeleteCmd, calendarFlags)
 }

@@ -46,7 +46,5 @@ var labelsCreateCmd = &cobra.Command{
 }
 
 func init() {
-	labelsCmd.AddCommand(labelsCreateCmd)
-	gsmhelpers.AddFlags(labelFlags, labelsCreateCmd.Flags(), labelsCreateCmd.Use)
-	markFlagsRequired(labelsCreateCmd, labelFlags, "")
+	gsmhelpers.InitCommand(labelsCmd, labelsCreateCmd, labelFlags)
 }

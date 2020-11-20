@@ -42,7 +42,5 @@ var aboutGetCmd = &cobra.Command{
 }
 
 func init() {
-	aboutCmd.AddCommand(aboutGetCmd)
-	gsmhelpers.AddFlags(aboutFlags, aboutGetCmd.Flags(), aboutGetCmd.Use)
-	markFlagsRequired(aboutGetCmd, aboutFlags, "")
+	gsmhelpers.InitCommand(aboutCmd, aboutGetCmd, aboutFlags)
 }

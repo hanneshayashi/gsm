@@ -46,7 +46,5 @@ var resourcesBuildingsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesBuildingsCmd.AddCommand(resourcesBuildingsPatchCmd)
-	gsmhelpers.AddFlags(resourcesBuildingFlags, resourcesBuildingsPatchCmd.Flags(), resourcesBuildingsPatchCmd.Use)
-	markFlagsRequired(resourcesBuildingsPatchCmd, resourcesBuildingFlags, "")
+	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsPatchCmd, resourcesBuildingFlags)
 }

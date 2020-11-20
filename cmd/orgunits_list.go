@@ -42,7 +42,5 @@ var orgUnitsListCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsCmd.AddCommand(orgUnitsListCmd)
-	gsmhelpers.AddFlags(orgUnitFlags, orgUnitsListCmd.Flags(), orgUnitsListCmd.Use)
-	markFlagsRequired(orgUnitsListCmd, orgUnitFlags, "")
+	gsmhelpers.InitCommand(orgUnitsCmd, orgUnitsListCmd, orgUnitFlags)
 }

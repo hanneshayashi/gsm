@@ -107,10 +107,5 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 }
 
 func init() {
-	groupsCiLookupCmd.AddCommand(groupsCiLookupBatchCmd)
-	flags := groupsCiLookupBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(groupCiFlags, flags, "lookup")
-	markFlagsRequired(groupsCiLookupBatchCmd, groupCiFlags, "lookup")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(groupsCiLookupBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(groupsCiLookupCmd, groupsCiLookupBatchCmd, groupCiFlags, batchFlags)
 }

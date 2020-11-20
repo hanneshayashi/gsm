@@ -108,10 +108,5 @@ var drivesUnhideBatchCmd = &cobra.Command{
 }
 
 func init() {
-	drivesUnhideCmd.AddCommand(drivesUnhideBatchCmd)
-	flags := drivesUnhideBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(driveFlags, flags, "unhide")
-	markFlagsRequired(drivesUnhideBatchCmd, driveFlags, "unhide")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(drivesUnhideBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(drivesUnhideCmd, drivesUnhideBatchCmd, driveFlags, batchFlags)
 }

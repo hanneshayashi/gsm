@@ -47,7 +47,5 @@ var resourcesCalendarsInsertCmd = &cobra.Command{
 }
 
 func init() {
-	resourcesCalendarsCmd.AddCommand(resourcesCalendarsInsertCmd)
-	gsmhelpers.AddFlags(resourcesCalendarFlags, resourcesCalendarsInsertCmd.Flags(), resourcesCalendarsInsertCmd.Use)
-	markFlagsRequired(resourcesCalendarsInsertCmd, resourcesCalendarFlags, "")
+	gsmhelpers.InitCommand(resourcesCalendarsCmd, resourcesCalendarsInsertCmd, resourcesCalendarFlags)
 }

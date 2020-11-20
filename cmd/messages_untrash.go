@@ -42,7 +42,5 @@ var messagesUntrashCmd = &cobra.Command{
 }
 
 func init() {
-	messagesCmd.AddCommand(messagesUntrashCmd)
-	gsmhelpers.AddFlags(messageFlags, messagesUntrashCmd.Flags(), messagesUntrashCmd.Use)
-	markFlagsRequired(messagesUntrashCmd, messageFlags, "")
+	gsmhelpers.InitCommand(messagesCmd, messagesUntrashCmd, messageFlags)
 }

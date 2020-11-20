@@ -46,7 +46,5 @@ var orgUnitsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsCmd.AddCommand(orgUnitsPatchCmd)
-	gsmhelpers.AddFlags(orgUnitFlags, orgUnitsPatchCmd.Flags(), orgUnitsPatchCmd.Use)
-	markFlagsRequired(orgUnitsPatchCmd, orgUnitFlags, "")
+	gsmhelpers.InitCommand(orgUnitsCmd, orgUnitsPatchCmd, orgUnitFlags)
 }

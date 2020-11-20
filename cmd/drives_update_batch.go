@@ -113,10 +113,5 @@ var drivesUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	drivesUpdateCmd.AddCommand(drivesUpdateBatchCmd)
-	flags := drivesUpdateBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(driveFlags, flags, "update")
-	markFlagsRequired(drivesUpdateBatchCmd, driveFlags, "update")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(drivesUpdateBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(drivesUpdateCmd, drivesUpdateBatchCmd, driveFlags, batchFlags)
 }

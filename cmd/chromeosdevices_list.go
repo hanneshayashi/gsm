@@ -42,7 +42,5 @@ var chromeOsDevicesListCmd = &cobra.Command{
 }
 
 func init() {
-	chromeOsDevicesCmd.AddCommand(chromeOsDevicesListCmd)
-	gsmhelpers.AddFlags(chromeOsDeviceFlags, chromeOsDevicesListCmd.Flags(), chromeOsDevicesListCmd.Use)
-	markFlagsRequired(chromeOsDevicesListCmd, chromeOsDeviceFlags, "")
+	gsmhelpers.InitCommand(chromeOsDevicesCmd, chromeOsDevicesListCmd, chromeOsDeviceFlags)
 }

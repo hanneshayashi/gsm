@@ -113,10 +113,5 @@ var domainAliasesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	domainAliasesInsertCmd.AddCommand(domainAliasesInsertBatchCmd)
-	flags := domainAliasesInsertBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(domainAliasFlags, flags, "insert")
-	markFlagsRequired(domainAliasesInsertBatchCmd, domainAliasFlags, "insert")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(domainAliasesInsertBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(domainAliasesInsertCmd, domainAliasesInsertBatchCmd, domainAliasFlags, batchFlags)
 }

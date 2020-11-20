@@ -42,7 +42,5 @@ var peopleConnectionsListCmd = &cobra.Command{
 }
 
 func init() {
-	peopleConnectionsCmd.AddCommand(peopleConnectionsListCmd)
-	gsmhelpers.AddFlags(peopleConnectionFlags, peopleConnectionsListCmd.Flags(), peopleConnectionsListCmd.Use)
-	markFlagsRequired(peopleConnectionsListCmd, peopleConnectionFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleConnectionsListCmd, peopleFlags)
 }

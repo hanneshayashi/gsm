@@ -42,7 +42,5 @@ var colorsGetCmd = &cobra.Command{
 }
 
 func init() {
-	colorsCmd.AddCommand(colorsGetCmd)
-	gsmhelpers.AddFlags(colorFlags, colorsGetCmd.Flags(), colorsGetCmd.Use)
-	markFlagsRequired(colorsGetCmd, colorFlags, "")
+	gsmhelpers.InitCommand(colorsCmd, colorsGetCmd, colorFlags)
 }

@@ -46,7 +46,5 @@ var sendAsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsPatchCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsPatchCmd.Flags(), sendAsPatchCmd.Use)
-	markFlagsRequired(sendAsPatchCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsPatchCmd, sendAsFlags)
 }

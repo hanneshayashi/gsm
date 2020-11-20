@@ -47,7 +47,5 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 }
 
 func init() {
-	delegatesCmd.AddCommand(delegatesDeleteCmd)
-	gsmhelpers.AddFlags(delegateFlags, delegatesDeleteCmd.Flags(), delegatesDeleteCmd.Use)
-	markFlagsRequired(delegatesDeleteCmd, delegateFlags, "")
+	gsmhelpers.InitCommand(delegatesCmd, delegatesDeleteCmd, delegateFlags)
 }

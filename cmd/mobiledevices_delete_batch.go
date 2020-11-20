@@ -112,10 +112,5 @@ var mobileDevicesDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	mobileDevicesDeleteCmd.AddCommand(mobileDevicesDeleteBatchCmd)
-	flags := mobileDevicesDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(mobileDeviceFlags, flags, "delete")
-	markFlagsRequired(mobileDevicesDeleteBatchCmd, mobileDeviceFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(mobileDevicesDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(mobileDevicesDeleteCmd, mobileDevicesDeleteBatchCmd, mobileDeviceFlags, batchFlags)
 }

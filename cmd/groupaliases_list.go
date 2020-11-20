@@ -42,7 +42,5 @@ var groupAliasesListCmd = &cobra.Command{
 }
 
 func init() {
-	groupAliasesCmd.AddCommand(groupAliasesListCmd)
-	gsmhelpers.AddFlags(groupAliasFlags, groupAliasesListCmd.Flags(), groupAliasesListCmd.Use)
-	markFlagsRequired(groupAliasesListCmd, groupAliasFlags, "")
+	gsmhelpers.InitCommand(groupAliasesCmd, groupAliasesListCmd, groupAliasFlags)
 }

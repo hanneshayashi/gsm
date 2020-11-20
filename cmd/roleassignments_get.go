@@ -42,7 +42,5 @@ var roleAssignmentsGetCmd = &cobra.Command{
 }
 
 func init() {
-	roleAssignmentsCmd.AddCommand(roleAssignmentsGetCmd)
-	gsmhelpers.AddFlags(roleAssignmentFlags, roleAssignmentsGetCmd.Flags(), roleAssignmentsGetCmd.Use)
-	markFlagsRequired(roleAssignmentsGetCmd, roleAssignmentFlags, "")
+	gsmhelpers.InitCommand(roleAssignmentsCmd, roleAssignmentsGetCmd, roleAssignmentFlags)
 }

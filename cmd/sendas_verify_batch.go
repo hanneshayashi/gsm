@@ -112,10 +112,5 @@ var sendAsVerifyBatchCmd = &cobra.Command{
 }
 
 func init() {
-	sendAsVerifyCmd.AddCommand(sendAsVerifyBatchCmd)
-	flags := sendAsVerifyBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(sendAsFlags, flags, "verify")
-	markFlagsRequired(sendAsVerifyBatchCmd, sendAsFlags, "verify")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(sendAsVerifyBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(sendAsVerifyCmd, sendAsVerifyBatchCmd, sendAsFlags, batchFlags)
 }

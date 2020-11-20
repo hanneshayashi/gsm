@@ -116,10 +116,5 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 }
 
 func init() {
-	chromeOsDevicesActionCmd.AddCommand(chromeOsDevicesActionBatchCmd)
-	flags := chromeOsDevicesActionBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(chromeOsDeviceFlags, flags, "action")
-	markFlagsRequired(chromeOsDevicesActionBatchCmd, chromeOsDeviceFlags, "action")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(chromeOsDevicesActionBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(chromeOsDevicesActionCmd, chromeOsDevicesActionBatchCmd, chromeOsDeviceFlags, batchFlags)
 }

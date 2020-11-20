@@ -50,7 +50,5 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/
 }
 
 func init() {
-	sendAsCmd.AddCommand(sendAsCreateCmd)
-	gsmhelpers.AddFlags(sendAsFlags, sendAsCreateCmd.Flags(), sendAsCreateCmd.Use)
-	markFlagsRequired(sendAsCreateCmd, sendAsFlags, "")
+	gsmhelpers.InitCommand(sendAsCmd, sendAsCreateCmd, sendAsFlags)
 }

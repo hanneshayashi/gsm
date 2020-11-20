@@ -111,10 +111,5 @@ var calendarListsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	calendarListsDeleteCmd.AddCommand(calendarListsDeleteBatchCmd)
-	flags := calendarListsDeleteBatchCmd.Flags()
-	gsmhelpers.AddFlagsBatch(calendarListFlags, flags, "delete")
-	markFlagsRequired(calendarListsDeleteBatchCmd, calendarListFlags, "delete")
-	gsmhelpers.AddFlags(batchFlags, flags, "batch")
-	markFlagsRequired(calendarListsDeleteBatchCmd, batchFlags, "")
+	gsmhelpers.InitBatchCommand(calendarListsDeleteCmd, calendarListsDeleteBatchCmd, calendarListFlags, batchFlags)
 }

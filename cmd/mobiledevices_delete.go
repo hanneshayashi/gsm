@@ -42,7 +42,5 @@ var mobileDevicesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	mobileDevicesCmd.AddCommand(mobileDevicesDeleteCmd)
-	gsmhelpers.AddFlags(mobileDeviceFlags, mobileDevicesDeleteCmd.Flags(), mobileDevicesDeleteCmd.Use)
-	markFlagsRequired(mobileDevicesDeleteCmd, mobileDeviceFlags, "")
+	gsmhelpers.InitCommand(mobileDevicesCmd, mobileDevicesDeleteCmd, mobileDeviceFlags)
 }

@@ -46,7 +46,5 @@ var messagesSendCmd = &cobra.Command{
 }
 
 func init() {
-	messagesCmd.AddCommand(messagesSendCmd)
-	gsmhelpers.AddFlags(messageFlags, messagesSendCmd.Flags(), messagesSendCmd.Use)
-	markFlagsRequired(messagesSendCmd, messageFlags, "")
+	gsmhelpers.InitCommand(messagesCmd, messagesSendCmd, messageFlags)
 }

@@ -42,7 +42,5 @@ var peopleGetBatchGetCmd = &cobra.Command{
 }
 
 func init() {
-	peopleCmd.AddCommand(peopleGetBatchGetCmd)
-	gsmhelpers.AddFlags(peopleFlags, peopleGetBatchGetCmd.Flags(), peopleGetBatchGetCmd.Use)
-	markFlagsRequired(peopleGetBatchGetCmd, peopleFlags, "")
+	gsmhelpers.InitCommand(peopleCmd, peopleGetBatchGetCmd, peopleFlags)
 }

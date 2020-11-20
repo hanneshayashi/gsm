@@ -42,7 +42,5 @@ var orgUnitsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	orgUnitsCmd.AddCommand(orgUnitsDeleteCmd)
-	gsmhelpers.AddFlags(orgUnitFlags, orgUnitsDeleteCmd.Flags(), orgUnitsDeleteCmd.Use)
-	markFlagsRequired(orgUnitsDeleteCmd, orgUnitFlags, "")
+	gsmhelpers.InitCommand(orgUnitsCmd, orgUnitsDeleteCmd, orgUnitFlags)
 }

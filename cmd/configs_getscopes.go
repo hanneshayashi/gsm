@@ -42,7 +42,5 @@ var configsGetScopesCmd = &cobra.Command{
 }
 
 func init() {
-	configsCmd.AddCommand(configsGetScopesCmd)
-	gsmhelpers.AddFlags(configFlags, configsGetScopesCmd.Flags(), configsGetScopesCmd.Use)
-	markFlagsRequired(configsGetScopesCmd, configFlags, "")
+	gsmhelpers.InitCommand(configsCmd, configsGetScopesCmd, configFlags)
 }

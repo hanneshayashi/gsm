@@ -46,7 +46,5 @@ var groupMembershipsCiListCmd = &cobra.Command{
 }
 
 func init() {
-	groupMembershipsCiCmd.AddCommand(groupMembershipsCiListCmd)
-	gsmhelpers.AddFlags(groupMembershipCiFlags, groupMembershipsCiListCmd.Flags(), groupMembershipsCiListCmd.Use)
-	markFlagsRequired(groupMembershipsCiListCmd, groupMembershipCiFlags, "")
+	gsmhelpers.InitCommand(groupMembershipsCiCmd, groupMembershipsCiListCmd, groupMembershipCiFlags)
 }
