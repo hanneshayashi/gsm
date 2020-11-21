@@ -44,9 +44,10 @@ The customerId is also returned as part of the Users resource.`,
 		Defaults: map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
 	},
 	"orgUnitPath": {
-		AvailableFor: []string{"delete", "get", "list", "patch"},
-		Type:         "string",
-		Description:  `The full path of the organizational unit or its unique ID.`,
+		AvailableFor:   []string{"delete", "get", "list", "patch"},
+		Type:           "string",
+		Description:    `The full path of the organizational unit or its unique ID.`,
+		ExcludeFromAll: true,
 	},
 	"name": {
 		AvailableFor: []string{"insert", "patch"},

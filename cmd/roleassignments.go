@@ -42,10 +42,11 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
 	},
 	"roleAssignmentId": {
-		AvailableFor: []string{"delete", "get"},
-		Type:         "string",
-		Description:  `Immutable ID of the role assignment.`,
-		Required:     []string{"delete", "get"},
+		AvailableFor:   []string{"delete", "get"},
+		Type:           "string",
+		Description:    `Immutable ID of the role assignment.`,
+		Required:       []string{"delete", "get"},
+		ExcludeFromAll: true,
 	},
 	"assignedTo": {
 		AvailableFor: []string{"insert"},
@@ -77,6 +78,7 @@ Acceptable values are:
 		Type:         "string",
 		Description: `The user's primary email address, alias email address, or unique user ID.
 If included in the request, returns role assignments only for this user.`,
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list"},

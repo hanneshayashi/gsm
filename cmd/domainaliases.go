@@ -42,10 +42,11 @@ var domainAliasFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
 	},
 	"domainAliasName": {
-		AvailableFor: []string{"delete", "get", "insert"},
-		Type:         "string",
-		Description:  "Name of domain alias.",
-		Required:     []string{"delete", "get", "insert"},
+		AvailableFor:   []string{"delete", "get", "insert"},
+		Type:           "string",
+		Description:    "Name of domain alias.",
+		Required:       []string{"delete", "get", "insert"},
+		ExcludeFromAll: true,
 	},
 	"parentDomainName": {
 		AvailableFor: []string{"insert", "list"},

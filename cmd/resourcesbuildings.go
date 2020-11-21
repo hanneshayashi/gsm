@@ -36,10 +36,11 @@ var resourcesBuildingsCmd = &cobra.Command{
 
 var resourcesBuildingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"buildingId": {
-		AvailableFor: []string{"delete", "get", "insert", "patch"},
-		Type:         "string",
-		Description:  `The ID of the file.`,
-		Required:     []string{"delete", "get", "insert", "patch"},
+		AvailableFor:   []string{"delete", "get", "insert", "patch"},
+		Type:           "string",
+		Description:    `The ID of the file.`,
+		Required:       []string{"delete", "get", "insert", "patch"},
+		ExcludeFromAll: true,
 	},
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},

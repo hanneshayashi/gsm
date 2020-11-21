@@ -57,10 +57,11 @@ var draftFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description:  "Body or content of the (draft) message",
 	},
 	"id": {
-		AvailableFor: []string{"delete", "get", "send", "update"},
-		Type:         "string",
-		Description:  "The ID of the draft.",
-		Required:     []string{"delete", "get", "send", "update"},
+		AvailableFor:   []string{"delete", "get", "send", "update"},
+		Type:           "string",
+		Description:    "The ID of the draft.",
+		Required:       []string{"delete", "get", "send", "update"},
+		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},

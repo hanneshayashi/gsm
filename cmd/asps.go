@@ -42,10 +42,11 @@ https://developers.google.com/admin-sdk/directory/v1/reference/asps`,
 
 var aspFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"codeId": {
-		AvailableFor: []string{"delete", "get"},
-		Type:         "int64",
-		Description:  "The unique ID of the ASP",
-		Required:     []string{"delete", "get"},
+		AvailableFor:   []string{"delete", "get"},
+		Type:           "int64",
+		Description:    "The unique ID of the ASP",
+		Required:       []string{"delete", "get"},
+		ExcludeFromAll: true,
 	},
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "list"},

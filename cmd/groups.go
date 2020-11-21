@@ -40,14 +40,16 @@ var groupFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
-		Required: []string{"delete", "get", "patch"},
+		Required:       []string{"delete", "get", "patch"},
+		ExcludeFromAll: true,
 	},
 	"email": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
-		Required: []string{"insert"},
+		Required:       []string{"insert"},
+		ExcludeFromAll: true,
 	},
 	"description": {
 		AvailableFor: []string{"insert", "patch"},

@@ -46,10 +46,11 @@ var messageFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{ //TO
 		Defaults:     map[string]interface{}{"delete": "me", "modify": "me", "get": "me", "import": "me", "insert": "me", "list": "me", "send": "me", "trash": "me", "untrash": "me"},
 	},
 	"ids": {
-		AvailableFor: []string{"batchDelete"},
-		Type:         "stringSlice",
-		Description:  `The IDs of the messages. There is a limit of 1000 ids per request.`,
-		Required:     []string{"batchDelete"},
+		AvailableFor:   []string{"batchDelete"},
+		Type:           "stringSlice",
+		Description:    `The IDs of the messages. There is a limit of 1000 ids per request.`,
+		Required:       []string{"batchDelete"},
+		ExcludeFromAll: true,
 	},
 	"addLabelIds": {
 		AvailableFor: []string{"modify"},
@@ -62,9 +63,10 @@ var messageFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{ //TO
 		Description:  `A list of label IDs to remove from messages.`,
 	},
 	"id": {
-		AvailableFor: []string{"delete", "get", "modify", "trash", "untrash"},
-		Type:         "string",
-		Description:  `The ID of the message.`,
+		AvailableFor:   []string{"delete", "get", "modify", "trash", "untrash"},
+		Type:           "string",
+		Description:    `The ID of the message.`,
+		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},

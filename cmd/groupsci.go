@@ -69,6 +69,7 @@ An object containing a list of "key": value pairs. Example: { "name": "wrench", 
 		Description: `The resource name of the Group.
 
 Must be of the form groups/{group_id}.`,
+		ExcludeFromAll: true,
 	},
 	"email": {
 		AvailableFor: []string{"get", "delete", "lookup", "patch"},
@@ -76,6 +77,7 @@ Must be of the form groups/{group_id}.`,
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
 Note that this will cause an additional API call.`,
+		ExcludeFromAll: true,
 	},
 	"parent": {
 		AvailableFor: []string{"create", "list"},
@@ -108,7 +110,8 @@ For Google-managed entities, the id must be the email address of an existing gro
 For external-identity-mapped entities, the id must be a string conforming to the Identity Source's requirements.
 
 Must be unique within a namespace.`,
-		Required: []string{"create"},
+		Required:       []string{"create"},
+		ExcludeFromAll: true,
 	},
 	"namespace": {
 		AvailableFor: []string{"create"},

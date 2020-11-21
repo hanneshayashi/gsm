@@ -61,10 +61,11 @@ See anchor documentation for details on how to define and interpret anchor prope
 This is interpreted as plain text if set through the API.`,
 	},
 	"commentId": {
-		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
-		Description:  `The ID of the comment.`,
-		Required:     []string{"delete", "get", "update"},
+		AvailableFor:   []string{"delete", "get", "update"},
+		Type:           "string",
+		Description:    `The ID of the comment.`,
+		Required:       []string{"delete", "get", "update"},
+		ExcludeFromAll: true,
 	},
 	"includeDeleted": {
 		AvailableFor: []string{"get", "list"},

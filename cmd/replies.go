@@ -61,10 +61,11 @@ This field is used for setting the content, while htmlContent should be displaye
 [resolve|reopen]`,
 	},
 	"replyId": {
-		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
-		Description:  `The ID of the reply.`,
-		Required:     []string{"delete", "get", "update"},
+		AvailableFor:   []string{"delete", "get", "update"},
+		Type:           "string",
+		Description:    `The ID of the reply.`,
+		Required:       []string{"delete", "get", "update"},
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},

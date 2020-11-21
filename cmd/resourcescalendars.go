@@ -36,10 +36,11 @@ var resourcesCalendarsCmd = &cobra.Command{
 
 var resourcesCalendarFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarResourceId": {
-		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
-		Description:  `The unique ID of the calendar resource`,
-		Required:     []string{"delete", "get", "patch"},
+		AvailableFor:   []string{"delete", "get", "patch"},
+		Type:           "string",
+		Description:    `The unique ID of the calendar resource`,
+		Required:       []string{"delete", "get", "patch"},
+		ExcludeFromAll: true,
 	},
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
@@ -49,10 +50,11 @@ As an account administrator, you can also use the my_customer alias to represent
 		Defaults: map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
 	},
 	"resourceId": {
-		AvailableFor: []string{"insert"},
-		Type:         "string",
-		Description:  `The unique ID of the calendar resource`,
-		Required:     []string{"insert"},
+		AvailableFor:   []string{"insert"},
+		Type:           "string",
+		Description:    `The unique ID of the calendar resource`,
+		Required:       []string{"insert"},
+		ExcludeFromAll: true,
 	},
 	"resourceName": {
 		AvailableFor: []string{"insert", "patch"},

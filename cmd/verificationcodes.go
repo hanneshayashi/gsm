@@ -39,7 +39,8 @@ var verificationCodeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.F
 		Type:         "string",
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
-		Required: []string{"generate", "invalidate", "list"},
+		Required:       []string{"generate", "invalidate", "list"},
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"list"},

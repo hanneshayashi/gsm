@@ -115,7 +115,8 @@ Must be in the form of "mailClass=...;label=...;usage=...;primary=[true|false];a
 		Type:         "string",
 		Description: `URL of the Shared Contact (Retrieve with "list" and look for "id").
 MUST BE https://!`,
-		Required: []string{"delete", "get", "update"},
+		Required:       []string{"delete", "get", "update"},
+		ExcludeFromAll: true,
 	},
 	"json": {
 		AvailableFor: []string{"create", "get", "list", "update"},

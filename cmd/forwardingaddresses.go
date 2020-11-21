@@ -46,10 +46,11 @@ var forwardingAddressFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
 	},
 	"forwardingEmail": {
-		AvailableFor: []string{"create", "delete", "get"},
-		Type:         "string",
-		Description:  "An email address to which messages can be forwarded.",
-		Required:     []string{"create", "delete", "get"},
+		AvailableFor:   []string{"create", "delete", "get"},
+		Type:           "string",
+		Description:    "An email address to which messages can be forwarded.",
+		Required:       []string{"create", "delete", "get"},
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},

@@ -114,9 +114,10 @@ SMALLER  - Find messages smaller than the given size.
 LARGER   - Find messages larger than the given size.`,
 	},
 	"id": {
-		AvailableFor: []string{"delete", "get"},
-		Type:         "string",
-		Description:  `The ID of the filter.`,
+		AvailableFor:   []string{"delete", "get"},
+		Type:           "string",
+		Description:    `The ID of the filter.`,
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},

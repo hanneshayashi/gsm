@@ -42,14 +42,16 @@ var roleFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
 	},
 	"roleId": {
-		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
-		Description:  `Immutable ID of the role.`,
+		AvailableFor:   []string{"delete", "get", "patch"},
+		Type:           "string",
+		Description:    `Immutable ID of the role.`,
+		ExcludeFromAll: true,
 	},
 	"roleName": {
-		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
-		Description:  `Name of the role.`,
+		AvailableFor:   []string{"insert", "patch"},
+		Type:           "string",
+		Description:    `Name of the role.`,
+		ExcludeFromAll: true,
 	},
 	"rolePrivileges": {
 		AvailableFor: []string{"insert", "patch"},

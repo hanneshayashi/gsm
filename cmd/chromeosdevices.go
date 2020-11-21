@@ -50,7 +50,8 @@ The customerId is also returned as part of the Users resource.`,
 		Type:         "string",
 		Description: `The unique ID of the device.
 The resourceIds are returned in the response from the chromeosdevices.list method.`,
-		Required: []string{"action"},
+		Required:       []string{"action"},
+		ExcludeFromAll: true,
 	},
 	"action": {
 		AvailableFor: []string{"action"},
@@ -86,8 +87,9 @@ Acceptable values are:
 		Type:         "string",
 		Description: `The unique ID of the device.
 The deviceIds are returned in the response from the chromeosdevices.list method.`,
-		Defaults: map[string]interface{}{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
-		Required: []string{"get", "patch"},
+		Defaults:       map[string]interface{}{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
+		Required:       []string{"get", "patch"},
+		ExcludeFromAll: true,
 	},
 	"projection": {
 		AvailableFor: []string{"get", "list", "patch"},

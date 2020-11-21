@@ -36,10 +36,11 @@ var userAliasesCmd = &cobra.Command{
 
 var userAliasFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"alias": {
-		AvailableFor: []string{"delete", "insert"},
-		Type:         "string",
-		Description:  `The alias email address.`,
-		Required:     []string{"delete", "insert"},
+		AvailableFor:   []string{"delete", "insert"},
+		Type:           "string",
+		Description:    `The alias email address.`,
+		Required:       []string{"delete", "insert"},
+		ExcludeFromAll: true,
 	},
 	"userKey": {
 		AvailableFor: []string{"delete", "insert", "list"},

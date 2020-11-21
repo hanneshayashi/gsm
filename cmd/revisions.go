@@ -42,10 +42,11 @@ var revisionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Required:     []string{"delete", "get", "list", "update"},
 	},
 	"revisionId": {
-		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
-		Description:  `The ID of the revision.`,
-		Required:     []string{"delete", "get", "update"},
+		AvailableFor:   []string{"delete", "get", "update"},
+		Type:           "string",
+		Description:    `The ID of the revision.`,
+		Required:       []string{"delete", "get", "update"},
+		ExcludeFromAll: true,
 	},
 	"acknowledgeAbuse": {
 		AvailableFor: []string{"delete", "get", "update"},

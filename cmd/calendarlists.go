@@ -41,7 +41,8 @@ var calendarListFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Defaults: map[string]interface{}{"delete": "primary", "get": "primary", "list": "primary", "patch": "primary"},
+		Defaults:       map[string]interface{}{"delete": "primary", "get": "primary", "list": "primary", "patch": "primary"},
+		ExcludeFromAll: true,
 	},
 	"colorRgbFormat": {
 		AvailableFor: []string{"insert", "patch"},
@@ -50,9 +51,10 @@ If you want to access the primary calendar of the currently logged in user, use 
 If this feature is used, the index-based colorId field will be set to the best matching option automatically.`,
 	},
 	"id": {
-		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
-		Description:  `Identifier of the calendar.`,
+		AvailableFor:   []string{"insert", "patch"},
+		Type:           "string",
+		Description:    `Identifier of the calendar.`,
+		ExcludeFromAll: true,
 	},
 	"backgroundColor": {
 		AvailableFor: []string{"insert", "patch"},

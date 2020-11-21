@@ -41,11 +41,19 @@ var labelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
 		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
 	},
+	"id": {
+		AvailableFor:   []string{"delete", "get", "patch"},
+		Type:           "string",
+		Description:    "The ID of the label",
+		Required:       []string{"delete", "get", "patch"},
+		ExcludeFromAll: true,
+	},
 	"name": {
-		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
-		Description:  "The display name of the label.",
-		Required:     []string{"create"},
+		AvailableFor:   []string{"create", "patch"},
+		Type:           "string",
+		Description:    "The display name of the label.",
+		Required:       []string{"create"},
+		ExcludeFromAll: true,
 	},
 	"messageListVisibility": {
 		AvailableFor: []string{"create", "patch"},

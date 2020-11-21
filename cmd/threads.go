@@ -41,10 +41,11 @@ var threadFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Defaults:     map[string]interface{}{"delete": "me", "get": "me", "list": "me", "modify": "me", "trash": "me", "untrash": "me"},
 	},
 	"id": {
-		AvailableFor: []string{"delete", "get", "modify", "trash", "untrash"},
-		Type:         "string",
-		Description:  "ID of the Thread.",
-		Required:     []string{"delete", "get", "modify", "trash", "untrash"},
+		AvailableFor:   []string{"delete", "get", "modify", "trash", "untrash"},
+		Type:           "string",
+		Description:    "ID of the Thread.",
+		Required:       []string{"delete", "get", "modify", "trash", "untrash"},
+		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},

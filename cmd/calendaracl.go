@@ -43,10 +43,11 @@ If you want to access the primary calendar of the currently logged in user, use 
 		Defaults: map[string]interface{}{"delete": "primary", "get": "primary", "insert": "primary", "list": "primary", "patch": "primary"},
 	},
 	"ruleId": {
-		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
-		Description:  `ACL rule identifier.`,
-		Required:     []string{"delete", "get", "patch"},
+		AvailableFor:   []string{"delete", "get", "patch"},
+		Type:           "string",
+		Description:    `ACL rule identifier.`,
+		Required:       []string{"delete", "get", "patch"},
+		ExcludeFromAll: true,
 	},
 	"sendNotifications": {
 		AvailableFor: []string{"insert", "patch"},

@@ -42,10 +42,11 @@ var permissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Required:     []string{"create", "delete", "get", "list", "update"},
 	},
 	"permissionId": {
-		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
-		Description:  "The ID of the permission.",
-		Required:     []string{"delete", "get", "update"},
+		AvailableFor:   []string{"delete", "get", "update"},
+		Type:           "string",
+		Description:    "The ID of the permission.",
+		Required:       []string{"delete", "get", "update"},
+		ExcludeFromAll: true,
 	},
 	"emailAddress": {
 		AvailableFor: []string{"create"},

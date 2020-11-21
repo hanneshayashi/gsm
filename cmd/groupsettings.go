@@ -67,10 +67,11 @@ func ignoreDeprecatedGroupSettings(groupSettings *groupssettings.Groups) *groups
 
 var groupSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"groupUniqueId": {
-		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
-		Description:  `The group's email address.`,
-		Required:     []string{"get", "patch"},
+		AvailableFor:   []string{"get", "patch"},
+		Type:           "string",
+		Description:    `The group's email address.`,
+		Required:       []string{"get", "patch"},
+		ExcludeFromAll: true,
 	},
 	"whoCanJoin": {
 		AvailableFor: []string{"patch"},
@@ -318,7 +319,6 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 	},
 }
 var groupSettingFlagsALL = gsmhelpers.GetAllFlags(groupSettingFlags)
-
 
 func init() {
 	rootCmd.AddCommand(groupSettingsCmd)

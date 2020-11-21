@@ -48,10 +48,11 @@ var smimeInfoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Required:     []string{"delete", "get", "insert", "list", "setDefault"},
 	},
 	"id": {
-		AvailableFor: []string{"delete", "get", "setDefault"},
-		Type:         "string",
-		Description:  `The immutable ID for the SmimeInfo.`,
-		Required:     []string{"delete", "get", "setDefault"},
+		AvailableFor:   []string{"delete", "get", "setDefault"},
+		Type:           "string",
+		Description:    `The immutable ID for the SmimeInfo.`,
+		Required:       []string{"delete", "get", "setDefault"},
+		ExcludeFromAll: true,
 	},
 	"issuerCn": {
 		AvailableFor: []string{"insert"},

@@ -36,10 +36,11 @@ var drivesCmd = &cobra.Command{
 
 var driveFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"driveId": {
-		AvailableFor: []string{"delete", "get", "hide", "unhide", "update"},
-		Type:         "string",
-		Description:  "The ID of the shared drive",
-		Required:     []string{"delete", "get", "hide", "unhide", "update"},
+		AvailableFor:   []string{"delete", "get", "hide", "unhide", "update"},
+		Type:           "string",
+		Description:    "The ID of the shared drive",
+		Required:       []string{"delete", "get", "hide", "unhide", "update"},
+		ExcludeFromAll: true,
 	},
 	"themeId": {
 		AvailableFor: []string{"create", "update"},

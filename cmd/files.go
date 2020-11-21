@@ -36,10 +36,11 @@ var filesCmd = &cobra.Command{
 
 var fileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
-		AvailableFor: []string{"copy", "delete", "export", "get", "update", "download"},
-		Type:         "string",
-		Description:  "The ID of the file",
-		Required:     []string{"copy", "delete", "export", "get", "update", "download"},
+		AvailableFor:   []string{"copy", "delete", "export", "get", "update", "download"},
+		Type:           "string",
+		Description:    "The ID of the file",
+		Required:       []string{"copy", "delete", "export", "get", "update", "download"},
+		ExcludeFromAll: true,
 	},
 	"ignoreDefaultVisibility": {
 		AvailableFor: []string{"copy", "create"},
@@ -182,9 +183,10 @@ The supported colors are published in the folderColorPalette field of the About 
 If an unsupported color is specified, the closest color in the palette will be used instead.`,
 	},
 	"id": {
-		AvailableFor: []string{"copy", "create"},
-		Type:         "string",
-		Description:  `The ID of the file.`,
+		AvailableFor:   []string{"copy", "create"},
+		Type:           "string",
+		Description:    `The ID of the file.`,
+		ExcludeFromAll: true,
 	},
 	"originalFilename": {
 		AvailableFor: []string{"create", "update"},

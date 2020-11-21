@@ -91,10 +91,11 @@ READ_SOURCE_TYPE_DOMAIN_CONTACT       - Returns SourceType.DOMAIN_CONTACT.`,
 		Required: []string{"listDirectoryPeople", "searchDirectoryPeople", "updateContact"},
 	},
 	"resourceName": {
-		AvailableFor: []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
-		Type:         "string",
-		Description:  `The resource name of the contact-`,
-		Required:     []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
+		AvailableFor:   []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
+		Type:           "string",
+		Description:    `The resource name of the contact-`,
+		Required:       []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
+		ExcludeFromAll: true,
 	},
 	"resourceNames": {
 		AvailableFor: []string{"getBatchGet"},
@@ -108,7 +109,8 @@ To get information about the authenticated user, specify people/me.
 To get information about a google account, specify people/{account_id}.
 To get information about a contact, specify the resource name that identifies the contact as returned by people.connections.list.
 You can include up to 50 resource names in one request.`,
-		Required: []string{"getBatchGet"},
+		Required:       []string{"getBatchGet"},
+		ExcludeFromAll: true,
 	},
 	"readMask": {
 		AvailableFor: []string{"listDirectoryPeople", "searchDirectoryPeople"},

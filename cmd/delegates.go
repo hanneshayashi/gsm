@@ -42,10 +42,11 @@ var delegateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
 	},
 	"delegateEmail": {
-		AvailableFor: []string{"create", "delete", "get"},
-		Type:         "string",
-		Description:  "The email address of the delegate.",
-		Required:     []string{"create", "delete", "get"},
+		AvailableFor:   []string{"create", "delete", "get"},
+		Type:           "string",
+		Description:    "The email address of the delegate.",
+		Required:       []string{"create", "delete", "get"},
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},

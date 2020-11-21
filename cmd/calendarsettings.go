@@ -35,10 +35,11 @@ var calendarSettingsCmd = &cobra.Command{
 
 var calendarSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"setting": {
-		AvailableFor: []string{"get"},
-		Type:         "string",
-		Description:  `The id of the user setting.`,
-		Required:     []string{"get"},
+		AvailableFor:   []string{"get"},
+		Type:           "string",
+		Description:    `The id of the user setting.`,
+		Required:       []string{"get"},
+		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},

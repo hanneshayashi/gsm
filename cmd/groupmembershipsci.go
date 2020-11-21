@@ -100,6 +100,7 @@ expireTime    - The time at which the MembershipRole will expire.
 		Type:         "string",
 		Description: `The resource name of the Membership.
 Must be of the form groups/{group_id}/memberships/{membership_id}.`,
+		ExcludeFromAll: true,
 	},
 	"email": {
 		AvailableFor: []string{"checkTransitiveMembership", "create", "delete", "get", "getMembershipGraph", "list", "lookup", "searchTransitiveGroups", "searchTransitiveMemberships"},

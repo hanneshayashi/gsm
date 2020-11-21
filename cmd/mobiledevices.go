@@ -44,9 +44,10 @@ The customerId is also returned as part of the Users resource.`,
 		Defaults: map[string]interface{}{"action": "my_customer", "delete": "my_customer", "get": "my_customer", "list": "my_customer"},
 	},
 	"resourceId": {
-		AvailableFor: []string{"action", "delete", "get"},
-		Type:         "string",
-		Description:  `The unique ID the API service uses to identify the mobile device.`,
+		AvailableFor:   []string{"action", "delete", "get"},
+		Type:           "string",
+		Description:    `The unique ID the API service uses to identify the mobile device.`,
+		ExcludeFromAll: true,
 	},
 	"action": {
 		AvailableFor: []string{"action"},
