@@ -98,6 +98,7 @@ If the email address is changed, the API automatically reflects the email addres
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var memberFlagsALL = gsmhelpers.GetAllFlags(memberFlags)
 
 func init() {
 	rootCmd.AddCommand(membersCmd)

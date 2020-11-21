@@ -31,6 +31,7 @@ var userFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required: []string{"delete", "get", "makeAdmin", "patch", "signOut", "undelete"},
+		ExcludeFromAll: true,
 	},
 	"customFieldMask": {
 		AvailableFor: []string{"get", "list"},
@@ -97,6 +98,7 @@ The password value is never returned in the API's response body.`,
 This property is required in a request to create a user account.
 The primaryEmail must be unique and cannot be an alias of another user.`,
 		Required: []string{"insert"},
+		ExcludeFromAll: true,
 	},
 	"addresses": {
 		AvailableFor: []string{"insert", "patch"},
@@ -533,6 +535,7 @@ Acceptable values are:
 		Description:  `Use to remove admin access.`,
 	},
 }
+var userFlagsALL = gsmhelpers.GetAllFlags(userFlags)
 
 // usersCmd represents the users command
 var usersCmd = &cobra.Command{

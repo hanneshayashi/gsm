@@ -35,7 +35,10 @@ var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 	Short: "Patch patches users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, licenseAssignmentFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -119,5 +122,5 @@ var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(licenseAssignmentsPatchCmd, licenseAssignmentsPatchBatchCmd, licenseAssignmentFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(licenseAssignmentsPatchCmd, licenseAssignmentsPatchBatchCmd, licenseAssignmentFlags, licenseAssignmentFlagsALL, batchFlags)
 }

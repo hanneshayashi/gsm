@@ -35,7 +35,10 @@ var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 	Short: "Batch modifys contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, contactGroupMemberFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(contactGroupsMembersModifyCmd, contactGroupsMembersModifyBatchCmd, contactGroupMemberFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(contactGroupsMembersModifyCmd, contactGroupsMembersModifyBatchCmd, contactGroupMemberFlagsALL, contactGroupMemberFlags, batchFlags)
 }

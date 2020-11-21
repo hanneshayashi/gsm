@@ -61,6 +61,7 @@ The value can be the user's primary email address, alias email address, or uniqu
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var aspFlagsALL = gsmhelpers.GetAllFlags(aspFlags)
 
 func init() {
 	rootCmd.AddCommand(aspsCmd)

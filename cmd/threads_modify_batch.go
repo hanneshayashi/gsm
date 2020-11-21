@@ -35,7 +35,10 @@ var threadsModifyBatchCmd = &cobra.Command{
 	Short: "Batch modifies threads using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, threadFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var threadsModifyBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(threadsModifyCmd, threadsModifyBatchCmd, threadFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(threadsModifyCmd, threadsModifyBatchCmd, threadFlags, threadFlagsALL, batchFlags)
 }

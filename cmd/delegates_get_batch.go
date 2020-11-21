@@ -36,7 +36,10 @@ var delegatesGetBatchCmd = &cobra.Command{
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
 	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, delegateFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -109,5 +112,5 @@ var delegatesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(delegatesGetCmd, delegatesGetBatchCmd, delegateFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(delegatesGetCmd, delegatesGetBatchCmd, delegateFlags, delegateFlagsALL, batchFlags)
 }

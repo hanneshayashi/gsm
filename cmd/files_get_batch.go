@@ -35,7 +35,10 @@ var filesGetBatchCmd = &cobra.Command{
 	Short: "Batch gets files or folders's metadata or content by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, fileFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -109,5 +112,5 @@ var filesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesGetCmd, filesGetBatchCmd, fileFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(filesGetCmd, filesGetBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }

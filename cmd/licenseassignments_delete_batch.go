@@ -34,7 +34,10 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 	Short: "Delete deletes users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, licenseAssignmentFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(licenseAssignmentsDeleteCmd, licenseAssignmentsDeleteBatchCmd, licenseAssignmentFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(licenseAssignmentsDeleteCmd, licenseAssignmentsDeleteBatchCmd, licenseAssignmentFlags, licenseAssignmentFlagsALL, batchFlags)
 }

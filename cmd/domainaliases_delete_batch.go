@@ -34,7 +34,10 @@ var domainAliasesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieves domain aliases of the customer using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, domainAliasFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var domainAliasesDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(domainAliasesDeleteCmd, domainAliasesDeleteBatchCmd, domainAliasFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(domainAliasesDeleteCmd, domainAliasesDeleteBatchCmd, domainAliasFlags, domainAliasFlagsALL, batchFlags)
 }

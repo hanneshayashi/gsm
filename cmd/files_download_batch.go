@@ -34,7 +34,10 @@ var filesDownloadBatchCmd = &cobra.Command{
 	Short: "Batch download files using a CSV file as input.",
 	Long:  `Downloads a (non-Google) file to your local system`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, fileFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -107,5 +110,5 @@ var filesDownloadBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesDownloadCmd, filesDownloadBatchCmd, fileFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(filesDownloadCmd, filesDownloadBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }

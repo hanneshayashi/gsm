@@ -60,6 +60,7 @@ var domainAliasFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var domainAliasFlagsALL = gsmhelpers.GetAllFlags(domainAliasFlags)
 
 func init() {
 	rootCmd.AddCommand(domainAliasesCmd)

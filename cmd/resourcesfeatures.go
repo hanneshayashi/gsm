@@ -73,6 +73,7 @@ As an account administrator, you can also use the my_customer alias to represent
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var resourcesFeatureFlagsALL = gsmhelpers.GetAllFlags(resourcesFeatureFlags)
 
 func init() {
 	rootCmd.AddCommand(resourcesFeaturesCmd)

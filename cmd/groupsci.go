@@ -167,6 +167,7 @@ A comma-separated list of fully qualified names of fields. Example: "user.displa
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var groupCiFlagsALL = gsmhelpers.GetAllFlags(groupCiFlags)
 
 func init() {
 	rootCmd.AddCommand(groupsCiCmd)

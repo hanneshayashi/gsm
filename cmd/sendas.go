@@ -119,6 +119,7 @@ STARTTLS  - Communication with the remote SMTP service is secured using STARTTLS
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var sendAsFlagsALL = gsmhelpers.GetAllFlags(sendAsFlags)
 
 func init() {
 	rootCmd.AddCommand(sendAsCmd)

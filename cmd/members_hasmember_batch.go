@@ -34,7 +34,10 @@ var membersHasMemberBatchCmd = &cobra.Command{
 	Short: "Checks whether the given user is a member of the group. Membership can be direct or nested.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, memberFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var membersHasMemberBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(membersHasMemberCmd, membersHasMemberBatchCmd, memberFlags)
+	gsmhelpers.InitBatchCommand(membersHasMemberCmd, membersHasMemberBatchCmd, memberFlags, memberFlagsALL, batchFlags)
 }

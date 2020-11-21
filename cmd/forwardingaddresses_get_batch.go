@@ -35,7 +35,10 @@ var forwardingAddressesGetBatchCmd = &cobra.Command{
 	Short: "Batch gets the specified forwarding addresses using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, forwardingAddressFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var forwardingAddressesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(forwardingAddressesGetCmd, forwardingAddressesGetBatchCmd, forwardingAddressFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(forwardingAddressesGetCmd, forwardingAddressesGetBatchCmd, forwardingAddressFlags, forwardingAddressFlagsALL, batchFlags)
 }

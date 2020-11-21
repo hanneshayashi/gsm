@@ -35,7 +35,10 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates permissions for a file or shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, permissionFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(permissionsUpdateCmd, permissionsUpdateBatchCmd, permissionFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(permissionsUpdateCmd, permissionsUpdateBatchCmd, permissionFlags, permissionFlagsALL, batchFlags)
 }

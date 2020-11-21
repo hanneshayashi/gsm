@@ -103,6 +103,7 @@ Acceptable values are:
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var mobileDeviceFlagsALL = gsmhelpers.GetAllFlags(mobileDeviceFlags)
 
 func init() {
 	rootCmd.AddCommand(mobileDevicesCmd)

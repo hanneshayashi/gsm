@@ -29,11 +29,12 @@ import (
 
 // Flag represents a flag configuration that can be easily reused for multiple commands
 type Flag struct {
-	Defaults     map[string]interface{}
-	Type         string
-	Description  string
-	Required     []string
-	AvailableFor []string
+	Defaults       map[string]interface{}
+	Type           string
+	Description    string
+	Required       []string
+	AvailableFor   []string
+	ExcludeFromAll bool
 }
 
 // Value is the value representation of a flag
@@ -42,6 +43,7 @@ type Value struct {
 	Value   interface{}
 	Type    string
 	Changed bool
+	AllFlag bool
 }
 
 // IsSet returns a true or false, depending on if a flag has been set by a user
@@ -226,7 +228,7 @@ func BatchFlagToBool(line []string, index int64, def interface{}) (value bool, e
 // CheckBatchFlags checks if the supplied flag values for a batch command are valid in regards to the supplied CSV file
 func CheckBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, length int64) error {
 	for k := range flags {
-		if defaultFlags[k] == nil || !flags[k].Changed {
+		if defaultFlags[k] == nil || !flags[k].Changed || flags[k].AllFlag {
 			continue
 		}
 		flags[k].Index = flags[k].GetInt64()
@@ -332,6 +334,10 @@ func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 		if defaultFlags[k] == nil {
 			continue
 		}
+		if flags[k].AllFlag {
+			m[k].Value = flags[k].Value
+			continue
+		}
 		var err error
 		def := defaultFlags[k].Defaults[command]
 		switch defaultFlags[k].Type {
@@ -363,14 +369,59 @@ func markFlagsRequired(cmd *cobra.Command, flags map[string]*Flag, command strin
 	}
 }
 
+// GetAllFlags creates copies of all normal flags with the _ALL suffix.
+// These flags are used for batch commands where normal flags get converted to int64 flags that are used to reference columns in CSV files
+func GetAllFlags(flags map[string]*Flag) map[string]*Flag {
+	flagsAll := map[string]*Flag{}
+	for k := range flags {
+		if flags[k].ExcludeFromAll {
+			continue
+		}
+		nk := k + "_ALL"
+		flagsAll[nk] = &Flag{
+			AvailableFor: flags[k].AvailableFor,
+			Description:  fmt.Sprintf("Same as %s but value is applied to all lines in the CSV file", k),
+			Type:         flags[k].Type,
+		}
+	}
+	return flagsAll
+}
+
+// ConsolidateFlags consolidates a batch commands "normal" and "all" flags
+func ConsolidateFlags(cmd *cobra.Command, cmdFlags map[string]*Flag) (map[string]*Value, error) {
+	flags := FlagsToMap(cmd.Flags())
+	flagsNew := map[string]*Value{}
+	for k := range flags {
+		if strings.HasSuffix(k, "_ALL") {
+			continue
+		}
+		flagsNew[k] = flags[k]
+	}
+	for k := range flagsNew {
+		ak := k + "_ALL"
+		if flags[k].IsSet() && flags[ak].IsSet() {
+			return nil, fmt.Errorf("You can't set a normal flag and its _ALL equivalent at the same time. %s", k)
+		}
+		if cmdFlags[k] != nil && Contains(cmd.Parent().Use, cmdFlags[k].Required) && !flags[k].IsSet() && !flags[ak].IsSet() {
+			return nil, fmt.Errorf("Required flag %s is not set", k)
+		}
+		if !flags[k].IsSet() && flags[ak].IsSet() {
+			flagsNew[k] = flags[ak]
+			flagsNew[k].AllFlag = true
+			flagsNew[k].Type = cmdFlags[k].Type
+		}
+	}
+	return flagsNew, nil
+}
+
 // InitBatchCommand sets flags for a batch command appropriately
-func InitBatchCommand(parentCmd, childCmd *cobra.Command, cmdFlags, batchFlags map[string]*Flag) {
+func InitBatchCommand(parentCmd, childCmd *cobra.Command, cmdFlags, cmdAllFlags, batchFlags map[string]*Flag) {
 	parentCmd.AddCommand(childCmd)
 	flags := childCmd.Flags()
 	AddFlagsBatch(cmdFlags, flags, parentCmd.Use)
-	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
 	AddFlags(batchFlags, flags, childCmd.Use)
 	markFlagsRequired(childCmd, batchFlags, childCmd.Use)
+	AddFlags(cmdAllFlags, flags, parentCmd.Use)
 }
 
 // InitCommand sets flags for a command appropriately

@@ -35,7 +35,10 @@ var tokensListBatchCmd = &cobra.Command{
 	Short: "Batch list access tokens issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, tokenFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var tokensListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(tokensListCmd, tokensListBatchCmd, tokenFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(tokensListCmd, tokensListBatchCmd, tokenFlags, tokenFlagsALL, batchFlags)
 }

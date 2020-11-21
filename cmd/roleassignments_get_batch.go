@@ -35,7 +35,10 @@ var roleAssignmentsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieve role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, roleAssignmentFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var roleAssignmentsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(roleAssignmentsGetCmd, roleAssignmentsGetBatchCmd, roleAssignmentFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(roleAssignmentsGetCmd, roleAssignmentsGetBatchCmd, roleAssignmentFlags, roleAssignmentFlagsALL, batchFlags)
 }

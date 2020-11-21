@@ -34,7 +34,10 @@ var userAliasesListBatchCmd = &cobra.Command{
 	Short: "Batch lists user aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, userAliasFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -111,5 +114,5 @@ var userAliasesListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(userAliasesListCmd, userAliasesListBatchCmd, userAliasFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(userAliasesListCmd, userAliasesListBatchCmd, userAliasFlags, userAliasFlagsALL, batchFlags)
 }

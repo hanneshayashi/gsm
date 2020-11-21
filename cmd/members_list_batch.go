@@ -35,7 +35,10 @@ var membersListBatchCmd = &cobra.Command{
 	Short: "Batch lists group members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, memberFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var membersListBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(membersListCmd, membersListBatchCmd, memberFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(membersListCmd, membersListBatchCmd, memberFlags, memberFlagsALL, batchFlags)
 }

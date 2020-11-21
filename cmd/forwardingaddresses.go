@@ -58,6 +58,7 @@ var forwardingAddressFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var forwardingAddressFlagsALL = gsmhelpers.GetAllFlags(forwardingAddressFlags)
 
 func mapToForwardingAddress(flags map[string]*gsmhelpers.Value) (*gmail.ForwardingAddress, error) {
 	forwardingAddress := &gmail.ForwardingAddress{}

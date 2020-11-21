@@ -35,7 +35,10 @@ var rolesInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts roles using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roles/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, roleFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var rolesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(rolesInsertCmd, rolesInsertBatchCmd, roleFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(rolesInsertCmd, rolesInsertBatchCmd, roleFlags, roleFlagsALL, batchFlags)
 }

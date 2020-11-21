@@ -92,6 +92,7 @@ For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:u
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var draftFlagsALL = gsmhelpers.GetAllFlags(draftFlags)
 
 // draftsCmd represents the drafts command
 var draftsCmd = &cobra.Command{

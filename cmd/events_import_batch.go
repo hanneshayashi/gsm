@@ -35,7 +35,10 @@ var eventsImportBatchCmd = &cobra.Command{
 	Short: "Batch imports events using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/import",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, eventFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var eventsImportBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(eventsImportCmd, eventsImportBatchCmd, eventFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(eventsImportCmd, eventsImportBatchCmd, eventFlags, eventFlagsALL, batchFlags)
 }

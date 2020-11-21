@@ -55,6 +55,7 @@ The value can be the group's email address, group alias, or the unique group ID.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var groupAliasFlagsALL = gsmhelpers.GetAllFlags(groupAliasFlags)
 
 func init() {
 	rootCmd.AddCommand(groupAliasesCmd)

@@ -365,6 +365,7 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		Description:  `The original start time of the instance in the result.`,
 	},
 }
+var eventFlagsALL = gsmhelpers.GetAllFlags(eventFlags)
 
 func init() {
 	rootCmd.AddCommand(eventsCmd)

@@ -34,97 +34,96 @@ var sharedContactsCmd = &cobra.Command{
 	},
 }
 
-var (
-	sharedContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
-		"domain": {
-			AvailableFor: []string{"create", "delete", "get", "list"},
-			Type:         "string",
-			Description:  "DNS domain the contact should be created in",
-			Required:     []string{"create", "delete", "get", "list"},
-		},
-		"givenName": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Person's given name.",
-		},
-		"additionalName": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Additional name of the person, eg. middle name.",
-		},
-		"familyName": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Person's family name.",
-		},
-		"namePrefix": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Honorific prefix, eg. 'Mr' or 'Mrs'.",
-		},
-		"nameSuffix": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Honorific suffix, eg. 'san' or 'III'.",
-		},
-		"fullName": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "string",
-			Description:  "Unstructured representation of the name.",
-		},
-		"email": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `Email.
+var sharedContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+	"domain": {
+		AvailableFor: []string{"create", "delete", "get", "list"},
+		Type:         "string",
+		Description:  "DNS domain the contact should be created in",
+		Required:     []string{"create", "delete", "get", "list"},
+	},
+	"givenName": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Person's given name.",
+	},
+	"additionalName": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Additional name of the person, eg. middle name.",
+	},
+	"familyName": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Person's family name.",
+	},
+	"namePrefix": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Honorific prefix, eg. 'Mr' or 'Mrs'.",
+	},
+	"nameSuffix": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Honorific suffix, eg. 'san' or 'III'.",
+	},
+	"fullName": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "string",
+		Description:  "Unstructured representation of the name.",
+	},
+	"email": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Email.
 Must be in the form of "address=user@domain.com;displayName=Some Name;primary=[true|false];label=[Work|Home]".
 Can be used multiple time (although "primary" may only be used once`,
-		},
-		"phoneNumber": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `Phone number.
+	},
+	"phoneNumber": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Phone number.
 Must be in the form of "phoneNumber=+1 212 213181;primary=[true|false]label=[Work|Home|Mobile]".
 Can be used multiple time (although "primary" may only be used once`,
-		},
-		"im": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `IM addresses.
+	},
+	"im": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `IM addresses.
 Must be in the form of "protocol=http://schemas.google.com/g/2005#GOOGLE_TALK;address=some@address.com;primary=[true|false]label=[Work|Home|Mobile]".
 Can be used multiple time (although "primary" may only be used once`,
-		},
-		"organization": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `Organization of the contact.
+	},
+	"organization": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Organization of the contact.
 Must be in the form of "orgName=Some Company;orgDepartment=Some Department;orgTitle=Some Title;orgJobDescription=Some Description;orgSymbol=Some Symbol"`,
-		},
-		"extendedProperty": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `Extended Properties
+	},
+	"extendedProperty": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Extended Properties
 Must be in the form of "name=Some Name;Value=Some Value;Realm=Some Realm"`,
-		},
-		"structuredPostalAddress": {
-			AvailableFor: []string{"create", "update"},
-			Type:         "stringSlice",
-			Description: `Structed Postal Address
+	},
+	"structuredPostalAddress": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Structed Postal Address
 Must be in the form of "mailClass=...;label=...;usage=...;primary=[true|false];agent=...;housename=...;street=...;pobox=...neighborhood=...;city=...;subregion=...;region=...;postcode=...;country=...;formattedAddress=..."`,
-		},
-		"url": {
-			AvailableFor: []string{"delete", "get", "update"},
-			Type:         "string",
-			Description: `URL of the Shared Contact (Retrieve with "list" and look for "id").
+	},
+	"url": {
+		AvailableFor: []string{"delete", "get", "update"},
+		Type:         "string",
+		Description: `URL of the Shared Contact (Retrieve with "list" and look for "id").
 MUST BE https://!`,
-			Required: []string{"delete", "get", "update"},
-		},
-		"json": {
-			AvailableFor: []string{"create", "get", "list", "update"},
-			Type:         "bool",
-			Description:  `Output as JSON"`,
-		},
-	}
-)
+		Required: []string{"delete", "get", "update"},
+	},
+	"json": {
+		AvailableFor: []string{"create", "get", "list", "update"},
+		Type:         "bool",
+		Description:  `Output as JSON"`,
+	},
+}
+var sharedContactFlagsALL = gsmhelpers.GetAllFlags(sharedContactFlags)
 
 func init() {
 	rootCmd.AddCommand(sharedContactsCmd)

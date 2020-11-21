@@ -71,6 +71,7 @@ Defaults to 0 if not set, which will return zero members.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var contactGroupFlagsALL = gsmhelpers.GetAllFlags(contactGroupFlags)
 
 func init() {
 	rootCmd.AddCommand(contactGroupsCmd)

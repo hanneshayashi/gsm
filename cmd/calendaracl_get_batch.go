@@ -35,7 +35,10 @@ var calendarACLGetBatchCmd = &cobra.Command{
 	Short: "Batch gets ACL rules using a CSV file as input.",
 	Long:  `https://developers.google.com/calendar/v3/reference/acl/get`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, calendarACLFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var calendarACLGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(calendarACLGetCmd, calendarACLGetBatchCmd, calendarACLFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarACLGetCmd, calendarACLGetBatchCmd, calendarACLFlags, calendarACLFlagsALL, batchFlags)
 }

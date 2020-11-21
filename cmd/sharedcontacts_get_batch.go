@@ -34,7 +34,10 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 	Short: "Batch gets Domain Shared Contact via URL / ID using a CSV file as input",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, sharedContactFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -106,5 +109,5 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(sharedContactsGetCmd, sharedContactsGetBatchCmd, sharedContactFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(sharedContactsGetCmd, sharedContactsGetBatchCmd, sharedContactFlags, sharedContactFlagsALL, batchFlags)
 }

@@ -35,7 +35,10 @@ var filesExportBatchCmd = &cobra.Command{
 	Long: `Please note that the exported content is limited to 10MB.
 https://developers.google.com/drive/api/v3/reference/files/export`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, fileFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesExportCmd, filesExportBatchCmd, fileFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(filesExportCmd, filesExportBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }

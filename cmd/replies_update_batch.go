@@ -35,7 +35,10 @@ var repliesUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates replies to comments using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/replies/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, replyFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var repliesUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(repliesUpdateCmd, repliesUpdateBatchCmd, replyFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(repliesUpdateCmd, repliesUpdateBatchCmd, replyFlags, replyFlagsALL, batchFlags)
 }

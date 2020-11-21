@@ -34,7 +34,10 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 	Short: "Batch creates groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, groupCiFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(groupsCiCreateCmd, groupsCiCreateBatchCmd, groupCiFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(groupsCiCreateCmd, groupsCiCreateBatchCmd, groupCiFlags, groupCiFlagsALL, batchFlags)
 }

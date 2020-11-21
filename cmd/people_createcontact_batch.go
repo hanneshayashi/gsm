@@ -35,7 +35,10 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 	Short: "Batch create contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, peopleFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(peopleCreateContactCmd, peopleCreateContactBatchCmd, peopleFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(peopleCreateContactCmd, peopleCreateContactBatchCmd, peopleFlags, peopleFlagsALL, batchFlags)
 }

@@ -34,7 +34,10 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 	Short: "Batch makes users admins using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/makeAdmin",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, userFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -111,5 +114,5 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(usersMakeAdminCmd, usersMakeAdminBatchCmd, userFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(usersMakeAdminCmd, usersMakeAdminBatchCmd, userFlags, userFlagsALL, batchFlags)
 }

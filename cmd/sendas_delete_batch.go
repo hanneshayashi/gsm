@@ -34,7 +34,10 @@ var sendAsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes the specified send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, sendAsFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var sendAsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(sendAsDeleteCmd, sendAsDeleteBatchCmd, sendAsFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(sendAsDeleteCmd, sendAsDeleteBatchCmd, sendAsFlags, sendAsFlagsALL, batchFlags)
 }

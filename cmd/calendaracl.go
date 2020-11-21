@@ -97,6 +97,7 @@ Deleted ACLs will always be included if syncToken is provided.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var calendarACLFlagsALL = gsmhelpers.GetAllFlags(calendarACLFlags)
 
 func init() {
 	rootCmd.AddCommand(calendarACLCmd)

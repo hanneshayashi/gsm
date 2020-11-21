@@ -141,6 +141,7 @@ Supported fields include generatedResourceName, resourceName, name, buildingId, 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var resourcesCalendarFlagsALL = gsmhelpers.GetAllFlags(resourcesCalendarFlags)
 
 func init() {
 	rootCmd.AddCommand(resourcesCalendarsCmd)

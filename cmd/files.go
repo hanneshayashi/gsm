@@ -287,6 +287,7 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		Description:  `File id of the folder to migrate`,
 	},
 }
+var fileFlagsALL = gsmhelpers.GetAllFlags(fileFlags)
 
 func init() {
 	rootCmd.AddCommand(filesCmd)

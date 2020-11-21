@@ -34,7 +34,10 @@ var verificationCodesGenerateBatchCmd = &cobra.Command{
 	Short: "Batch generates backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/generate",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, verificationCodeFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -111,5 +114,5 @@ var verificationCodesGenerateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(verificationCodesGenerateCmd, verificationCodesGenerateBatchCmd, verificationCodeFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(verificationCodesGenerateCmd, verificationCodesGenerateBatchCmd, verificationCodeFlags, verificationCodeFlagsALL, batchFlags)
 }

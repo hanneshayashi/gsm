@@ -35,7 +35,10 @@ var membersPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, memberFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var membersPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(membersPatchCmd, membersPatchBatchCmd, memberFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(membersPatchCmd, membersPatchBatchCmd, memberFlags, memberFlagsALL, batchFlags)
 }

@@ -85,6 +85,7 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		Required: []string{"create", "get", "list", "update"},
 	},
 }
+var commentFlagsALL = gsmhelpers.GetAllFlags(commentFlags)
 
 func init() {
 	rootCmd.AddCommand(commentsCmd)

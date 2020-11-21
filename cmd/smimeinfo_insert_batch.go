@@ -35,7 +35,10 @@ var smimeInfoInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts S/MIME configs for the specified send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, smimeInfoFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var smimeInfoInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(smimeInfoInsertCmd, smimeInfoInsertBatchCmd, smimeInfoFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(smimeInfoInsertCmd, smimeInfoInsertBatchCmd, smimeInfoFlags, smimeInfoFlagsALL, batchFlags)
 }

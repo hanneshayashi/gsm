@@ -35,7 +35,10 @@ var calendarListsGetBatchCmd = &cobra.Command{
 	Short: "Batch returns calendars from the user's calendar list using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, calendarListFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var calendarListsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(calendarListsGetCmd, calendarListsGetBatchCmd, calendarListFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarListsGetCmd, calendarListsGetBatchCmd, calendarListFlags, calendarListFlagsALL, batchFlags)
 }

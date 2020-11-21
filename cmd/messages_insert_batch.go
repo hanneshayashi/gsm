@@ -35,7 +35,10 @@ var messagesInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts messages using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, messageFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var messagesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(messagesInsertCmd, messagesInsertBatchCmd, messageFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(messagesInsertCmd, messagesInsertBatchCmd, messageFlags, messageFlagsALL, batchFlags)
 }

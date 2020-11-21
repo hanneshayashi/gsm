@@ -35,7 +35,10 @@ var draftsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates drafts using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, draftFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var draftsUpdateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(draftsUpdateCmd, draftsUpdateBatchCmd, draftFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(draftsUpdateCmd, draftsUpdateBatchCmd, draftFlags, draftFlagsALL, batchFlags)
 }

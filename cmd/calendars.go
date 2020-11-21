@@ -72,6 +72,7 @@ If you want to access the primary calendar of the currently logged in user, use 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var calendarFlagsALL = gsmhelpers.GetAllFlags(calendarFlags)
 
 func init() {
 	rootCmd.AddCommand(calendarsCmd)

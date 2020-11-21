@@ -35,7 +35,10 @@ var calendarListsInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts existing calendar entries using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, calendarListFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var calendarListsInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(calendarListsInsertCmd, calendarListsInsertBatchCmd, calendarListFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarListsInsertCmd, calendarListsInsertBatchCmd, calendarListFlags, calendarListFlagsALL, batchFlags)
 }

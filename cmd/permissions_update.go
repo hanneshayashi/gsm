@@ -46,5 +46,5 @@ var permissionsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(peopleCmd, permissionsUpdateCmd, peopleFlags)
+	gsmhelpers.InitCommand(permissionsCmd, permissionsUpdateCmd, permissionFlags)
 }

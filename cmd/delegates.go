@@ -54,6 +54,7 @@ var delegateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var delegateFlagsALL = gsmhelpers.GetAllFlags(delegateFlags)
 
 func init() {
 	rootCmd.AddCommand(delegatesCmd)

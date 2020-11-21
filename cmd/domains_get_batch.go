@@ -35,7 +35,10 @@ var domainsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves domains of the customer using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, domainFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var domainsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(domainsGetCmd, domainsGetBatchCmd, domainFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(domainsGetCmd, domainsGetBatchCmd, domainFlags, domainFlagsALL, batchFlags)
 }

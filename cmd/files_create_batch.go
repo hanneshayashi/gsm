@@ -37,7 +37,10 @@ var filesCreateBatchCmd = &cobra.Command{
 	Short: "Batch Creates a new file or folder. Can also be used to upload files using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, fileFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -127,5 +130,5 @@ var filesCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesCreateCmd, filesCreateBatchCmd, fileFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(filesCreateCmd, filesCreateBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }

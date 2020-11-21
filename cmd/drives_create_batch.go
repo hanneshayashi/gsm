@@ -35,7 +35,10 @@ var drivesCreateBatchCmd = &cobra.Command{
 	Short: "Batch Creates a new shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/drives/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, driveFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var drivesCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(drivesCreateCmd, drivesCreateBatchCmd, driveFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(drivesCreateCmd, drivesCreateBatchCmd, driveFlags, driveFlagsALL, batchFlags)
 }

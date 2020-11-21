@@ -34,7 +34,10 @@ var resourcesFeaturesRenameBatchCmd = &cobra.Command{
 	Short: "Batch renames feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, resourcesFeatureFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -117,5 +120,5 @@ var resourcesFeaturesRenameBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesFeaturesRenameCmd, resourcesFeaturesRenameBatchCmd, resourcesFeatureFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(resourcesFeaturesRenameCmd, resourcesFeaturesRenameBatchCmd, resourcesFeatureFlags, resourcesFeatureFlagsALL, batchFlags)
 }

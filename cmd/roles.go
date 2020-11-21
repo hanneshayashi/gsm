@@ -63,6 +63,7 @@ var roleFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var roleFlagsALL = gsmhelpers.GetAllFlags(roleFlags)
 
 func init() {
 	rootCmd.AddCommand(rolesCmd)

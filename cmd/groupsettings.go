@@ -317,6 +317,8 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		Defaults:     map[string]interface{}{"get": true, "patch": true},
 	},
 }
+var groupSettingFlagsALL = gsmhelpers.GetAllFlags(groupSettingFlags)
+
 
 func init() {
 	rootCmd.AddCommand(groupSettingsCmd)

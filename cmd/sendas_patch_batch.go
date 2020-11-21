@@ -35,7 +35,10 @@ var sendAsPatchBatchCmd = &cobra.Command{
 	Short: `Batch patches custom "from" send-as aliases using a CSV file as input.`,
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, sendAsFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var sendAsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(sendAsPatchCmd, sendAsPatchBatchCmd, sendAsFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(sendAsPatchCmd, sendAsPatchBatchCmd, sendAsFlags, sendAsFlagsALL, batchFlags)
 }

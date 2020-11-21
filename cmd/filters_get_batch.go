@@ -35,7 +35,10 @@ var filtersGetBatchCmd = &cobra.Command{
 	Short: "Batch gets filters using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, filterFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var filtersGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filtersGetCmd, filtersGetBatchCmd, filterFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(filtersGetCmd, filtersGetBatchCmd, filterFlags, filterFlagsALL, batchFlags)
 }

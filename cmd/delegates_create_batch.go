@@ -43,7 +43,10 @@ Also note that when a new delegate is created, there may be up to a one minute d
 
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, delegateFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -121,5 +124,5 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(delegatesCreateCmd, delegatesCreateBatchCmd, delegateFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(delegatesCreateCmd, delegatesCreateBatchCmd, delegateFlags, delegateFlagsALL, batchFlags)
 }

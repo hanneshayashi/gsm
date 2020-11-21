@@ -160,6 +160,7 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var messageFlagsALL = gsmhelpers.GetAllFlags(messageFlags)
 
 func init() {
 	rootCmd.AddCommand(messagesCmd)

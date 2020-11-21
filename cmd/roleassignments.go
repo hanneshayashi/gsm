@@ -85,6 +85,7 @@ If included in the request, returns role assignments only for this user.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var roleAssignmentFlagsALL = gsmhelpers.GetAllFlags(roleAssignmentFlags)
 
 func init() {
 	rootCmd.AddCommand(roleAssignmentsCmd)

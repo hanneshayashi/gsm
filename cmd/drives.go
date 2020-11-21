@@ -99,6 +99,7 @@ See the https://developers.google.com/drive/api/v3/search-shareddrives for suppo
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var driveFlagsALL = gsmhelpers.GetAllFlags(driveFlags)
 
 func init() {
 	rootCmd.AddCommand(drivesCmd)

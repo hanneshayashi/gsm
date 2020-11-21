@@ -132,6 +132,7 @@ For example, ["B2", "B1", "L", "1", "2", "2M", "3", "PH"] Must contain at least 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var resourcesBuildingFlagsALL = gsmhelpers.GetAllFlags(resourcesBuildingFlags)
 
 func init() {
 	rootCmd.AddCommand(resourcesBuildingsCmd)

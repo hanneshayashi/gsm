@@ -34,7 +34,10 @@ var peopleDeleteContactBatchCmd = &cobra.Command{
 	Short: "Batch deletes contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/deleteContact",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, peopleFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -111,5 +114,5 @@ var peopleDeleteContactBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(peopleDeleteContactCmd, peopleDeleteContactBatchCmd, peopleFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(peopleDeleteContactCmd, peopleDeleteContactBatchCmd, peopleFlags, peopleFlagsALL, batchFlags)
 }

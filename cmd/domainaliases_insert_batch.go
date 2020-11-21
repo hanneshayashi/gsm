@@ -35,7 +35,10 @@ var domainAliasesInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts Domain aliases of a customer using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, domainAliasFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var domainAliasesInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(domainAliasesInsertCmd, domainAliasesInsertBatchCmd, domainAliasFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(domainAliasesInsertCmd, domainAliasesInsertBatchCmd, domainAliasFlags, domainAliasFlagsALL, batchFlags)
 }

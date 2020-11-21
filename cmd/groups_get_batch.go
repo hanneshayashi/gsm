@@ -35,7 +35,10 @@ var groupsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups' properties using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, groupFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var groupsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(groupsGetCmd, groupsGetBatchCmd, groupFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(groupsGetCmd, groupsGetBatchCmd, groupFlags, groupFlagsALL, batchFlags)
 }

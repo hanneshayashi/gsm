@@ -86,6 +86,7 @@ This is only applicable to Google Docs.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var revisionFlagsALL = gsmhelpers.GetAllFlags(revisionFlags)
 
 func init() {
 	rootCmd.AddCommand(revisionsCmd)

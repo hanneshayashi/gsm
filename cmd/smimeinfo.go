@@ -95,6 +95,7 @@ A base64-encoded string.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var smimeInfoFlagsALL = gsmhelpers.GetAllFlags(smimeInfoFlags)
 
 func init() {
 	rootCmd.AddCommand(smimeInfoCmd)

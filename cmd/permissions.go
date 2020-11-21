@@ -145,6 +145,7 @@ The time cannot be more than a year in the future`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var permissionFlagsALL = gsmhelpers.GetAllFlags(permissionFlags)
 
 func init() {
 	rootCmd.AddCommand(permissionsCmd)

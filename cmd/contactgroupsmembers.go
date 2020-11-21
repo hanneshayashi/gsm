@@ -58,6 +58,7 @@ var contactGroupMemberFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var contactGroupMemberFlagsALL = gsmhelpers.GetAllFlags(contactGroupMemberFlags)
 
 func init() {
 	rootCmd.AddCommand(contactGroupsMembersCmd)

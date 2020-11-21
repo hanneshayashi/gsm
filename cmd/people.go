@@ -681,6 +681,7 @@ value    - The end user specified value of the user defined data.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var peopleFlagsALL = gsmhelpers.GetAllFlags(peopleFlags)
 
 func init() {
 	rootCmd.AddCommand(peopleCmd)

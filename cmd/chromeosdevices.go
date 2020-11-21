@@ -170,6 +170,7 @@ Maximum length is 500 characters. Empty values are allowed.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var chromeOsDeviceFlagsALL = gsmhelpers.GetAllFlags(chromeOsDeviceFlags)
 
 func init() {
 	rootCmd.AddCommand(chromeOsDevicesCmd)

@@ -111,6 +111,7 @@ If it's an ID, it should match with the ID of the user object.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var groupFlagsALL = gsmhelpers.GetAllFlags(groupFlags)
 
 func init() {
 	rootCmd.AddCommand(groupsCmd)

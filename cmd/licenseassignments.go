@@ -77,6 +77,7 @@ This key could break if the current user's email address changes.
 If the userId is suspended, the license status changes.`,
 	},
 }
+var licenseAssignmentFlagsALL = gsmhelpers.GetAllFlags(licenseAssignmentFlags)
 
 func init() {
 	rootCmd.AddCommand(licenseAssignmentsCmd)

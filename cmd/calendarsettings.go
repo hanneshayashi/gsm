@@ -47,6 +47,7 @@ var calendarSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var calendarSettingFlagsALL = gsmhelpers.GetAllFlags(calendarSettingFlags)
 
 func init() {
 	rootCmd.AddCommand(calendarSettingsCmd)

@@ -34,7 +34,10 @@ var tokensDeleteBatchCmd = &cobra.Command{
 	Short: "Batch delete access tokens issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, tokenFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var tokensDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(tokensDeleteCmd, tokensDeleteBatchCmd, tokenFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(tokensDeleteCmd, tokensDeleteBatchCmd, tokenFlags, tokenFlagsALL, batchFlags)
 }

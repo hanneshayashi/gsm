@@ -73,6 +73,7 @@ This field is used for setting the content, while htmlContent should be displaye
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var replyFlagsALL = gsmhelpers.GetAllFlags(replyFlags)
 
 func init() {
 	rootCmd.AddCommand(repliesCmd)

@@ -34,7 +34,10 @@ var usersUndeleteBatchCmd = &cobra.Command{
 	Short: "Batch undeletes users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, userFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -111,5 +114,5 @@ var usersUndeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(usersUndeleteCmd, usersUndeleteBatchCmd, userFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(usersUndeleteCmd, usersUndeleteBatchCmd, userFlags, userFlagsALL, batchFlags)
 }

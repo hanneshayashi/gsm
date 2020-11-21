@@ -34,7 +34,10 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes permissions by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, permissionFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -112,5 +115,5 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(permissionsDeleteCmd, permissionsDeleteBatchCmd, permissionFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(permissionsDeleteCmd, permissionsDeleteBatchCmd, permissionFlags, permissionFlagsALL, batchFlags)
 }

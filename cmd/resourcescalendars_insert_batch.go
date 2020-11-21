@@ -35,7 +35,10 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, resourcesCalendarFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesCalendarsInsertCmd, resourcesCalendarsInsertBatchCmd, resourcesCalendarFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(resourcesCalendarsInsertCmd, resourcesCalendarsInsertBatchCmd, resourcesCalendarFlags, resourcesCalendarFlagsALL, batchFlags)
 }

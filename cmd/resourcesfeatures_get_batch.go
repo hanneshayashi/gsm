@@ -35,7 +35,10 @@ var resourcesFeaturesGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, resourcesFeatureFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -108,5 +111,5 @@ var resourcesFeaturesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesFeaturesGetCmd, resourcesFeaturesGetBatchCmd, resourcesFeatureFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(resourcesFeaturesGetCmd, resourcesFeaturesGetBatchCmd, resourcesFeatureFlags, resourcesFeatureFlagsALL, batchFlags)
 }

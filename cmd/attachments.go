@@ -60,6 +60,7 @@ The special value me can be used to indicate the authenticated user.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+var attachmentFlagsALL = gsmhelpers.GetAllFlags(attachmentFlags)
 
 func init() {
 	rootCmd.AddCommand(attachmentsCmd)

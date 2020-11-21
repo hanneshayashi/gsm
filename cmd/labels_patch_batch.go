@@ -35,7 +35,10 @@ var labelsPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches labels using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		flags, err := gsmhelpers.ConsolidateFlags(cmd, labelFlags)
+		if err != nil {
+			log.Fatalf("Error consolidating flags: %v", err)
+		}
 		csv, err := gsmhelpers.GetCSV(flags)
 		if err != nil {
 			log.Fatalf("Error with CSV file: %v\n", err)
@@ -113,5 +116,5 @@ var labelsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(labelsPatchCmd, labelsPatchBatchCmd, labelFlags, batchFlags)
+	gsmhelpers.InitBatchCommand(labelsPatchCmd, labelsPatchBatchCmd, labelFlags, labelFlagsALL, batchFlags)
 }
