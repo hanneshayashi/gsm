@@ -43,10 +43,11 @@ import (
 )
 
 var (
-	cfgDir     string
-	cfgFile    string
-	dwdSubject string
-	batchFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+	cfgDir       string
+	cfgFile      string
+	dwdSubject   string
+	batchThreads int
+	batchFlags   map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
 			Type:         "string",
@@ -91,16 +92,17 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig, initLog, auth)
+	cobra.OnInitialize(initConfig, initLog, auth, initThreads)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
+	rootCmd.PersistentFlags().IntVar(&batchThreads, "batchThreads", 0, "Specify the number of threads that should be used for batch commands (overrides value in config file. Max 16)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -179,4 +181,11 @@ func initLog() {
 	}
 
 	log.SetOutput(file)
+}
+
+func initThreads() {
+	if batchThreads == 0 {
+		batchThreads = viper.GetInt("threads")
+	}
+	batchThreads = gsmhelpers.MaxThreads(batchThreads)
 }

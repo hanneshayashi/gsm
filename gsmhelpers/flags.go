@@ -84,6 +84,11 @@ func (v Value) GetInt64() int64 {
 	return InterfaceToInt64(v.Value)
 }
 
+// GetInt returns the value of the flag as an int
+func (v Value) GetInt() int {
+	return InterfaceToInt(v.Value)
+}
+
 // GetFloat64 returns the value of the flag as a float64
 func (v Value) GetFloat64() float64 {
 	return InterfaceToFloat64(v.Value)
@@ -190,6 +195,15 @@ func InterfaceToInt64(i interface{}) int64 {
 	return 0
 }
 
+// InterfaceToInt converts an interface to an int or returns 0 if the interface is nil
+// Panics if the interface is not an int
+func InterfaceToInt(i interface{}) int {
+	if i != nil {
+		return i.(int)
+	}
+	return 0
+}
+
 // BatchFlagToInt64 returns a value from a slice based on an index and default value
 func BatchFlagToInt64(line []string, index int64, def interface{}) (value int64, err error) {
 	if index != 0 {
@@ -282,6 +296,8 @@ func FlagsToMap(flags *pflag.FlagSet) (m map[string]*Value) {
 			m[k].Value, _ = flags.GetStringArray(k)
 		case "uint64":
 			m[k].Value, _ = flags.GetUint64(k)
+		case "int":
+			m[k].Value, _ = flags.GetInt(k)
 		default:
 			m[k].Value, _ = flags.GetString(k)
 		}
@@ -318,6 +334,8 @@ func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 			flags.StringArray(f, nil, m[f].Description)
 		case "uint64":
 			flags.Uint64(f, InterfaceToUint64(def), m[f].Description)
+		case "int":
+			flags.Int(f, InterfaceToInt(def), m[f].Description)
 		default:
 			flags.String(f, InterfaceToString(def), m[f].Description)
 		}

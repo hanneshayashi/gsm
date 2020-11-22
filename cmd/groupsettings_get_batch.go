@@ -35,80 +35,53 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups' settings identified by the group email address using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, groupSettingFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, groupSettingFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan *groupssettings.Groups, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := []*groupssettings.Groups{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, groupSettingFlags, line, "get")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					errKey := fmt.Sprintf("%s:", m["groupUniqueId"].GetString())
-					operation := func() error {
-						result, err := gsmgroupssettings.GetGroupSettings(m["groupUniqueId"].GetString(), m["fields"].GetString())
-						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		results := make(chan *groupssettings.Groups, batchThreads)
+		final := []*groupssettings.Groups{}
+		go func() {
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						errKey := fmt.Sprintf("%s:", m["groupUniqueId"].GetString())
+						operation := func() error {
+							result, err := gsmgroupssettings.GetGroupSettings(m["groupUniqueId"].GetString(), m["fields"].GetString())
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
 							}
-							log.Println(errKey, "Giving up after", err)
+							if m["ignoreDeprecated"].GetBool() {
+								result = ignoreDeprecatedGroupSettings(result)
+							}
+							results <- result
 							return nil
 						}
-						if m["ignoreDeprecated"].GetBool() {
-							result = ignoreDeprecatedGroupSettings(result)
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
 						}
-						results <- result
-						return nil
+						time.Sleep(200 * time.Millisecond)
 					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
-		}
-		wg3.Add(1)
-		go func() {
-			for res := range results {
-				final = append(final, res)
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

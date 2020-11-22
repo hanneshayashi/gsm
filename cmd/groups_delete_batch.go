@@ -34,81 +34,54 @@ var groupsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups' properties using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, groupFlags)
+		retrier := gsmhelpers.NewStandardRetrier()
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupFlags, batchThreads)
 		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
+			log.Fatalln(err)
 		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, groupFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
 		type resultStruct struct {
 			GroupKey string `json:"groupKey,omitempty"`
 			Result   bool   `json:"result"`
 		}
-		results := make(chan resultStruct, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
+		results := make(chan resultStruct, batchThreads)
 		final := []resultStruct{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
 		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, groupFlags, line, "delete")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
-		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					errKey := fmt.Sprintf("%s:", m["groupKey"].GetString())
-					operation := func() error {
-						result, err := gsmadmin.DeleteGroup(m["groupKey"].GetString())
-						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						errKey := fmt.Sprintf("%s:", m["groupKey"].GetString())
+						operation := func() error {
+							result, err := gsmadmin.DeleteGroup(m["groupKey"].GetString())
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
 							}
-							log.Println(errKey, "Giving up after", err)
+							results <- resultStruct{GroupKey: m["groupKey"].GetString(), Result: result}
 							return nil
 						}
-						results <- resultStruct{GroupKey: m["groupKey"].GetString(), Result: result}
-						return nil
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
 					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
-		}
-		wg3.Add(1)
-		go func() {
-			for res := range results {
-				final = append(final, res)
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

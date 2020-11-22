@@ -35,82 +35,55 @@ var resourcesCalendarsPatchBatchCmd = &cobra.Command{
 	Short: "Batch patchs calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, resourcesCalendarFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, resourcesCalendarFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan *admin.CalendarResource, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := []*admin.CalendarResource{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, resourcesCalendarFlags, line, "patch")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					c, err := mapToResourceCalendar(m)
-					if err != nil {
-						log.Printf("Error building resourceCalendar object: %v", err)
-						continue
-					}
-					errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(), m["calendarResourceId"].GetString())
-					operation := func() error {
-						result, err := gsmadmin.PatchResourcesCalendar(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString(), c)
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		results := make(chan *admin.CalendarResource, batchThreads)
+		final := []*admin.CalendarResource{}
+		go func() {
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						c, err := mapToResourceCalendar(m)
 						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
+							log.Printf("Error building resourceCalendar object: %v", err)
+							continue
+						}
+						errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(), m["calendarResourceId"].GetString())
+						operation := func() error {
+							result, err := gsmadmin.PatchResourcesCalendar(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString(), c)
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
 							}
-							log.Println(errKey, "Giving up after", err)
+							results <- result
 							return nil
 						}
-						results <- result
-						return nil
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
 					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
-		}
-		wg3.Add(1)
-		go func() {
-			for res := range results {
-				final = append(final, res)
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

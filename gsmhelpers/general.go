@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"gsm/gsmadmin"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -133,12 +134,15 @@ func Contains(s string, slice []string) bool {
 }
 
 // MaxThreads returns the maximum number of threads (goroutines that should be spawned)
-func MaxThreads(lines int) int {
-	numCPU := runtime.NumCPU() * 2
-	if lines < numCPU {
-		return lines
+func MaxThreads(threads int) int {
+	d := runtime.NumCPU() * 2
+	if threads == 0 {
+		return d
 	}
-	return numCPU
+	if threads > 16 {
+		return 16
+	}
+	return threads
 }
 
 // PrettyPrint is used to output the result of an API call in the requested format
@@ -222,4 +226,64 @@ func CreateDocs(cmd *cobra.Command) {
 		w.Flush()
 	}
 	os.Remove(tmpDir)
+}
+
+// getCSVChan uses a FlagSet to read a CSV file and parse it accordingly
+func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
+	path := flags["path"].GetString()
+	var delimiter rune
+	if flags["delimiter"].Changed {
+		delimiter = flags["delimiter"].GetRune()
+	} else {
+		delimiter = ';'
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	r := csv.NewReader(f)
+	r.Comma = delimiter
+	return r, nil
+}
+
+// GetBatchMaps returns a channel containing maps to be used for batch requests to the Google API
+func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<-chan map[string]*Value, error) {
+	flags, err := ConsolidateFlags(cmd, cmdFlags)
+	if err != nil {
+		return nil, fmt.Errorf("Error consolidating flags: %v", err)
+	}
+	csvReader, err := getCSVReader(flags)
+	if err != nil {
+		return nil, fmt.Errorf("Error with CSV file: %v", err)
+	}
+	maps := make(chan map[string]*Value, threads)
+	line, err := csvReader.Read()
+	if err != nil {
+		return nil, err
+	}
+	err = CheckBatchFlags(flags, cmdFlags, int64(len(line)))
+	if err != nil {
+		return nil, fmt.Errorf("Error with batch flag index: %v", err)
+	}
+	cmdName := cmd.Parent().Use
+	if !flags["skipHeader"].GetBool() {
+		maps <- BatchFlagsToMap(flags, cmdFlags, line, cmdName)
+	}
+	i := 0
+	go func() {
+		defer close(maps)
+		for {
+			i++
+			line, err := csvReader.Read()
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				log.Printf("Error reading line %d: %v\n", i, err)
+				continue
+			}
+			maps <- BatchFlagsToMap(flags, cmdFlags, line, cmdName)
+		}
+	}()
+	return maps, nil
 }

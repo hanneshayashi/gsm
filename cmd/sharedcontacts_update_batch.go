@@ -34,86 +34,59 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates Domain Shared Contacts using a CSV file as input",
 	Long:  `https://developers.google.com/admin-sdk/domain-shared-contacts`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, sharedContactFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, sharedContactFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan *gsmadmin.Entry, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := []*gsmadmin.Entry{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, sharedContactFlags, line, "update")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					errKey := fmt.Sprintf("%s:", m["url"].GetString())
-					operation := func() error {
-						s, _, err := gsmadmin.GetSharedContact(m["url"].GetString())
-						if err != nil {
-							log.Printf("Error getting shared contact: %v\n", err)
-							return nil
-						}
-						s, err = mapToSharedContact(m, s)
-						if err != nil {
-							log.Printf("Error building shared contact object: %v\n", err)
-							return nil
-						}
-						result, statusCode, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
-						if err != nil {
-							if statusCode == 403 {
-								log.Println(errKey, "Retrying after", err)
-								return err
-							}
-							log.Println(errKey, "Giving up after", err)
-							return nil
-						}
-						results <- result
-						return nil
-					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
 		}
-		wg3.Add(1)
+		results := make(chan *gsmadmin.Entry, batchThreads)
+		final := []*gsmadmin.Entry{}
 		go func() {
-			for res := range results {
-				final = append(final, res)
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						errKey := fmt.Sprintf("%s:", m["url"].GetString())
+						operation := func() error {
+							s, _, err := gsmadmin.GetSharedContact(m["url"].GetString())
+							if err != nil {
+								log.Printf("Error getting shared contact: %v\n", err)
+								return nil
+							}
+							s, err = mapToSharedContact(m, s)
+							if err != nil {
+								log.Printf("Error building shared contact object: %v\n", err)
+								return nil
+							}
+							result, statusCode, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
+							if err != nil {
+								if statusCode == 403 {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
+							}
+							results <- result
+							return nil
+						}
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
+					}
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

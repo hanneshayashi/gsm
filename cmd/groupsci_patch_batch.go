@@ -34,87 +34,60 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, groupCiFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, groupCiFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan map[string]interface{}, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := []map[string]interface{}{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, groupCiFlags, line, "patch")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					errKey := fmt.Sprintf("%s/%s:", m["name"].GetString(), m["email"].GetString())
-					operation := func() error {
-						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
-						if err != nil {
-							log.Printf("%v\n", err)
-							return nil
-						}
-						g, err := mapToGroupCi(m)
-						if err != nil {
-							log.Printf("Error building group object: %v\n", err)
-							return nil
-						}
-						result, err := gsmci.PatchGroup(name, m["updateMask"].GetString(), m["fields"].GetString(), g)
-						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
-							}
-							log.Println(errKey, "Giving up after", err)
-							return nil
-						}
-						results <- result
-						return nil
-					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
 		}
-		wg3.Add(1)
+		results := make(chan map[string]interface{}, batchThreads)
+		final := []map[string]interface{}{}
 		go func() {
-			for res := range results {
-				final = append(final, res)
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						errKey := fmt.Sprintf("%s/%s:", m["name"].GetString(), m["email"].GetString())
+						operation := func() error {
+							name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
+							if err != nil {
+								log.Printf("%v\n", err)
+								return nil
+							}
+							g, err := mapToGroupCi(m)
+							if err != nil {
+								log.Printf("Error building group object: %v\n", err)
+								return nil
+							}
+							result, err := gsmci.PatchGroup(name, m["updateMask"].GetString(), m["fields"].GetString(), g)
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
+							}
+							results <- result
+							return nil
+						}
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
+					}
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

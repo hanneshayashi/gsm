@@ -111,6 +111,12 @@ Can be relative to the binary or fully qualified.`,
 		Type:         "bool",
 		Description:  `List detailed information about configs.`,
 	},
+	"threads": {
+		AvailableFor: []string{"new"},
+		Type:         "int",
+		Description:  `The maximum number of threads to use.`,
+		Defaults:     map[string]interface{}{"new": gsmhelpers.MaxThreads(0)},
+	},
 }
 
 func init() {
@@ -135,6 +141,9 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	}
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()
+	}
+	if flags["threads"].IsSet() {
+		config.Threads = flags["threads"].GetInt()
 	}
 	return config, nil
 }

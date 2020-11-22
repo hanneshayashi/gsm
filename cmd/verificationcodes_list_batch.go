@@ -35,77 +35,50 @@ var verificationCodesListBatchCmd = &cobra.Command{
 	Short: "Batch lists backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, verificationCodeFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, verificationCodeFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan []*admin.VerificationCode, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := [][]*admin.VerificationCode{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, verificationCodeFlags, line, "list")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					errKey := fmt.Sprintf("%s:", m["userKey"].GetString())
-					operation := func() error {
-						result, err := gsmadmin.ListVerificationCodes(m["userKey"].GetString(), m["fields"].GetString())
-						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		results := make(chan []*admin.VerificationCode, batchThreads)
+		final := [][]*admin.VerificationCode{}
+		go func() {
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						errKey := fmt.Sprintf("%s:", m["userKey"].GetString())
+						operation := func() error {
+							result, err := gsmadmin.ListVerificationCodes(m["userKey"].GetString(), m["fields"].GetString())
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
 							}
-							log.Println(errKey, "Giving up after", err)
+							results <- result
 							return nil
 						}
-						results <- result
-						return nil
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
 					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
-		}
-		wg3.Add(1)
-		go func() {
-			for res := range results {
-				final = append(final, res)
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }

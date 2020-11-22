@@ -35,82 +35,55 @@ var sendAsPatchBatchCmd = &cobra.Command{
 	Short: `Batch patches custom "from" send-as aliases using a CSV file as input.`,
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		flags, err := gsmhelpers.ConsolidateFlags(cmd, sendAsFlags)
-		if err != nil {
-			log.Fatalf("Error consolidating flags: %v", err)
-		}
-		csv, err := gsmhelpers.GetCSV(flags)
-		if err != nil {
-			log.Fatalf("Error with CSV file: %v\n", err)
-		}
-		err = gsmhelpers.CheckBatchFlags(flags, sendAsFlags, int64(len(csv[0])))
-		if err != nil {
-			log.Fatalf("Error with batch flag index: %v\n", err)
-		}
-		l := len(csv)
-		results := make(chan *gmail.SendAs, l)
-		maps := make(chan map[string]*gsmhelpers.Value, l)
-		final := []*gmail.SendAs{}
-		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
-		var wg3 sync.WaitGroup
-		wg1.Add(1)
-		go func() {
-			for _, line := range csv {
-				m := gsmhelpers.BatchFlagsToMap(flags, sendAsFlags, line, "patch")
-				maps <- m
-			}
-			close(maps)
-			wg1.Done()
-		}()
-		wg2.Add(1)
 		retrier := gsmhelpers.NewStandardRetrier()
-		for i := 0; i < gsmhelpers.MaxThreads(l); i++ {
-			wg2.Add(1)
-			go func() {
-				for m := range maps {
-					var err error
-					s, err := mapToSendAs(m)
-					if err != nil {
-						log.Printf("Error building send-as object: %v\n", err)
-						continue
-					}
-					errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["sendAsEmail"].GetString())
-					operation := func() error {
-						result, err := gsmgmail.PatchSendAs(m["userId"].GetString(), m["sendAsEmail"].GetString(), m["fields"].GetString(), s)
+		var wg sync.WaitGroup
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sendAsFlags, batchThreads)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		results := make(chan *gmail.SendAs, batchThreads)
+		final := []*gmail.SendAs{}
+		go func() {
+			for i := 0; i < batchThreads; i++ {
+				wg.Add(1)
+				go func() {
+					for m := range maps {
+						var err error
+						s, err := mapToSendAs(m)
 						if err != nil {
-							retryable := gsmhelpers.ErrorIsRetryable(err)
-							if retryable {
-								log.Println(errKey, "Retrying after", err)
-								return err
+							log.Printf("Error building send-as object: %v\n", err)
+							continue
+						}
+						errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["sendAsEmail"].GetString())
+						operation := func() error {
+							result, err := gsmgmail.PatchSendAs(m["userId"].GetString(), m["sendAsEmail"].GetString(), m["fields"].GetString(), s)
+							if err != nil {
+								retryable := gsmhelpers.ErrorIsRetryable(err)
+								if retryable {
+									log.Println(errKey, "Retrying after", err)
+									return err
+								}
+								log.Println(errKey, "Giving up after", err)
+								return nil
 							}
-							log.Println(errKey, "Giving up after", err)
+							results <- result
 							return nil
 						}
-						results <- result
-						return nil
+						err = retrier.Run(operation)
+						if err != nil {
+							log.Println(errKey, "Max retries reached. Giving up after", err)
+						}
+						time.Sleep(200 * time.Millisecond)
 					}
-					err = retrier.Run(operation)
-					if err != nil {
-						log.Println(errKey, "Max retries reached. Giving up after", err)
-					}
-					time.Sleep(200 * time.Millisecond)
-				}
-				wg2.Done()
-			}()
-		}
-		wg3.Add(1)
-		go func() {
-			for res := range results {
-				final = append(final, res)
+					wg.Done()
+				}()
 			}
-			wg3.Done()
+			wg.Wait()
+			close(results)
 		}()
-		wg2.Done()
-		wg1.Wait()
-		wg2.Wait()
-		close(results)
-		wg3.Wait()
+		for res := range results {
+			final = append(final, res)
+		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }
