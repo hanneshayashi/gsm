@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -37,14 +38,15 @@ var domainAliasesGetBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan *admin.DomainAlias, batchThreads)
+		results := make(chan *admin.DomainAlias, cap)
 		final := []*admin.DomainAlias{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

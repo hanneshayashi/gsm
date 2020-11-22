@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"google.golang.org/api/groupssettings/v1"
 )
 
@@ -37,14 +38,15 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan *groupssettings.Groups, batchThreads)
+		results := make(chan *groupssettings.Groups, cap)
 		final := []*groupssettings.Groups{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

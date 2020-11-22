@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"google.golang.org/api/people/v1"
 )
 
@@ -37,14 +38,15 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan *people.ContactGroup, batchThreads)
+		results := make(chan *people.ContactGroup, cap)
 		final := []*people.ContactGroup{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

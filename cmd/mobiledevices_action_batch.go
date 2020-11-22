@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // mobileDevicesActionBatchCmd represents the batch command
@@ -36,7 +37,8 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -45,10 +47,10 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 			ResourceID string `json:"resourceId,omitempty"`
 			Result     bool   `json:"result"`
 		}
-		results := make(chan resultStruct, batchThreads)
+		results := make(chan resultStruct, cap)
 		final := []resultStruct{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

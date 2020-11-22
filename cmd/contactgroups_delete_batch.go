@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // contactGroupsDeleteBatchCmd represents the batch command
@@ -36,7 +37,8 @@ var contactGroupsDeleteBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -44,10 +46,10 @@ var contactGroupsDeleteBatchCmd = &cobra.Command{
 			ResourceName string `json:"resourceName,omitempty"`
 			Result       bool   `json:"result,omitempty"`
 		}
-		results := make(chan resultStruct, batchThreads)
+		results := make(chan resultStruct, cap)
 		final := []resultStruct{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

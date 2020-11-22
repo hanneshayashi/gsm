@@ -256,6 +256,11 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 	if err != nil {
 		return nil, fmt.Errorf("Error with CSV file: %v", err)
 	}
+	if flags["batchThreads"].IsSet() {
+		threads = MaxThreads(flags["batchThreads"].GetInt())
+	} else {
+		threads = MaxThreads(threads)
+	}
 	maps := make(chan map[string]*Value, threads)
 	line, err := csvReader.Read()
 	if err != nil {

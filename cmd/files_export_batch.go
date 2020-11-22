@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // filesExportBatchCmd represents the batch command
@@ -37,14 +38,15 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan string, batchThreads)
+		results := make(chan string, cap)
 		final := []string{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

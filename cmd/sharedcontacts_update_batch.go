@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // sharedContactsUpdateBatchCmd represents the batch command
@@ -36,14 +37,15 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan *gsmadmin.Entry, batchThreads)
+		results := make(chan *gsmadmin.Entry, cap)
 		final := []*gsmadmin.Entry{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

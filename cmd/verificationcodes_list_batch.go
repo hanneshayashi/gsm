@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -37,14 +38,15 @@ var verificationCodesListBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan []*admin.VerificationCode, batchThreads)
+		results := make(chan []*admin.VerificationCode, cap)
 		final := [][]*admin.VerificationCode{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {

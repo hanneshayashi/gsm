@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -37,7 +38,8 @@ var aspsListBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags, batchThreads)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags, viper.GetInt("threads"))
+		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -45,10 +47,10 @@ var aspsListBatchCmd = &cobra.Command{
 			UserKey string       `json:"userKey,omitempty"`
 			Asps    []*admin.Asp `json:"asps,omitempty"`
 		}
-		results := make(chan resultStruct, batchThreads)
+		results := make(chan resultStruct, cap)
 		final := []resultStruct{}
 		go func() {
-			for i := 0; i < batchThreads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {
