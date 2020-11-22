@@ -37,7 +37,6 @@ var filesGetBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		retrier := gsmhelpers.NewStandardRetrier()
 		var wg sync.WaitGroup
-		fmt.Println(batchThreads)
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, batchThreads)
 		if err != nil {
 			log.Fatalln(err)
