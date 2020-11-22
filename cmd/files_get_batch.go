@@ -52,8 +52,8 @@ var filesGetBatchCmd = &cobra.Command{
 						var err error
 						errKey := fmt.Sprintf("%s:", m["fileId"].GetString())
 						operation := func() error {
-							// result, err := gsmdrive.GetFile(m["fileId"].GetString(), m["fields"].GetString(), m["includePermissionsForView"].GetString())
-							result, err := gsmdrive.RandomFile(m["fileId"].GetString(), m["fields"].GetString(), m["includePermissionsForView"].GetString())
+							result, err := gsmdrive.GetFile(m["fileId"].GetString(), m["fields"].GetString(), m["includePermissionsForView"].GetString())
+							// result, err := gsmdrive.RandomFile(m["fileId"].GetString(), m["fields"].GetString(), m["includePermissionsForView"].GetString())
 							if err != nil {
 								retryable := gsmhelpers.ErrorIsRetryable(err)
 								if retryable {

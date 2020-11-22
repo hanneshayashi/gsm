@@ -18,9 +18,7 @@ package gsmdrive
 
 import (
 	"io"
-	"math/rand"
 	"os"
-	"time"
 
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
@@ -146,29 +144,29 @@ func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
 }
 
 // RandomFile gets a file's metadata or content by ID.
-func RandomFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
-	r := &drive.File{
-		Id: fileID,
-	}
-	err := &googleapi.Error{}
-	rand.Seed(time.Now().UnixNano())
-	random := rand.Intn(1)
-	if random%1 == 0 {
-		return r, nil
-	}
-	if random%3 == 3 {
-		err.Code = 404
-		return nil, err
-	}
-	err.Code = 403
-	foo := []string{
-		"Rate limit reached",
-		"Quota exceeded",
-	}
-	rand2 := rand.Intn(2)
-	err.Message = foo[rand2]
-	return nil, err
-}
+// func RandomFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
+// 	r := &drive.File{
+// 		Id: fileID,
+// 	}
+// 	err := &googleapi.Error{}
+// 	rand.Seed(time.Now().UnixNano())
+// 	random := rand.Intn(1)
+// 	if random%1 == 0 {
+// 		return r, nil
+// 	}
+// 	if random%3 == 3 {
+// 		err.Code = 404
+// 		return nil, err
+// 	}
+// 	err.Code = 403
+// 	foo := []string{
+// 		"Rate limit reached",
+// 		"Quota exceeded",
+// 	}
+// 	rand2 := rand.Intn(2)
+// 	err.Message = foo[rand2]
+// 	return nil, err
+// }
 
 // GetFile gets a file's metadata or content by ID.
 func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
