@@ -92,8 +92,8 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	time.Sleep(200 * time.Millisecond)
 }
 
-// Migrate migrates a folder to a drive
-func Migrate(file *drive.File, destination, driveID string) {
+// MoveFolderToSharedDrive migrates a folder to a drive
+func MoveFolderToSharedDrive(file *drive.File, destination, driveID string) {
 	fields := "*"
 	pc := make(chan parentChildren, 1000)
 	folders := make(chan parent, 1000)

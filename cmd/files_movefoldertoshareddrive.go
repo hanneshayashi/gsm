@@ -25,25 +25,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// filesMigrateCmd represents the migrate command
-var filesMigrateCmd = &cobra.Command{
-	Use:   "migrate",
-	Short: "Migrate a folder to a Shared Drive",
+// filesMoveFolderToSharedDriveCmd represents the movefoldertoshareddrive command
+var filesMoveFolderToSharedDriveCmd = &cobra.Command{
+	Use:   "movefoldertoshareddrive",
+	Short: "MoveFolderToSharedDrive a folder to a Shared Drive",
 	Long: `Example:
-migrate --folderId <folderId> --driveId <driveId>
+movefoldertoshareddrive --folderId <folderId> --driveId <driveId>
 For each source folder, a new folder will be created at the destination.
-Files will be moved (not copied) to the new folders.
+Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		file, err := gsmdrive.GetFile(flags["folderId"].GetString(), "id, name, mimeType, parents", "")
+		file, err := gsmdrive.GetFile(flags["folderId"].GetString(), "id,name,mimeType,parents", "")
 		if err != nil {
 			log.Fatalf("%v", err)
 		}
-		gsmdrive.Migrate(file, flags["driveId"].GetString(), flags["driveId"].GetString())
+		gsmdrive.MoveFolderToSharedDrive(file, flags["driveId"].GetString(), flags["driveId"].GetString())
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(filesCmd, filesMigrateCmd, fileFlags)
+	gsmhelpers.InitCommand(filesCmd, filesMoveFolderToSharedDriveCmd, fileFlags)
 }
