@@ -100,7 +100,7 @@ METADATA  - Returns only email message ID, labels, and email headers.`,
 		AvailableFor: []string{"insert", "import"},
 		Type:         "bool",
 		Description: `Mark the email as permanently deleted (not TRASH) and only visible in Google Vault to a Vault administrator.
-Only used for G Suite accounts.`,
+Only used for Workspace accounts.`,
 	},
 	"neverMarkSpam": {
 		AvailableFor: []string{"import"},

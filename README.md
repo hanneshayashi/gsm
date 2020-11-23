@@ -44,8 +44,8 @@ GSM offers CLI access to over 20 Google API via 50+ main commands and over
 You can use GSM in one of two modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
         Note that you will only have access to the resources and APIs your account can access!
-- dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a G Suite domain.\
- You need to add the service account and the appropriate scopes in the Admin Console of your G Suite domain to us this mode.
+- dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
+ You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
 
 You can set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs).
 

@@ -83,8 +83,8 @@ userDefined`,
 		AvailableFor: []string{"createContact", "deleteContactPhoto", "get", "getBatchGet", "listDirectoryPeople", "searchDirectoryPeople", "updateContact", "updateContactPhoto"},
 		Type:         "string",
 		Description: `A mask of what source types to return.
-DIRECTORY_SOURCE_TYPE_DOMAIN_CONTACT  - G Suite domain shared contact.
-DIRECTORY_SOURCE_TYPE_DOMAIN_PROFILE  - G Suite domain profile.
+DIRECTORY_SOURCE_TYPE_DOMAIN_CONTACT  - Workspace domain shared contact.
+DIRECTORY_SOURCE_TYPE_DOMAIN_PROFILE  - Workspace domain profile.
 READ_SOURCE_TYPE_PROFILE              - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
 READ_SOURCE_TYPE_CONTACT              - Returns SourceType.CONTACT.
 READ_SOURCE_TYPE_DOMAIN_CONTACT       - Returns SourceType.DOMAIN_CONTACT.`,

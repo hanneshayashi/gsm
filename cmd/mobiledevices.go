@@ -38,7 +38,7 @@ var mobileDeviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"action", "delete", "get", "list"},
 		Type:         "string",
-		Description: `The unique ID for the customer's G Suite account.
+		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
 		Defaults: map[string]interface{}{"action": "my_customer", "delete": "my_customer", "get": "my_customer", "list": "my_customer"},
@@ -54,10 +54,10 @@ The customerId is also returned as part of the Users resource.`,
 		Type:         "string",
 		Description: `The action to be performed on the device.
 [admin_account_wipe|admin_remote_wipe|approve|approve|block|cancel_remote_wipe_then_activate|cancel_remote_wipe_then_block]
-admin_account_wipe                - Remotely wipes only G Suite data from the device. See the administration help center for more information.
+admin_account_wipe                - Remotely wipes only Workspace data from the device. See the administration help center for more information.
 admin_remote_wipe                 - Remotely wipes all data on the device. See the administration help center for more information.
-approve                           - Approves the device. If you've selected Enable device activation, devices that register after the device activation setting is enabled will need to be approved before they can start syncing with your domain. Enabling device activation forces the device user to install the Device Policy app to sync with G Suite.
-block                             - Blocks access to G Suite data (mail, calendar, and contacts) on the device. The user can still access their mail, calendar, and contacts from a desktop computer or mobile browser.
+approve                           - Approves the device. If you've selected Enable device activation, devices that register after the device activation setting is enabled will need to be approved before they can start syncing with your domain. Enabling device activation forces the device user to install the Device Policy app to sync with Workspace.
+block                             - Blocks access to Workspace data (mail, calendar, and contacts) on the device. The user can still access their mail, calendar, and contacts from a desktop computer or mobile browser.
 cancel_remote_wipe_then_activate  - Cancels a remote wipe of the device and then reactivates it.
 cancel_remote_wipe_then_block     - Cancels a remote wipe of the device and then blocks it.`,
 	},

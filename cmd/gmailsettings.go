@@ -135,7 +135,7 @@ If both responseBodyPlainText and responseBodyHtml are specified, responseBodyHt
 		AvailableFor: []string{"updateVacation"},
 		Type:         "bool",
 		Description: `Flag that determines whether responses are sent to recipients who are outside of the user's domain.
-This feature is only available for G Suite users.`,
+This feature is only available for Workspace users.`,
 	},
 	"startTime": {
 		AvailableFor: []string{"updateVacation"},

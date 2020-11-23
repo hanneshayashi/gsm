@@ -38,7 +38,7 @@ var resourcesFeatureFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.F
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch", "rename"},
 		Type:         "string",
-		Description: `The unique ID for the customer's G Suite account.
+		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customer ID.`,
 		Defaults: map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer", "rename": "my_customer"},
 	},

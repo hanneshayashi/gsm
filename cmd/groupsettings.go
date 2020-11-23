@@ -108,7 +108,7 @@ ALL_OWNERS_CAN_VIEW     - Any group owner can view this group's messages.`,
 		AvailableFor: []string{"patch"},
 		Type:         "string",
 		Description: `Identifies whether members external to your organization can join the group.
-true   - G Suite users external to your organization can become members of this group.
+true   - Workspace users external to your organization can become members of this group.
 false  - Users not belonging to the organization are not allowed to become members of this group.`,
 	},
 	"whoCanPostMessage": {
@@ -136,7 +136,7 @@ false  - Members only use Gmail to communicate with the group.`,
 		AvailableFor: []string{"patch"},
 		Type:         "string",
 		Description: `The primary language for group.
-For a group's primary language use the language tags from the G Suite languages found at G Suite Email Settings API Email Language Tags.`,
+For a group's primary language use the language tags from the Workspace languages found at Workspace Email Settings API Email Language Tags.`,
 	},
 	"isArchived": {
 		AvailableFor: []string{"patch"},

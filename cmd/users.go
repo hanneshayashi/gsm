@@ -30,7 +30,7 @@ var userFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
-		Required: []string{"delete", "get", "makeAdmin", "patch", "signOut", "undelete"},
+		Required:       []string{"delete", "get", "makeAdmin", "patch", "signOut", "undelete"},
 		ExcludeFromAll: true,
 	},
 	"customFieldMask": {
@@ -97,7 +97,7 @@ The password value is never returned in the API's response body.`,
 		Description: `The user's primary email address.
 This property is required in a request to create a user account.
 The primaryEmail must be unique and cannot be an alias of another user.`,
-		Required: []string{"insert"},
+		Required:       []string{"insert"},
 		ExcludeFromAll: true,
 	},
 	"addresses": {
@@ -227,7 +227,7 @@ type            - The type of the IM account.
 	"includeInGlobalAddressList": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
-		Description: `Indicates if the user's profile is visible in the G Suite global address list when the contact sharing feature is enabled for the domain.
+		Description: `Indicates if the user's profile is visible in the Workspace global address list when the contact sharing feature is enabled for the domain.
 For more information about excluding user profiles, see the administration help center.`,
 	},
 	"ipWhitelisted": {
@@ -486,7 +486,7 @@ value       - The URL of the website.`,
 	"customer": {
 		AvailableFor: []string{"list"},
 		Type:         "string",
-		Description: `The unique ID for the customer's G Suite account.
+		Description: `The unique ID for the customer's Workspace account.
 In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain.
 You can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.
