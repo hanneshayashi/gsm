@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -28,21 +31,30 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListSettingsCallAndAppend(c *calendar.SettingsListCall, settings []*calendar.Setting) ([]*calendar.Setting, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(setting), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*calendar.Setting)
+	return r, nil
+}
+
+func makeListSettingsCallAndAppend(c *calendar.SettingsListCall, settings []*calendar.Setting, errKey string) ([]*calendar.Setting, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Settings)
 	for _, s := range r.Items {
 		settings = append(settings, s)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		settings, err = makeListSettingsCallAndAppend(c, settings)
+		settings, err = makeListSettingsCallAndAppend(c, settings, errKey)
 	}
 	return settings, err
 }
@@ -55,6 +67,6 @@ func ListSettings(fields string) ([]*calendar.Setting, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var settings []*calendar.Setting
-	settings, err := makeListSettingsCallAndAppend(c, settings)
+	settings, err := makeListSettingsCallAndAppend(c, settings, gsmhelpers.FormatErrorKey("List settings"))
 	return settings, err
 }

@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteEvent deletes an event.
 func DeleteEvent(calendarID, eventID, sendUpdates string) (bool, error) {
 	srv := getEventsService()
-	err := srv.Delete(calendarID, eventID).SendUpdates(sendUpdates).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(calendarID, eventID).SendUpdates(sendUpdates)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetEvent returns an event.
@@ -44,8 +47,14 @@ func GetEvent(calendarID, eventID, timeZone, fields string, maxAttendees int64) 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
 }
 
 // ImportEvent imports an event. This operation is used to add a private copy of an existing event to a calendar.
@@ -55,8 +64,14 @@ func ImportEvent(calendarID, fields string, event *calendar.Event, conferenceDat
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
 }
 
 // InsertEvent creates an event.
@@ -69,21 +84,30 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListInstancesCallAndAppend(c *calendar.EventsInstancesCall, eventInstances []*calendar.Event) ([]*calendar.Event, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
+}
+
+func makeListInstancesCallAndAppend(c *calendar.EventsInstancesCall, eventInstances []*calendar.Event, errKey string) ([]*calendar.Event, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Events)
 	for _, e := range r.Items {
 		eventInstances = append(eventInstances, e)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		eventInstances, err = makeListInstancesCallAndAppend(c, eventInstances)
+		eventInstances, err = makeListInstancesCallAndAppend(c, eventInstances, errKey)
 	}
 	return eventInstances, err
 }
@@ -108,21 +132,24 @@ func ListInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMi
 		c = c.MaxAttendees(maxAttendees)
 	}
 	var eventInstances []*calendar.Event
-	eventInstances, err := makeListInstancesCallAndAppend(c, eventInstances)
+	eventInstances, err := makeListInstancesCallAndAppend(c, eventInstances, gsmhelpers.FormatErrorKey(calendarID, eventID))
 	return eventInstances, err
 }
 
-func makeListEventsCallAndAppend(c *calendar.EventsListCall, events []*calendar.Event) ([]*calendar.Event, error) {
-	r, err := c.Do()
+func makeListEventsCallAndAppend(c *calendar.EventsListCall, events []*calendar.Event, errKey string) ([]*calendar.Event, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*calendar.Events)
 	for _, e := range r.Items {
 		events = append(events, e)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		events, err = makeListEventsCallAndAppend(c, events)
+		events, err = makeListEventsCallAndAppend(c, events, errKey)
 	}
 	return events, err
 }
@@ -165,7 +192,7 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 		c = c.UpdatedMin(updatedMin)
 	}
 	var events []*calendar.Event
-	events, err := makeListEventsCallAndAppend(c, events)
+	events, err := makeListEventsCallAndAppend(c, events, gsmhelpers.FormatErrorKey(calendarID))
 	return events, err
 }
 
@@ -176,8 +203,14 @@ func MoveEvent(calendarID, eventID, destination, sendUpdates, fields string) (*c
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID, destination), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
 }
 
 // PatchEvent Updates an event. This method supports patch semantics.
@@ -192,8 +225,14 @@ func PatchEvent(calendarID, eventID, sendUpdates, fields string, event *calendar
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
 }
 
 // QuickAddEvent creates an event based on a simple text string.
@@ -203,6 +242,12 @@ func QuickAddEvent(calendarID, text, sendUpdates, fields string) (*calendar.Even
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Event)
+	return r, nil
 }

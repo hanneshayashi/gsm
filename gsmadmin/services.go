@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify

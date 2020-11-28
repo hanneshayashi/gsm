@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteACL deletes an access control rule.
 func DeleteACL(calendarID, ruleID string) (bool, error) {
 	srv := getACLService()
-	err := srv.Delete(calendarID, ruleID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(calendarID, ruleID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetACL returns an access control rule.
@@ -38,8 +41,14 @@ func GetACL(calendarID, ruleID, fields string) (*calendar.AclRule, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.AclRule)
+	return r, nil
 }
 
 // InsertACL creates an acl.
@@ -49,21 +58,30 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListACLsCallAndAppend(c *calendar.AclListCall, acls []*calendar.AclRule) ([]*calendar.AclRule, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, acl.Scope.Value), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*calendar.AclRule)
+	return r, nil
+}
+
+func makeListACLsCallAndAppend(c *calendar.AclListCall, acls []*calendar.AclRule, errKey string) ([]*calendar.AclRule, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Acl)
 	for _, a := range r.Items {
 		acls = append(acls, a)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		acls, err = makeListACLsCallAndAppend(c, acls)
+		acls, err = makeListACLsCallAndAppend(c, acls, errKey)
 	}
 	return acls, err
 }
@@ -76,7 +94,7 @@ func ListACLs(calendarID, fields string, showDeleted bool) ([]*calendar.AclRule,
 		c.Fields(googleapi.Field(fields))
 	}
 	var acls []*calendar.AclRule
-	acls, err := makeListACLsCallAndAppend(c, acls)
+	acls, err := makeListACLsCallAndAppend(c, acls, gsmhelpers.FormatErrorKey(calendarID))
 	return acls, err
 }
 
@@ -87,6 +105,12 @@ func PatchACL(calendarID, ruleID, fields string, aclRule *calendar.AclRule, send
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.AclRule)
+	return r, nil
 }

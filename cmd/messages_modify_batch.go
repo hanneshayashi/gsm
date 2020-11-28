@@ -36,13 +36,12 @@ var messagesModifyBatchCmd = &cobra.Command{
 	Short: "Batch modifies messages using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/modify",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, messageFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *gmail.Message, cap)
 		final := []*gmail.Message{}
 		go func() {
@@ -50,25 +49,11 @@ var messagesModifyBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["id"].GetString())
-						operation := func() error {
-							result, err := gsmgmail.ModifyMessages(m["userId"].GetString(), m["id"].GetString(), m["fields"].GetString(), m["addLabels"].GetStringSlice(), m["removeLabels"].GetStringSlice())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmgmail.ModifyMessage(m["userId"].GetString(), m["id"].GetString(), m["fields"].GetString(), m["addLabels"].GetStringSlice(), m["removeLabels"].GetStringSlice())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

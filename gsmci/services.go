@@ -1,4 +1,5 @@
 /*
+Package gsmci implements the Cloud Identity (Beta) API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify

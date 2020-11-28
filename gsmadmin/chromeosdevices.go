@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // TakeActionOnChromeOsDevice takes an action that affects a Chrome OS Device. This includes deprovisioning, disabling, and re-enabling devices.
 func TakeActionOnChromeOsDevice(customerID, deviceID string, action *admin.ChromeOsDeviceAction) (bool, error) {
 	srv := getChromeosdevicesService()
-	err := srv.Action(customerID, deviceID, action).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Action(customerID, deviceID, action)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetChromeOsDevice retrieves a Chrome OS device's properties.
@@ -41,21 +44,30 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	if projection != "" {
 		c.Projection(projection)
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListChromeOsDevicesCallAndAppend(c *admin.ChromeosdevicesListCall, chromeosDevices []*admin.ChromeOsDevice) ([]*admin.ChromeOsDevice, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.ChromeOsDevice)
+	return r, nil
+}
+
+func makeListChromeOsDevicesCallAndAppend(c *admin.ChromeosdevicesListCall, chromeosDevices []*admin.ChromeOsDevice, errKey string) ([]*admin.ChromeOsDevice, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.ChromeOsDevices)
 	for _, c := range r.Chromeosdevices {
 		chromeosDevices = append(chromeosDevices, c)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		chromeosDevices, err = makeListChromeOsDevicesCallAndAppend(c, chromeosDevices)
+		chromeosDevices, err = makeListChromeOsDevicesCallAndAppend(c, chromeosDevices, errKey)
 	}
 	return chromeosDevices, err
 }
@@ -77,18 +89,18 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 		c = c.OrgUnitPath(orgUnitPath)
 	}
 	var chromeOsDevices []*admin.ChromeOsDevice
-	chromeOsDevices, err := makeListChromeOsDevicesCallAndAppend(c, chromeOsDevices)
+	chromeOsDevices, err := makeListChromeOsDevicesCallAndAppend(c, chromeOsDevices, gsmhelpers.FormatErrorKey(customerID))
 	return chromeOsDevices, err
 }
 
 // MoveChromeOSDevicesToOU moves or inserts multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.
 func MoveChromeOSDevicesToOU(customerID, orgUnitPath string, devicesToMove *admin.ChromeOsMoveDevicesToOu) (bool, error) {
 	srv := getChromeosdevicesService()
-	err := srv.MoveDevicesToOu(customerID, orgUnitPath, devicesToMove).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.MoveDevicesToOu(customerID, orgUnitPath, devicesToMove)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // PatchChromeOsDevice updates a device's updatable properties, such as annotatedUser, annotatedLocation, notes, orgUnitPath, or annotatedAssetId. This method supports patch semantics.
@@ -101,6 +113,12 @@ func PatchChromeOsDevice(customerID, deviceID, fields, projection string, chrome
 	if projection != "" {
 		c.Projection(projection)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.ChromeOsDevice)
+	return r, nil
 }

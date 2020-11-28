@@ -33,7 +33,7 @@ var sharedContactsGetCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, _, err := gsmadmin.GetSharedContact(flags["url"].GetString())
+		result, err := gsmadmin.GetSharedContact(flags["url"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting shared contact: %v", err)
 		}

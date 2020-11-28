@@ -36,13 +36,12 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
 	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			UserID        string `json:"userId,omitempty"`
 			DelegateEmail string `json:"delegateEmail,omitempty"`
@@ -55,26 +54,11 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["delegateEmail"].GetString())
-						operation := func() error {
-							result, err := gsmgmail.DeleteDelegate(m["userId"].GetString(), m["delegateEmail"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{UserID: m["userId"].GetString(), DelegateEmail: m["delegateEmail"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmgmail.DeleteDelegate(m["userId"].GetString(), m["delegateEmail"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{UserID: m["userId"].GetString(), DelegateEmail: m["delegateEmail"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

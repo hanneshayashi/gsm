@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,21 +27,21 @@ import (
 // GenerateVerificationCodes generates new backup verification codes for the user.
 func GenerateVerificationCodes(userKey string) (bool, error) {
 	srv := getVerificationCodesService()
-	err := srv.Generate(userKey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Generate(userKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // InvalidateVerificationCodes invalidates the current backup verification codes for the user.
 func InvalidateVerificationCodes(userKey string) (bool, error) {
 	srv := getVerificationCodesService()
-	err := srv.Invalidate(userKey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Invalidate(userKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // ListVerificationCodes returns the current set of valid backup verification codes for the specified user.
@@ -48,9 +51,12 @@ func ListVerificationCodes(userKey, fields string) ([]*admin.VerificationCode, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.VerificationCodes)
 	return r.Items, nil
 }

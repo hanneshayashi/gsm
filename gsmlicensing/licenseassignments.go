@@ -1,4 +1,5 @@
 /*
+Package gsmlicensing implements the Enterprise License Manager API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmlicensing
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/licensing/v1"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteLicenseAssignment revoke a license.
 func DeleteLicenseAssignment(productID, skuID, userID string) (bool, error) {
 	srv := getLicenseAssignmentsService()
-	err := srv.Delete(productID, skuID, userID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(productID, skuID, userID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetLicenseAssignment get a specific user's license by product SKU.
@@ -38,8 +41,14 @@ func GetLicenseAssignment(productID, skuID, userID, fields string) (*licensing.L
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*licensing.LicenseAssignment)
+	return r, nil
 }
 
 // InsertLicenseAssignment assign a license.
@@ -49,21 +58,30 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListLicenseAssignmentsForProductCallAndAppend(c *licensing.LicenseAssignmentsListForProductCall, licenseAssignments []*licensing.LicenseAssignment) ([]*licensing.LicenseAssignment, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, licenseAssignmentInsert.UserId), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*licensing.LicenseAssignment)
+	return r, nil
+}
+
+func makeListLicenseAssignmentsForProductCallAndAppend(c *licensing.LicenseAssignmentsListForProductCall, licenseAssignments []*licensing.LicenseAssignment, errKey string) ([]*licensing.LicenseAssignment, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*licensing.LicenseAssignmentList)
 	for _, l := range r.Items {
 		licenseAssignments = append(licenseAssignments, l)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		licenseAssignments, err = makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments)
+		licenseAssignments, err = makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments, errKey)
 	}
 	return licenseAssignments, err
 }
@@ -76,21 +94,24 @@ func ListLicenseAssignmentsForProduct(productID, customerID, fields string) ([]*
 		c.Fields(googleapi.Field(fields))
 	}
 	var licenseAssignments []*licensing.LicenseAssignment
-	licenseAssignments, err := makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments)
+	licenseAssignments, err := makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments, gsmhelpers.FormatErrorKey(productID, customerID))
 	return licenseAssignments, err
 }
 
-func makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c *licensing.LicenseAssignmentsListForProductAndSkuCall, licenseAssignments []*licensing.LicenseAssignment) ([]*licensing.LicenseAssignment, error) {
-	r, err := c.Do()
+func makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c *licensing.LicenseAssignmentsListForProductAndSkuCall, licenseAssignments []*licensing.LicenseAssignment, errKey string) ([]*licensing.LicenseAssignment, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*licensing.LicenseAssignmentList)
 	for _, l := range r.Items {
 		licenseAssignments = append(licenseAssignments, l)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		licenseAssignments, err = makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments)
+		licenseAssignments, err = makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments, errKey)
 	}
 	return licenseAssignments, err
 }
@@ -103,7 +124,7 @@ func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields
 		c.Fields(googleapi.Field(fields))
 	}
 	var licenseAssignments []*licensing.LicenseAssignment
-	licenseAssignments, err := makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments)
+	licenseAssignments, err := makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments, gsmhelpers.FormatErrorKey(productID, skuID, customerID))
 	return licenseAssignments, err
 }
 
@@ -114,6 +135,12 @@ func PatchLicenseAssignment(productID, skuID, userID, fields string, licenseAssi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*licensing.LicenseAssignment)
+	return r, nil
 }

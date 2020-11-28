@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteResourcesCalendar deletes a calendar resource.
 func DeleteResourcesCalendar(customer, calendarResourceID string) (bool, error) {
 	srv := getResourcesCalendarsService()
-	err := srv.Delete(customer, calendarResourceID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customer, calendarResourceID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetResourcesCalendar retrieves a calendar resource.
@@ -38,8 +41,14 @@ func GetResourcesCalendar(customer, calendarResourceID, fields string) (*admin.C
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.CalendarResource)
+	return r, nil
 }
 
 // InsertResourcesCalendar inserts a calendar resource.
@@ -49,21 +58,30 @@ func InsertResourcesCalendar(customer, fields string, calendarResource *admin.Ca
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListResourceCalendarsCallAndAppend(c *admin.ResourcesCalendarsListCall, calendars []*admin.CalendarResource) ([]*admin.CalendarResource, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResource.ResourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.CalendarResource)
+	return r, nil
+}
+
+func makeListResourceCalendarsCallAndAppend(c *admin.ResourcesCalendarsListCall, calendars []*admin.CalendarResource, errKey string) ([]*admin.CalendarResource, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.CalendarResources)
 	for _, b := range r.Items {
 		calendars = append(calendars, b)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		calendars, err = makeListResourceCalendarsCallAndAppend(c, calendars)
+		calendars, err = makeListResourceCalendarsCallAndAppend(c, calendars, errKey)
 	}
 	return calendars, err
 }
@@ -82,7 +100,7 @@ func ListResourcesCalendars(customer, orderBy, query, fields string) ([]*admin.C
 		c = c.Query(query)
 	}
 	var calendars []*admin.CalendarResource
-	calendars, err := makeListResourceCalendarsCallAndAppend(c, calendars)
+	calendars, err := makeListResourceCalendarsCallAndAppend(c, calendars, gsmhelpers.FormatErrorKey(customer))
 	return calendars, err
 }
 
@@ -93,6 +111,12 @@ func PatchResourcesCalendar(customer, calendarResourceID, fields string, calenda
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.CalendarResource)
+	return r, nil
 }

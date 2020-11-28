@@ -36,13 +36,12 @@ var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 	Short: "Batch modifys contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupMemberFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *people.ModifyContactGroupMembersResponse, cap)
 		final := []*people.ModifyContactGroupMembersResponse{}
 		go func() {
@@ -50,30 +49,16 @@ var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						mo, err := mapToModifyContactGroupMembersRequest(m)
 						if err != nil {
 							log.Printf("Error building ModifyContactGroupMembersRequest object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s:", m["resourceName"].GetString())
-						operation := func() error {
-							result, err := gsmpeople.ModifyContactGroupMembers(m["resourceName"].GetString(), m["fields"].GetString(), mo)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmpeople.ModifyContactGroupMembers(m["resourceName"].GetString(), m["fields"].GetString(), mo)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
+
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -28,18 +31,24 @@ func CreateComment(fileID, fields string, comment *drive.Comment) (*drive.Commen
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Comment)
+	return r, nil
 }
 
 // DeleteComment deletes a comment.
 func DeleteComment(fileID, commentID string) (bool, error) {
 	srv := getCommentsService()
-	err := srv.Delete(fileID, commentID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(fileID, commentID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetComment gets a comment by ID.
@@ -49,21 +58,30 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListCommentsCallAndAppend(c *drive.CommentsListCall, comments []*drive.Comment) ([]*drive.Comment, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.Comment)
+	return r, nil
+}
+
+func makeListCommentsCallAndAppend(c *drive.CommentsListCall, comments []*drive.Comment, errKey string) ([]*drive.Comment, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.CommentList)
 	for _, p := range r.Comments {
 		comments = append(comments, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		comments, err = makeListCommentsCallAndAppend(c, comments)
+		comments, err = makeListCommentsCallAndAppend(c, comments, errKey)
 	}
 	return comments, err
 }
@@ -79,7 +97,7 @@ func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool)
 		c = c.StartModifiedTime(startModifiedTime)
 	}
 	var comments []*drive.Comment
-	comments, err := makeListCommentsCallAndAppend(c, comments)
+	comments, err := makeListCommentsCallAndAppend(c, comments, gsmhelpers.FormatErrorKey(fileID))
 	return comments, err
 }
 
@@ -90,6 +108,12 @@ func UpdateComment(fileID, commentID, fields string, comment *drive.Comment) (*d
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Comment)
+	return r, nil
 }

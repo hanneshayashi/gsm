@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify

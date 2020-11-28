@@ -35,13 +35,12 @@ var userAliasesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes user aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, userAliasFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			UserKey string `json:"userKey,omitempty"`
 			Alias   string `json:"alias,omitempty"`
@@ -54,26 +53,11 @@ var userAliasesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["userKey"].GetString(), m["alias"].GetString())
-						operation := func() error {
-							result, err := gsmadmin.DeleteUserAlias(m["userKey"].GetString(), m["alias"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{Alias: m["alias"].GetString(), UserKey: m["userKey"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.DeleteUserAlias(m["userKey"].GetString(), m["alias"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{Alias: m["alias"].GetString(), UserKey: m["userKey"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

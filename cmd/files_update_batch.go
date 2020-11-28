@@ -38,13 +38,12 @@ var filesUpdateBatchCmd = &cobra.Command{
 	Short: "Batch update files using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *drive.File, cap)
 		final := []*drive.File{}
 		go func() {
@@ -52,7 +51,6 @@ var filesUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						f, err := mapToFile(m)
 						if err != nil {
 							log.Printf("Error building file object: %v\n", err)
@@ -76,24 +74,11 @@ var filesUpdateBatchCmd = &cobra.Command{
 							}
 							defer content.Close()
 						}
-						errKey := fmt.Sprintf("%s:", m["fileId"].GetString())
-						operation := func() error {
-							result, err := gsmdrive.UpdateFile(m["fileId"].GetString(), m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString(), f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmdrive.UpdateFile(m["fileId"].GetString(), m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString(), f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

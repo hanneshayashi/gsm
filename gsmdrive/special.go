@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -62,7 +63,7 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	}
 	err := retrier.Run(operation)
 	if err != nil {
-		log.Println(errKey, "Max retries reached. Giving up after", err)
+		log.Println(err)
 		return
 	}
 	time.Sleep(200 * time.Millisecond)
@@ -87,7 +88,7 @@ func folder(folder *drive.File, destination, driveID, fields string, pc chan par
 	}
 	err = retrier.Run(operation)
 	if err != nil {
-		log.Println(errKey, "Max retries reached. Giving up after", err)
+		log.Println(err)
 	}
 	time.Sleep(200 * time.Millisecond)
 }
@@ -139,7 +140,7 @@ func MoveFolderToSharedDrive(file *drive.File, destination, driveID string) {
 						}
 						err = retrier.Run(operation)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

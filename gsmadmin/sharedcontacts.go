@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -241,147 +242,131 @@ type Feed struct {
 	Entry        []Entry   `xml:"entry"`
 }
 
-func makeListSharedContactsCallAndAppend(url string) ([]Entry, int, error) {
+func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		if r != nil {
-			return nil, r.StatusCode, err
-		}
-		return nil, 0, err
+		return nil, err
 	}
 	defer r.Body.Close()
 	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, err
 	}
 	feed := Feed{}
 	xml.Unmarshal(responseBody, &feed)
 	for _, l := range feed.Link {
 		if l.Rel == "next" {
-			f, statusCode, err := makeListSharedContactsCallAndAppend(l.Href)
+			f, err := makeListSharedContactsCallAndAppend(l.Href)
 			if err != nil {
-				return nil, statusCode, err
+				return nil, err
 			}
 			feed.Entry = append(feed.Entry, f...)
 		}
 	}
-	return feed.Entry, r.StatusCode, nil
+	return feed.Entry, nil
 }
 
 // ListSharedContacts lists all shared contacts in the domain
-func ListSharedContacts(domain string) ([]Entry, int, error) {
+func ListSharedContacts(domain string) ([]Entry, error) {
 	url := fmt.Sprintf(feedURL, domain) + "&max-results=1000"
-	entries, statusCode, err := makeListSharedContactsCallAndAppend(url)
-	return entries, statusCode, err
+	entries, err := makeListSharedContactsCallAndAppend(url)
+	return entries, err
 }
 
 // CreateSharedContact creates a new shared contact in the domain
-func CreateSharedContact(domain string, person *Entry) (*Entry, int, error) {
+func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 	personXML, err := xml.Marshal(person)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	body := bytes.NewReader(personXML)
 	req, err := http.NewRequest("POST", fmt.Sprintf(feedURL, domain), body)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, err
 	}
 	defer r.Body.Close()
 	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		if r != nil {
-			return nil, r.StatusCode, err
-		}
-		return nil, 0, err
+		return nil, err
 	}
 	personC := &Entry{}
 	xml.Unmarshal(responseBody, personC)
-	return personC, r.StatusCode, nil
+	return personC, nil
 }
 
 // DeleteSharedContact deletes a shared contact
-func DeleteSharedContact(url string) ([]byte, int, error) {
+func DeleteSharedContact(url string) ([]byte, error) {
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	req.Header.Add("GData-Version", "3.0")
 	req.Header.Add("If-Match", "*")
 	r, err := client.Do(req)
 	if err != nil {
-		if r != nil {
-			return nil, r.StatusCode, err
-		}
-		return nil, 0, err
+		return nil, err
 	}
 	defer r.Body.Close()
 	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, err
 	}
-	return responseBody, r.StatusCode, nil
+	return responseBody, nil
 }
 
 // GetSharedContact retrieves a shared contact
-func GetSharedContact(url string) (*Entry, int, error) {
+func GetSharedContact(url string) (*Entry, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, err
 	}
 	defer r.Body.Close()
-	// fmt.Println(r.StatusCode)
 	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		if r != nil {
-			return nil, r.StatusCode, err
-		}
-		return nil, 0, err
+		return nil, err
 	}
 	person := &Entry{}
 	xml.Unmarshal(responseBody, person)
-	return person, r.StatusCode, nil
+	return person, nil
 }
 
 // UpdateSharedContact updates a shared contact
-func UpdateSharedContact(url string, person *Entry) (*Entry, int, error) {
+func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 	personXML, err := xml.Marshal(person)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	body := bytes.NewReader(personXML)
 	req, err := http.NewRequest("PUT", url, body)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		if r != nil {
-			return nil, r.StatusCode, err
-		}
-		return nil, 0, err
+		return nil, err
 	}
 	defer r.Body.Close()
 	responseBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, err
 	}
 	personU := &Entry{}
 	xml.Unmarshal(responseBody, personU)
-	return personU, r.StatusCode, nil
+	return personU, nil
 }

@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteGroupAlias removes an alias.
 func DeleteGroupAlias(groupKey, alias string) (bool, error) {
 	srv := getGroupsAliasesService()
-	err := srv.Delete(groupKey, alias).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(groupKey, alias)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(groupKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // InsertGroupAlias adds an alias for the group.
@@ -38,8 +41,14 @@ func InsertGroupAlias(groupKey, fields string, alias *admin.Alias) (*admin.Alias
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, alias.Alias), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Alias)
+	return r, nil
 }
 
 // ListGroupAliases lists all aliases for a group.
@@ -49,9 +58,12 @@ func ListGroupAliases(groupKey, fields string) ([]interface{}, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Aliases)
 	return r.Aliases, nil
 }

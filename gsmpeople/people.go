@@ -1,4 +1,5 @@
 /*
+Package gsmpeople implements the People API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
@@ -31,14 +34,23 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Create Contact"), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.Person)
+	return r, nil
 }
 
 // DeleteContact deletes a contact person. Any non-contact data will not be deleted.
 func DeleteContact(resourceName string) (bool, error) {
 	srv := getpService()
-	_, err := srv.DeleteContact(resourceName).Do()
+	c := srv.DeleteContact(resourceName)
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return false, err
 	}
@@ -58,7 +70,9 @@ func DeleteContactPhoto(resourceName, personFields, sources, fields string) (boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	_, err := c.Do()
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return false, err
 	}
@@ -79,8 +93,14 @@ func GetContact(resourceName, personFields, sources, fields string) (*people.Per
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.Person)
+	return r, nil
 }
 
 // GetContactsBatch provides information about a list of specific people by specifying a list of requested resource names.
@@ -94,26 +114,35 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListDirectoryPeopleCallAndAppend(c *people.PeopleListDirectoryPeopleCall, people []*people.Person) ([]*people.Person, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*people.GetPeopleResponse)
+	return r, nil
+}
+
+func makeListDirectoryPeopleCallAndAppend(c *people.PeopleListDirectoryPeopleCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.ListDirectoryPeopleResponse)
 	for _, p := range r.People {
-		people = append(people, p)
+		ps = append(ps, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		people, err = makeListDirectoryPeopleCallAndAppend(c, people)
+		ps, err = makeListDirectoryPeopleCallAndAppend(c, ps, errKey)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return people, nil
+	return ps, nil
 }
 
 // ListDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory.
@@ -127,26 +156,29 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 		c.Fields(googleapi.Field(fields))
 	}
 	var people []*people.Person
-	people, err := makeListDirectoryPeopleCallAndAppend(c, people)
+	people, err := makeListDirectoryPeopleCallAndAppend(c, people, gsmhelpers.FormatErrorKey("List people"))
 	return people, err
 }
 
-func makeSearchDirectoryPeopleCallAndAppend(c *people.PeopleSearchDirectoryPeopleCall, people []*people.Person) ([]*people.Person, error) {
-	r, err := c.Do()
+func makeSearchDirectoryPeopleCallAndAppend(c *people.PeopleSearchDirectoryPeopleCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*people.SearchDirectoryPeopleResponse)
 	for _, p := range r.People {
-		people = append(people, p)
+		ps = append(ps, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		people, err = makeSearchDirectoryPeopleCallAndAppend(c, people)
+		ps, err = makeSearchDirectoryPeopleCallAndAppend(c, ps, errKey)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return people, nil
+	return ps, nil
 }
 
 // SearchDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.
@@ -160,7 +192,7 @@ func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources
 		c.Fields(googleapi.Field(fields))
 	}
 	var people []*people.Person
-	people, err := makeSearchDirectoryPeopleCallAndAppend(c, people)
+	people, err := makeSearchDirectoryPeopleCallAndAppend(c, people, gsmhelpers.FormatErrorKey("Search directory"))
 	return people, err
 }
 
@@ -177,8 +209,14 @@ func UpdateContact(resourceName, updatePersonFields, personFields, sources, fiel
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.Person)
+	return r, nil
 }
 
 // UpdateContactPhoto updates a contact's photo.
@@ -188,9 +226,12 @@ func UpdateContactPhoto(resourceName, fields string, updateContactPhotoRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
-	return r.Person, err
+	r, _ := result.(*people.UpdateContactPhotoResponse)
+	return r.Person, nil
 }

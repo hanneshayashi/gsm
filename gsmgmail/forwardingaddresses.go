@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -25,24 +27,30 @@ import (
 // CreateForwardingAddress creates a forwarding address.
 // If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to pending;
 // otherwise, the resource will be created with verification status set to accepted.
-func CreateForwardingAddress(userID, fields string, settingsforwardingaddress *gmail.ForwardingAddress) (*gmail.ForwardingAddress, error) {
+func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.ForwardingAddress) (*gmail.ForwardingAddress, error) {
 	srv := getUsersSettingsForwardingAddressesService()
-	c := srv.Create(userID, settingsforwardingaddress)
+	c := srv.Create(userID, forwardingAddress)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingAddress.ForwardingEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ForwardingAddress)
+	return r, nil
 }
 
 // DeleteForwardingAddress deletes the specified forwarding address and revokes any verification that may have been required.
 func DeleteForwardingAddress(userID, forwardingEmail string) (bool, error) {
 	srv := getUsersSettingsForwardingAddressesService()
-	err := srv.Delete(userID, forwardingEmail).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, forwardingEmail)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetForwardingAddress gets the specified forwarding address.
@@ -52,8 +60,14 @@ func GetForwardingAddress(userID, forwardingEmail, fields string) (*gmail.Forwar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ForwardingAddress)
+	return r, nil
 }
 
 // ListForwardingAddresses lists the forwarding addresses for the specified account.
@@ -63,9 +77,12 @@ func ListForwardingAddresses(userID, fields string) ([]*gmail.ForwardingAddress,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
-	return r.ForwardingAddresses, err
+	r, _ := result.(*gmail.ListForwardingAddressesResponse)
+	return r.ForwardingAddresses, nil
 }

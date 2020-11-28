@@ -36,13 +36,12 @@ var smimeInfoGetBatchCmd = &cobra.Command{
 	Short: "Batch gets the specified S/MIME config for the specified send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, smimeInfoFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *gmail.SmimeInfo, cap)
 		final := []*gmail.SmimeInfo{}
 		go func() {
@@ -50,25 +49,11 @@ var smimeInfoGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s - %s:", m["userId"].GetString(), m["sendAsEmail"].GetString(), m["id"].GetString())
-						operation := func() error {
-							result, err := gsmgmail.GetSmimeInfo(m["userId"].GetString(), m["sendAsEmail"].GetString(), m["id"].GetString(), m["fields"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmgmail.GetSmimeInfo(m["userId"].GetString(), m["sendAsEmail"].GetString(), m["id"].GetString(), m["fields"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

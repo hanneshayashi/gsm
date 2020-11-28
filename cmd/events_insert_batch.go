@@ -36,13 +36,12 @@ var eventsInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts events using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *calendar.Event, cap)
 		final := []*calendar.Event{}
 		go func() {
@@ -50,29 +49,15 @@ var eventsInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						event, err := mapToEvent(m)
 						if err != nil {
 							log.Printf("Error building event object: %v", err)
 						}
-						errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), event.Id)
-						operation := func() error {
-							result, err := gsmcalendar.InsertEvent(m["calendarId"].GetString(), m["sendUpdates"].GetString(), m["fields"].GetString(), event, m["conferenceDataVersion"].GetInt64(), m["maxAttendees"].GetInt64(), m["supportsAttachments"].GetBool())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmcalendar.InsertEvent(m["calendarId"].GetString(), m["sendUpdates"].GetString(), m["fields"].GetString(), event, m["conferenceDataVersion"].GetInt64(), m["maxAttendees"].GetInt64(), m["supportsAttachments"].GetBool())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

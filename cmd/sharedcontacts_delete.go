@@ -33,7 +33,7 @@ var sharedContactsDeleteCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, _, err := gsmadmin.DeleteSharedContact(flags["url"].GetString())
+		result, err := gsmadmin.DeleteSharedContact(flags["url"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting shared contact: %v", err)
 		}

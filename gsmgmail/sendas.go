@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -33,19 +35,25 @@ func CreateSendAs(userID, fields string, sendAs *gmail.SendAs) (*gmail.SendAs, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAs.SendAsEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.SendAs)
+	return r, nil
 }
 
 // DeleteSendAs deletes the specified send-as alias.
 // Revokes any verification that may have been required for using it.
 func DeleteSendAs(userID, sendAsEmail string) (bool, error) {
 	srv := getUsersSettingsSendAsService()
-	err := srv.Delete(userID, sendAsEmail).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, sendAsEmail)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetSendAs gets the specified send-as alias.
@@ -56,8 +64,14 @@ func GetSendAs(userID, sendAsEmail, fields string) (*gmail.SendAs, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.SendAs)
+	return r, nil
 }
 
 // ListSendAs lists the send-as aliases for the specified account.
@@ -68,11 +82,14 @@ func ListSendAs(userID, fields string) ([]*gmail.SendAs, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
-	return r.SendAs, err
+	r, _ := result.(*gmail.ListSendAsResponse)
+	return r.SendAs, nil
 }
 
 // PatchSendAs PATCHes the specified send-as alias.
@@ -82,17 +99,23 @@ func PatchSendAs(userID, sendAsEmail, fields string, sendAs *gmail.SendAs) (*gma
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.SendAs)
+	return r, nil
 }
 
 // VerifySendAs sends a verification email to the specified send-as alias address.
 // The verification status must be pending.
 func VerifySendAs(userID, sendAsEmail string) (bool, error) {
 	srv := getUsersSettingsSendAsService()
-	err := srv.Verify(userID, sendAsEmail).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Verify(userID, sendAsEmail)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() error {
+		return c.Do()
+	})
+	return result, err
 }

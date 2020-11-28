@@ -1,4 +1,5 @@
 /*
+Package gsmpeople implements the People API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
@@ -28,21 +31,30 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, sources []st
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListOtherContactsCallAndAppend(c *people.OtherContactsListCall, otherContacts []*people.Person) ([]*people.Person, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*people.Person)
+	return r, nil
+}
+
+func makeListOtherContactsCallAndAppend(c *people.OtherContactsListCall, otherContacts []*people.Person, errKey string) ([]*people.Person, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.ListOtherContactsResponse)
 	for _, o := range r.OtherContacts {
 		otherContacts = append(otherContacts, o)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		otherContacts, err = makeListOtherContactsCallAndAppend(c, otherContacts)
+		otherContacts, err = makeListOtherContactsCallAndAppend(c, otherContacts, errKey)
 		if err != nil {
 			return nil, err
 		}
@@ -59,6 +71,6 @@ func ListOtherContacts(readMask, fields string) ([]*people.Person, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var otherContacts []*people.Person
-	otherContacts, err := makeListOtherContactsCallAndAppend(c, otherContacts)
+	otherContacts, err := makeListOtherContactsCallAndAppend(c, otherContacts, gsmhelpers.FormatErrorKey("List other contacts"))
 	return otherContacts, err
 }

@@ -36,13 +36,12 @@ var contactGroupsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *people.ContactGroup, cap)
 		final := []*people.ContactGroup{}
 		go func() {
@@ -50,40 +49,21 @@ var contactGroupsUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["resourceName"].GetString())
-						operation := func() error {
-							c, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), "*", 0)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							u, err := mapToUpdateContactGroupRequest(m, c)
-							if err != nil {
-								log.Println(err)
-								return nil
-							}
-							result, err := gsmpeople.UpdateContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), u)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						c, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), "*", 0)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Printf("Error getting contact group: %v\n", err)
+							continue
+						}
+						u, err := mapToUpdateContactGroupRequest(m, c)
+						if err != nil {
+							log.Printf("Error building updateContactGroupRequest object: %v\n", err)
+							continue
+						}
+						result, err := gsmpeople.UpdateContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), u)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

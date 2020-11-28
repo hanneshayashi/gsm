@@ -35,13 +35,12 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 	Short: "Batch gets Domain Shared Contact via URL / ID using a CSV file as input",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *gsmadmin.Entry, cap)
 		final := []*gsmadmin.Entry{}
 		go func() {
@@ -49,24 +48,11 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["url"].GetString())
-						operation := func() error {
-							result, statusCode, err := gsmadmin.GetSharedContact(m["url"].GetString())
-							if err != nil {
-								if statusCode == 403 {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.GetSharedContact(m["url"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

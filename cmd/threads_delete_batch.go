@@ -35,13 +35,12 @@ var threadsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes the specified threads using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, threadFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			UserID string `json:"userId,omitempty"`
 			ID     string `json:"id,omitempty"`
@@ -54,26 +53,11 @@ var threadsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["userId"].GetString(), m["id"].GetString())
-						operation := func() error {
-							result, err := gsmgmail.DeleteThread(m["userId"].GetString(), m["id"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{ID: m["id"].GetString(), UserID: m["userId"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmgmail.DeleteThread(m["userId"].GetString(), m["id"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{ID: m["id"].GetString(), UserID: m["userId"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

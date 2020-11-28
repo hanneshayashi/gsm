@@ -36,13 +36,12 @@ var groupAliasesInsertBatchCmd = &cobra.Command{
 	Short: "Batch insert group aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupAliasFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *admin.Alias, cap)
 		final := []*admin.Alias{}
 		go func() {
@@ -50,30 +49,16 @@ var groupAliasesInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						a, err := mapToGroupAlias(m)
 						if err != nil {
 							log.Printf("Error building group alias object: %v", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s - %s:", m["groupKey"].GetString(), a.Alias)
-						operation := func() error {
-							result, err := gsmadmin.InsertGroupAlias(m["groupKey"].GetString(), m["fields"].GetString(), a)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.InsertGroupAlias(m["groupKey"].GetString(), m["fields"].GetString(), a)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

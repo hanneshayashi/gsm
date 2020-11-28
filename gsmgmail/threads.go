@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -26,11 +28,11 @@ import (
 // This operation cannot be undone. Prefer TrashThread instead.
 func DeleteThread(userID, id string) (bool, error) {
 	srv := getUsersThreadsService()
-	err := srv.Delete(userID, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetThread gets the specified thread.
@@ -46,21 +48,30 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 			c = c.MetadataHeaders(metadataHeaders)
 		}
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListThreadsCallAndAppend(c *gmail.UsersThreadsListCall, threads []*gmail.Thread) ([]*gmail.Thread, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.Thread)
+	return r, nil
+}
+
+func makeListThreadsCallAndAppend(c *gmail.UsersThreadsListCall, threads []*gmail.Thread, errKey string) ([]*gmail.Thread, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ListThreadsResponse)
 	for _, d := range r.Threads {
 		threads = append(threads, d)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		threads, err = makeListThreadsCallAndAppend(c, threads)
+		threads, err = makeListThreadsCallAndAppend(c, threads, errKey)
 		if err != nil {
 			return nil, err
 		}
@@ -82,7 +93,7 @@ func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash b
 		c = c.LabelIds(labelIDs...)
 	}
 	var threads []*gmail.Thread
-	threads, err := makeListThreadsCallAndAppend(c, threads)
+	threads, err := makeListThreadsCallAndAppend(c, threads, gsmhelpers.FormatErrorKey(userID))
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +107,14 @@ func ModifyThread(userID, id, fields string, addLabelIds, removeLabelIds []strin
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Thread)
+	return r, nil
 }
 
 // TrashThread moves the specified thread to the trash.
@@ -107,8 +124,14 @@ func TrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Thread)
+	return r, nil
 }
 
 // UntrashThread removes the specified thread from the trash.
@@ -118,6 +141,12 @@ func UntrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Thread)
+	return r, nil
 }

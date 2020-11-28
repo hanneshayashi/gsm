@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+	"log"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -28,8 +32,26 @@ func GetCustomer(id, fields string) (*admin.Customer, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Customer)
+	return r, nil
+}
+
+// GetCustomerID returns either your own customer ID or the provided one
+func GetCustomerID(customerID string) string {
+	if customerID == "" {
+		var err error
+		customerID, err = GetOwnCustomerID()
+		if err != nil {
+			log.Printf("Error determining customer ID: %v\n", err)
+		}
+	}
+	return customerID
 }
 
 // GetOwnCustomerID returns your own customer ID
@@ -48,6 +70,12 @@ func PatchCustomer(customerKey, fields string, customer *admin.Customer) (*admin
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Customer)
+	return r, nil
 }

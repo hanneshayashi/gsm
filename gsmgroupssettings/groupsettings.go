@@ -1,4 +1,5 @@
 /*
+Package gsmgroupssettings implements the Group Settings API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgroupssettings
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/groupssettings/v1"
 )
@@ -28,8 +31,14 @@ func GetGroupSettings(groupUniqueID, fields string) (*groupssettings.Groups, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*groupssettings.Groups)
+	return r, nil
 }
 
 // PatchGroupSettings updates an existing resource. This method supports patch semantics.
@@ -39,6 +48,12 @@ func PatchGroupSettings(groupUniqueID, fields string, groups *groupssettings.Gro
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*groupssettings.Groups)
+	return r, nil
 }

@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
+
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -34,18 +37,24 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	if permission.Role == "owner" {
 		c.TransferOwnership(true).SendNotificationEmail(true)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Permission)
+	return r, nil
 }
 
 // DeletePermission deletes a permission.
 func DeletePermission(fileID, permissionID string, useDomainAdminAccess bool) (bool, error) {
 	srv := getPermissionsService()
-	err := srv.Delete(fileID, permissionID).UseDomainAdminAccess(useDomainAdminAccess).SupportsAllDrives(true).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(fileID, permissionID).UseDomainAdminAccess(useDomainAdminAccess).SupportsAllDrives(true)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetPermission gets a permission by ID.
@@ -55,21 +64,30 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListPermissionsCallAndAppend(c *drive.PermissionsListCall, permissions []*drive.Permission) ([]*drive.Permission, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.Permission)
+	return r, nil
+}
+
+func makeListPermissionsCallAndAppend(c *drive.PermissionsListCall, permissions []*drive.Permission, errKey string) ([]*drive.Permission, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.PermissionList)
 	for _, p := range r.Permissions {
 		permissions = append(permissions, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		permissions, err = makeListPermissionsCallAndAppend(c, permissions)
+		permissions, err = makeListPermissionsCallAndAppend(c, permissions, errKey)
 	}
 	return permissions, err
 }
@@ -85,7 +103,7 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 		c = c.IncludePermissionsForView(includePermissionsForView)
 	}
 	var permissions []*drive.Permission
-	permissions, err := makeListPermissionsCallAndAppend(c, permissions)
+	permissions, err := makeListPermissionsCallAndAppend(c, permissions, gsmhelpers.FormatErrorKey(fileID))
 	return permissions, err
 }
 
@@ -99,6 +117,12 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	if permission.Role == "owner" {
 		c.TransferOwnership(true)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Permission)
+	return r, nil
 }

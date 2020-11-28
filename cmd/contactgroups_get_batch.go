@@ -36,13 +36,12 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 	Short: "Batch gets contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *people.ContactGroup, cap)
 		final := []*people.ContactGroup{}
 		go func() {
@@ -50,25 +49,11 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["resourceName"].GetString())
-						operation := func() error {
-							result, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), m["maxMembers"].GetInt64())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), m["maxMembers"].GetInt64())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

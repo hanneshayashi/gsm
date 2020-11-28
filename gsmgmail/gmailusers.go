@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -29,6 +31,12 @@ func GetUserProfile(userID, fields string) (*gmail.Profile, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Profile)
+	return r, nil
 }

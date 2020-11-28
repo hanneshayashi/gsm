@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteCalendarListEntry removes a calendar from the user's calendar list.
 func DeleteCalendarListEntry(calendarID string) (bool, error) {
 	srv := getCalendarListService()
-	err := srv.Delete(calendarID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(calendarID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetCalendarListEntry returns a calendar from the user's calendar list.
@@ -38,8 +41,14 @@ func GetCalendarListEntry(calendarID, fields string) (*calendar.CalendarListEntr
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.CalendarListEntry)
+	return r, nil
 }
 
 // InsertCalendarListEntry inserts an existing calendar into the user's calendar list.
@@ -49,8 +58,14 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarListEntry.Id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.CalendarListEntry)
+	return r, nil
 }
 
 // ListCalendarListEntries returns the calendars on the user's calendar list.
@@ -63,10 +78,13 @@ func ListCalendarListEntries(minAccessRole, fields string) ([]*calendar.Calendar
 	if minAccessRole != "" {
 		c = c.MinAccessRole(minAccessRole)
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("List calendar list entries"), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*calendar.CalendarList)
 	return r.Items, nil
 }
 
@@ -77,6 +95,12 @@ func PatchCalendarListEntry(calendarID, fields string, calendarListEntry *calend
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.CalendarListEntry)
+	return r, nil
 }

@@ -36,13 +36,12 @@ var commentsGetBatchCmd = &cobra.Command{
 	Short: "Batch gets comments by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/comments/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, commentFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *drive.Comment, cap)
 		final := []*drive.Comment{}
 		go func() {
@@ -50,25 +49,11 @@ var commentsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["fileId"].GetString(), m["commentId"].GetString())
-						operation := func() error {
-							result, err := gsmdrive.GetComment(m["fileId"].GetString(), m["commentId"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmdrive.GetComment(m["fileId"].GetString(), m["commentId"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

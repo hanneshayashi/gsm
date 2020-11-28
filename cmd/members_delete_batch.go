@@ -35,13 +35,12 @@ var membersDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes group members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			GroupKey  string `json:"groupKey,omitempty"`
 			MemberKey string `json:"memberKey,omitempty"`
@@ -54,26 +53,11 @@ var membersDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["groupKey"].GetString(), m["memberKey"].GetString())
-						operation := func() error {
-							result, err := gsmadmin.DeleteMember(m["groupKey"].GetString(), m["memberKey"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{GroupKey: m["groupKey"].GetString(), MemberKey: m["memberKey"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.DeleteMember(m["groupKey"].GetString(), m["memberKey"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{GroupKey: m["groupKey"].GetString(), MemberKey: m["memberKey"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

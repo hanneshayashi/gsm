@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -29,18 +31,24 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Filter)
+	return r, nil
 }
 
 // DeleteFilter deletes a filter.
 func DeleteFilter(userID, id string) (bool, error) {
 	srv := getUsersSettingsFiltersService()
-	err := srv.Delete(userID, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetFilter gets a filter.
@@ -50,8 +58,14 @@ func GetFilter(userID, id, fields string) (*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Filter)
+	return r, nil
 }
 
 // ListFilters lists the message filters of a Gmail user.
@@ -61,9 +75,12 @@ func ListFilters(userID, fields string) ([]*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.ListFiltersResponse)
 	return r.Filter, nil
 }

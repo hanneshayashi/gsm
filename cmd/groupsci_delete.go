@@ -35,7 +35,7 @@ var groupsCiDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error resolving group name: %v", err)
 		}
 		result, err := gsmci.DeleteGroup(name)
 		if err != nil {

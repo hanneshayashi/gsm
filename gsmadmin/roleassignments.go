@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+	"strconv"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +28,11 @@ import (
 // DeleteRoleAssignment deletes a role assignment.
 func DeleteRoleAssignment(customer, roleAssignmentID string) (bool, error) {
 	srv := getRoleAssignmentsService()
-	err := srv.Delete(customer, roleAssignmentID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customer, roleAssignmentID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetRoleAssignment retrieve a role assignment.
@@ -38,8 +42,14 @@ func GetRoleAssignment(customer, roleAssignmentID, fields string) (*admin.RoleAs
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.RoleAssignment)
+	return r, nil
 }
 
 // InsertRoleAssignment creates a role assignment.
@@ -49,21 +59,30 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListRoleAssignmentsCallAndAppend(c *admin.RoleAssignmentsListCall, roleAssignments []*admin.RoleAssignment) ([]*admin.RoleAssignment, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, strconv.FormatInt(roleAssignment.RoleId, 10), roleAssignment.AssignedTo), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.RoleAssignment)
+	return r, nil
+}
+
+func makeListRoleAssignmentsCallAndAppend(c *admin.RoleAssignmentsListCall, roleAssignments []*admin.RoleAssignment, errKey string) ([]*admin.RoleAssignment, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.RoleAssignments)
 	for _, r := range r.Items {
 		roleAssignments = append(roleAssignments, r)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		roleAssignments, err = makeListRoleAssignmentsCallAndAppend(c, roleAssignments)
+		roleAssignments, err = makeListRoleAssignmentsCallAndAppend(c, roleAssignments, errKey)
 	}
 	return roleAssignments, err
 }
@@ -82,6 +101,6 @@ func ListRoleAssignments(customer, roleID, userKey, fields string) ([]*admin.Rol
 		c = c.UserKey(userKey)
 	}
 	var roleAssignments []*admin.RoleAssignment
-	roleAssignments, err := makeListRoleAssignmentsCallAndAppend(c, roleAssignments)
+	roleAssignments, err := makeListRoleAssignmentsCallAndAppend(c, roleAssignments, gsmhelpers.FormatErrorKey(customer, roleID, userKey))
 	return roleAssignments, err
 }

@@ -35,7 +35,7 @@ var filesGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetFile(flags["fileId"].GetString(), flags["fields"].GetString(), flags["includePermissionsForView"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting file %v", err)
+			log.Println(err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},

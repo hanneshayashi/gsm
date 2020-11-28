@@ -36,13 +36,12 @@ var membersInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *admin.Member, cap)
 		final := []*admin.Member{}
 		go func() {
@@ -50,30 +49,16 @@ var membersInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						member, err := mapToMember(m)
 						if err != nil {
 							log.Printf("Error building member object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s - %s:", m["groupKey"].GetString(), member.Email)
-						operation := func() error {
-							result, err := gsmadmin.InsertMember(m["groupKey"].GetString(), m["fields"].GetString(), member)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.InsertMember(m["groupKey"].GetString(), m["fields"].GetString(), member)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

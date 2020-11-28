@@ -1,4 +1,5 @@
 /*
+Package gsmlicensing implements the Enterprise License Manager API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify

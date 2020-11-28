@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteToken deletes all access tokens issued by a user for an application.rolesPatchCmd
 func DeleteToken(userKey, clientID string) (bool, error) {
 	srv := getTokensService()
-	err := srv.Delete(userKey, clientID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userKey, clientID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetToken gets information about an access token issued by a user.rolesPatchCmd
@@ -38,8 +41,14 @@ func GetToken(userKey, clientID, fields string) (*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Token)
+	return r, nil
 }
 
 // ListTokens returns the set of tokens specified user has issued to 3rd party applications.rolesPatchCmd
@@ -49,9 +58,12 @@ func ListTokens(userKey, fields string) ([]*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Tokens)
 	return r.Items, nil
 }

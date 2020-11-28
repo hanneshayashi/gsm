@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -25,11 +27,11 @@ import (
 // DeleteSmimeInfo deletes the specified S/MIME config for the specified send-as alias.
 func DeleteSmimeInfo(userID, sendAsEmail, id string) (bool, error) {
 	srv := getUsersSettingsSendAsSmimeInfoService()
-	err := srv.Delete(userID, sendAsEmail, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, sendAsEmail, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetSmimeInfo gets the specified S/MIME config for the specified send-as alias.
@@ -39,8 +41,14 @@ func GetSmimeInfo(userID, sendAsEmail, id, fields string) (*gmail.SmimeInfo, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.SmimeInfo)
+	return r, nil
 }
 
 // InsertSmimeInfo uploads the given S/MIME config for the specified send-as alias.
@@ -51,8 +59,14 @@ func InsertSmimeInfo(userID, sendAsEmail, fields string, smimeInfo *gmail.SmimeI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.SmimeInfo)
+	return r, nil
 }
 
 // ListSmimeInfo lists S/MIME configs for the specified send-as alias.
@@ -62,19 +76,22 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
-	return r.SmimeInfo, err
+	r, _ := result.(*gmail.ListSmimeInfoResponse)
+	return r.SmimeInfo, nil
 }
 
 // SetDefaultSmimeInfo sets the default S/MIME config for the specified send-as alias.
 func SetDefaultSmimeInfo(userID, sendAsEmail, id string) (bool, error) {
 	srv := getUsersSettingsSendAsSmimeInfoService()
-	err := srv.SetDefault(userID, sendAsEmail, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.SetDefault(userID, sendAsEmail, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }

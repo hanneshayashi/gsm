@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
+
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -28,18 +31,24 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Reply)
+	return r, nil
 }
 
 // DeleteReply deletes a reply.
 func DeleteReply(fileID, commentID, replyID string) (bool, error) {
 	srv := getRepliesService()
-	err := srv.Delete(fileID, commentID, replyID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(fileID, commentID, replyID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetReply gets a reply by ID.
@@ -49,21 +58,30 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListRepliesCallAndAppend(c *drive.RepliesListCall, replies []*drive.Reply) ([]*drive.Reply, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.Reply)
+	return r, nil
+}
+
+func makeListRepliesCallAndAppend(c *drive.RepliesListCall, replies []*drive.Reply, errKey string) ([]*drive.Reply, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.ReplyList)
 	for _, p := range r.Replies {
 		replies = append(replies, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		replies, err = makeListRepliesCallAndAppend(c, replies)
+		replies, err = makeListRepliesCallAndAppend(c, replies, errKey)
 	}
 	return replies, err
 }
@@ -76,7 +94,7 @@ func ListReplies(fileID, commentID, fields string, includeDeleted bool) ([]*driv
 		c.Fields(googleapi.Field(fields))
 	}
 	var replies []*drive.Reply
-	replies, err := makeListRepliesCallAndAppend(c, replies)
+	replies, err := makeListRepliesCallAndAppend(c, replies, gsmhelpers.FormatErrorKey(fileID, commentID))
 	return replies, err
 }
 
@@ -87,6 +105,12 @@ func UpdateReply(fileID, commentID, replyID, fields string, reply *drive.Reply) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Reply)
+	return r, nil
 }

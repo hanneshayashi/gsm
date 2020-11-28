@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
+
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -31,11 +34,17 @@ func GetStartPageToken(driveID, fields string) (*drive.StartPageToken, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.StartPageToken)
+	return r, nil
 }
 
-func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView string, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive bool, changes []*drive.Change) (*drive.ChangeList, error) {
+func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView string, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive bool, changes []*drive.Change, errKey string) (*drive.ChangeList, error) {
 	srv := getChangesService()
 	c := srv.List(pageToken).IncludeCorpusRemovals(includeCorpusRemovals).IncludeItemsFromAllDrives(includeItemsFromAllDrives).IncludeRemoved(includeRemoved).RestrictToMyDrive(restrictToMyDrive).SupportsAllDrives(true)
 	if driveID != "" {
@@ -50,13 +59,16 @@ func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView s
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.ChangeList)
 	changes = append(changes, r.Changes...)
 	if r.NextPageToken != "" {
-		r, err = listChanges(r.NextPageToken, driveID, spaces, fields, includePermissionsForView, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive, changes)
+		result, err = listChanges(r.NextPageToken, driveID, spaces, fields, includePermissionsForView, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive, changes, errKey)
 		if err != nil {
 			return nil, err
 		}
@@ -68,7 +80,7 @@ func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView s
 // ListChanges lists the changes for a user or shared drive.
 func ListChanges(pageToken, driveID, spaces, fields, includePermissionsForView string, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive bool) ([]*drive.Change, string, error) {
 	var changes []*drive.Change
-	r, err := listChanges(pageToken, driveID, spaces, fields, includePermissionsForView, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive, changes)
+	r, err := listChanges(pageToken, driveID, spaces, fields, includePermissionsForView, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive, changes, gsmhelpers.FormatErrorKey(driveID))
 	if err != nil {
 		return nil, "", err
 	}

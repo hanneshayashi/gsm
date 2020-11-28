@@ -36,13 +36,12 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates permissions for a file or shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *drive.Permission, cap)
 		final := []*drive.Permission{}
 		go func() {
@@ -50,30 +49,16 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						p, err := mapToPermission(m)
 						if err != nil {
 							log.Printf("Error building permission object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s - %s:", m["fileId"].GetString(), m["permissionId"].GetString())
-						operation := func() error {
-							result, err := gsmdrive.UpdatePermission(m["fileId"].GetString(), m["permissionId"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), p)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmdrive.UpdatePermission(m["fileId"].GetString(), m["permissionId"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), p)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

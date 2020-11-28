@@ -35,13 +35,12 @@ var eventsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes events using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			CalendarID string `json:"calendarId,omitempty"`
 			EventID    string `json:"eventId,omitempty"`
@@ -54,26 +53,11 @@ var eventsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s:", m["calendarId"].GetString(), m["eventId"].GetString())
-						operation := func() error {
-							result, err := gsmcalendar.DeleteEvent(m["calendarId"].GetString(), m["eventId"].GetString(), m["sendUpdates"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{CalendarID: m["calendarId"].GetString(), EventID: m["eventId"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmcalendar.DeleteEvent(m["calendarId"].GetString(), m["eventId"].GetString(), m["sendUpdates"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{CalendarID: m["calendarId"].GetString(), EventID: m["eventId"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

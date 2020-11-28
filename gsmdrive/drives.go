@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,32 +18,40 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
+
 	"github.com/google/uuid"
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"
 )
 
 // CreateDrive creates a new shared drive.
-func CreateDrive(drive *drive.Drive, fields string) (*drive.Drive, error) {
+func CreateDrive(d *drive.Drive, fields string) (*drive.Drive, error) {
 	srv := getDrivesService()
 	u, _ := uuid.NewRandom()
 	requestID := u.String()
-	c := srv.Create(requestID, drive)
+	c := srv.Create(requestID, d)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(d.Name), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Drive)
+	return r, nil
 }
 
 // DeleteDrive permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items.
 func DeleteDrive(driveID string) (bool, error) {
 	srv := getDrivesService()
-	err := srv.Delete(driveID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(driveID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(driveID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetDrive gets a shared drive's metadata by ID.
@@ -52,8 +61,14 @@ func GetDrive(driveID, fields string, useDomainAdminAccess bool) (*drive.Drive, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Drive)
+	return r, nil
 }
 
 // HideDrive hides a shared drive from the default view.
@@ -63,21 +78,30 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListDrivesCallAndAppend(c *drive.DrivesListCall, drives []*drive.Drive) ([]*drive.Drive, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.Drive)
+	return r, nil
+}
+
+func makeListDrivesCallAndAppend(c *drive.DrivesListCall, drives []*drive.Drive, errKey string) ([]*drive.Drive, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.DriveList)
 	for _, d := range r.Drives {
 		drives = append(drives, d)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		drives, err = makeListDrivesCallAndAppend(c, drives)
+		drives, err = makeListDrivesCallAndAppend(c, drives, errKey)
 	}
 	return drives, err
 }
@@ -95,7 +119,7 @@ func ListDrives(filter, fields string, useDomainAdminAccess bool) ([]*drive.Driv
 		c = c.Q(filter)
 	}
 	var drives []*drive.Drive
-	drives, err := makeListDrivesCallAndAppend(c, drives)
+	drives, err := makeListDrivesCallAndAppend(c, drives, gsmhelpers.FormatErrorKey("List drives"))
 	return drives, err
 }
 
@@ -106,17 +130,29 @@ func UnhideDrive(driveID, fields string) (*drive.Drive, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Drive)
+	return r, nil
 }
 
 // UpdateDrive updates the metadate for a shared drive.
-func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, drive *drive.Drive) (*drive.Drive, error) {
+func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, d *drive.Drive) (*drive.Drive, error) {
 	srv := getDrivesService()
-	c := srv.Update(driveID, drive).UseDomainAdminAccess(useDomainAdminAccess)
+	c := srv.Update(driveID, d).UseDomainAdminAccess(useDomainAdminAccess)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Drive)
+	return r, nil
 }

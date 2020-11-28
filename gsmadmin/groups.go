@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,53 +18,70 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
 
 // DeleteGroup deletes a group.
-func DeleteGroup(groupkey string) (bool, error) {
+func DeleteGroup(groupKey string) (bool, error) {
 	srv := getGroupsService()
-	err := srv.Delete(groupkey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(groupKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(groupKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetGroup retrieves a group's properties.
-func GetGroup(groupkey, fields string) (*admin.Group, error) {
+func GetGroup(groupKey, fields string) (*admin.Group, error) {
 	srv := getGroupsService()
-	c := srv.Get(groupkey)
+	c := srv.Get(groupKey)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-// InsertGroup creates a group.
-func InsertGroup(Group *admin.Group, fields string) (*admin.Group, error) {
-	srv := getGroupsService()
-	c := srv.Insert(Group)
-	if fields != "" {
-		c.Fields(googleapi.Field(fields))
-	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListGroupsCallAndAppend(c *admin.GroupsListCall, groups []*admin.Group) ([]*admin.Group, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Group)
+	return r, nil
+}
+
+// InsertGroup creates a group.
+func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
+	srv := getGroupsService()
+	c := srv.Insert(group)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(group.Email), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Group)
+	return r, nil
+}
+
+func makeListGroupsCallAndAppend(c *admin.GroupsListCall, groups []*admin.Group, errKey string) ([]*admin.Group, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Groups)
 	for _, g := range r.Groups {
 		groups = append(groups, g)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeListGroupsCallAndAppend(c, groups)
+		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)
 	}
 	return groups, err
 }
@@ -87,17 +105,23 @@ func ListGroups(filter, userKey, domain, customer, fields string) ([]*admin.Grou
 		c = c.Domain(domain)
 	}
 	var groups []*admin.Group
-	groups, err := makeListGroupsCallAndAppend(c, groups)
+	groups, err := makeListGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(customer))
 	return groups, err
 }
 
 // PatchGroup updates a group's properties. This method supports patch semantics.
-func PatchGroup(groupkey, fields string, Group *admin.Group) (*admin.Group, error) {
+func PatchGroup(groupKey, fields string, Group *admin.Group) (*admin.Group, error) {
 	srv := getGroupsService()
-	c := srv.Patch(groupkey, Group)
+	c := srv.Patch(groupKey, Group)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Group)
+	return r, nil
 }

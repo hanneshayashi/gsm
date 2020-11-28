@@ -33,7 +33,7 @@ var sharedContactsListCmd = &cobra.Command{
 	Long:  `Example: gsm sharedContacts list --domain "example.org"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, _, err := gsmadmin.ListSharedContacts(flags["domain"].GetString())
+		result, err := gsmadmin.ListSharedContacts(flags["domain"].GetString())
 		if err != nil {
 			log.Fatalf("Error listing shared contacts: %v", err)
 		}

@@ -36,13 +36,12 @@ var roleAssignmentsInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *admin.RoleAssignment, cap)
 		final := []*admin.RoleAssignment{}
 		go func() {
@@ -50,30 +49,16 @@ var roleAssignmentsInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						r, err := mapToRoleAssignment(m)
 						if err != nil {
 							log.Printf("Error building role assignment object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s - %s - %d:", m["customer"].GetString(), r.AssignedTo, r.RoleId)
-						operation := func() error {
-							result, err := gsmadmin.InsertRoleAssignment(m["customer"].GetString(), m["fields"].GetString(), r)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.InsertRoleAssignment(m["customer"].GetString(), m["fields"].GetString(), r)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

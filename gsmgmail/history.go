@@ -18,21 +18,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
 
-func makeListHistoryCallAndAppend(c *gmail.UsersHistoryListCall, history []*gmail.History) ([]*gmail.History, error) {
-	r, err := c.Do()
+func makeListHistoryCallAndAppend(c *gmail.UsersHistoryListCall, history []*gmail.History, errKey string) ([]*gmail.History, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.ListHistoryResponse)
 	for _, h := range r.History {
 		history = append(history, h)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		history, err = makeListHistoryCallAndAppend(c, history)
+		history, err = makeListHistoryCallAndAppend(c, history, errKey)
 	}
 	return history, err
 }
@@ -51,7 +56,7 @@ func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyT
 		c = c.HistoryTypes(historyTypes...)
 	}
 	var history []*gmail.History
-	history, err := makeListHistoryCallAndAppend(c, history)
+	history, err := makeListHistoryCallAndAppend(c, history, gsmhelpers.FormatErrorKey(userID))
 	if err != nil {
 		return nil, err
 	}

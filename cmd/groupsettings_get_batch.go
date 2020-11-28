@@ -36,13 +36,12 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups' settings identified by the group email address using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *groupssettings.Groups, cap)
 		final := []*groupssettings.Groups{}
 		go func() {
@@ -50,28 +49,14 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["groupUniqueId"].GetString())
-						operation := func() error {
-							result, err := gsmgroupssettings.GetGroupSettings(m["groupUniqueId"].GetString(), m["fields"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
+						result, err := gsmgroupssettings.GetGroupSettings(m["groupUniqueId"].GetString(), m["fields"].GetString())
+						if err != nil {
+							log.Println(err)
+						} else {
 							if m["ignoreDeprecated"].GetBool() {
 								result = ignoreDeprecatedGroupSettings(result)
 							}
 							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
-						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

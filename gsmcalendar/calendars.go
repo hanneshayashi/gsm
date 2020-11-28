@@ -1,4 +1,5 @@
 /*
+Package gsmcalendar implements the Calendar API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 )
@@ -25,22 +28,22 @@ import (
 // This operation deletes all events associated with the primary calendar of an account.
 func ClearCalendar(calendarID string) (bool, error) {
 	srv := getCalendarsService()
-	err := srv.Clear(calendarID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Clear(calendarID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // DeleteCalendar deletes a secondary calendar.
 // Use calendars.clear for clearing all events on primary calendars.
 func DeleteCalendar(calendarID string) (bool, error) {
 	srv := getCalendarsService()
-	err := srv.Delete(calendarID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(calendarID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetCalendar returns metadata for a calendar.
@@ -50,29 +53,47 @@ func GetCalendar(calendarID, fields string) (*calendar.Calendar, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Calendar)
+	return r, nil
 }
 
 // InsertCalendar creates a secondary calendar.
-func InsertCalendar(calendar *calendar.Calendar, fields string) (*calendar.Calendar, error) {
+func InsertCalendar(cal *calendar.Calendar, fields string) (*calendar.Calendar, error) {
 	srv := getCalendarsService()
-	c := srv.Insert(calendar)
+	c := srv.Insert(cal)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cal.Summary), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Calendar)
+	return r, nil
 }
 
 // PatchCalendar updates metadata for a calendar.
 // This method supports patch semantics.
-func PatchCalendar(calendarID, fields string, calendar *calendar.Calendar) (*calendar.Calendar, error) {
+func PatchCalendar(calendarID, fields string, cal *calendar.Calendar) (*calendar.Calendar, error) {
 	srv := getCalendarsService()
-	c := srv.Patch(calendarID, calendar)
+	c := srv.Patch(calendarID, cal)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*calendar.Calendar)
+	return r, nil
 }

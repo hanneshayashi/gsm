@@ -35,13 +35,12 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 	Short: "Batch creates groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan map[string]interface{}, cap)
 		final := []map[string]interface{}{}
 		go func() {
@@ -49,30 +48,16 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["id"].GetString())
-						operation := func() error {
-							g, err := mapToGroupCi(m)
-							if err != nil {
-								log.Printf("Error building group object: %v\n", err)
-								return nil
-							}
-							result, err := gsmci.CreateGroup(g, m["initialGroupConfig"].GetString(), m["fields"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						g, err := mapToGroupCi(m)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Printf("Error building group object: %v\n", err)
+							continue
+						}
+						result, err := gsmci.CreateGroup(g, m["initialGroupConfig"].GetString(), m["fields"].GetString())
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

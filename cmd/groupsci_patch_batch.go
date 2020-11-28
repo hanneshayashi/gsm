@@ -35,13 +35,12 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan map[string]interface{}, cap)
 		final := []map[string]interface{}{}
 		go func() {
@@ -49,35 +48,21 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s/%s:", m["name"].GetString(), m["email"].GetString())
-						operation := func() error {
-							name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
-							if err != nil {
-								log.Printf("%v\n", err)
-								return nil
-							}
-							g, err := mapToGroupCi(m)
-							if err != nil {
-								log.Printf("Error building group object: %v\n", err)
-								return nil
-							}
-							result, err := gsmci.PatchGroup(name, m["updateMask"].GetString(), m["fields"].GetString(), g)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Printf("Error resolving group name: %v\n", err)
+							continue
+						}
+						g, err := mapToGroupCi(m)
+						if err != nil {
+							log.Printf("Error building group object: %v\n", err)
+							continue
+						}
+						result, err := gsmci.PatchGroup(name, m["updateMask"].GetString(), m["fields"].GetString(), g)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

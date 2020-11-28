@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteRole deleteRole deletes a role.
 func DeleteRole(customer, roleID string) (bool, error) {
 	srv := getRolesService()
-	err := srv.Delete(customer, roleID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customer, roleID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetRole retrieves a role.
@@ -38,8 +41,14 @@ func GetRole(customer, roleID, fields string) (*admin.Role, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Role)
+	return r, nil
 }
 
 // InsertRole creates a role.
@@ -49,21 +58,30 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListRolesCallAndAppend(c *admin.RolesListCall, roles []*admin.Role) ([]*admin.Role, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Role)
+	return r, nil
+}
+
+func makeListRolesCallAndAppend(c *admin.RolesListCall, roles []*admin.Role, errKey string) ([]*admin.Role, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Roles)
 	for _, r := range r.Items {
 		roles = append(roles, r)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		roles, err = makeListRolesCallAndAppend(c, roles)
+		roles, err = makeListRolesCallAndAppend(c, roles, errKey)
 	}
 	return roles, err
 }
@@ -76,7 +94,7 @@ func ListRoles(customer, fields string) ([]*admin.Role, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var roles []*admin.Role
-	roles, err := makeListRolesCallAndAppend(c, roles)
+	roles, err := makeListRolesCallAndAppend(c, roles, customer)
 	return roles, err
 }
 
@@ -87,6 +105,12 @@ func PatchRole(customer, roleID, fields string, role *admin.Role) (*admin.Role, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Role)
+	return r, nil
 }

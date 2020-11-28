@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -29,8 +31,14 @@ func GetAutoForwardingSettings(userID, fields string) (*gmail.AutoForwarding, er
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.AutoForwarding)
+	return r, nil
 }
 
 // GetIMAPSettings gets IMAP settings.
@@ -40,8 +48,14 @@ func GetIMAPSettings(userID, fields string) (*gmail.ImapSettings, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ImapSettings)
+	return r, nil
 }
 
 // GetLanguageSettings gets language settings.
@@ -51,8 +65,14 @@ func GetLanguageSettings(userID, fields string) (*gmail.LanguageSettings, error)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.LanguageSettings)
+	return r, nil
 }
 
 // GetPOPSettings gets POP settings.
@@ -62,8 +82,14 @@ func GetPOPSettings(userID, fields string) (*gmail.PopSettings, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.PopSettings)
+	return r, nil
 }
 
 // GetVacationResponderSettings gets vacation responder settings.
@@ -73,8 +99,14 @@ func GetVacationResponderSettings(userID, fields string) (*gmail.VacationSetting
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.VacationSettings)
+	return r, nil
 }
 
 // UpdateAutoForwardingSettings updates the auto-forwarding setting for the specified account.
@@ -85,8 +117,14 @@ func UpdateAutoForwardingSettings(userID, fields string, autoForwarding *gmail.A
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.AutoForwarding)
+	return r, nil
 }
 
 // UpdateIMAPSettings updates IMAP settings.
@@ -96,8 +134,14 @@ func UpdateIMAPSettings(userID, fields string, imapSettings *gmail.ImapSettings)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ImapSettings)
+	return r, nil
 }
 
 // UpdateLanguageSettings updates language settings.
@@ -109,8 +153,14 @@ func UpdateLanguageSettings(userID, fields string, languageSetting *gmail.Langua
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.LanguageSettings)
+	return r, nil
 }
 
 // UpdatePOPSettings updates POP settings.
@@ -120,8 +170,14 @@ func UpdatePOPSettings(userID, fields string, popSettings *gmail.PopSettings) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.PopSettings)
+	return r, nil
 }
 
 // UpdateVacationResponderSettings updates vacation responder settings.
@@ -131,6 +187,12 @@ func UpdateVacationResponderSettings(userID, fields string, vacationSettings *gm
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.VacationSettings)
+	return r, nil
 }

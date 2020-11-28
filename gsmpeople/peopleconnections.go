@@ -1,4 +1,5 @@
 /*
+Package gsmpeople implements the People API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,26 +18,31 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
 
-func makeListPeopleConnectionsCallAndAppend(c *people.PeopleConnectionsListCall, people []*people.Person) ([]*people.Person, error) {
-	r, err := c.Do()
+func makeListPeopleConnectionsCallAndAppend(c *people.PeopleConnectionsListCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*people.ListConnectionsResponse)
 	for _, c := range r.Connections {
-		people = append(people, c)
+		ps = append(ps, c)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		people, err = makeListPeopleConnectionsCallAndAppend(c, people)
+		ps, err = makeListPeopleConnectionsCallAndAppend(c, ps, errKey)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return people, nil
+	return ps, nil
 }
 
 // ListPeopleConnections provides a list of the authenticated user's contacts.
@@ -50,6 +56,6 @@ func ListPeopleConnections(resourceName, personFields, sources, fields string) (
 		c.Fields(googleapi.Field(fields))
 	}
 	var people []*people.Person
-	people, err := makeListPeopleConnectionsCallAndAppend(c, people)
+	people, err := makeListPeopleConnectionsCallAndAppend(c, people, gsmhelpers.FormatErrorKey(resourceName))
 	return people, err
 }

@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteDomain deletes a domain of the customer.
 func DeleteDomain(customerID, domainName string) (bool, error) {
 	srv := getDomainsService()
-	err := srv.Delete(customerID, domainName).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customerID, domainName)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetDomain retrieves a domain of the customer.
@@ -38,8 +41,14 @@ func GetDomain(customerID, domainName, fields string) (*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Domains)
+	return r, nil
 }
 
 // InsertDomain inserts a domain of the customer.
@@ -49,8 +58,14 @@ func InsertDomain(customerID, fields string, domain *admin.Domains) (*admin.Doma
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domain.DomainName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Domains)
+	return r, nil
 }
 
 // ListDomains lists the domains of the customer.
@@ -60,9 +75,12 @@ func ListDomains(customerID, fields string) ([]*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Domains2)
 	return r.Domains, nil
 }

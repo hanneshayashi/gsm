@@ -1,4 +1,5 @@
 /*
+Package gsmpeople implements the People API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
@@ -31,8 +34,14 @@ func BatchGetContactGroups(resourceNames []string, maxMembers int64, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.BatchGetContactGroupsResponse)
+	return r, nil
 }
 
 // CreateContactGroup creates a new contact group owned by the authenticated user.
@@ -42,14 +51,23 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(createContactGroupRequest.ContactGroup.Name), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.ContactGroup)
+	return r, nil
 }
 
 // DeleteContactGroup deletes an existing contact group owned by the authenticated user by specifying a contact group resource name.
 func DeleteContactGroup(resourceName string, deleteContacts bool) (bool, error) {
 	srv := getContactGroupsService()
-	_, err := srv.Delete(resourceName).DeleteContacts(deleteContacts).Do()
+	c := srv.Delete(resourceName).DeleteContacts(deleteContacts)
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return false, err
 	}
@@ -66,21 +84,30 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListContactGroupsCallAndAppend(c *people.ContactGroupsListCall, contactGroups []*people.ContactGroup) ([]*people.ContactGroup, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*people.ContactGroup)
+	return r, nil
+}
+
+func makeListContactGroupsCallAndAppend(c *people.ContactGroupsListCall, contactGroups []*people.ContactGroup, errKey string) ([]*people.ContactGroup, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.ListContactGroupsResponse)
 	for _, c := range r.ContactGroups {
 		contactGroups = append(contactGroups, c)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		contactGroups, err = makeListContactGroupsCallAndAppend(c, contactGroups)
+		contactGroups, err = makeListContactGroupsCallAndAppend(c, contactGroups, errKey)
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +124,7 @@ func ListContactGroups(fields string) ([]*people.ContactGroup, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var contactGroups []*people.ContactGroup
-	contactGroups, err := makeListContactGroupsCallAndAppend(c, contactGroups)
+	contactGroups, err := makeListContactGroupsCallAndAppend(c, contactGroups, gsmhelpers.FormatErrorKey("List contact groups"))
 	return contactGroups, err
 }
 
@@ -108,6 +135,12 @@ func UpdateContactGroup(resourceName, fields string, updateContactGroupRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*people.ContactGroup)
+	return r, nil
 }

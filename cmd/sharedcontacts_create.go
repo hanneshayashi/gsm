@@ -38,7 +38,7 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 		if err != nil {
 			log.Fatalf("Error building shared contact object: %v\n", err)
 		}
-		result, _, err := gsmadmin.CreateSharedContact(flags["domain"].GetString(), s)
+		result, err := gsmadmin.CreateSharedContact(flags["domain"].GetString(), s)
 		if err != nil {
 			log.Fatalf("Error creating shared contact: %v", err)
 		}

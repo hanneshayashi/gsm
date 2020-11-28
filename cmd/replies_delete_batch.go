@@ -35,13 +35,12 @@ var repliesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes replies by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/replies/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, replyFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			FileID    string `json:"fileId,omitempty"`
 			CommentID string `json:"commentId,omitempty"`
@@ -55,26 +54,11 @@ var repliesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s - %s:", m["fileId"].GetString(), m["commentId"].GetString(), m["replyId"].GetString())
-						operation := func() error {
-							result, err := gsmdrive.DeleteReply(m["fileId"].GetString(), m["commentId"].GetString(), m["replyId"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{CommentID: m["commentId"].GetString(), FileID: m["fileId"].GetString(), ReplyID: m["replyId"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmdrive.DeleteReply(m["fileId"].GetString(), m["commentId"].GetString(), m["replyId"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{CommentID: m["commentId"].GetString(), FileID: m["fileId"].GetString(), ReplyID: m["replyId"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

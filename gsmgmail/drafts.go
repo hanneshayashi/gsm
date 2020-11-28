@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
 	"io"
 
 	"google.golang.org/api/gmail/v1"
@@ -34,18 +35,24 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 	for _, m := range media {
 		c = c.Media(m)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Draft)
+	return r, nil
 }
 
 // DeleteDraft immediately and permanently deletes the specified draft. Does not simply trash it.
 func DeleteDraft(userID, id string) (bool, error) {
 	srv := getUsersDraftsService()
-	err := srv.Delete(userID, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetDraft gets the specified draft.
@@ -58,21 +65,30 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	if format != "" {
 		c = c.Format(format)
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListDraftsCallAndAppend(c *gmail.UsersDraftsListCall, drafts []*gmail.Draft) ([]*gmail.Draft, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.Draft)
+	return r, nil
+}
+
+func makeListDraftsCallAndAppend(c *gmail.UsersDraftsListCall, drafts []*gmail.Draft, errKey string) ([]*gmail.Draft, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ListDraftsResponse)
 	for _, d := range r.Drafts {
 		drafts = append(drafts, d)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		drafts, err = makeListDraftsCallAndAppend(c, drafts)
+		drafts, err = makeListDraftsCallAndAppend(c, drafts, errKey)
 		if err != nil {
 			return nil, err
 		}
@@ -91,7 +107,7 @@ func ListDrafts(userID, q, fields string, includeSpamTrash bool) ([]*gmail.Draft
 		c = c.Q(q)
 	}
 	var drafts []*gmail.Draft
-	drafts, err := makeListDraftsCallAndAppend(c, drafts)
+	drafts, err := makeListDraftsCallAndAppend(c, drafts, gsmhelpers.FormatErrorKey(userID))
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +121,14 @@ func SendDraft(userID string, draft *gmail.Draft, media ...io.Reader) (*gmail.Me
 	for _, m := range media {
 		c = c.Media(m)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // UpdateDraft replaces a draft's content.
@@ -119,6 +141,12 @@ func UpdateDraft(userID, id, fields string, draft *gmail.Draft, media ...io.Read
 	for _, m := range media {
 		c = c.Media(m)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Draft)
+	return r, nil
 }

@@ -23,7 +23,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"gsm/gsmadmin"
 	"io"
 	"io/ioutil"
 	"log"
@@ -40,6 +39,9 @@ import (
 )
 
 const version = "0.1.15"
+
+// StandarRetrier is a retrier object that should be used by every function that calls a Google API
+var StandarRetrier = NewStandardRetrier()
 
 // GetVersion returns the current version
 func GetVersion() string {
@@ -94,11 +96,40 @@ func GetCSV(flags map[string]*Value) ([][]string, error) {
 	return csv, nil
 }
 
+// FormatError adds an errKey prefix to an error message
+func FormatError(err error, errKey string) error {
+	return fmt.Errorf("%s: %v", errKey, err)
+}
+
+// RetryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
+func RetryLog(err error, errKey string) bool {
+	if err != nil {
+		if ErrorIsRetryable(err) {
+			log.Println(FormatError(err, errKey), "- Retrying...")
+			return true
+		}
+		return false
+	}
+	return false
+}
+
 // ErrorIsRetryable checks if a Google API response returned a retryable error
 func ErrorIsRetryable(err error) bool {
 	gerr := err.(*googleapi.Error)
-	if gerr.Code == 403 && (strings.Contains(gerr.Message, "quota") || strings.Contains(gerr.Message, "limit") || strings.Contains(gerr.Message, "rate")) {
-		return true
+	keyWords := []string{
+		"quota",
+		"Quota",
+		"limit",
+		"Limit",
+		"rate",
+		"Rate",
+	}
+	if gerr.Code == 403 {
+		for _, kw := range keyWords {
+			if strings.Contains(gerr.Message, kw) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -109,18 +140,6 @@ func NewStandardRetrier() *retrier.Retrier {
 	// 	&googleapi.Error{Code: 403},
 	// }
 	return retrier.New(retrier.ExponentialBackoff(4, 20*time.Second), nil)
-}
-
-// GetCustomerID returns either your own customer ID or the provided one
-func GetCustomerID(customerID string) string {
-	if customerID == "" {
-		var err error
-		customerID, err = gsmadmin.GetOwnCustomerID()
-		if err != nil {
-			log.Printf("Error determining customer ID: %v\n", err)
-		}
-	}
-	return customerID
 }
 
 // Contains checks if a string is inside a slice
@@ -291,4 +310,41 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 		}
 	}()
 	return maps, nil
+}
+
+func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, error) {
+	var err error
+	var result interface{}
+	operation := func() error {
+		result, err = c()
+		if RetryLog(err, errKey) {
+			return err
+		}
+		return nil
+	}
+	StandarRetrier.Run(operation)
+	if err != nil {
+		return nil, FormatError(err, errKey)
+	}
+	return result, nil
+}
+
+func ActionRetry(errKey string, c func() error) (bool, error) {
+	var err error
+	operation := func() error {
+		err = c()
+		if RetryLog(err, errKey) {
+			return err
+		}
+		return nil
+	}
+	StandarRetrier.Run(operation)
+	if err != nil {
+		return false, FormatError(err, errKey)
+	}
+	return true, nil
+}
+
+func FormatErrorKey(s ...string) string {
+	return strings.Join(s, " - ")
 }

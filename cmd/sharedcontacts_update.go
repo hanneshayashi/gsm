@@ -34,7 +34,7 @@ var sharedContactsUpdateCmd = &cobra.Command{
 Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;label=Mobile" --url https://www.google.com/m8/feeds/contacts/example.org/base/a1034b28e4f62f3`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		s, _, err := gsmadmin.GetSharedContact(flags["url"].GetString())
+		s, err := gsmadmin.GetSharedContact(flags["url"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting shared contact: %v", err)
 		}
@@ -42,7 +42,7 @@ Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;l
 		if err != nil {
 			log.Fatalf("Error building shared contact object: %v", err)
 		}
-		result, _, err := gsmadmin.UpdateSharedContact(flags["url"].GetString(), s)
+		result, err := gsmadmin.UpdateSharedContact(flags["url"].GetString(), s)
 		if err != nil {
 			log.Fatalf("Error creating shared contact: %v", err)
 		}

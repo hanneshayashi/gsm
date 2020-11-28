@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteMember removes a member from a group.
 func DeleteMember(groupKey, memberKey string) (bool, error) {
 	srv := getMembersService()
-	err := srv.Delete(groupKey, memberKey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(groupKey, memberKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetMember retrieves a group member's properties.
@@ -38,50 +41,69 @@ func GetMember(groupKey, memberKey, fields string) (*admin.Member, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Member)
+	return r, nil
 }
 
 // HasMember checks whether the given user is a member of the group. Membership can be direct or nested.
 func HasMember(groupKey, memberKey string) (bool, error) {
 	srv := getMembersService()
-	r, err := srv.HasMember(groupKey, memberKey).Do()
+	c := srv.HasMember(groupKey, memberKey)
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return false, err
 	}
+	r, _ := result.(*admin.MembersHasMember)
 	return r.IsMember, nil
 }
 
 // InsertMember adds a user to the specified group.
-func InsertMember(key, fields string, Member *admin.Member) (*admin.Member, error) {
+func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member, error) {
 	srv := getMembersService()
-	c := srv.Insert(key, Member)
+	c := srv.Insert(groupKey, member)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListMembersCallAndAppend(c *admin.MembersListCall, members []*admin.Member) ([]*admin.Member, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, member.Email), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Member)
+	return r, nil
+}
+
+func makeListMembersCallAndAppend(c *admin.MembersListCall, members []*admin.Member, errKey string) ([]*admin.Member, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Members)
 	for _, m := range r.Members {
 		members = append(members, m)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		members, err = makeListMembersCallAndAppend(c, members)
+		members, err = makeListMembersCallAndAppend(c, members, errKey)
 	}
 	return members, err
 }
 
 // ListMembers retrieves a paginated list of all members in a group.
-func ListMembers(key, roles, fields string, includeDerivedMembership bool) ([]*admin.Member, error) {
+func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool) ([]*admin.Member, error) {
 	srv := getMembersService()
-	c := srv.List(key).IncludeDerivedMembership(includeDerivedMembership)
+	c := srv.List(groupKey).IncludeDerivedMembership(includeDerivedMembership)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -89,7 +111,7 @@ func ListMembers(key, roles, fields string, includeDerivedMembership bool) ([]*a
 		c = c.Roles(roles)
 	}
 	var members []*admin.Member
-	members, err := makeListMembersCallAndAppend(c, members)
+	members, err := makeListMembersCallAndAppend(c, members, gsmhelpers.FormatErrorKey(groupKey))
 	return members, err
 }
 
@@ -100,6 +122,12 @@ func PatchMember(groupKey, memberKey, fields string, member *admin.Member) (*adm
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Member)
+	return r, nil
 }

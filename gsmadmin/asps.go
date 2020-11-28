@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+	"strconv"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +28,11 @@ import (
 // DeleteAsp deletes an ASP issued by a user.
 func DeleteAsp(userKey string, codeID int64) (bool, error) {
 	srv := getAspsService()
-	err := srv.Delete(userKey, codeID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userKey, codeID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetAsp gets information about an ASP issued by a user.
@@ -38,8 +42,14 @@ func GetAsp(userKey, fields string, codeID int64) (*admin.Asp, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, strconv.FormatInt(codeID, 10)), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Asp)
+	return r, nil
 }
 
 // ListAsps lists the ASPs issued by a user.
@@ -49,9 +59,12 @@ func ListAsps(userKey, fields string) ([]*admin.Asp, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Asps)
 	return r.Items, nil
 }

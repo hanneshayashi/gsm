@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"fmt"
+	"gsm/gsmadmin"
 	"gsm/gsmhelpers"
 	"gsm/gsmlicensing"
 	"log"
@@ -33,7 +34,7 @@ var licenseAssignmentsListForProductAndSkuCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForProductAndSku",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		customerID := gsmhelpers.GetCustomerID(flags["customerId"].GetString())
+		customerID := gsmadmin.GetCustomerID(flags["customerId"].GetString())
 		result, err := gsmlicensing.ListLicenseAssignmentsForProductAndSku(flags["productId"].GetString(), flags["skuId"].GetString(), customerID, flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error listing license assignments for product: %v", err)

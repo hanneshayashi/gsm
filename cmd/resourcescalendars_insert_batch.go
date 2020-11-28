@@ -36,13 +36,12 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *admin.CalendarResource, cap)
 		final := []*admin.CalendarResource{}
 		go func() {
@@ -50,30 +49,16 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						c, err := mapToResourceCalendar(m)
 						if err != nil {
-							log.Printf("Error building resourceCalendar object: %v", err)
+							log.Printf("Error building resourceCalendar object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s - %s:", m["customer"].GetString(), c.ResourceId)
-						operation := func() error {
-							result, err := gsmadmin.InsertResourcesCalendar(m["customer"].GetString(), m["fields"].GetString(), c)
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.InsertResourcesCalendar(m["customer"].GetString(), m["fields"].GetString(), c)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

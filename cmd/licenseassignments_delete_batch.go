@@ -35,13 +35,12 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 	Short: "Delete deletes users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, licenseAssignmentFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		type resultStruct struct {
 			ProductID string `json:"productId,omitempty"`
 			SkuID     string `json:"skuId,omitempty"`
@@ -55,26 +54,11 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s - %s - %s:", m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString())
-						operation := func() error {
-							result, err := gsmlicensing.DeleteLicenseAssignment(m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- resultStruct{ProductID: m["productId"].GetString(), SkuID: m["skuId"].GetString(), UserID: m["userId"].GetString(), Result: result}
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmlicensing.DeleteLicenseAssignment(m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
 						}
+						results <- resultStruct{ProductID: m["productId"].GetString(), SkuID: m["skuId"].GetString(), UserID: m["userId"].GetString(), Result: result}
 						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()

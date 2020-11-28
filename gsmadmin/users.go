@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,8 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
-	"crypto/sha1"
-	"fmt"
+	"gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
@@ -27,11 +27,11 @@ import (
 // DeleteUser deletes a user.
 func DeleteUser(userKey string) (bool, error) {
 	srv := getUsersService()
-	err := srv.Delete(userKey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetUser retrieves a user.
@@ -50,8 +50,14 @@ func GetUser(userKey, fields, projection, customFieldMask, viewType string) (*ad
 	if viewType != "" {
 		c.ViewType(viewType)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.User)
+	return r, nil
 }
 
 // InsertUser creates a user.
@@ -61,21 +67,30 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListUsersCallAndAppend(c *admin.UsersListCall, users []*admin.User) ([]*admin.User, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(user.PrimaryEmail), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.User)
+	return r, nil
+}
+
+func makeListUsersCallAndAppend(c *admin.UsersListCall, users []*admin.User, errKey string) ([]*admin.User, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Users)
 	for _, u := range r.Users {
 		users = append(users, u)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		users, err = makeListUsersCallAndAppend(c, users)
+		users, err = makeListUsersCallAndAppend(c, users, errKey)
 	}
 	return users, err
 }
@@ -112,55 +127,61 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 		c = c.CustomFieldMask(customFieldMask)
 	}
 	var users []*admin.User
-	users, err := makeListUsersCallAndAppend(c, users)
+	users, err := makeListUsersCallAndAppend(c, users, gsmhelpers.FormatErrorKey(customer))
 	return users, err
 }
 
 // MakeAdmin makes a user a super administrator.
 func MakeAdmin(userKey string, status bool) (bool, error) {
 	srv := getUsersService()
-	err := srv.MakeAdmin(userKey, &admin.UserMakeAdmin{Status: status}).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.MakeAdmin(userKey, &admin.UserMakeAdmin{Status: status})
+	result, err := gsmhelpers.ActionRetry(userKey, func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // PatchUser updates a user using patch semantics.
-func PatchUser(key, fields string, user *admin.User) (*admin.User, error) {
+func PatchUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	srv := getUsersService()
-	c := srv.Patch(key, user)
+	c := srv.Patch(userKey, user)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.User)
+	return r, nil
 }
 
 // SignOutUser signs a user out of all web and device sessions and reset their sign-in cookies.
 // User will have to sign in by authenticating again.
-func SignOutUser(key string) (bool, error) {
+func SignOutUser(userKey string) (bool, error) {
 	srv := getUsersService()
-	err := srv.SignOut(key).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.SignOut(userKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // UndeletUser undeletes a deleted user.
-func UndeletUser(key, orgUnitPath string) (bool, error) {
+func UndeletUser(userKey, orgUnitPath string) (bool, error) {
 	srv := getUsersService()
-	err := srv.Undelete(key, &admin.UserUndelete{OrgUnitPath: orgUnitPath}).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Undelete(userKey, &admin.UserUndelete{OrgUnitPath: orgUnitPath})
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
-func hashPW(password string) string {
-	h := sha1.New()
-	h.Write([]byte(password))
-	bs := h.Sum(nil)
-	return fmt.Sprintf("%x\n", bs)
-}
+// func hashPW(password string) string {
+// 	h := sha1.New()
+// 	h.Write([]byte(password))
+// 	bs := h.Sum(nil)
+// 	return fmt.Sprintf("%x\n", bs)
+// }

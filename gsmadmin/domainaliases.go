@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteDomainAlias deletes a Domain Alias of the customer.
 func DeleteDomainAlias(customerID, domainAliasName string) (bool, error) {
 	srv := getDomainAliasesService()
-	err := srv.Delete(customerID, domainAliasName).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customerID, domainAliasName)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetDomainAlias retrieves a domain alias of the customer.
@@ -38,8 +41,14 @@ func GetDomainAlias(customerID, domainAliasName, fields string) (*admin.DomainAl
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.DomainAlias)
+	return r, nil
 }
 
 // InsertDomainAlias inserts a Domain alias of the customer.
@@ -49,8 +58,14 @@ func InsertDomainAlias(customerID, fields string, domainAlias *admin.DomainAlias
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAlias.DomainAliasName), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.DomainAlias)
+	return r, nil
 }
 
 // ListDomainAliases lists the domain aliases of the customer.
@@ -63,9 +78,12 @@ func ListDomainAliases(customerID, parentDomainName, fields string) ([]*admin.Do
 	if parentDomainName != "" {
 		c = c.ParentDomainName(parentDomainName)
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, parentDomainName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.DomainAliases)
 	return r.DomainAliases, nil
 }

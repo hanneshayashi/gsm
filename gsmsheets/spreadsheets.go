@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmsheets
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/sheets/v4"
 )
@@ -29,8 +31,14 @@ func BatchUpdateSpreadsheet(spreadsheetID, fields string, batchUpdateSpreadsheet
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheetID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*sheets.BatchUpdateSpreadsheetResponse)
+	return r, nil
 }
 
 // CreateSpreadsheet creates a spreadsheet, returning the newly created spreadsheet.
@@ -40,8 +48,14 @@ func CreateSpreadsheet(spreadsheet *sheets.Spreadsheet, fields string) (*sheets.
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheet.Properties.Title), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*sheets.Spreadsheet)
+	return r, nil
 }
 
 // GetSpreadsheet returns the spreadsheet at the given ID.
@@ -54,8 +68,14 @@ func GetSpreadsheet(spreadsheetID, fields string, ranges []string, includeGridDa
 	if ranges != nil {
 		c.Ranges(ranges...)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheetID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*sheets.Spreadsheet)
+	return r, nil
 }
 
 // GetSpreadsheetByDateFilter returns the spreadsheet at the given ID.

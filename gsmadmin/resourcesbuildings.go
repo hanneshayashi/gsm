@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteResourcesBuilding deletes a building.
 func DeleteResourcesBuilding(customer, buildingID string) (bool, error) {
 	srv := getResourcesBuildingsService()
-	err := srv.Delete(customer, buildingID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customer, buildingID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetResourcesBuilding retrieves a building.
@@ -38,8 +41,14 @@ func GetResourcesBuilding(customer, buildingID, fields string) (*admin.Building,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Building)
+	return r, nil
 }
 
 // InsertResourcesBuilding inserts a building.
@@ -52,21 +61,30 @@ func InsertResourcesBuilding(customer, coordinatesSource, fields string, buildin
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListResourceBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall, buildings []*admin.Building) ([]*admin.Building, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, building.BuildingName), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Building)
+	return r, nil
+}
+
+func makeListResourceBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall, buildings []*admin.Building, errKey string) ([]*admin.Building, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Buildings)
 	for _, b := range r.Buildings {
 		buildings = append(buildings, b)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		buildings, err = makeListResourceBuildingsCallAndAppend(c, buildings)
+		buildings, err = makeListResourceBuildingsCallAndAppend(c, buildings, errKey)
 	}
 	return buildings, err
 }
@@ -79,7 +97,7 @@ func ListResourcesBuildings(customer, fields string) ([]*admin.Building, error) 
 		c.Fields(googleapi.Field(fields))
 	}
 	var buildings []*admin.Building
-	buildings, err := makeListResourceBuildingsCallAndAppend(c, buildings)
+	buildings, err := makeListResourceBuildingsCallAndAppend(c, buildings, gsmhelpers.FormatErrorKey(customer))
 	return buildings, err
 }
 
@@ -93,6 +111,12 @@ func PatchResourcesBuilding(customer, buildingID, coordinatesSource, fields stri
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Building)
+	return r, nil
 }

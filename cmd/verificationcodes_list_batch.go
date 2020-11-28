@@ -36,39 +36,28 @@ var verificationCodesListBatchCmd = &cobra.Command{
 	Short: "Batch lists backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		results := make(chan []*admin.VerificationCode, cap)
-		final := [][]*admin.VerificationCode{}
+		var wg sync.WaitGroup
+		cap := cap(maps)
+		type resultStruct struct {
+			UserKey           string                    `json:"userKey,omitempty"`
+			VerificationCodes []*admin.VerificationCode `json:"verification_codes,omitempty"`
+		}
+		results := make(chan resultStruct, cap)
+		final := []resultStruct{}
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["userKey"].GetString())
-						operation := func() error {
-							result, err := gsmadmin.ListVerificationCodes(m["userKey"].GetString(), m["fields"].GetString())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.ListVerificationCodes(m["userKey"].GetString(), m["fields"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- resultStruct{UserKey: m["userKey"].GetString(), VerificationCodes: result}
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

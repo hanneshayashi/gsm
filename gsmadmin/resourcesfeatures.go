@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteResourcesFeature deletes a feature.
 func DeleteResourcesFeature(customer, featureKey string) (bool, error) {
 	srv := getResourcesFeaturesService()
-	err := srv.Delete(customer, featureKey).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customer, featureKey)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetResourcesFeature retrieves a feature.
@@ -38,8 +41,14 @@ func GetResourcesFeature(customer, featureKey, fields string) (*admin.Feature, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Feature)
+	return r, nil
 }
 
 // InsertResourcesFeature inserts a feature.
@@ -49,21 +58,30 @@ func InsertResourcesFeature(customer, fields string, feature *admin.Feature) (*a
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListResourceFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, features []*admin.Feature) ([]*admin.Feature, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, feature.Name), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.Feature)
+	return r, nil
+}
+
+func makeListResourceFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, features []*admin.Feature, errKey string) ([]*admin.Feature, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Features)
 	for _, f := range r.Features {
 		features = append(features, f)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		features, err = makeListResourceFeaturesCallAndAppend(c, features)
+		features, err = makeListResourceFeaturesCallAndAppend(c, features, errKey)
 	}
 	return features, err
 }
@@ -76,7 +94,7 @@ func ListResourcesFeatures(customer, fields string) ([]*admin.Feature, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var features []*admin.Feature
-	features, err := makeListResourceFeaturesCallAndAppend(c, features)
+	features, err := makeListResourceFeaturesCallAndAppend(c, features, gsmhelpers.FormatErrorKey(customer))
 	return features, err
 }
 
@@ -87,16 +105,22 @@ func PatchResourcesFeature(customer, featureKey, fields string, feature *admin.F
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.Feature)
+	return r, nil
 }
 
 // RenameResourcesFeature renames a feature.
 func RenameResourcesFeature(customer, oldName string, featureRename *admin.FeatureRename) (bool, error) {
 	srv := getResourcesFeaturesService()
-	err := srv.Rename(customer, oldName, featureRename).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Rename(customer, oldName, featureRename)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, oldName), func() error {
+		return c.Do()
+	})
+	return result, err
 }

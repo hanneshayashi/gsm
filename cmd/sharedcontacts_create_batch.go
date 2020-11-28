@@ -36,13 +36,12 @@ var sharedContactsCreateBatchCmd = &cobra.Command{
 	Long: `https://developers.google.com/admin-sdk/domain-shared-contacts
 Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --familyName "Bauer" --email "displayName=Jack Bauer;address=jack@ctu.gov;primary=false" --email "displayName=Jack bauer;address=jack.bauer@ctu.gov;primary=true" --phoneNumber "phoneNumber=+49 127 12381;primary=true;label=Work" --phoneNumber "phoneNumber=+49 21891238;primary=false;label=Home" --organization "orgName=Counter Terrorist Unit;orgDepartment=Field Agents;orgTitle=Special Agent"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *gsmadmin.Entry, cap)
 		final := []*gsmadmin.Entry{}
 		go func() {
@@ -50,29 +49,16 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						s, err := mapToSharedContact(m, nil)
 						if err != nil {
 							log.Printf("Error building shared contact object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s:", m["domain"].GetString())
-						operation := func() error {
-							result, statusCode, err := gsmadmin.CreateSharedContact(m["domain"].GetString(), s)
-							if err != nil {
-								if statusCode == 403 {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmadmin.CreateSharedContact(m["domain"].GetString(), s)
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

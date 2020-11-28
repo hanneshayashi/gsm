@@ -35,13 +35,12 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates Domain Shared Contacts using a CSV file as input",
 	Long:  `https://developers.google.com/admin-sdk/domain-shared-contacts`,
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *gsmadmin.Entry, cap)
 		final := []*gsmadmin.Entry{}
 		go func() {
@@ -49,34 +48,21 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
-						errKey := fmt.Sprintf("%s:", m["url"].GetString())
-						operation := func() error {
-							s, _, err := gsmadmin.GetSharedContact(m["url"].GetString())
-							if err != nil {
-								log.Printf("Error getting shared contact: %v\n", err)
-								return nil
-							}
-							s, err = mapToSharedContact(m, s)
-							if err != nil {
-								log.Printf("Error building shared contact object: %v\n", err)
-								return nil
-							}
-							result, statusCode, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
-							if err != nil {
-								if statusCode == 403 {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						s, err := gsmadmin.GetSharedContact(m["url"].GetString())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Printf("Error getting shared contact: %v\n", err)
+							continue
+						}
+						s, err = mapToSharedContact(m, s)
+						if err != nil {
+							log.Printf("Error building shared contact object: %v\n", err)
+							continue
+						}
+						result, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

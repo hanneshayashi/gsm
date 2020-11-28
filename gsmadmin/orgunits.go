@@ -1,4 +1,5 @@
 /*
+Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"gsm/gsmhelpers"
+
 	admin "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -24,11 +27,11 @@ import (
 // DeleteOrgUnit removes an organizational unit.
 func DeleteOrgUnit(customerID, orgUnitPath string) (bool, error) {
 	srv := getOrgunitsService()
-	err := srv.Delete(customerID, orgUnitPath).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(customerID, orgUnitPath)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetOrgUnit retrieves an organizational unit.
@@ -38,8 +41,14 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.OrgUnit)
+	return r, nil
 }
 
 // InsertOrgUnit adds an organizational unit.
@@ -49,8 +58,14 @@ func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.Or
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.OrgUnit)
+	return r, nil
 }
 
 // ListOrgUnits retrieves a list of all organizational units for an account.
@@ -66,10 +81,13 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 	if t != "" {
 		c = c.Type(t)
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*admin.OrgUnits)
 	return r.OrganizationUnits, nil
 }
 
@@ -80,6 +98,12 @@ func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*admin.OrgUnit)
+	return r, nil
 }

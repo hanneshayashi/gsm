@@ -1,4 +1,5 @@
 /*
+Package gsmci implements the Cloud Identity (Beta) API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +19,7 @@ package gsmci
 
 import (
 	"encoding/json"
+	"gsm/gsmhelpers"
 
 	ci "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/googleapi"
@@ -30,10 +32,13 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(group.GroupKey.Id), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*ci.Operation)
 	var m map[string]interface{}
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
@@ -45,11 +50,14 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string
 // DeleteGroup deletes a group.
 func DeleteGroup(name string) (bool, error) {
 	srv := getGroupsService()
-	_, err := srv.Delete(name).Do()
+	c := srv.Delete(name)
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return false, err
 	}
-	return true, err
+	return true, nil
 }
 
 // PatchGroup updates a group using patch semantics.
@@ -59,10 +67,13 @@ func PatchGroup(name, updateMask, fields string, group *ci.Group) (map[string]in
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*ci.Operation)
 	var m map[string]interface{}
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
@@ -78,32 +89,44 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*ci.Group)
+	return r, nil
 }
 
 // LookupGroup looks up a group via its email address and returns its resourceName
 func LookupGroup(email string) (string, error) {
 	srv := getGroupsService()
 	c := srv.Lookup().GroupKeyId(email)
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(email), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return "", err
 	}
+	r, _ := result.(*ci.LookupGroupNameResponse)
 	return r.Name, nil
 }
 
-func makeListGroupsCallAndAppend(c *ci.GroupsListCall, groups []*ci.Group) ([]*ci.Group, error) {
-	r, err := c.Do()
+func makeListGroupsCallAndAppend(c *ci.GroupsListCall, groups []*ci.Group, errKey string) ([]*ci.Group, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*ci.ListGroupsResponse)
 	for _, g := range r.Groups {
 		groups = append(groups, g)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeListGroupsCallAndAppend(c, groups)
+		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)
 	}
 	return groups, err
 }
@@ -119,21 +142,24 @@ func ListGroups(parent, view, fields string) ([]*ci.Group, error) {
 		c.View(view)
 	}
 	var groups []*ci.Group
-	groups, err := makeListGroupsCallAndAppend(c, groups)
+	groups, err := makeListGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(parent))
 	return groups, err
 }
 
-func makeSearchGroupsCallAndAppend(c *ci.GroupsSearchCall, groups []*ci.Group) ([]*ci.Group, error) {
-	r, err := c.Do()
+func makeSearchGroupsCallAndAppend(c *ci.GroupsSearchCall, groups []*ci.Group, errKey string) ([]*ci.Group, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*ci.SearchGroupsResponse)
 	for _, g := range r.Groups {
 		groups = append(groups, g)
 	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeSearchGroupsCallAndAppend(c, groups)
+		groups, err = makeSearchGroupsCallAndAppend(c, groups, errKey)
 	}
 	return groups, err
 }
@@ -149,6 +175,6 @@ func SearchGroups(query, view, fields string) ([]*ci.Group, error) {
 		c.View(view)
 	}
 	var groups []*ci.Group
-	groups, err := makeSearchGroupsCallAndAppend(c, groups)
+	groups, err := makeSearchGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(query))
 	return groups, err
 }

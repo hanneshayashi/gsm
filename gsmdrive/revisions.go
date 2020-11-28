@@ -1,4 +1,5 @@
 /*
+Package gsmdrive implements the Drive API
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"gsm/gsmhelpers"
 	"io"
+	"net/http"
 	"os"
 
 	drive "google.golang.org/api/drive/v3"
@@ -29,11 +32,11 @@ import (
 // Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted.
 func DeleteRevision(fileID, revisionID string) (bool, error) {
 	srv := getRevisionsService()
-	err := srv.Delete(fileID, revisionID).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(fileID, revisionID)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetRevision gets a revision's metadata or content by ID.
@@ -43,8 +46,14 @@ func GetRevision(fileID, revisionID, fields string) (*drive.Revision, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Revision)
+	return r, nil
 }
 
 // DownloadRevision downloads a file revision from drive
@@ -54,10 +63,14 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	if err != nil {
 		return "", err
 	}
-	r, err := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse).Download()
+	c := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse)
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+		return c.Download()
+	})
 	if err != nil {
 		return "", err
 	}
+	r, _ := result.(*http.Response)
 	defer r.Body.Close()
 	fileLocal, err := os.Create(file.OriginalFilename)
 	if err != nil {
@@ -68,17 +81,20 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	return file.OriginalFilename, err
 }
 
-func makeListRevisionsCallAndAppend(c *drive.RevisionsListCall, revisions []*drive.Revision) ([]*drive.Revision, error) {
-	r, err := c.Do()
+func makeListRevisionsCallAndAppend(c *drive.RevisionsListCall, revisions []*drive.Revision, errKey string) ([]*drive.Revision, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*drive.RevisionList)
 	for _, p := range r.Revisions {
 		revisions = append(revisions, p)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		revisions, err = makeListRevisionsCallAndAppend(c, revisions)
+		revisions, err = makeListRevisionsCallAndAppend(c, revisions, errKey)
 	}
 	return revisions, err
 }
@@ -91,7 +107,7 @@ func ListRevisions(fileID, fields string) ([]*drive.Revision, error) {
 		c.Fields(googleapi.Field(fields))
 	}
 	var revisions []*drive.Revision
-	revisions, err := makeListRevisionsCallAndAppend(c, revisions)
+	revisions, err := makeListRevisionsCallAndAppend(c, revisions, gsmhelpers.FormatErrorKey(fileID))
 	return revisions, err
 }
 
@@ -102,6 +118,12 @@ func UpdateRevision(fileID, revisionID, fields string, revision *drive.Revision)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*drive.Revision)
+	return r, nil
 }

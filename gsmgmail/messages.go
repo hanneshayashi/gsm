@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -25,32 +27,32 @@ import (
 // BatchDeleteMessages deletes many messages by message ID. Provides no guarantees that messages were not already deleted or even existed at all.
 func BatchDeleteMessages(userID string, ids []string) (bool, error) {
 	srv := getUsersMessagesService()
-	err := srv.BatchDelete(userID, &gmail.BatchDeleteMessagesRequest{Ids: ids}).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.BatchDelete(userID, &gmail.BatchDeleteMessagesRequest{Ids: ids})
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // BatchModifyMessages modifies the labels on the specified messages.
 func BatchModifyMessages(userID string, ids, addLabelIds, removeLabelIds []string) (bool, error) {
 	srv := getUsersMessagesService()
-	err := srv.BatchModify(userID, &gmail.BatchModifyMessagesRequest{Ids: ids, AddLabelIds: addLabelIds, RemoveLabelIds: removeLabelIds}).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.BatchModify(userID, &gmail.BatchModifyMessagesRequest{Ids: ids, AddLabelIds: addLabelIds, RemoveLabelIds: removeLabelIds})
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // DeleteMessage immediately and permanently deletes the specified message.
 // This operation cannot be undone. Prefer messages.trash instead.
 func DeleteMessage(userID, id string) (bool, error) {
 	srv := getUsersMessagesService()
-	err := srv.Delete(userID, id).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, id)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // GetMessage gets the specified message.
@@ -66,8 +68,14 @@ func GetMessage(userID, id, format, metadataHeaders, fields string) (*gmail.Mess
 			c = c.MetadataHeaders(metadataHeaders)
 		}
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // ImportMessage imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP.
@@ -78,8 +86,14 @@ func ImportMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // InsertMessage directly inserts a message into only this user's mailbox similar to IMAP APPEND, bypassing most scanning and classification.
@@ -90,21 +104,30 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
-}
-
-func makeListMessagesCallAndAppend(c *gmail.UsersMessagesListCall, messages []*gmail.Message) ([]*gmail.Message, error) {
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
+}
+
+func makeListMessagesCallAndAppend(c *gmail.UsersMessagesListCall, messages []*gmail.Message, errKey string) ([]*gmail.Message, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.ListMessagesResponse)
 	for _, m := range r.Messages {
 		messages = append(messages, m)
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		messages, err = makeListMessagesCallAndAppend(c, messages)
+		messages, err = makeListMessagesCallAndAppend(c, messages, errKey)
 	}
 	return messages, err
 }
@@ -123,22 +146,25 @@ func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash 
 		c = c.Q(q)
 	}
 	var messages []*gmail.Message
-	messages, err := makeListMessagesCallAndAppend(c, messages)
-	if err != nil {
-		return nil, err
-	}
-	return messages, nil
+	messages, err := makeListMessagesCallAndAppend(c, messages, gsmhelpers.FormatErrorKey(userID))
+	return messages, err
 }
 
-// ModifyMessages modifies the labels on the specified messages.
-func ModifyMessages(userID, id, fields string, addLabelIds, removeLabelIds []string) (*gmail.Message, error) {
+// ModifyMessage modifies the labels on the specified message.
+func ModifyMessage(userID, id, fields string, addLabelIds, removeLabelIds []string) (*gmail.Message, error) {
 	srv := getUsersMessagesService()
 	c := srv.Modify(userID, id, &gmail.ModifyMessageRequest{AddLabelIds: addLabelIds, RemoveLabelIds: removeLabelIds})
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // SendMessage sends the specified message to the recipients in the To, Cc, and Bcc headers.
@@ -148,8 +174,14 @@ func SendMessage(userID, fields string, message *gmail.Message) (*gmail.Message,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // TrashMessage moves the specified message to the trash.
@@ -159,8 +191,14 @@ func TrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }
 
 // UntrashMessage removes the specified message from the trash.
@@ -170,6 +208,12 @@ func UntrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Message)
+	return r, nil
 }

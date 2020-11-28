@@ -36,13 +36,12 @@ var calendarACLInsertBatchCmd = &cobra.Command{
 	Short: "Batch inserts ACL rules using a CSV file as input.",
 	Long:  `https://developers.google.com/calendar/v3/reference/acl/insert`,
 	Run: func(cmd *cobra.Command, args []string) {
-		retrier := gsmhelpers.NewStandardRetrier()
-		var wg sync.WaitGroup
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarACLFlags, viper.GetInt("threads"))
-		cap := cap(maps)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		var wg sync.WaitGroup
+		cap := cap(maps)
 		results := make(chan *calendar.AclRule, cap)
 		final := []*calendar.AclRule{}
 		go func() {
@@ -50,30 +49,16 @@ var calendarACLInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						var err error
 						a, err := mapToCalendarACLRule(m)
 						if err != nil {
 							log.Printf("Error building acl rule object: %v\n", err)
 							continue
 						}
-						errKey := fmt.Sprintf("%s:", m["calendarId"].GetString())
-						operation := func() error {
-							result, err := gsmcalendar.InsertACL(m["calendarId"].GetString(), m["fields"].GetString(), a, m["sendNotifications"].GetBool())
-							if err != nil {
-								retryable := gsmhelpers.ErrorIsRetryable(err)
-								if retryable {
-									log.Println(errKey, "Retrying after", err)
-									return err
-								}
-								log.Println(errKey, "Giving up after", err)
-								return nil
-							}
-							results <- result
-							return nil
-						}
-						err = retrier.Run(operation)
+						result, err := gsmcalendar.InsertACL(m["calendarId"].GetString(), m["fields"].GetString(), a, m["sendNotifications"].GetBool())
 						if err != nil {
-							log.Println(errKey, "Max retries reached. Giving up after", err)
+							log.Println(err)
+						} else {
+							results <- result
 						}
 						time.Sleep(200 * time.Millisecond)
 					}

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"gsm/gsmhelpers"
+
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -31,8 +33,14 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, delegateEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Delegate)
+	return r, nil
 }
 
 // DeleteDelegate removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it.
@@ -40,11 +48,11 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 // This method is only available to service account clients that have been delegated domain-wide authority.
 func DeleteDelegate(userID, delegateEmail string) (bool, error) {
 	srv := getUsersSettingsDelegatesService()
-	err := srv.Delete(userID, delegateEmail).Do()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+	c := srv.Delete(userID, delegateEmail)
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, delegateEmail), func() error {
+		return c.Do()
+	})
+	return result, err
 }
 
 // ListDelegates lists the delegates for the specified account.
@@ -55,10 +63,13 @@ func ListDelegates(userID, fields string) ([]*gmail.Delegate, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+		return c.Do()
+	})
 	if err != nil {
 		return nil, err
 	}
+	r, _ := result.(*gmail.ListDelegatesResponse)
 	return r.Delegates, nil
 }
 
@@ -75,6 +86,12 @@ func CreateDelegate(userID, fields string, delegate *gmail.Delegate) (*gmail.Del
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	r, err := c.Do()
-	return r, err
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, delegate.DelegateEmail), func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, _ := result.(*gmail.Delegate)
+	return r, nil
 }
