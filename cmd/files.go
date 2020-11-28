@@ -223,10 +223,9 @@ Supported groupings are:
 When able, use 'user' or 'drive', instead of 'allDrives', for efficiency.`,
 	},
 	"driveId": {
-		AvailableFor: []string{"list", "migrate"},
+		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  `ID of the shared drive.`,
-		Required:     []string{"migrate"},
 	},
 	"includeItemsFromAllDrives": {
 		AvailableFor: []string{"list"},
@@ -282,11 +281,7 @@ All users with access can copy, download, export, and share the file.`,
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-	},
-	"folderId": {
-		AvailableFor: []string{"migrate"},
-		Type:         "string",
-		Description:  `File id of the folder to migrate`,
+		Recursive: true,
 	},
 }
 var fileFlagsALL = gsmhelpers.GetAllFlags(fileFlags)

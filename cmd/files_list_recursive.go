@@ -24,27 +24,24 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// permissionsCreateCmd represents the create command
-var permissionsCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a permission for a file or shared drive.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
+// filesListRecursiveCmd represents the recursive command
+var filesListRecursiveCmd = &cobra.Command{
+	Use:   "recursive",
+	Short: "Recursively list files in a folder",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		p, err := mapToPermission(flags)
-		if err != nil {
-			log.Fatalf("Error building permission object: %v", err)
-		}
-		result, err := gsmdrive.CreatePermission(flags["fileId"].GetString(), flags["emailMessage"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["sendNotificationEmail"].GetBool(), flags["transferOwnership"].GetBool(), flags["moveToNewOwnersRoot"].GetBool(), p)
-		if err != nil {
-			log.Fatalf("Error creating permission %v", err)
+		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
+		if len(err) > 0 {
+			log.Fatalf("Error listing files %v", err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(permissionsCmd, permissionsCreateCmd, permissionFlags)
+	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFlags)
 }

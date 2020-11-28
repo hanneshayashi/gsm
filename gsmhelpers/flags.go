@@ -35,6 +35,7 @@ type Flag struct {
 	Required       []string
 	AvailableFor   []string
 	ExcludeFromAll bool
+	Recursive		bool
 }
 
 // Value is the value representation of a flag
@@ -315,9 +316,9 @@ func AddFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 }
 
 // AddFlags adds flags to a command
-func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string) {
+func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string, recursive bool) {
 	for f := range m {
-		if !Contains(command, m[f].AvailableFor) {
+		if !Contains(command, m[f].AvailableFor) || (recursive && !m[f].Recursive) {
 			continue
 		}
 		def := m[f].Defaults[command]
@@ -437,14 +438,24 @@ func InitBatchCommand(parentCmd, childCmd *cobra.Command, cmdFlags, cmdAllFlags,
 	parentCmd.AddCommand(childCmd)
 	flags := childCmd.Flags()
 	AddFlagsBatch(cmdFlags, flags, parentCmd.Use)
-	AddFlags(batchFlags, flags, childCmd.Use)
+	AddFlags(batchFlags, flags, childCmd.Use, false)
 	markFlagsRequired(childCmd, batchFlags, childCmd.Use)
-	AddFlags(cmdAllFlags, flags, parentCmd.Use)
+	AddFlags(cmdAllFlags, flags, parentCmd.Use, false)
 }
 
 // InitCommand sets flags for a command appropriately
 func InitCommand(parentCmd, childCmd *cobra.Command, cmdFlags map[string]*Flag) {
 	parentCmd.AddCommand(childCmd)
-	AddFlags(cmdFlags, childCmd.Flags(), childCmd.Use)
+	AddFlags(cmdFlags, childCmd.Flags(), childCmd.Use, false)
 	markFlagsRequired(childCmd, cmdFlags, childCmd.Use)
+}
+
+// InitRecursiveCommand sets flags for a recursive command appropriately
+func InitRecursiveCommand(parentCmd, childCmd *cobra.Command, cmdFlags, recursiveFlags map[string]*Flag) {
+	parentCmd.AddCommand(childCmd)
+	flags := childCmd.Flags()
+	AddFlags(cmdFlags, flags, parentCmd.Use, true)
+	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
+	AddFlags(recursiveFlags, flags, childCmd.Use, false)
+	markFlagsRequired(childCmd, recursiveFlags, childCmd.Use)
 }

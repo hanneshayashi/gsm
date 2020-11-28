@@ -54,7 +54,7 @@ var permissionsCreateBatchCmd = &cobra.Command{
 							log.Printf("Error building permission object: %v\n", err)
 							continue
 						}
-						result, err := gsmdrive.CreatePermission(m["fileId"].GetString(), m["emailMessage"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["sendNotificationEmail"].GetBool(), p)
+						result, err := gsmdrive.CreatePermission(m["fileId"].GetString(), m["emailMessage"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["sendNotificationEmail"].GetBool(), m["transferOwnership"].GetBool(), m["moveToNewOwnersRoot"].GetBool(), p)
 						if err != nil {
 							log.Println(err)
 						} else {

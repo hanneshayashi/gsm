@@ -25,17 +25,14 @@ import (
 )
 
 // CreatePermission creates a permission for a file or shared drive.
-func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess, sendNotificationEmail bool, permission *drive.Permission) (*drive.Permission, error) {
+func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess, sendNotificationEmail, transferOwnership, moveToNewOwnersRoot bool, permission *drive.Permission) (*drive.Permission, error) {
 	srv := getPermissionsService()
-	c := srv.Create(fileID, permission).UseDomainAdminAccess(useDomainAdminAccess).SendNotificationEmail(sendNotificationEmail).EnforceSingleParent(true).SupportsAllDrives(true)
+	c := srv.Create(fileID, permission).UseDomainAdminAccess(useDomainAdminAccess).SendNotificationEmail(sendNotificationEmail).SupportsAllDrives(true).TransferOwnership(transferOwnership).MoveToNewOwnersRoot(moveToNewOwnersRoot)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if emailMessage != "" {
 		c = c.EmailMessage(emailMessage)
-	}
-	if permission.Role == "owner" {
-		c.TransferOwnership(true).SendNotificationEmail(true)
 	}
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
 		return c.Do()

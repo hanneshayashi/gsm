@@ -162,3 +162,126 @@ func MoveFolderToSharedDrive(file *drive.File, destination, driveID string) {
 	close(folders)
 	close(pc)
 }
+
+func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, errs chan error, wgFolders, wgFiles, wgErrors *sync.WaitGroup) {
+	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true)
+	if err != nil {
+		wgErrors.Add(1)
+		errs <- err
+	}
+	for _, f := range result {
+		wgFiles.Add(1)
+		files <- f
+		if f.MimeType == "application/vnd.google-apps.folder" {
+			wgFolders.Add(1)
+			folders <- f.Id
+		}
+	}
+}
+
+// ListFilesRecursive lists all files and foldes in a parent folder recursively
+func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, []error) {
+	errChan := make(chan error, threads)
+	finalErr := []error{}
+	final := []*drive.File{}
+	wgFolders := &sync.WaitGroup{}
+	wgFiles := &sync.WaitGroup{}
+	wgErrors := &sync.WaitGroup{}
+	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true)
+	if err != nil {
+		errChan <- err
+	}
+	folders := make(chan string, threads)
+	files := make(chan *drive.File, threads)
+	go func() {
+		for id := range folders {
+			time.Sleep(200 * time.Millisecond)
+			go func(id string) {
+				listFilesRecursive(id, fields, folders, files, errChan, wgFolders, wgFiles, wgErrors)
+				wgFolders.Done()
+			}(id)
+		}
+	}()
+	go func() {
+		for f := range files {
+			final = append(final, f)
+			wgFiles.Done()
+		}
+	}()
+	go func() {
+		for e := range errChan {
+			finalErr = append(finalErr, e)
+			wgErrors.Done()
+		}
+	}()
+	for _, f := range result {
+		wgFiles.Add(1)
+		files <- f
+		if f.MimeType == "application/vnd.google-apps.folder" {
+			wgFolders.Add(1)
+			folders <- f.Id
+		}
+	}
+	wgFolders.Wait()
+	close(folders)
+	wgFiles.Wait()
+	close(files)
+	wgErrors.Wait()
+	close(errChan)
+	return final, finalErr
+}
+
+// CreatePermissionRecursive recursively grants permissions on a folder
+func CreatePermissionRecursive(fileIds []string, emailMessage, fields string, useDomainAdminAccess, sendNotificationEmail, transferOwnership, moveToNewOwnersRoot bool, permission *drive.Permission, threads int) ([]*drive.Permission, []error) {
+	ids := make(chan string, threads)
+	results := make(chan *drive.Permission, threads)
+	errChan := make(chan error, threads)
+	final := []*drive.Permission{}
+	finalErr := []error{}
+	wgIDs := &sync.WaitGroup{}
+	wgPermissions := &sync.WaitGroup{}
+	wgErrors := &sync.WaitGroup{}
+	wgIDs.Add(1)
+	go func() {
+		for _, id := range fileIds {
+			ids <- id
+		}
+		wgIDs.Done()
+	}()
+	for i := 0; i < threads; i++ {
+		wgPermissions.Add(1)
+		go func() {
+			for id := range ids {
+				r, err := CreatePermission(id, emailMessage, fields, useDomainAdminAccess, sendNotificationEmail, transferOwnership, moveToNewOwnersRoot, permission)
+				if err != nil {
+					fmt.Println(err)
+					errChan <- err
+				} else {
+					results <- r
+				}
+			}
+			wgPermissions.Done()
+		}()
+	}
+	wgErrors.Add(1)
+	go func() {
+		for e := range errChan {
+			finalErr = append(finalErr, e)
+		}
+		wgErrors.Done()
+	}()
+	wgErrors.Add(1)
+	go func() {
+		for r := range results {
+			final = append(final, r)
+		}
+		wgErrors.Done()
+	}()
+	wgIDs.Wait()
+	close(ids)
+	wgPermissions.Wait()
+	close(errChan)
+	close(results)
+	wgErrors.Wait()
+	return final, finalErr
+}

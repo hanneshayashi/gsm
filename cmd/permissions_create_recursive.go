@@ -26,10 +26,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// permissionsCreateCmd represents the create command
-var permissionsCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a permission for a file or shared drive.",
+// permissionsCreateRecursiveCmd represents the recursive command
+var permissionsCreateRecursiveCmd = &cobra.Command{
+	Use:   "recursive",
+	Short: "Recursively grant a permissions to a folder and all of its children.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -37,14 +37,19 @@ var permissionsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building permission object: %v", err)
 		}
-		result, err := gsmdrive.CreatePermission(flags["fileId"].GetString(), flags["emailMessage"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["sendNotificationEmail"].GetBool(), flags["transferOwnership"].GetBool(), flags["moveToNewOwnersRoot"].GetBool(), p)
-		if err != nil {
-			log.Fatalf("Error creating permission %v", err)
+		files, _ := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", 10)
+		var ids []string
+		for _, f := range files {
+			ids = append(ids, f.Id)
+		}
+		result, errs := gsmdrive.CreatePermissionRecursive(ids, flags["emailMessage"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["sendNotificationEmail"].GetBool(), flags["transferOwnership"].GetBool(), false, p, 10)
+		if len(errs) > 0 {
+			log.Fatalf("Error creating permissions %v", errs)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(permissionsCmd, permissionsCreateCmd, permissionFlags)
+	gsmhelpers.InitRecursiveCommand(permissionsCreateCmd, permissionsCreateRecursiveCmd, permissionFlags, recursiveFlags)
 }

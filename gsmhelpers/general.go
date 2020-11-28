@@ -312,6 +312,7 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 	return maps, nil
 }
 
+// GetObjectRetry performs an action that returns an object, retrying on failure when appropriate
 func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, error) {
 	var err error
 	var result interface{}
@@ -329,6 +330,7 @@ func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, 
 	return result, nil
 }
 
+// ActionRetry performs an action that does not return an object, retrying on failure when appropriate
 func ActionRetry(errKey string, c func() error) (bool, error) {
 	var err error
 	operation := func() error {
@@ -345,6 +347,8 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 	return true, nil
 }
 
+// FormatErrorKey formats an error key.
+// Error keys are used on error messages to make it easier to debug where an error ocurred
 func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }

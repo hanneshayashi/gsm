@@ -69,6 +69,14 @@ var (
 			Description:  "Specify the number of threads that should be used for batch commands (overrides value in config file. Max 16)",
 		},
 	}
+	recursiveFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+		"folderId": {
+			AvailableFor: []string{"recursive"},
+			Type:         "string",
+			Description:  `File id of the folder.`,
+			Required:     []string{"recursive"},
+		},
+	}
 )
 
 // rootCmd represents the base command when called without any subcommands

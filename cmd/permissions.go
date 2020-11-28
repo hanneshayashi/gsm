@@ -52,6 +52,7 @@ var permissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create"},
 		Type:         "string",
 		Description:  "The email address of the user or group to which this permission refers.",
+		Recursive:    true,
 	},
 	"moveToNewOwnersRoot": {
 		AvailableFor: []string{"create", "update"},
@@ -67,6 +68,7 @@ however, the file will be added to the new owner's My Drive root folder, unless 
 		Type:         "bool",
 		Description: `Whether to transfer ownership to the specified user and downgrade the current owner to a writer.
 This parameter is required as an acknowledgement of the side effect.`,
+		Recursive: true,
 	},
 	"type": {
 		AvailableFor: []string{"create", "update"},
@@ -76,18 +78,21 @@ This parameter is required as an acknowledgement of the side effect.`,
 When creating a permission, if type is user or group, you must provide an emailAddress for the user or group.
 When type is domain, you must provide a domain.
 There isn't extra information required for a anyone type.`,
-		Required: []string{"create"},
+		Required:  []string{"create"},
+		Recursive: true,
 	},
 	"domain": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "string",
 		Description:  "The domain to which this permission refers.",
+		Recursive:    true,
 	},
 	"allowFileDiscovery": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "bool",
 		Description: `Whether the permission allows the file to be discovered through search.
 This is only applicable for permissions of type domain or anyone.`,
+		Recursive: true,
 	},
 	"role": {
 		AvailableFor: []string{"create", "update"},
@@ -95,17 +100,20 @@ This is only applicable for permissions of type domain or anyone.`,
 		Description: `"The role granted by this permission.
 While new values may be supported in the future, the following are currently allowed:
 [owner|organizer|fileOrganizer|writer|commenter|reader]"`,
-		Required: []string{"create"},
+		Recursive: true,
+		Required:  []string{"create"},
 	},
 	"emailMessage": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "string",
 		Description:  "A plain text custom message to include in the notification email",
+		Recursive:    true,
 	},
 	"useDomainAdminAccess": {
 		AvailableFor: []string{"create", "delete", "get", "list", "update"},
 		Type:         "bool",
 		Description:  "Issue the request as a domain administrator; if set to true, then the requester will be granted access if the file ID parameter refers to a shared drive and the requester is an administrator of the domain to which the shared drive belongs.",
+		Recursive:    true,
 	},
 	"sendNotificationEmail": {
 		AvailableFor: []string{"create", "update"},
@@ -113,6 +121,7 @@ While new values may be supported in the future, the following are currently all
 		Description: `Whether to send a notification email when sharing to users or groups.
 This defaults to true for users and groups, and is not allowed for other requests.
 It must not be disabled for ownership transfers.`,
+		Recursive: true,
 	},
 	"view": {
 		AvailableFor: []string{"create", "update"},
@@ -144,6 +153,7 @@ The time cannot be more than a year in the future`,
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
+		Recursive: true,
 	},
 }
 var permissionFlagsALL = gsmhelpers.GetAllFlags(permissionFlags)
