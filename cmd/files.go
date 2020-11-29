@@ -224,10 +224,9 @@ Supported groupings are:
 When able, use 'user' or 'drive', instead of 'allDrives', for efficiency.`,
 	},
 	"driveId": {
-		AvailableFor: []string{"list", "move"},
+		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  `ID of the shared drive.`,
-		Recursive:    true,
 	},
 	"includeItemsFromAllDrives": {
 		AvailableFor: []string{"list"},

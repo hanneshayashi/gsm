@@ -34,7 +34,8 @@ import (
 var filesMoveBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch moves files using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/move",
+	Long: `You can't move folders to Shared Drives with this command!
+Use "move files recursive" instead!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
 		if err != nil {
