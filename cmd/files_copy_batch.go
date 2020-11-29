@@ -22,8 +22,6 @@ import (
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
-	"os"
-	"path/filepath"
 	"sync"
 	"time"
 
@@ -32,11 +30,11 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-// filesCreateBatchCmd represents the batch command
-var filesCreateBatchCmd = &cobra.Command{
+// filesCopyBatchCmd represents the batch command
+var filesCopyBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a new file or folder. Can also be used to upload files using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/create",
+	Short: "Batch copies files using a CSV file as input.",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
 		if err != nil {
@@ -56,19 +54,7 @@ var filesCreateBatchCmd = &cobra.Command{
 							log.Printf("Error building file object: %v\n", err)
 							continue
 						}
-						var content *os.File
-						if m["localFilePath"].IsSet() {
-							content, err = os.Open(m["localFilePath"].GetString())
-							if err != nil {
-								log.Printf("Error opening file %s: %v", m["localFilePath"].GetString(), err)
-								continue
-							}
-							defer content.Close()
-							if f.Name == "" {
-								f.Name = filepath.Base(content.Name())
-							}
-						}
-						result, err := gsmdrive.CreateFile(f, content, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString())
+						result, err := gsmdrive.CopyFile(m["fileId"].GetString(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString(), f, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -90,5 +76,5 @@ var filesCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesCreateCmd, filesCreateBatchCmd, fileFlags, fileFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(filesCopyCmd, filesCopyBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }

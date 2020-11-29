@@ -24,24 +24,28 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
-	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+// filesCopyCmd represents the copy command
+var filesCopyCmd = &cobra.Command{
+	Use: "copy",
+	Short: `Creates a copy of a file and applies any requested updates with patch semantics.
+Use "files copy recursive" to copy folders.`,
+	Long: "https://developers.google.com/drive/api/v3/reference/files/copy",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
+		f, err := mapToFile(flags)
 		if err != nil {
-			log.Fatalf("Error listing files %v", err)
+			log.Fatalf("Error building file object: %v\n", err)
+		}
+		result, err := gsmdrive.CopyFile(flags["fileId"].GetString(), flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString(), f, flags["ignoreDefaultVisibility"].GetBool(), flags["keepRevisionForever"].GetBool())
+		if err != nil {
+			log.Fatalf("Error creating file %v", err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFlags)
+	gsmhelpers.InitCommand(filesCmd, filesCopyCmd, fileFlags)
 }

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -25,25 +26,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// filesMoveFolderToSharedDriveCmd represents the movefoldertoshareddrive command
-var filesMoveFolderToSharedDriveCmd = &cobra.Command{
-	Use:   "movefoldertoshareddrive",
-	Short: "MoveFolderToSharedDrive a folder to a Shared Drive",
-	Long: `Example:
-movefoldertoshareddrive --folderId <folderId> --driveId <driveId>
-For each source folder, a new folder will be created at the destination.
-Files will be moved (not copied!!) to the new folders.
-The original folders will be preserved at the source!`,
+// filesMoveCmd represents the move command
+var filesMoveCmd = &cobra.Command{
+	Use:   "move",
+	Short: "Move a file.",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		file, err := gsmdrive.GetFile(flags["folderId"].GetString(), "id,name,mimeType,parents", "")
+		f, err := gsmdrive.GetFile(flags["fileId"].GetString(), "id,parents", "")
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Println(err)
 		}
-		gsmdrive.MoveFolderToSharedDrive(file, flags["driveId"].GetString(), flags["driveId"].GetString())
+		result, err := gsmdrive.UpdateFile(f.Id, flags["parent"].GetString(), f.Parents[0], "", "", "", f, nil, false, false)
+		if err != nil {
+			log.Fatalf("Error during move: %v", err)
+		}
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(filesCmd, filesMoveFolderToSharedDriveCmd, fileFlags)
+	gsmhelpers.InitCommand(filesCmd, filesMoveCmd, fileFlags)
 }

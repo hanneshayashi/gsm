@@ -27,21 +27,21 @@ import (
 	"github.com/spf13/viper"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
+// filesCopyRecursiveCmd represents the recursive command
+var filesCopyRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+	Short: "Recursively copies a folder to a new destination.",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
-		if err != nil {
-			log.Fatalf("Error listing files %v", err)
+		result, err := gsmdrive.CopyFolderRecursive(flags["folderId"].GetString(), flags["parent"].GetString(), viper.GetInt("threads"))
+		if len(err) > 0 {
+			log.Fatalf("Error copying folder %v", err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(filesCopyCmd, filesCopyRecursiveCmd, fileFlags, recursiveFlags)
 }

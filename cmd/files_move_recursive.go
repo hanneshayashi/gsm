@@ -27,21 +27,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
+// filesMoveRecursiveCmd represents the movefoldertoshareddrive command
+var filesMoveRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+	Short: "Moves a folder to a Shared Drive",
+	Long: `WARNING: This command can "move" a folder to a Shared Drive, by creating a COPY(!) of its folder structure and MOVING(!)
+all files to the new folders. For each source folder, a new folder will be created at the destination.
+Files will be moved (not copied!!) to the new folders.
+The original folders will be preserved at the source!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
-		if err != nil {
-			log.Fatalf("Error listing files %v", err)
+		result, err := gsmdrive.MoveFolderToSharedDrive(flags["folderId"].GetString(), flags["parent"].GetString(), viper.GetInt("threads"))
+		if len(err) > 0 {
+			log.Fatalf("Errors during folder move: %v", err)
 		}
 		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(filesMoveCmd, filesMoveRecursiveCmd, fileFlags, recursiveFlags)
 }

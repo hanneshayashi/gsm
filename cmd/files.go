@@ -36,10 +36,10 @@ var filesCmd = &cobra.Command{
 
 var fileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
-		AvailableFor:   []string{"copy", "delete", "export", "get", "update", "download"},
+		AvailableFor:   []string{"copy", "delete", "export", "get", "move", "update", "download"},
 		Type:           "string",
 		Description:    "The ID of the file",
-		Required:       []string{"copy", "delete", "export", "get", "update", "download"},
+		Required:       []string{"copy", "delete", "export", "get", "move", "update", "download"},
 		ExcludeFromAll: true,
 	},
 	"ignoreDefaultVisibility": {
@@ -131,10 +131,11 @@ Note that setting modifiedTime will also update modifiedByMeTime for the user.`,
 Note that for immutable items such as the top level folders of shared drives, My Drive root folder, and Application Data folder the name is constant.`,
 	},
 	"parent": {
-		AvailableFor: []string{"copy", "create", "update"},
+		AvailableFor: []string{"copy", "create", "move", "update"},
 		Type:         "string",
-		Description: `The single parent of the file.
-Note that GSM automatically sets enforceSingleParent=true`,
+		Description:  `The single parent of the file.`,
+		Required:     []string{"move"},
+		Recursive:    true,
 	},
 	"properties": {
 		AvailableFor: []string{"copy", "create", "update"},
@@ -223,9 +224,10 @@ Supported groupings are:
 When able, use 'user' or 'drive', instead of 'allDrives', for efficiency.`,
 	},
 	"driveId": {
-		AvailableFor: []string{"list"},
+		AvailableFor: []string{"list", "move"},
 		Type:         "string",
 		Description:  `ID of the shared drive.`,
+		Recursive:    true,
 	},
 	"includeItemsFromAllDrives": {
 		AvailableFor: []string{"list"},
@@ -277,7 +279,7 @@ All users with access can copy, download, export, and share the file.`,
 		Description:  `Whether the user is acknowledging the risk of downloading known malware or other abusive files.`,
 	},
 	"fields": {
-		AvailableFor: []string{"create", "get", "list", "update"},
+		AvailableFor: []string{"copy", "create", "get", "list", "update"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -433,6 +435,14 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 		file.Trashed = flags["trashed"].GetBool()
 		if !file.Trashed {
 			file.ForceSendFields = append(file.ForceSendFields, "Trashed")
+		}
+	}
+	if flags["parent"].IsSet() {
+		parent := flags["parent"].GetString()
+		if parent == "" {
+			file.ForceSendFields = append(file.ForceSendFields, "Parents")
+		} else {
+			file.Parents = append(file.Parents, parent)
 		}
 	}
 	return file, nil
