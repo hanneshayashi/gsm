@@ -22,9 +22,12 @@ import (
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
+	"sync"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"google.golang.org/api/drive/v3"
 )
 
 // filesMoveRecursiveCmd represents the movefoldertoshareddrive command
@@ -37,11 +40,57 @@ Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.MoveFolderToSharedDrive(flags["folderId"].GetString(), flags["parent"].GetString(), viper.GetInt("threads"))
-		if len(err) > 0 {
-			log.Fatalf("Errors during folder move: %v", err)
+		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		folderID := flags["folderId"].GetString()
+		folderMap, files, err := gsmdrive.GetFilesAndFolders(folderID, threads)
+		if err != nil {
+			log.Fatalf("Error getting files and folders: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		filesChan := make(chan *drive.File, threads)
+		finalChan := make(chan *drive.File, threads)
+		final := []*drive.File{}
+		wgFiles := &sync.WaitGroup{}
+		wgFinal := &sync.WaitGroup{}
+		folderMap[folderID].NewParent = flags["parent"].GetString()
+		wgFiles.Add(1)
+		go func() {
+			for _, f := range files {
+				filesChan <- f
+			}
+			close(filesChan)
+			wgFiles.Done()
+		}()
+		err = gsmdrive.CopyFolders(folderMap, "")
+		if err != nil {
+			log.Fatalf("Error creating new folder structure: %v", err)
+		}
+		for i := 0; i < threads; i++ {
+			wgFiles.Add(1)
+			go func() {
+				for f := range filesChan {
+					folder := folderMap[f.Parents[0]]
+					u, err := gsmdrive.UpdateFile(f.Id, folder.NewID, folder.OldParent, "", "", "id", nil, nil, false, false)
+					if err != nil {
+						fmt.Println(err)
+					} else {
+						finalChan <- u
+					}
+					time.Sleep(200 * time.Millisecond)
+				}
+				wgFiles.Done()
+			}()
+		}
+		wgFinal.Add(1)
+		go func() {
+			for r := range finalChan {
+				final = append(final, r)
+			}
+			wgFinal.Done()
+		}()
+		wgFiles.Wait()
+		close(finalChan)
+		wgFinal.Wait()
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
 	},
 }
 

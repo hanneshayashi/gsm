@@ -47,6 +47,7 @@ var permissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description:    "The ID of the permission.",
 		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
+		Recursive:      true,
 	},
 	"emailAddress": {
 		AvailableFor: []string{"create"},
@@ -62,6 +63,7 @@ When set to true, the item is moved to the new owner's My Drive root folder and 
 If set to false, when enforceSingleParent=true, parents are not changed.
 If set to false, when enforceSingleParent=false, existing parents are not changed;
 however, the file will be added to the new owner's My Drive root folder, unless it is already in the new owner's My Drive.`,
+		Recursive: true,
 	},
 	"transferOwnership": {
 		AvailableFor: []string{"create", "update"},

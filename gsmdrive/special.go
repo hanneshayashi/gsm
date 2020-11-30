@@ -19,14 +19,14 @@ package gsmdrive
 
 import (
 	"fmt"
-	"gsm/gsmhelpers"
 	"sync"
 	"time"
 
 	drive "google.golang.org/api/drive/v3"
 )
 
-type folder struct {
+// Folder represents a structure useful for copying Drive folder trees to a new destination
+type Folder struct {
 	NewID     string
 	OldParent string
 	NewParent string
@@ -34,7 +34,19 @@ type folder struct {
 	Root      bool
 }
 
-func copyFolders(folderMap map[string]*folder, destination string) error {
+const folderMimetype = "application/vnd.google-apps.folder"
+
+// IsFolder returns true if the file object is a folder, otherwise false
+// Make sure that the MimeType property is actually set.
+func IsFolder(f *drive.File) bool {
+	if f.MimeType == folderMimetype {
+		return true
+	}
+	return false
+}
+
+// CopyFolders creates a copy of a Drive folder structure at a new destination
+func CopyFolders(folderMap map[string]*Folder, destination string) error {
 	var err error
 	for k := range folderMap {
 		if folderMap[k].NewID == "" {
@@ -49,7 +61,7 @@ func copyFolders(folderMap map[string]*folder, destination string) error {
 
 func createFolder(parent, name string) (*drive.File, error) {
 	f := &drive.File{
-		MimeType: "application/vnd.google-apps.folder",
+		MimeType: folderMimetype,
 		Parents:  []string{parent},
 		Name:     name,
 	}
@@ -60,7 +72,7 @@ func createFolder(parent, name string) (*drive.File, error) {
 	return newFolder, nil
 }
 
-func getNewID(oldID string, folderMap map[string]*folder) (string, error) {
+func getNewID(oldID string, folderMap map[string]*Folder) (string, error) {
 	if folderMap[oldID].NewID != "" {
 		return folderMap[oldID].NewID, nil
 	}
@@ -80,13 +92,15 @@ func getNewID(oldID string, folderMap map[string]*folder) (string, error) {
 	return folderMap[oldID].NewID, nil
 }
 
-func getFilesAndFolders(folderID string, threads int) (folderMap map[string]*folder, files []*drive.File, err error) {
-	folderMap = make(map[string]*folder)
+// GetFilesAndFolders recursively gets all files and folders below a parent folder and separates them,
+// returning a map[string]*folder for folders and a simple list for files.
+func GetFilesAndFolders(folderID string, threads int) (folderMap map[string]*Folder, files []*drive.File, err error) {
+	folderMap = make(map[string]*Folder)
 	root, err := GetFile(folderID, "id,mimeType,name,parents", "")
 	if err != nil {
 		return nil, nil, err
 	}
-	if root.MimeType != "application/vnd.google-apps.folder" {
+	if !IsFolder(root) {
 		return nil, nil, fmt.Errorf("%s is not a folder", folderID)
 	}
 	items, err := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
@@ -94,146 +108,14 @@ func getFilesAndFolders(folderID string, threads int) (folderMap map[string]*fol
 		return nil, nil, err
 	}
 	for _, i := range items {
-		if i.MimeType == "application/vnd.google-apps.folder" {
-			folderMap[i.Id] = &folder{OldParent: i.Parents[0], Name: i.Name}
+		if IsFolder(i) {
+			folderMap[i.Id] = &Folder{OldParent: i.Parents[0], Name: i.Name}
 		} else {
 			files = append(files, i)
 		}
 	}
-	folderMap[folderID] = &folder{Name: root.Name, OldParent: root.Parents[0], Root: true}
+	folderMap[folderID] = &Folder{Name: root.Name, OldParent: root.Parents[0], Root: true}
 	return folderMap, files, nil
-}
-
-// CopyFolderRecursive recursively copies a folder to a new destination
-func CopyFolderRecursive(folderID, destination string, threads int) ([]*drive.File, []error) {
-	threads = gsmhelpers.MaxThreads(threads)
-	folderMap, files, err := getFilesAndFolders(folderID, threads)
-	if err != nil {
-		return nil, []error{err}
-	}
-	filesChan := make(chan *drive.File, threads)
-	finalChan := make(chan *drive.File, threads)
-	errChan := make(chan error, threads)
-	finalErr := []error{}
-	final := []*drive.File{}
-	wgFiles := &sync.WaitGroup{}
-	wgErrors := &sync.WaitGroup{}
-	wgFinal := &sync.WaitGroup{}
-	folderMap[folderID].NewParent = destination
-	wgFiles.Add(1)
-	go func() {
-		for _, f := range files {
-			filesChan <- f
-		}
-		close(filesChan)
-		wgFiles.Done()
-	}()
-	err = copyFolders(folderMap, "")
-	if err != nil {
-		return nil, []error{err}
-	}
-	for i := 0; i < threads; i++ {
-		wgFiles.Add(1)
-		go func() {
-			for f := range filesChan {
-				folder := folderMap[f.Parents[0]]
-				c, err := CopyFile(f.Id, "", "", "id,name,mimeType,parents", &drive.File{Parents: []string{folder.NewID}, Name: f.Name}, false, false)
-				if err != nil {
-					errChan <- err
-				} else {
-					finalChan <- c
-				}
-				time.Sleep(200 * time.Millisecond)
-			}
-			wgFiles.Done()
-		}()
-	}
-	wgErrors.Add(1)
-	go func() {
-		for e := range errChan {
-			finalErr = append(finalErr, e)
-		}
-		wgErrors.Done()
-	}()
-	wgFinal.Add(1)
-	go func() {
-		for r := range finalChan {
-			final = append(final, r)
-		}
-		wgFinal.Done()
-	}()
-	wgFiles.Wait()
-	close(errChan)
-	close(finalChan)
-	wgErrors.Wait()
-	wgFinal.Wait()
-	return final, finalErr
-}
-
-// MoveFolderToSharedDrive migrates a folder to a drive
-func MoveFolderToSharedDrive(folderID, destination string, threads int) ([]*drive.File, []error) {
-	threads = gsmhelpers.MaxThreads(threads)
-	folderMap, files, err := getFilesAndFolders(folderID, threads)
-	if err != nil {
-		return nil, []error{err}
-	}
-	filesChan := make(chan *drive.File, threads)
-	finalChan := make(chan *drive.File, threads)
-	errChan := make(chan error, threads)
-	finalErr := []error{}
-	final := []*drive.File{}
-	wgFiles := &sync.WaitGroup{}
-	wgErrors := &sync.WaitGroup{}
-	wgFinal := &sync.WaitGroup{}
-	folderMap[folderID].NewParent = destination
-	wgFiles.Add(1)
-	go func() {
-		for _, f := range files {
-			filesChan <- f
-		}
-		close(filesChan)
-		wgFiles.Done()
-	}()
-	err = copyFolders(folderMap, "")
-	if err != nil {
-		return nil, []error{err}
-	}
-	for i := 0; i < threads; i++ {
-		wgFiles.Add(1)
-		go func() {
-			for f := range filesChan {
-				folder := folderMap[f.Parents[0]]
-				u, err := UpdateFile(f.Id, folder.NewID, folder.OldParent, "", "", "id", nil, nil, false, false)
-				if err != nil {
-					errChan <- err
-				} else {
-					finalChan <- u
-				}
-				time.Sleep(200 * time.Millisecond)
-			}
-			wgFiles.Done()
-		}()
-	}
-	wgErrors.Add(1)
-	go func() {
-		for e := range errChan {
-			finalErr = append(finalErr, e)
-		}
-		wgErrors.Done()
-	}()
-	wgFinal.Add(1)
-	go func() {
-		for r := range finalChan {
-			final = append(final, r)
-		}
-		wgFinal.Done()
-	}()
-	wgFiles.Wait()
-	close(errChan)
-	close(finalChan)
-	wgErrors.Wait()
-	wgFinal.Wait()
-	return final, finalErr
 }
 
 func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wgFolders, wgFiles *sync.WaitGroup) error {
@@ -244,7 +126,7 @@ func listFilesRecursive(id, fields string, folders chan string, files chan *driv
 	for _, f := range result {
 		wgFiles.Add(1)
 		files <- f
-		if f.MimeType == "application/vnd.google-apps.folder" {
+		if IsFolder(f) {
 			wgFolders.Add(1)
 			folders <- f.Id
 		}
@@ -281,7 +163,7 @@ func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, error) {
 	for _, f := range result {
 		wgFiles.Add(1)
 		files <- f
-		if f.MimeType == "application/vnd.google-apps.folder" {
+		if IsFolder(f) {
 			wgFolders.Add(1)
 			folders <- f.Id
 		}
@@ -291,58 +173,4 @@ func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, error) {
 	wgFiles.Wait()
 	close(files)
 	return final, nil
-}
-
-// CreatePermissionRecursive recursively grants permissions on a folder
-func CreatePermissionRecursive(fileIds []string, emailMessage, fields string, useDomainAdminAccess, sendNotificationEmail, transferOwnership, moveToNewOwnersRoot bool, permission *drive.Permission, threads int) ([]*drive.Permission, []error) {
-	ids := make(chan string, threads)
-	results := make(chan *drive.Permission, threads)
-	errChan := make(chan error, threads)
-	final := []*drive.Permission{}
-	finalErr := []error{}
-	wgIDs := &sync.WaitGroup{}
-	wgPermissions := &sync.WaitGroup{}
-	wgErrors := &sync.WaitGroup{}
-	wgIDs.Add(1)
-	go func() {
-		for _, id := range fileIds {
-			ids <- id
-		}
-		wgIDs.Done()
-	}()
-	for i := 0; i < threads; i++ {
-		wgPermissions.Add(1)
-		go func() {
-			for id := range ids {
-				r, err := CreatePermission(id, emailMessage, fields, useDomainAdminAccess, sendNotificationEmail, transferOwnership, moveToNewOwnersRoot, permission)
-				if err != nil {
-					errChan <- err
-				} else {
-					results <- r
-				}
-			}
-			wgPermissions.Done()
-		}()
-	}
-	wgErrors.Add(1)
-	go func() {
-		for e := range errChan {
-			finalErr = append(finalErr, e)
-		}
-		wgErrors.Done()
-	}()
-	wgErrors.Add(1)
-	go func() {
-		for r := range results {
-			final = append(final, r)
-		}
-		wgErrors.Done()
-	}()
-	wgIDs.Wait()
-	close(ids)
-	wgPermissions.Wait()
-	close(errChan)
-	close(results)
-	wgErrors.Wait()
-	return final, finalErr
 }

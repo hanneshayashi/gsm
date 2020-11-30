@@ -54,7 +54,7 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, fields string) (*drive.File, error) {
 	srv := getFilesService()
 	if content == nil {
-		file.MimeType = "application/vnd.google-apps.folder"
+		file.MimeType = folderMimetype
 	}
 	c := srv.Create(file).SupportsAllDrives(true).IgnoreDefaultVisibility(ignoreDefaultVisibility).KeepRevisionForever(keepRevisionForever).UseContentAsIndexableText(useContentAsIndexableText)
 	if fields != "" {

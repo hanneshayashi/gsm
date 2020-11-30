@@ -27,20 +27,15 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"google.golang.org/api/drive/v3"
 )
 
-// permissionsCreateRecursiveCmd represents the recursive command
-var permissionsCreateRecursiveCmd = &cobra.Command{
+// permissionsDeleteRecursiveCmd represents the recursive command
+var permissionsDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively grant a permissions to a folder and all of its children.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
+	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		p, err := mapToPermission(flags)
-		if err != nil {
-			log.Fatalf("Error building permission object: %v", err)
-		}
 		folderID := flags["folderId"].GetString()
 		folder, err := gsmdrive.GetFile(folderID, "id,mimeType", "")
 		if err != nil {
@@ -55,20 +50,16 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error listing files: %v", err)
 		}
 		type resultStruct struct {
-			FileID      string            `json:"fileId,omitempty"`
-			Permissions *drive.Permission `json:"permissions,omitempty"`
+			FileID string `json:"fileId,omitempty"`
+			Result bool   `json:"result,omitempty"`
 		}
 		resultsChan := make(chan resultStruct, threads)
 		final := []resultStruct{}
 		wgPermissions := &sync.WaitGroup{}
 		wgFinal := &sync.WaitGroup{}
 		idChan := make(chan string, threads)
-		fields := flags["fields"].GetString()
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
-		emailMessage := flags["emailMessage"].GetString()
-		sendNotificationEmail := flags["sendNotificationEmail"].GetBool()
-		transferOwnership := flags["transferOwnership"].GetBool()
-		moveToNewOwnersRoot := flags["moveToNewOwnersRoot"].GetBool()
+		permissionID := flags["permissionId"].GetString()
 		wgPermissions.Add(1)
 		go func() {
 			idChan <- folderID
@@ -82,17 +73,11 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 			wgPermissions.Add(1)
 			go func() {
 				for id := range idChan {
-					var move bool
-					if moveToNewOwnersRoot && id == folderID {
-						move = true
-					} else {
-						move = false
-					}
-					r, err := gsmdrive.CreatePermission(id, emailMessage, fields, useDomainAdminAccess, sendNotificationEmail, transferOwnership, move, p)
+					r, err := gsmdrive.DeletePermission(id, permissionID, useDomainAdminAccess)
 					if err != nil {
 						log.Println(err)
 					} else {
-						resultsChan <- resultStruct{FileID: id, Permissions: r}
+						resultsChan <- resultStruct{FileID: id, Result: r}
 					}
 					time.Sleep(200 * time.Millisecond)
 				}
@@ -114,5 +99,5 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(permissionsCreateCmd, permissionsCreateRecursiveCmd, permissionFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(permissionsDeleteCmd, permissionsDeleteRecursiveCmd, permissionFlags, recursiveFlags)
 }
