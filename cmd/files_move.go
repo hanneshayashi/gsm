@@ -38,7 +38,7 @@ Use "move files recursive" instead!`,
 		if err != nil {
 			log.Println(err)
 		}
-		result, err := gsmdrive.UpdateFile(f.Id, flags["parent"].GetString(), f.Parents[0], "", "", "", f, nil, false, false)
+		result, err := gsmdrive.UpdateFile(f.Id, flags["parent"].GetString(), f.Parents[0], "", "", "", nil, nil, false, false)
 		if err != nil {
 			log.Fatalf("Error during move: %v", err)
 		}

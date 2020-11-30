@@ -60,8 +60,6 @@ var permissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "bool",
 		Description: `This parameter only takes effect if the item is not in a shared drive and the request is attempting to transfer the ownership of the item.
 When set to true, the item is moved to the new owner's My Drive root folder and all prior parents removed.
-If set to false, when enforceSingleParent=true, parents are not changed.
-If set to false, when enforceSingleParent=false, existing parents are not changed;
 however, the file will be added to the new owner's My Drive root folder, unless it is already in the new owner's My Drive.`,
 		Recursive: true,
 	},

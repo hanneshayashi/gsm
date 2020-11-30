@@ -58,6 +58,7 @@ var filesUpdateBatchCmd = &cobra.Command{
 						}
 						var removeParents string
 						if m["parent"].IsSet() {
+							f.Parents = nil
 							fOld, err := gsmdrive.GetFile(m["fileId"].GetString(), m["fields"].GetString(), "")
 							if err != nil {
 								log.Printf("Error getting existing file %s: %v\n", m["fileId"].GetString(), err)
