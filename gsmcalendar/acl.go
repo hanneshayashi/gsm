@@ -76,9 +76,7 @@ func makeListACLsCallAndAppend(c *calendar.AclListCall, acls []*calendar.AclRule
 		return nil, err
 	}
 	r, _ := result.(*calendar.Acl)
-	for _, a := range r.Items {
-		acls = append(acls, a)
-	}
+	acls = append(acls, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		acls, err = makeListACLsCallAndAppend(c, acls, errKey)

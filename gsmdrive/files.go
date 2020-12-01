@@ -241,9 +241,7 @@ func makeListFilesCallAndAppend(c *drive.FilesListCall, files []*drive.File, err
 		return nil, gsmhelpers.FormatError(err, errKey)
 	}
 	r, _ := result.(*drive.FileList)
-	for _, f := range r.Files {
-		files = append(files, f)
-	}
+	files = append(files, r.Files...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		files, err = makeListFilesCallAndAppend(c, files, errKey)

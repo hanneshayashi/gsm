@@ -85,9 +85,7 @@ func makeListUsersCallAndAppend(c *admin.UsersListCall, users []*admin.User, err
 		return nil, err
 	}
 	r, _ := result.(*admin.Users)
-	for _, u := range r.Users {
-		users = append(users, u)
-	}
+	users = append(users, r.Users...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		users, err = makeListUsersCallAndAppend(c, users, errKey)

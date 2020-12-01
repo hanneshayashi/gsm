@@ -102,9 +102,7 @@ func makeListContactGroupsCallAndAppend(c *people.ContactGroupsListCall, contact
 		return nil, err
 	}
 	r, _ := result.(*people.ListContactGroupsResponse)
-	for _, c := range r.ContactGroups {
-		contactGroups = append(contactGroups, c)
-	}
+	contactGroups = append(contactGroups, r.ContactGroups...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		contactGroups, err = makeListContactGroupsCallAndAppend(c, contactGroups, errKey)

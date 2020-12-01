@@ -492,9 +492,7 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	if flags["recurrence"].IsSet() {
 		recurrences := flags["recurrence"].GetStringSlice()
 		if len(recurrences) > 0 {
-			for _, r := range recurrences {
-				event.Recurrence = append(event.Recurrence, r)
-			}
+			event.Recurrence = append(event.Recurrence, recurrences...)
 		} else {
 			event.ForceSendFields = append(event.ForceSendFields, "Recurrence")
 		}

@@ -62,9 +62,7 @@ func makeListChromeOsDevicesCallAndAppend(c *admin.ChromeosdevicesListCall, chro
 		return nil, err
 	}
 	r, _ := result.(*admin.ChromeOsDevices)
-	for _, c := range r.Chromeosdevices {
-		chromeosDevices = append(chromeosDevices, c)
-	}
+	chromeosDevices = append(chromeosDevices, r.Chromeosdevices...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		chromeosDevices, err = makeListChromeOsDevicesCallAndAppend(c, chromeosDevices, errKey)

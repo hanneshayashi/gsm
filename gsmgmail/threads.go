@@ -66,9 +66,7 @@ func makeListThreadsCallAndAppend(c *gmail.UsersThreadsListCall, threads []*gmai
 		return nil, err
 	}
 	r, _ := result.(*gmail.ListThreadsResponse)
-	for _, d := range r.Threads {
-		threads = append(threads, d)
-	}
+	threads = append(threads, r.Threads...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		threads, err = makeListThreadsCallAndAppend(c, threads, errKey)

@@ -132,9 +132,7 @@ func makeListDirectoryPeopleCallAndAppend(c *people.PeopleListDirectoryPeopleCal
 		return nil, err
 	}
 	r, _ := result.(*people.ListDirectoryPeopleResponse)
-	for _, p := range r.People {
-		ps = append(ps, p)
-	}
+	ps = append(ps, r.People...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		ps, err = makeListDirectoryPeopleCallAndAppend(c, ps, errKey)
@@ -168,9 +166,7 @@ func makeSearchDirectoryPeopleCallAndAppend(c *people.PeopleSearchDirectoryPeopl
 		return nil, err
 	}
 	r, _ := result.(*people.SearchDirectoryPeopleResponse)
-	for _, p := range r.People {
-		ps = append(ps, p)
-	}
+	ps = append(ps, r.People...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		ps, err = makeSearchDirectoryPeopleCallAndAppend(c, ps, errKey)

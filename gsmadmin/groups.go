@@ -76,9 +76,7 @@ func makeListGroupsCallAndAppend(c *admin.GroupsListCall, groups []*admin.Group,
 		return nil, err
 	}
 	r, _ := result.(*admin.Groups)
-	for _, g := range r.Groups {
-		groups = append(groups, g)
-	}
+	groups = append(groups, r.Groups...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)

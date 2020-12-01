@@ -121,9 +121,7 @@ func makeListGroupsCallAndAppend(c *ci.GroupsListCall, groups []*ci.Group, errKe
 		return nil, err
 	}
 	r, _ := result.(*ci.ListGroupsResponse)
-	for _, g := range r.Groups {
-		groups = append(groups, g)
-	}
+	groups = append(groups, r.Groups...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)
@@ -154,9 +152,7 @@ func makeSearchGroupsCallAndAppend(c *ci.GroupsSearchCall, groups []*ci.Group, e
 		return nil, err
 	}
 	r, _ := result.(*ci.SearchGroupsResponse)
-	for _, g := range r.Groups {
-		groups = append(groups, g)
-	}
+	groups = append(groups, r.Groups...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		groups, err = makeSearchGroupsCallAndAppend(c, groups, errKey)

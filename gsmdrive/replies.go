@@ -76,9 +76,7 @@ func makeListRepliesCallAndAppend(c *drive.RepliesListCall, replies []*drive.Rep
 		return nil, err
 	}
 	r, _ := result.(*drive.ReplyList)
-	for _, p := range r.Replies {
-		replies = append(replies, p)
-	}
+	replies = append(replies, r.Replies...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		replies, err = makeListRepliesCallAndAppend(c, replies, errKey)

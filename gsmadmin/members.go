@@ -90,9 +90,7 @@ func makeListMembersCallAndAppend(c *admin.MembersListCall, members []*admin.Mem
 		return nil, err
 	}
 	r, _ := result.(*admin.Members)
-	for _, m := range r.Members {
-		members = append(members, m)
-	}
+	members = append(members, r.Members...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		members, err = makeListMembersCallAndAppend(c, members, errKey)

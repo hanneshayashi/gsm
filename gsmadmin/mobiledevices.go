@@ -72,9 +72,7 @@ func makeListMobileDevicesCallAndAppend(c *admin.MobiledevicesListCall, mobileDe
 		return nil, err
 	}
 	r, _ := result.(*admin.MobileDevices)
-	for _, m := range r.Mobiledevices {
-		mobileDevices = append(mobileDevices, m)
-	}
+	mobileDevices = append(mobileDevices, r.Mobiledevices...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		mobileDevices, err = makeListMobileDevicesCallAndAppend(c, mobileDevices, errKey)

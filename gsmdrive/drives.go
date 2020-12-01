@@ -96,9 +96,7 @@ func makeListDrivesCallAndAppend(c *drive.DrivesListCall, drives []*drive.Drive,
 		return nil, err
 	}
 	r, _ := result.(*drive.DriveList)
-	for _, d := range r.Drives {
-		drives = append(drives, d)
-	}
+	drives = append(drives, r.Drives...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		drives, err = makeListDrivesCallAndAppend(c, drives, errKey)

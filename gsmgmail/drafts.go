@@ -83,9 +83,7 @@ func makeListDraftsCallAndAppend(c *gmail.UsersDraftsListCall, drafts []*gmail.D
 		return nil, err
 	}
 	r, _ := result.(*gmail.ListDraftsResponse)
-	for _, d := range r.Drafts {
-		drafts = append(drafts, d)
-	}
+	drafts = append(drafts, r.Drafts...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		drafts, err = makeListDraftsCallAndAppend(c, drafts, errKey)

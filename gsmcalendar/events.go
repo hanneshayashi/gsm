@@ -102,9 +102,7 @@ func makeListInstancesCallAndAppend(c *calendar.EventsInstancesCall, eventInstan
 		return nil, err
 	}
 	r, _ := result.(*calendar.Events)
-	for _, e := range r.Items {
-		eventInstances = append(eventInstances, e)
-	}
+	eventInstances = append(eventInstances, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		eventInstances, err = makeListInstancesCallAndAppend(c, eventInstances, errKey)
@@ -144,9 +142,7 @@ func makeListEventsCallAndAppend(c *calendar.EventsListCall, events []*calendar.
 		return nil, err
 	}
 	r, _ := result.(*calendar.Events)
-	for _, e := range r.Items {
-		events = append(events, e)
-	}
+	events = append(events, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		events, err = makeListEventsCallAndAppend(c, events, errKey)

@@ -77,9 +77,7 @@ func makeListRoleAssignmentsCallAndAppend(c *admin.RoleAssignmentsListCall, role
 		return nil, err
 	}
 	r, _ := result.(*admin.RoleAssignments)
-	for _, r := range r.Items {
-		roleAssignments = append(roleAssignments, r)
-	}
+	roleAssignments = append(roleAssignments, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		roleAssignments, err = makeListRoleAssignmentsCallAndAppend(c, roleAssignments, errKey)

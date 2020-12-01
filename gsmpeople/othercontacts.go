@@ -49,9 +49,7 @@ func makeListOtherContactsCallAndAppend(c *people.OtherContactsListCall, otherCo
 		return nil, err
 	}
 	r, _ := result.(*people.ListOtherContactsResponse)
-	for _, o := range r.OtherContacts {
-		otherContacts = append(otherContacts, o)
-	}
+	otherContacts = append(otherContacts, r.OtherContacts...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		otherContacts, err = makeListOtherContactsCallAndAppend(c, otherContacts, errKey)

@@ -79,9 +79,7 @@ func makeListResourceBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall,
 		return nil, err
 	}
 	r, _ := result.(*admin.Buildings)
-	for _, b := range r.Buildings {
-		buildings = append(buildings, b)
-	}
+	buildings = append(buildings, r.Buildings...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		buildings, err = makeListResourceBuildingsCallAndAppend(c, buildings, errKey)

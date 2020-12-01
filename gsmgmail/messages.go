@@ -122,9 +122,7 @@ func makeListMessagesCallAndAppend(c *gmail.UsersMessagesListCall, messages []*g
 		return nil, err
 	}
 	r, _ := result.(*gmail.ListMessagesResponse)
-	for _, m := range r.Messages {
-		messages = append(messages, m)
-	}
+	messages = append(messages, r.Messages...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		messages, err = makeListMessagesCallAndAppend(c, messages, errKey)

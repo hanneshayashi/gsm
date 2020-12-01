@@ -32,9 +32,7 @@ func makeListHistoryCallAndAppend(c *gmail.UsersHistoryListCall, history []*gmai
 		return nil, err
 	}
 	r, _ := result.(*gmail.ListHistoryResponse)
-	for _, h := range r.History {
-		history = append(history, h)
-	}
+	history = append(history, r.History...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		history, err = makeListHistoryCallAndAppend(c, history, errKey)

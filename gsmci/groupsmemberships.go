@@ -33,9 +33,7 @@ func makeListMembersCallAndAppend(c *ci.GroupsMembershipsListCall, members []*ci
 		return nil, err
 	}
 	r, _ := result.(*ci.ListMembershipsResponse)
-	for _, m := range r.Memberships {
-		members = append(members, m)
-	}
+	members = append(members, r.Memberships...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		members, err = makeListMembersCallAndAppend(c, members, errKey)
@@ -182,9 +180,7 @@ func makeSearchTransitiveGroupsCallAndAppend(c *ci.GroupsMembershipsSearchTransi
 		return nil, err
 	}
 	r, _ := result.(*ci.SearchTransitiveGroupsResponse)
-	for _, m := range r.Memberships {
-		members = append(members, m)
-	}
+	members = append(members, r.Memberships...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		members, err = makeSearchTransitiveGroupsCallAndAppend(c, members, errKey)
@@ -212,9 +208,7 @@ func makeSearchTransitiveMembershipsCallAndAppend(c *ci.GroupsMembershipsSearchT
 		return nil, err
 	}
 	r, _ := result.(*ci.SearchTransitiveMembershipsResponse)
-	for _, m := range r.Memberships {
-		members = append(members, m)
-	}
+	members = append(members, r.Memberships...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		members, err = makeSearchTransitiveMembershipsCallAndAppend(c, members, errKey)

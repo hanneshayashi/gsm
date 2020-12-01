@@ -32,9 +32,7 @@ func makeListPeopleConnectionsCallAndAppend(c *people.PeopleConnectionsListCall,
 		return nil, err
 	}
 	r, _ := result.(*people.ListConnectionsResponse)
-	for _, c := range r.Connections {
-		ps = append(ps, c)
-	}
+	ps = append(ps, r.Connections...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		ps, err = makeListPeopleConnectionsCallAndAppend(c, ps, errKey)

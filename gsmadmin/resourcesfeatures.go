@@ -76,9 +76,7 @@ func makeListResourceFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, f
 		return nil, err
 	}
 	r, _ := result.(*admin.Features)
-	for _, f := range r.Features {
-		features = append(features, f)
-	}
+	features = append(features, r.Features...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		features, err = makeListResourceFeaturesCallAndAppend(c, features, errKey)

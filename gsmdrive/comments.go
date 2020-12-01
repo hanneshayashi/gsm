@@ -76,9 +76,7 @@ func makeListCommentsCallAndAppend(c *drive.CommentsListCall, comments []*drive.
 		return nil, err
 	}
 	r, _ := result.(*drive.CommentList)
-	for _, p := range r.Comments {
-		comments = append(comments, p)
-	}
+	comments = append(comments, r.Comments...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		comments, err = makeListCommentsCallAndAppend(c, comments, errKey)

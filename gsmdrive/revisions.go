@@ -89,9 +89,7 @@ func makeListRevisionsCallAndAppend(c *drive.RevisionsListCall, revisions []*dri
 		return nil, err
 	}
 	r, _ := result.(*drive.RevisionList)
-	for _, p := range r.Revisions {
-		revisions = append(revisions, p)
-	}
+	revisions = append(revisions, r.Revisions...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		revisions, err = makeListRevisionsCallAndAppend(c, revisions, errKey)

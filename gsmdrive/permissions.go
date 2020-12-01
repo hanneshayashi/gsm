@@ -79,9 +79,7 @@ func makeListPermissionsCallAndAppend(c *drive.PermissionsListCall, permissions 
 		return nil, err
 	}
 	r, _ := result.(*drive.PermissionList)
-	for _, p := range r.Permissions {
-		permissions = append(permissions, p)
-	}
+	permissions = append(permissions, r.Permissions...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		permissions, err = makeListPermissionsCallAndAppend(c, permissions, errKey)

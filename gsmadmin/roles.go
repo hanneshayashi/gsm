@@ -76,9 +76,7 @@ func makeListRolesCallAndAppend(c *admin.RolesListCall, roles []*admin.Role, err
 		return nil, err
 	}
 	r, _ := result.(*admin.Roles)
-	for _, r := range r.Items {
-		roles = append(roles, r)
-	}
+	roles = append(roles, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		roles, err = makeListRolesCallAndAppend(c, roles, errKey)

@@ -76,9 +76,7 @@ func makeListLicenseAssignmentsForProductCallAndAppend(c *licensing.LicenseAssig
 		return nil, err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	for _, l := range r.Items {
-		licenseAssignments = append(licenseAssignments, l)
-	}
+	licenseAssignments = append(licenseAssignments, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		licenseAssignments, err = makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments, errKey)
@@ -106,9 +104,7 @@ func makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c *licensing.Licens
 		return nil, err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	for _, l := range r.Items {
-		licenseAssignments = append(licenseAssignments, l)
-	}
+	licenseAssignments = append(licenseAssignments, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		licenseAssignments, err = makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments, errKey)

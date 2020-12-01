@@ -49,9 +49,7 @@ func makeListSettingsCallAndAppend(c *calendar.SettingsListCall, settings []*cal
 		return nil, err
 	}
 	r, _ := result.(*calendar.Settings)
-	for _, s := range r.Items {
-		settings = append(settings, s)
-	}
+	settings = append(settings, r.Items...)
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
 		settings, err = makeListSettingsCallAndAppend(c, settings, errKey)

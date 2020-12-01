@@ -76,9 +76,7 @@ func makeListResourceCalendarsCallAndAppend(c *admin.ResourcesCalendarsListCall,
 		return nil, err
 	}
 	r, _ := result.(*admin.CalendarResources)
-	for _, b := range r.Items {
-		calendars = append(calendars, b)
-	}
+	calendars = append(calendars, r.Items...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
 		calendars, err = makeListResourceCalendarsCallAndAppend(c, calendars, errKey)
