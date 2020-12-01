@@ -38,7 +38,7 @@ User will have to sign in by authenticating again.`,
 		if err != nil {
 			log.Fatalf("Error signOutting user %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

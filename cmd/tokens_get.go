@@ -37,7 +37,7 @@ var tokensGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting token %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

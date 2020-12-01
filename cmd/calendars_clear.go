@@ -38,7 +38,7 @@ This operation deletes all events associated with the primary calendar of an acc
 		if err != nil {
 			log.Fatalf("Error clearing calendar: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

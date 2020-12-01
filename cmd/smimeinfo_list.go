@@ -37,7 +37,7 @@ var smimeInfoListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing S/MIME info: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

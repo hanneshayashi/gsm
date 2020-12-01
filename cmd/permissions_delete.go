@@ -37,7 +37,7 @@ var permissionsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting permission %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

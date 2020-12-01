@@ -41,7 +41,7 @@ var licenseAssignmentsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching licenseAssignment: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

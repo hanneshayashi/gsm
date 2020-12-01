@@ -37,7 +37,7 @@ var mobileDevicesGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting mobile device %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

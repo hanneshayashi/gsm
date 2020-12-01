@@ -39,7 +39,7 @@ https://developers.google.com/drive/api/v3/reference/revisions/delete`,
 		if err != nil {
 			log.Fatalf("Error deleting revision: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

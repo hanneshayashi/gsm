@@ -79,7 +79,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 		for res := range results {
 			final = append(final, res)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
 	},
 }
 

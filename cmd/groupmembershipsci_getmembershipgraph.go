@@ -41,7 +41,7 @@ var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting membership graph %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

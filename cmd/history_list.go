@@ -45,7 +45,7 @@ var historyListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing history: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

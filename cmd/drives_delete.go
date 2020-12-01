@@ -38,7 +38,7 @@ The shared drive cannot contain any untrashed items.`,
 		if err != nil {
 			log.Fatalf("Error deleting drive %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

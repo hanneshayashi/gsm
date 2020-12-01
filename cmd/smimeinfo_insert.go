@@ -42,7 +42,7 @@ Note that pkcs12 format is required for the key.`,
 		if err != nil {
 			log.Fatalf("Error inserting S/MIME info: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

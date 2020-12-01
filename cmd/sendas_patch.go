@@ -41,7 +41,7 @@ var sendAsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching send-as: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

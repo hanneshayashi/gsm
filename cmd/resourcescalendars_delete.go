@@ -37,7 +37,7 @@ var resourcesCalendarsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting calendar resource %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

@@ -94,7 +94,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 		wgPermissions.Wait()
 		close(resultsChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
 	},
 }
 

@@ -41,7 +41,7 @@ var mobileDevicesActionCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error taking action on mobile device %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

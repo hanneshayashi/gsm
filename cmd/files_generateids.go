@@ -37,7 +37,7 @@ var filesGenerateIdsCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error generating file IDs: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

@@ -37,7 +37,7 @@ var messagesListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing messages: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

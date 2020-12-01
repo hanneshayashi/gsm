@@ -37,7 +37,7 @@ var aspsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting ASP: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

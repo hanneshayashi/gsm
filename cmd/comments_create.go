@@ -41,7 +41,7 @@ var commentsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating comment on file %s: %v", flags["fileId"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

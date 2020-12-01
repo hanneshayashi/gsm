@@ -37,7 +37,7 @@ var roleAssignmentsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting role assignment %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

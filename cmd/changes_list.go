@@ -34,7 +34,7 @@ var changesListCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/changes/list",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, nextStartPageToken, err := gsmdrive.ListChanges(flags["pageToken"].GetString(), flags["driveId"].GetString(), flags["spaces"].GetString(), flags["fields"].GetString(), flags["includePermissionsForView"].GetString(), flags["includeCorpusRemovals"].GetBool(), flags["includeItemsFromAllDrives"].GetBool(), flags["includeRemoved"].GetBool(), flags["restrictToMyDrive"].GetBool())
+		r, nextStartPageToken, err := gsmdrive.ListChanges(flags["pageToken"].GetString(), flags["driveId"].GetString(), flags["spaces"].GetString(), flags["fields"].GetString(), flags["includePermissionsForView"].GetString(), flags["includeCorpusRemovals"].GetBool(), flags["includeItemsFromAllDrives"].GetBool(), flags["includeRemoved"].GetBool(), flags["restrictToMyDrive"].GetBool())
 		if err != nil {
 			log.Fatalf("Error listing changes: %v", err)
 		}
@@ -42,11 +42,11 @@ var changesListCmd = &cobra.Command{
 			Changes            []*drive.Change `json:"changes,omitempty"`
 			NextStartPageToken string          `json:"nextStartPageToken"`
 		}
-		r := resultStruct{
-			Changes:            result,
+		result := resultStruct{
+			Changes:            r,
 			NextStartPageToken: nextStartPageToken,
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(r, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

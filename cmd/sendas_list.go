@@ -38,7 +38,7 @@ The result includes the primary send-as address associated with the account as w
 		if err != nil {
 			log.Fatalf("Error listing send-as aliases: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

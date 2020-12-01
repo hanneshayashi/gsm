@@ -41,7 +41,7 @@ var groupAliasesInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting group alias %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

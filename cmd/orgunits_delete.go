@@ -37,7 +37,7 @@ var orgUnitsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting org unit %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

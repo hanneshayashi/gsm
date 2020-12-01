@@ -41,7 +41,7 @@ var spreadsheetsBatchUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating spreadsheet: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

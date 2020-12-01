@@ -37,7 +37,7 @@ var forwardingAddressesGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting forwarding address for user %s: %v", flags["userId"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

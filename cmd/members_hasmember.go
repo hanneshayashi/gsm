@@ -37,7 +37,7 @@ var membersHasMemberCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error checking if user is member of group %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

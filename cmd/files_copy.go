@@ -42,7 +42,7 @@ Use "files copy recursive" to copy folders.`,
 		if err != nil {
 			log.Fatalf("Error creating file %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

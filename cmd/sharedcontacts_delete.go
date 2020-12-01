@@ -37,7 +37,7 @@ var sharedContactsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting shared contact: %v", err)
 		}
-		fmt.Println(string(result))
+		fmt.Fprintln(cmd.OutOrStdout(), string(result))
 	},
 }
 

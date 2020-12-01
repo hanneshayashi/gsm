@@ -37,7 +37,7 @@ var calendarACLDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting calendar acl rule: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

@@ -37,7 +37,7 @@ var peopleGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting contact %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

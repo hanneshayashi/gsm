@@ -66,7 +66,7 @@ var domainAliasesGetBatchCmd = &cobra.Command{
 		for res := range results {
 			final = append(final, res)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
 	},
 }
 

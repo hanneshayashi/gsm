@@ -88,7 +88,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 		wgPermissions.Wait()
 		close(resultsChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
 	},
 }
 

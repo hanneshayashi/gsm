@@ -43,10 +43,11 @@ import (
 )
 
 var (
-	cfgDir     string
-	cfgFile    string
-	dwdSubject string
-	batchFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+	cfgDir         string
+	cfgFile        string
+	dwdSubject     string
+	compressOutput bool
+	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
 			Type:         "string",
@@ -111,6 +112,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
+	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

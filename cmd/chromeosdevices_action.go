@@ -41,7 +41,7 @@ var chromeOsDevicesActionCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error taking action on Chrome OS device: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

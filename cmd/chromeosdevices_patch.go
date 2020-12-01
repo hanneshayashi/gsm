@@ -41,7 +41,7 @@ var chromeOsDevicesPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching Chrome OS device: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

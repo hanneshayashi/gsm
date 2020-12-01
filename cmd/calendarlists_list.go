@@ -42,7 +42,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatalf("Error listing calendar lists: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

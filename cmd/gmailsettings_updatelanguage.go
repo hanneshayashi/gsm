@@ -43,7 +43,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateL
 		if err != nil {
 			log.Fatalf("Error updating language settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

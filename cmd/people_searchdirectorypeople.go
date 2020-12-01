@@ -37,7 +37,7 @@ var peopleSearchDirectoryPeopleCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error searching for contacts %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

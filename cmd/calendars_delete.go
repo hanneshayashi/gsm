@@ -38,7 +38,7 @@ Use calendars.clear for clearing all events on primary calendars.`,
 		if err != nil {
 			log.Fatalf("Error deleting calendar: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

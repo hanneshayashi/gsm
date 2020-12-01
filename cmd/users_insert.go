@@ -41,7 +41,7 @@ var usersInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting user %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

@@ -42,7 +42,7 @@ This operation is used to add a private copy of an existing event to a calendar.
 		if err != nil {
 			log.Fatalf("Error importing event: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

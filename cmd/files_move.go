@@ -42,7 +42,7 @@ Use "move files recursive" instead!`,
 		if err != nil {
 			log.Fatalf("Error during move: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json"))
+		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
 	},
 }
 

@@ -165,13 +165,21 @@ func MaxThreads(threads int) int {
 }
 
 // PrettyPrint is used to output the result of an API call in the requested format
-func PrettyPrint(i interface{}, format string) string {
+func PrettyPrint(i interface{}, format string, compress bool) string {
 	var b []byte
 	if format == "json" {
-		b, _ = json.MarshalIndent(i, "", "\t")
+		if compress {
+			b, _ = json.Marshal(i)
+		} else {
+			b, _ = json.MarshalIndent(i, "", "\t")
+		}
 	}
 	if format == "xml" {
-		b, _ = xml.MarshalIndent(i, "", "\t")
+		if compress {
+			b, _ = xml.Marshal(i)
+		} else {
+			b, _ = xml.MarshalIndent(i, "", "\t")
+		}
 	}
 	if format == "yaml" {
 		b, _ = yaml.Marshal(i)
