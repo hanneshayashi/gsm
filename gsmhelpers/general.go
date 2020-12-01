@@ -38,7 +38,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const version = "0.1.15"
+const version = "0.1.16"
 
 // StandarRetrier is a retrier object that should be used by every function that calls a Google API
 var StandarRetrier = NewStandardRetrier()
