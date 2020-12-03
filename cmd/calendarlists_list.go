@@ -38,7 +38,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcalendar.ListCalendarListEntries(flags["minAccessRole"].GetString(), flags["fields"].GetString())
+		result, err := gsmcalendar.ListCalendarListEntries(flags["minAccessRole"].GetString(), flags["fields"].GetString(), flags["showHidden"].GetBool(), flags["showDeleted"].GetBool())
 		if err != nil {
 			log.Fatalf("Error listing calendar lists: %v", err)
 		}

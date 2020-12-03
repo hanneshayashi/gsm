@@ -69,9 +69,9 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 }
 
 // ListCalendarListEntries returns the calendars on the user's calendar list.
-func ListCalendarListEntries(minAccessRole, fields string) ([]*calendar.CalendarListEntry, error) {
+func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDeleted bool) ([]*calendar.CalendarListEntry, error) {
 	srv := getCalendarListService()
-	c := srv.List()
+	c := srv.List().ShowDeleted(showDeleted).ShowHidden(showHidden)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
