@@ -35,7 +35,7 @@ type Flag struct {
 	Required       []string
 	AvailableFor   []string
 	ExcludeFromAll bool
-	Recursive		bool
+	Recursive      bool
 }
 
 // Value is the value representation of a flag

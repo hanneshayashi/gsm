@@ -28,10 +28,13 @@ import (
 func DeleteLicenseAssignment(productID, skuID, userID string) (bool, error) {
 	srv := getLicenseAssignmentsService()
 	c := srv.Delete(productID, skuID, userID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() error {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
 		return c.Do()
 	})
-	return result, err
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 // GetLicenseAssignment get a specific user's license by product SKU.
