@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // membersHasMemberBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var membersHasMemberBatchCmd = &cobra.Command{
 	Short: "Checks whether the given user is a member of the group. Membership can be direct or nested.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

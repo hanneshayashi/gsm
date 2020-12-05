@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // revisionsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes revisions' metadata or content by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

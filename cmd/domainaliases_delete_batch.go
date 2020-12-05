@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // domainAliasesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var domainAliasesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieves domain aliases of the customer using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

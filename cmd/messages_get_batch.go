@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -35,7 +34,7 @@ var messagesGetBatchCmd = &cobra.Command{
 	Short: "Batch gets the specified messages using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, messageFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, messageFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

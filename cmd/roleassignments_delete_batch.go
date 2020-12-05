@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // roleAssignmentsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieve role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

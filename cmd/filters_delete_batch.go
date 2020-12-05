@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // filtersDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var filtersDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes filters using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

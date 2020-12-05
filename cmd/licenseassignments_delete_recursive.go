@@ -26,7 +26,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // licenseAssignmentsDeleteRecursiveCmd represents the recursive command
@@ -36,7 +35,7 @@ var licenseAssignmentsDeleteRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
 			UserID string `json:"userId,omitempty"`
 			Result bool   `json:"result"`

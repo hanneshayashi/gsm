@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // groupAliasesListBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var groupAliasesListBatchCmd = &cobra.Command{
 	Short: "Batch lists group aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupAliasFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupAliasFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // filesDownloadBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var filesDownloadBatchCmd = &cobra.Command{
 	Short: "Batch download files using a CSV file as input.",
 	Long:  `Downloads a (non-Google) file to your local system`,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

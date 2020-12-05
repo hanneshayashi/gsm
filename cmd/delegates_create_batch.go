@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -43,7 +42,7 @@ Also note that when a new delegate is created, there may be up to a one minute d
 
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

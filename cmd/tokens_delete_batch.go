@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // tokensDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var tokensDeleteBatchCmd = &cobra.Command{
 	Short: "Batch delete access tokens issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, tokenFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, tokenFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

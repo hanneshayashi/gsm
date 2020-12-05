@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // chromeOsDevicesActionBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 	Short: "Takes actions that affect a Chrome OS Devices using a CSV file as input",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/action",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

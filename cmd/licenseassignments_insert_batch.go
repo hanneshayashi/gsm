@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/licensing/v1"
 )
 
@@ -35,7 +34,7 @@ var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 	Short: "Insert inserts users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, licenseAssignmentFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, licenseAssignmentFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

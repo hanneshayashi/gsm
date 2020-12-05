@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/calendar/v3"
 )
 
@@ -35,7 +34,7 @@ var calendarListsGetBatchCmd = &cobra.Command{
 	Short: "Batch returns calendars from the user's calendar list using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarListFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarListFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/groupssettings/v1"
 )
 
@@ -35,7 +34,7 @@ var groupSettingsPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches groups' settings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // sendAsVerifyBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var sendAsVerifyBatchCmd = &cobra.Command{
 	Short: "Batch send verification emails for send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/verify",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, sendAsFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sendAsFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

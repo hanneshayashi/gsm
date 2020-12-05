@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -35,7 +34,7 @@ var repliesGetBatchCmd = &cobra.Command{
 	Short: "Batch gets replies by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/replies/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, replyFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, replyFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

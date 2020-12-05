@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -48,7 +47,7 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		if !gsmdrive.IsFolder(folder) {
 			log.Fatalf("%s is not a folder", folderID)
 		}
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		files, err := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
 		if err != nil {
 			log.Fatalf("Error listing files: %v", err)

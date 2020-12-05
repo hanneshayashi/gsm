@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -35,7 +34,7 @@ var aspsListBatchCmd = &cobra.Command{
 	Short: "Batch lists ASPs issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/asps/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

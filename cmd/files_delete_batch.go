@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // filesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var filesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes files or folders by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

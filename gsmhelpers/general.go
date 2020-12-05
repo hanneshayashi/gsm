@@ -35,6 +35,7 @@ import (
 	"github.com/eapache/go-resiliency/retrier"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
+	"github.com/spf13/viper"
 	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v3"
 )
@@ -142,14 +143,24 @@ func Contains(s string, slice []string) bool {
 }
 
 // MaxThreads returns the maximum number of threads (goroutines that should be spawned)
-func MaxThreads(threads int) int {
-	d := runtime.NumCPU() * 2
-	if threads == 0 {
-		return d
+func MaxThreads(fThreads int) int {
+	var threads int
+	if fThreads != 0 {
+		threads = fThreads
+	} else {
+		cThreads := viper.GetInt("threads")
+		if cThreads != 0 {
+			threads = cThreads
+		} else {
+			threads = runtime.NumCPU() * 2
+		}
 	}
-	if threads > 16 {
-		return 16
+	maxThreads := 16
+	if threads > maxThreads {
+		fmt.Println("Threads MAX", maxThreads)
+		return maxThreads
 	}
+	fmt.Println("Threads", threads)
 	return threads
 }
 
@@ -263,7 +274,7 @@ func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
 }
 
 // GetBatchMaps returns a channel containing maps to be used for batch requests to the Google API
-func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<-chan map[string]*Value, error) {
+func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[string]*Value, error) {
 	flags, err := consolidateFlags(cmd, cmdFlags)
 	if err != nil {
 		return nil, fmt.Errorf("Error consolidating flags: %v", err)
@@ -272,11 +283,7 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 	if err != nil {
 		return nil, fmt.Errorf("Error with CSV file: %v", err)
 	}
-	if flags["batchThreads"].IsSet() {
-		threads = MaxThreads(flags["batchThreads"].GetInt())
-	} else {
-		threads = MaxThreads(threads)
-	}
+	threads := MaxThreads(flags["batchThreads"].GetInt())
 	maps := make(chan map[string]*Value, threads)
 	line, err := csvReader.Read()
 	if err != nil {
@@ -350,10 +357,9 @@ func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }
 
-// sleep will sleep for the supplied amount of milliseconds
+// sleep will sleep for the supplied amount of milliseconds plus a jitter between 0 and 20
 func sleep(ms int) {
 	ms += rand.Intn(20) + 1
-	fmt.Println(ms)
 	time.Sleep(time.Duration(ms) * time.Millisecond)
 }
 

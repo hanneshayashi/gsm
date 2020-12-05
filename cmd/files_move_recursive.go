@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -39,7 +38,7 @@ Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		folderID := flags["folderId"].GetString()
 		folderMap, files, err := gsmdrive.GetFilesAndFolders(folderID, threads)
 		if err != nil {

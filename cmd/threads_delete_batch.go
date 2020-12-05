@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // threadsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var threadsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes the specified threads using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, threadFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, threadFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -35,7 +34,7 @@ var usersPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches users using a CSV file as input",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

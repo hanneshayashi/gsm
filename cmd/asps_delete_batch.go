@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // aspsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var aspsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes ASPs issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/asps/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

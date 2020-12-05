@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -35,7 +34,7 @@ var permissionsCreateBatchCmd = &cobra.Command{
 	Short: "Batch Creates a permission for a file or shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

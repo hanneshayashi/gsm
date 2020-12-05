@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // usersMakeAdminBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 	Short: "Batch makes users admins using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/makeAdmin",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

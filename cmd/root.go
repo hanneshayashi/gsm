@@ -47,7 +47,6 @@ var (
 	cfgFile        string
 	dwdSubject     string
 	compressOutput bool
-	standardDelay  int
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
@@ -78,6 +77,11 @@ var (
 			Description:  `File id of the folder.`,
 			Required:     []string{"recursive"},
 		},
+		"batchThreads": {
+			AvailableFor: []string{"recursive"},
+			Type:         "int",
+			Description:  "Specify the number of threads that should be used for recursive commands (overrides value in config file. Max 16)",
+		},
 	}
 	recursiveUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"orgUnit": {
@@ -89,6 +93,11 @@ var (
 			AvailableFor: []string{"recursive"},
 			Type:         "stringSlice",
 			Description:  `An email address of a group. Can be used multiple times. Note that a group will include recursive memberships!`,
+		},
+		"batchThreads": {
+			AvailableFor: []string{"recursive"},
+			Type:         "int",
+			Description:  "Specify the number of threads that should be used for recursive commands (overrides value in config file. Max 16)",
 		},
 	}
 )
@@ -125,7 +134,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
-	rootCmd.PersistentFlags().IntVar(&standardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

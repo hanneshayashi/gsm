@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // resourcesFeaturesRenameBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var resourcesFeaturesRenameBatchCmd = &cobra.Command{
 	Short: "Batch renames feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

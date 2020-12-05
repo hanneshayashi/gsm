@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -35,7 +34,7 @@ var chromeOsDevicesPatchBatchCmd = &cobra.Command{
 	Short: "Batch patch Chrome OS devices using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -35,7 +34,7 @@ var commentsListBatchCmd = &cobra.Command{
 	Short: "Batch lists comments in files using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/comments/list",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, commentFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, commentFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

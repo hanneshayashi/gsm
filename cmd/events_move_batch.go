@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/calendar/v3"
 )
 
@@ -35,7 +34,7 @@ var eventsMoveBatchCmd = &cobra.Command{
 	Short: "Batch moves events to other calendars, i.e. changes an events' organizer using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/move",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

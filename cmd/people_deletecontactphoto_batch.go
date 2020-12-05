@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // peopleDeleteContactPhotoBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var peopleDeleteContactPhotoBatchCmd = &cobra.Command{
 	Short: "Batch deletes contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/deleteContactPhoto",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

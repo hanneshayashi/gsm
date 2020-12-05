@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
@@ -36,7 +35,7 @@ var membersGetRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		final := []*admin.Member{}
 		finalChan := make(chan *admin.Member, threads)
 		wgOps := &sync.WaitGroup{}

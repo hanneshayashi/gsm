@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // usersDeleteRecursiveCmd represents the recursive command
@@ -35,7 +34,7 @@ var usersDeleteRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
 			UserKey string `json:"userKey,omitempty"`
 			Result  bool   `json:"result"`

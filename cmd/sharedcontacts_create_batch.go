@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // sharedContactsCreateBatchCmd represents the batch command
@@ -35,7 +34,7 @@ var sharedContactsCreateBatchCmd = &cobra.Command{
 	Long: `https://developers.google.com/admin-sdk/domain-shared-contacts
 Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --familyName "Bauer" --email "displayName=Jack Bauer;address=jack@ctu.gov;primary=false" --email "displayName=Jack bauer;address=jack.bauer@ctu.gov;primary=true" --phoneNumber "phoneNumber=+49 127 12381;primary=true;label=Work" --phoneNumber "phoneNumber=+49 21891238;primary=false;label=Home" --organization "orgName=Counter Terrorist Unit;orgDepartment=Field Agents;orgTitle=Special Agent"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

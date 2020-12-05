@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -35,7 +34,7 @@ var revisionsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates revisions' metadata or content by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

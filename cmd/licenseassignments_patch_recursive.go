@@ -26,7 +26,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/licensing/v1"
 )
 
@@ -37,7 +36,7 @@ var licenseAssignmentsPatchRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/patch",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		final := []*licensing.LicenseAssignment{}
 		finalChan := make(chan *licensing.LicenseAssignment, threads)
 		wgOps := &sync.WaitGroup{}

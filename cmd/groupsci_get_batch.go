@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	ci "google.golang.org/api/cloudidentity/v1beta1"
 )
 
@@ -35,7 +34,7 @@ var groupsCiGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

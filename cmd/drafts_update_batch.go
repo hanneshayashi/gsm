@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -35,7 +34,7 @@ var draftsUpdateBatchCmd = &cobra.Command{
 	Short: "Batch updates drafts using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, draftFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, draftFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

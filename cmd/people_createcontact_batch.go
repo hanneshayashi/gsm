@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/people/v1"
 )
 
@@ -35,7 +34,7 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 	Short: "Batch create contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

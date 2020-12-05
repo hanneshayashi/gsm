@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -36,7 +35,7 @@ var filesCopyRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(viper.GetInt("threads"))
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		folderID := flags["folderId"].GetString()
 		folderMap, files, err := gsmdrive.GetFilesAndFolders(folderID, threads)
 		if err != nil {

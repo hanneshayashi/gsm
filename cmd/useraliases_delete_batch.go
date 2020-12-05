@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // userAliasesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var userAliasesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes user aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, userAliasFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, userAliasFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -27,7 +27,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -37,7 +36,7 @@ var filesCreateBatchCmd = &cobra.Command{
 	Short: "Batch Creates a new file or folder. Can also be used to upload files using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/create",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // mobileDevicesActionBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 	Short: "Batch takes action on mobile devices using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/action",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

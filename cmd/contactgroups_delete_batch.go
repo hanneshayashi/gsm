@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // contactGroupsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var contactGroupsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

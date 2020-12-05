@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // mobileDevicesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var mobileDevicesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieves mobile devices' properties using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, mobileDeviceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

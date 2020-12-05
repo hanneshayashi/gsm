@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // verificationCodesInvalidateBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var verificationCodesInvalidateBatchCmd = &cobra.Command{
 	Short: "Batch invalidates backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/invalidate",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

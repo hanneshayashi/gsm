@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // resourcesBuildingsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch retrieves buildings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

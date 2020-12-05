@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // groupAliasesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var groupAliasesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes group aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupAliasFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupAliasFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

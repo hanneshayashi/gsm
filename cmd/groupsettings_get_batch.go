@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/groupssettings/v1"
 )
 
@@ -35,7 +34,7 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Short: "Batch retrieves groups' settings identified by the group email address using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // resourcesCalendarsDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var resourcesCalendarsDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

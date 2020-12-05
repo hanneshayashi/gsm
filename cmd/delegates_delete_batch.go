@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // delegatesDeleteBatchCmd represents the batch command
@@ -35,7 +34,7 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
 	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

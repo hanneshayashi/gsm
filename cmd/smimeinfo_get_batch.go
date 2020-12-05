@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -35,7 +34,7 @@ var smimeInfoGetBatchCmd = &cobra.Command{
 	Short: "Batch gets the specified S/MIME config for the specified send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, smimeInfoFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, smimeInfoFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // drivesDeleteBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var drivesDeleteBatchCmd = &cobra.Command{
 	Short: "Batch deletes shared drives' metadata by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/drives/delete",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, driveFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, driveFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

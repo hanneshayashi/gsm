@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -35,7 +34,7 @@ var labelsPatchBatchCmd = &cobra.Command{
 	Short: "Batch patches labels using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/patch",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, labelFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, labelFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}

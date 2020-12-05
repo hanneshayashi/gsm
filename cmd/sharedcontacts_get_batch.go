@@ -25,7 +25,6 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // sharedContactsGetBatchCmd represents the batch command
@@ -34,7 +33,7 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 	Short: "Batch gets Domain Shared Contact via URL / ID using a CSV file as input",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags, viper.GetInt("threads"))
+		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
