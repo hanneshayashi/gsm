@@ -171,13 +171,13 @@ func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
 
 // RandomFile gets a file's metadata or content by ID.
 // func RandomFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
-// 	randomFile := func() (*drive.File, error) {
+// 	c := func() (interface{}, error) {
 // 		r := &drive.File{
 // 			Id: fileID,
 // 		}
 // 		err := &googleapi.Error{}
-// 		random := rand.Intn(10)
-// 		if random%2 == 0 {
+// 		random := rand.Intn(100)
+// 		if random%99 == 0 {
 // 			foo := []string{
 // 				"Rate limit reached",
 // 				"Quota exceeded",
@@ -188,28 +188,19 @@ func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
 // 			err.Code = 403
 // 			return nil, err
 // 		}
-// 		if random%3 == 0 {
+// 		if random%3 == 20 {
 // 			err.Message = "File not found"
 // 			err.Code = 404
 // 			return nil, err
 // 		}
 // 		return r, nil
 // 	}
-// 	var err error
-// 	var result *drive.File
-// 	errKey := fmt.Sprintf("%s", fileID)
-// 	operation := func() error {
-// 		result, err = randomFile()
-// 		if gsmhelpers.RetryLog(err, errKey) {
-// 			return err
-// 		}
-// 		return nil
-// 	}
-// 	gsmhelpers.StandarRetrier.Run(operation)
+// 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), c)
 // 	if err != nil {
-// 		return nil, gsmhelpers.FormatError(err, errKey)
+// 		return nil, err
 // 	}
-// 	return result, nil
+// 	r, _ := result.(*drive.File)
+// 	return r, nil
 // }
 
 // GetFile gets a file's metadata or content by ID.
