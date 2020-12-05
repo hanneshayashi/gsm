@@ -93,5 +93,5 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(permissionsListCmd, permissionsListRecursiveCmd, permissionFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(permissionsListCmd, permissionsListRecursiveCmd, permissionFlags, recursiveFileFlags)
 }

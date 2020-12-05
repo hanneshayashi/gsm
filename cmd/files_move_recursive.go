@@ -95,5 +95,5 @@ The original folders will be preserved at the source!`,
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesMoveCmd, filesMoveRecursiveCmd, fileFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(filesMoveCmd, filesMoveRecursiveCmd, fileFlags, recursiveFileFlags)
 }

@@ -92,5 +92,5 @@ var filesCopyRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesCopyCmd, filesCopyRecursiveCmd, fileFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(filesCopyCmd, filesCopyRecursiveCmd, fileFlags, recursiveFileFlags)
 }

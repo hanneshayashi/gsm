@@ -99,5 +99,5 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(permissionsDeleteCmd, permissionsDeleteRecursiveCmd, permissionFlags, recursiveFlags)
+	gsmhelpers.InitRecursiveCommand(permissionsDeleteCmd, permissionsDeleteRecursiveCmd, permissionFlags, recursiveFileFlags)
 }

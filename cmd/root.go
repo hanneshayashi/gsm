@@ -70,12 +70,24 @@ var (
 			Description:  "Specify the number of threads that should be used for batch commands (overrides value in config file. Max 16)",
 		},
 	}
-	recursiveFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+	recursiveFileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"folderId": {
 			AvailableFor: []string{"recursive"},
 			Type:         "string",
 			Description:  `File id of the folder.`,
 			Required:     []string{"recursive"},
+		},
+	}
+	recursiveUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+		"orgUnit": {
+			AvailableFor: []string{"recursive"},
+			Type:         "stringSlice",
+			Description:  `Path of an orgUnit. Can be used multiple times. Note that an orgUnit always includes all of its children!`,
+		},
+		"groupEmail": {
+			AvailableFor: []string{"recursive"},
+			Type:         "stringSlice",
+			Description:  `An email address of a group. Can be used multiple times. Note that a group will include recursive memberships!`,
 		},
 	}
 )
