@@ -47,32 +47,6 @@ You can always explicitly specify a config file with the --config flag.`,
 	},
 }
 
-var defaultScopes = []string{admin.AdminDirectoryUserScope,
-	admin.AdminDirectoryCustomerScope,
-	admin.AdminDirectoryGroupScope,
-	admin.AdminDirectoryGroupMemberScope,
-	admin.AdminDirectoryOrgunitScope,
-	admin.AdminDirectoryRolemanagementScope,
-	admin.AdminDirectoryUserSecurityScope,
-	admin.AdminDirectoryDomainScope,
-	admin.AdminDirectoryDeviceMobileScope,
-	admin.AdminDirectoryDeviceChromeosScope,
-	admin.AdminDirectoryResourceCalendarScope,
-	"https://www.google.com/m8/feeds/contacts/",
-	drive.DriveScope,
-	gmail.MailGoogleComScope,
-	gmail.GmailSettingsSharingScope,
-	gmail.GmailSettingsBasicScope,
-	gmail.GmailModifyScope,
-	ci.CloudIdentityGroupsScope,
-	groupssettings.AppsGroupsSettingsScope,
-	calendar.CalendarScope,
-	licensing.AppsLicensingScope,
-	people.DirectoryReadonlyScope,
-	people.ContactsOtherReadonlyScope,
-	sheets.SpreadsheetsScope,
-}
-
 var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"get", "getScopes", "new", "load", "remove"},
@@ -120,7 +94,7 @@ Can be relative to the binary or fully qualified.`,
 		AvailableFor: []string{"new"},
 		Type:         "int",
 		Description:  `Delay in ms to wait after each API call`,
-		Defaults:     map[string]interface{}{"new": 150},
+		Defaults:     map[string]interface{}{"new": 200},
 	},
 }
 
@@ -145,7 +119,31 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()
 	} else {
-		config.Scopes = defaultScopes
+		config.Scopes = []string{admin.AdminDirectoryUserScope,
+			admin.AdminDirectoryCustomerScope,
+			admin.AdminDirectoryGroupScope,
+			admin.AdminDirectoryGroupMemberScope,
+			admin.AdminDirectoryOrgunitScope,
+			admin.AdminDirectoryRolemanagementScope,
+			admin.AdminDirectoryUserSecurityScope,
+			admin.AdminDirectoryDomainScope,
+			admin.AdminDirectoryDeviceMobileScope,
+			admin.AdminDirectoryDeviceChromeosScope,
+			admin.AdminDirectoryResourceCalendarScope,
+			"https://www.google.com/m8/feeds/contacts/",
+			drive.DriveScope,
+			gmail.MailGoogleComScope,
+			gmail.GmailSettingsSharingScope,
+			gmail.GmailSettingsBasicScope,
+			gmail.GmailModifyScope,
+			ci.CloudIdentityGroupsScope,
+			groupssettings.AppsGroupsSettingsScope,
+			calendar.CalendarScope,
+			licensing.AppsLicensingScope,
+			people.DirectoryReadonlyScope,
+			people.ContactsOtherReadonlyScope,
+			sheets.SpreadsheetsScope,
+		}
 	}
 	if flags["threads"].IsSet() {
 		config.Threads = flags["threads"].GetInt()
