@@ -157,10 +157,8 @@ func MaxThreads(fThreads int) int {
 	}
 	maxThreads := 16
 	if threads > maxThreads {
-		fmt.Println("Threads MAX", maxThreads)
 		return maxThreads
 	}
-	fmt.Println("Threads", threads)
 	return threads
 }
 
