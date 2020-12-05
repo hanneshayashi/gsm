@@ -42,7 +42,7 @@ import (
 const version = "0.1.16"
 
 // StandardRetrier is a retrier object that should be used by every function that calls a Google API
-var StandardRetrier = NewStandardRetrier()
+var StandardRetrier = newStandardRetrier()
 
 // StandardDelay is the delay (plus a random jitter between 0 and 20) that will be applied after every command.
 // This is can be configured either via the config file or via the --standardDelay flag
@@ -84,33 +84,16 @@ func GetCSVContent(path string, delimiter rune, skipHeader bool) ([][]string, er
 	return csv, nil
 }
 
-// GetCSV uses a FlagSet to read a CSV file and parse it accordingly
-func GetCSV(flags map[string]*Value) ([][]string, error) {
-	path := flags["path"].GetString()
-	var delimiter rune
-	if flags["delimiter"].Changed {
-		delimiter = flags["delimiter"].GetRune()
-	} else {
-		delimiter = ';'
-	}
-	skipHeader := flags["skipHeader"].GetBool()
-	csv, err := GetCSVContent(path, delimiter, skipHeader)
-	if err != nil {
-		return nil, err
-	}
-	return csv, nil
-}
-
 // FormatError adds an errKey prefix to an error message
 func FormatError(err error, errKey string) error {
 	return fmt.Errorf("%s: %v", errKey, err)
 }
 
-// RetryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
-func RetryLog(err error, errKey string) bool {
+// retryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
+func retryLog(err error, errKey string) bool {
 	sleep(StandardDelay)
 	if err != nil {
-		if ErrorIsRetryable(err) {
+		if errorIsRetryable(err) {
 			log.Println(FormatError(err, errKey), "- Retrying...")
 			return true
 		}
@@ -119,8 +102,8 @@ func RetryLog(err error, errKey string) bool {
 	return false
 }
 
-// ErrorIsRetryable checks if a Google API response returned a retryable error
-func ErrorIsRetryable(err error) bool {
+// errorIsRetryable checks if a Google API response returned a retryable error
+func errorIsRetryable(err error) bool {
 	gerr := err.(*googleapi.Error)
 	keyWords := []string{
 		"quota",
@@ -140,8 +123,8 @@ func ErrorIsRetryable(err error) bool {
 	return false
 }
 
-// NewStandardRetrier returns a retrier with default values
-func NewStandardRetrier() *retrier.Retrier {
+// newStandardRetrier returns a retrier with default values
+func newStandardRetrier() *retrier.Retrier {
 	// class := retrier.WhitelistClassifier{
 	// 	&googleapi.Error{Code: 403},
 	// }
@@ -281,7 +264,7 @@ func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
 
 // GetBatchMaps returns a channel containing maps to be used for batch requests to the Google API
 func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<-chan map[string]*Value, error) {
-	flags, err := ConsolidateFlags(cmd, cmdFlags)
+	flags, err := consolidateFlags(cmd, cmdFlags)
 	if err != nil {
 		return nil, fmt.Errorf("Error consolidating flags: %v", err)
 	}
@@ -299,13 +282,13 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 	if err != nil {
 		return nil, err
 	}
-	err = CheckBatchFlags(flags, cmdFlags, int64(len(line)))
+	err = checkBatchFlags(flags, cmdFlags, int64(len(line)))
 	if err != nil {
 		return nil, fmt.Errorf("Error with batch flag index: %v", err)
 	}
 	cmdName := cmd.Parent().Use
 	if !flags["skipHeader"].GetBool() {
-		maps <- BatchFlagsToMap(flags, cmdFlags, line, cmdName)
+		maps <- batchFlagsToMap(flags, cmdFlags, line, cmdName)
 	}
 	i := 0
 	go func() {
@@ -320,7 +303,7 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag, threads int) (<
 				log.Printf("Error reading line %d: %v\n", i, err)
 				continue
 			}
-			maps <- BatchFlagsToMap(flags, cmdFlags, line, cmdName)
+			maps <- batchFlagsToMap(flags, cmdFlags, line, cmdName)
 		}
 	}()
 	return maps, nil
@@ -332,7 +315,7 @@ func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, 
 	var result interface{}
 	operation := func() error {
 		result, err = c()
-		if RetryLog(err, errKey) {
+		if retryLog(err, errKey) {
 			return err
 		}
 		return nil
@@ -349,7 +332,7 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 	var err error
 	operation := func() error {
 		err = c()
-		if RetryLog(err, errKey) {
+		if retryLog(err, errKey) {
 			return err
 		}
 		return nil

@@ -57,76 +57,56 @@ func (v *Value) IsSet() bool {
 
 // GetStringSlice returns the value of the flag as a []string
 func (v Value) GetStringSlice() []string {
-	return InterfaceToStringSlice(v.Value)
+	return interfaceToStringSlice(v.Value)
 }
 
 // GetBool returns the value of the flag as a bool
 func (v Value) GetBool() bool {
-	return InterfaceToBool(v.Value)
+	return interfaceToBool(v.Value)
 }
 
 // GetRune returns the value of the flag as a rune
 func (v Value) GetRune() rune {
-	return InterfaceToRune(v.Value)
+	return interfaceToRune(v.Value)
 }
 
 // GetString returns the value of the flag as a string
 func (v Value) GetString() string {
-	return InterfaceToString(v.Value)
+	return interfaceToString(v.Value)
 }
 
 // GetUint64 returns the value of the flag as a uint64
 func (v Value) GetUint64() uint64 {
-	return InterfaceToUint64(v.Value)
+	return interfaceToUint64(v.Value)
 }
 
 // GetInt64 returns the value of the flag as an int64
 func (v Value) GetInt64() int64 {
-	return InterfaceToInt64(v.Value)
+	return interfaceToInt64(v.Value)
 }
 
 // GetInt returns the value of the flag as an int
 func (v Value) GetInt() int {
-	return InterfaceToInt(v.Value)
+	return interfaceToInt(v.Value)
 }
 
 // GetFloat64 returns the value of the flag as a float64
 func (v Value) GetFloat64() float64 {
-	return InterfaceToFloat64(v.Value)
+	return interfaceToFloat64(v.Value)
 }
 
-// InterfaceToStringSlice converts an interface to a string slice ([]string] or returns nil if the interface is nil
+// interfaceToStringSlice converts an interface to a string slice ([]string] or returns nil if the interface is nil
 // Panics if the interface is not a string slice
-func InterfaceToStringSlice(i interface{}) []string {
+func interfaceToStringSlice(i interface{}) []string {
 	if i != nil {
 		return i.([]string)
 	}
 	return nil
 }
 
-// BatchFlagToStringArray returns a string slice with the column as a single field
-func BatchFlagToStringArray(line []string, index int64) (value []string) {
-	if index != 0 {
-		value = []string{line[index-1]}
-	} else {
-		value = nil
-	}
-	return value
-}
-
-// BatchFlagToStringSlice returns a value from a slice based on an index and default value
-func BatchFlagToStringSlice(line []string, index int64) (value []string) {
-	if index != 0 {
-		value = strings.Split(line[index-1], ",")
-	} else {
-		value = nil
-	}
-	return value
-}
-
-// InterfaceToRune converts an interface to a rune or returns rune(-1 )if the interface is nil
+// interfaceToRune converts an interface to a rune or returns rune(-1 )if the interface is nil
 // Panics if the interface is not a rune
-func InterfaceToRune(i interface{}) rune {
+func interfaceToRune(i interface{}) rune {
 	if i != nil {
 		s := i.(string)
 		if len(s) != 1 {
@@ -137,111 +117,131 @@ func InterfaceToRune(i interface{}) rune {
 	return rune(-1)
 }
 
-// InterfaceToString converts an interface to a string or returns 0 if the interface is nil
+// interfaceToString converts an interface to a string or returns 0 if the interface is nil
 // Panics if the interface is not a string
-func InterfaceToString(i interface{}) string {
+func interfaceToString(i interface{}) string {
 	if i != nil {
 		return i.(string)
 	}
 	return ""
 }
 
-// BatchFlagToString returns a value from a slice based on an index and default value
-func BatchFlagToString(line []string, index int64, def interface{}) (value string) {
+// batchFlagToStringArray returns a string slice with the column as a single field
+func batchFlagToStringArray(line []string, index int64) (value []string) {
 	if index != 0 {
-		value = line[index-1]
+		value = []string{line[index-1]}
 	} else {
-		value = InterfaceToString(def)
+		value = nil
 	}
 	return value
 }
 
-// InterfaceToFloat64 converts an interface to an float64 or returns 0 if the interface is nil
+// batchFlagToStringSlice returns a value from a slice based on an index and default value
+func batchFlagToStringSlice(line []string, index int64) (value []string) {
+	if index != 0 {
+		value = strings.Split(line[index-1], ",")
+	} else {
+		value = nil
+	}
+	return value
+}
+
+// batchFlagToString returns a value from a slice based on an index and default value
+func batchFlagToString(line []string, index int64, def interface{}) (value string) {
+	if index != 0 {
+		value = line[index-1]
+	} else {
+		value = interfaceToString(def)
+	}
+	return value
+}
+
+// interfaceToFloat64 converts an interface to an float64 or returns 0 if the interface is nil
 // Panics if the interface is not an float64
-func InterfaceToFloat64(i interface{}) float64 {
+func interfaceToFloat64(i interface{}) float64 {
 	if i != nil {
 		return i.(float64)
 	}
 	return 0.0
 }
 
-// BatchFlagToFloat64 returns a value from a slice based on an index and default value
-func BatchFlagToFloat64(line []string, index int64, def interface{}) (value float64, err error) {
+// batchFlagToFloat64 returns a value from a slice based on an index and default value
+func batchFlagToFloat64(line []string, index int64, def interface{}) (value float64, err error) {
 	if index != 0 {
 		value, err = strconv.ParseFloat(line[index-1], 64)
 		if err != nil {
-			return InterfaceToFloat64(def), err
+			return interfaceToFloat64(def), err
 		}
 	} else {
-		value = InterfaceToFloat64(def)
+		value = interfaceToFloat64(def)
 	}
 	return value, nil
 }
 
-// InterfaceToUint64 converts an interface to a uint64 or returns 0 if the interface is nil
+// interfaceToUint64 converts an interface to a uint64 or returns 0 if the interface is nil
 // Panics if the interface is not a uint64
-func InterfaceToUint64(i interface{}) uint64 {
+func interfaceToUint64(i interface{}) uint64 {
 	if i != nil {
 		return i.(uint64)
 	}
 	return 0
 }
 
-// InterfaceToInt64 converts an interface to an int64 or returns 0 if the interface is nil
+// interfaceToInt64 converts an interface to an int64 or returns 0 if the interface is nil
 // Panics if the interface is not an int64
-func InterfaceToInt64(i interface{}) int64 {
+func interfaceToInt64(i interface{}) int64 {
 	if i != nil {
 		return i.(int64)
 	}
 	return 0
 }
 
-// InterfaceToInt converts an interface to an int or returns 0 if the interface is nil
+// interfaceToInt converts an interface to an int or returns 0 if the interface is nil
 // Panics if the interface is not an int
-func InterfaceToInt(i interface{}) int {
+func interfaceToInt(i interface{}) int {
 	if i != nil {
 		return i.(int)
 	}
 	return 0
 }
 
-// BatchFlagToInt64 returns a value from a slice based on an index and default value
-func BatchFlagToInt64(line []string, index int64, def interface{}) (value int64, err error) {
+// batchFlagToInt64 returns a value from a slice based on an index and default value
+func batchFlagToInt64(line []string, index int64, def interface{}) (value int64, err error) {
 	if index != 0 {
 		value, err = strconv.ParseInt(line[index-1], 10, 64)
 		if err != nil {
-			return InterfaceToInt64(def), err
+			return interfaceToInt64(def), err
 		}
 	} else {
-		value = InterfaceToInt64(def)
+		value = interfaceToInt64(def)
 	}
 	return value, nil
 }
 
-// InterfaceToBool converts an interface to a bool or returns false if the interface is nil
+// interfaceToBool converts an interface to a bool or returns false if the interface is nil
 // Panics if the interface is not a bool
-func InterfaceToBool(i interface{}) bool {
+func interfaceToBool(i interface{}) bool {
 	if i != nil {
 		return i.(bool)
 	}
 	return false
 }
 
-// BatchFlagToBool returns a value from a slice based on an index and default value
-func BatchFlagToBool(line []string, index int64, def interface{}) (value bool, err error) {
+// batchFlagToBool returns a value from a slice based on an index and default value
+func batchFlagToBool(line []string, index int64, def interface{}) (value bool, err error) {
 	if index != 0 {
 		value, err = strconv.ParseBool(line[index-1])
 		if err != nil {
-			return InterfaceToBool(def), err
+			return interfaceToBool(def), err
 		}
 	} else {
-		value = InterfaceToBool(def)
+		value = interfaceToBool(def)
 	}
 	return value, nil
 }
 
-// CheckBatchFlags checks if the supplied flag values for a batch command are valid in regards to the supplied CSV file
-func CheckBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, length int64) error {
+// checkBatchFlags checks if the supplied flag values for a batch command are valid in regards to the supplied CSV file
+func checkBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, length int64) error {
 	for k := range flags {
 		if defaultFlags[k] == nil || !flags[k].Changed || flags[k].AllFlag {
 			continue
@@ -306,8 +306,8 @@ func FlagsToMap(flags *pflag.FlagSet) (m map[string]*Value) {
 	return m
 }
 
-// AddFlagsBatch adds a Int64 flag for all normal flags of a command to be used to reference the column index in a CSV file
-func AddFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
+// addFlagsBatch adds a Int64 flag for all normal flags of a command to be used to reference the column index in a CSV file
+func addFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 	for f := range m {
 		if Contains(command, m[f].AvailableFor) {
 			flags.Int64(f, 0, m[f].Description)
@@ -315,8 +315,8 @@ func AddFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 	}
 }
 
-// AddFlags adds flags to a command
-func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string, recursive bool) {
+// addFlags adds flags to a command
+func addFlags(m map[string]*Flag, flags *pflag.FlagSet, command string, recursive bool) {
 	for f := range m {
 		if !Contains(command, m[f].AvailableFor) || (recursive && !m[f].Recursive) {
 			continue
@@ -324,27 +324,27 @@ func AddFlags(m map[string]*Flag, flags *pflag.FlagSet, command string, recursiv
 		def := m[f].Defaults[command]
 		switch m[f].Type {
 		case "int64":
-			flags.Int64(f, InterfaceToInt64(def), m[f].Description)
+			flags.Int64(f, interfaceToInt64(def), m[f].Description)
 		case "bool":
-			flags.Bool(f, InterfaceToBool(def), m[f].Description)
+			flags.Bool(f, interfaceToBool(def), m[f].Description)
 		case "float64":
-			flags.Float64(f, InterfaceToFloat64(def), m[f].Description)
+			flags.Float64(f, interfaceToFloat64(def), m[f].Description)
 		case "stringSlice":
 			flags.StringSlice(f, nil, m[f].Description)
 		case "stringArray":
 			flags.StringArray(f, nil, m[f].Description)
 		case "uint64":
-			flags.Uint64(f, InterfaceToUint64(def), m[f].Description)
+			flags.Uint64(f, interfaceToUint64(def), m[f].Description)
 		case "int":
-			flags.Int(f, InterfaceToInt(def), m[f].Description)
+			flags.Int(f, interfaceToInt(def), m[f].Description)
 		default:
-			flags.String(f, InterfaceToString(def), m[f].Description)
+			flags.String(f, interfaceToString(def), m[f].Description)
 		}
 	}
 }
 
-// BatchFlagsToMap converts all information for a single csv line to a map to be used as input for the creation of a struct
-func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, line []string, command string) map[string]*Value {
+// batchFlagsToMap converts all information for a single csv line to a map to be used as input for the creation of a struct
+func batchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, line []string, command string) map[string]*Value {
 	m := make(map[string]*Value)
 	for k := range flags {
 		m[k] = &Value{
@@ -361,17 +361,17 @@ func BatchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 		def := defaultFlags[k].Defaults[command]
 		switch defaultFlags[k].Type {
 		case "int64":
-			m[k].Value, err = BatchFlagToInt64(line, flags[k].Index, def)
+			m[k].Value, err = batchFlagToInt64(line, flags[k].Index, def)
 		case "bool":
-			m[k].Value, err = BatchFlagToBool(line, flags[k].Index, def)
+			m[k].Value, err = batchFlagToBool(line, flags[k].Index, def)
 		case "float64":
-			m[k].Value, err = BatchFlagToFloat64(line, flags[k].Index, def)
+			m[k].Value, err = batchFlagToFloat64(line, flags[k].Index, def)
 		case "stringSlice":
-			m[k].Value = BatchFlagToStringSlice(line, flags[k].Index)
+			m[k].Value = batchFlagToStringSlice(line, flags[k].Index)
 		case "stringArray":
-			m[k].Value = BatchFlagToStringArray(line, flags[k].Index)
+			m[k].Value = batchFlagToStringArray(line, flags[k].Index)
 		default:
-			m[k].Value = BatchFlagToString(line, flags[k].Index, def)
+			m[k].Value = batchFlagToString(line, flags[k].Index, def)
 		}
 		if err != nil {
 			log.Fatalf("Error paring %s: %v\n", defaultFlags[k].Type, err)
@@ -406,8 +406,8 @@ func GetAllFlags(flags map[string]*Flag) map[string]*Flag {
 	return flagsAll
 }
 
-// ConsolidateFlags consolidates a batch commands "normal" and "all" flags
-func ConsolidateFlags(cmd *cobra.Command, cmdFlags map[string]*Flag) (map[string]*Value, error) {
+// consolidateFlags consolidates a batch commands "normal" and "all" flags
+func consolidateFlags(cmd *cobra.Command, cmdFlags map[string]*Flag) (map[string]*Value, error) {
 	flags := FlagsToMap(cmd.Flags())
 	flagsNew := map[string]*Value{}
 	for k := range flags {
@@ -437,16 +437,16 @@ func ConsolidateFlags(cmd *cobra.Command, cmdFlags map[string]*Flag) (map[string
 func InitBatchCommand(parentCmd, childCmd *cobra.Command, cmdFlags, cmdAllFlags, batchFlags map[string]*Flag) {
 	parentCmd.AddCommand(childCmd)
 	flags := childCmd.Flags()
-	AddFlagsBatch(cmdFlags, flags, parentCmd.Use)
-	AddFlags(batchFlags, flags, childCmd.Use, false)
+	addFlagsBatch(cmdFlags, flags, parentCmd.Use)
+	addFlags(batchFlags, flags, childCmd.Use, false)
 	markFlagsRequired(childCmd, batchFlags, childCmd.Use)
-	AddFlags(cmdAllFlags, flags, parentCmd.Use, false)
+	addFlags(cmdAllFlags, flags, parentCmd.Use, false)
 }
 
 // InitCommand sets flags for a command appropriately
 func InitCommand(parentCmd, childCmd *cobra.Command, cmdFlags map[string]*Flag) {
 	parentCmd.AddCommand(childCmd)
-	AddFlags(cmdFlags, childCmd.Flags(), childCmd.Use, false)
+	addFlags(cmdFlags, childCmd.Flags(), childCmd.Use, false)
 	markFlagsRequired(childCmd, cmdFlags, childCmd.Use)
 }
 
@@ -454,8 +454,8 @@ func InitCommand(parentCmd, childCmd *cobra.Command, cmdFlags map[string]*Flag) 
 func InitRecursiveCommand(parentCmd, childCmd *cobra.Command, cmdFlags, recursiveFlags map[string]*Flag) {
 	parentCmd.AddCommand(childCmd)
 	flags := childCmd.Flags()
-	AddFlags(cmdFlags, flags, parentCmd.Use, true)
+	addFlags(cmdFlags, flags, parentCmd.Use, true)
 	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
-	AddFlags(recursiveFlags, flags, childCmd.Use, false)
+	addFlags(recursiveFlags, flags, childCmd.Use, false)
 	markFlagsRequired(childCmd, recursiveFlags, childCmd.Use)
 }
