@@ -65,18 +65,21 @@ Acceptable values are:
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
+		Recursive: true,
 	},
 	"familyName": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description:  `The user's last name. Required when creating a user account.`,
 		Required:     []string{"insert"},
+		Recursive:    true,
 	},
 	"givenName": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description:  `The user's first name. Required when creating a user account.`,
 		Required:     []string{"insert"},
+		Recursive:    true,
 	},
 	"password": {
 		AvailableFor: []string{"insert", "patch"},
@@ -89,7 +92,8 @@ A minimum of 8 characters is required. The maximum length is 100 characters.
 We recommend sending the password property value as a base 16 bit, hexadecimal-encoded hash value.
 If a hashFunction is specified, the password must be a valid hash key.
 The password value is never returned in the API's response body.`,
-		Required: []string{"insert"},
+		Required:  []string{"insert"},
+		Recursive: true,
 	},
 	"primaryEmail": {
 		AvailableFor: []string{"insert", "patch"},
@@ -123,18 +127,21 @@ type                - The address type.
                         - "custom"
                         - "home"
                         - "other"
-                        - "work"`,
+						- "work"`,
+		Recursive: true,
 	},
 	"archived": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `Indicates if user is archived.`,
+		Recursive:    true,
 	},
 	"changePasswordAtNextLogin": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description: `Indicates if the user is forced to change their password at next login.
 This setting doesn't apply when the user signs in via a third-party identity provider.`,
+		Recursive: true,
 	},
 	"emails": {
 		AvailableFor: []string{"insert", "patch"},
@@ -173,6 +180,7 @@ value           - The value of the ID.`,
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description:  `Custom gender.`,
+		Recursive:    true,
 	},
 	"genderType": {
 		AvailableFor: []string{"insert", "patch"},
@@ -183,6 +191,7 @@ Acceptable values are:
 "male"
 "other"
 "unknown"`,
+		Recursive: true,
 	},
 	"hashFunction": {
 		AvailableFor: []string{"insert", "patch"},
@@ -229,11 +238,13 @@ type            - The type of the IM account.
 		Type:         "bool",
 		Description: `Indicates if the user's profile is visible in the Workspace global address list when the contact sharing feature is enabled for the domain.
 For more information about excluding user profiles, see the administration help center.`,
+		Recursive: true,
 	},
 	"ipWhitelisted": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `If true, the user's IP address is white listed.`,
+		Recursive:    true,
 	},
 	"keywords": {
 		AvailableFor: []string{"insert", "patch"},
@@ -253,6 +264,7 @@ type        - Each entry can have a type which indicates standard type of that e
                 - "occupation"
 				- "outlook"
 value  -      Keyword.`,
+		Recursive: true,
 	},
 	"languages": {
 		AvailableFor: []string{"insert", "patch"},
@@ -267,7 +279,8 @@ customLanguage  - Other language.
 			      If this is set, LanguageCode can't be set
 languageCode    - Language Code.
                   Should be used for storing Google III LanguageCode string representation for language.
-                  Illegal values cause SchemaException.`,
+				  Illegal values cause SchemaException.`,
+		Recursive: true,
 	},
 	"locations": {
 		AvailableFor: []string{"insert", "patch"},
@@ -289,7 +302,8 @@ type          - The location type.
                 Acceptable values are:
                   - "custom"
                   - "default"
-                  - "desk"`,
+				  - "desk"`,
+		Recursive: true,
 	},
 	"notesContentType": {
 		AvailableFor: []string{"insert", "patch"},
@@ -298,18 +312,21 @@ type          - The location type.
 Default is plain text. Possible values are:
 text_plain
 text_html`,
+		Recursive: true,
 	},
 	"notesValue": {
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description:  `Contents of notes.`,
+		Recursive:    true,
 	},
 	"orgUnitPath": {
 		AvailableFor: []string{"insert", "patch", "undelete"},
 		Type:         "string",
 		Description: `The full path of the parent organization associated with the user.
 If the parent organization is the top-level, it is represented as a forward slash (/).`,
-		Required: []string{"undelete"},
+		Required:  []string{"undelete"},
+		Recursive: true,
 	},
 	"organizations": {
 		AvailableFor: []string{"insert", "patch"},
@@ -337,7 +354,8 @@ type                - The type of organization.
                         - "domain_only"
                         - "school"
                         - "unknown"
-                        - "work"`,
+						- "work"`,
+		Recursive: true,
 	},
 	"phones": {
 		AvailableFor: []string{"insert", "patch"},
@@ -373,7 +391,8 @@ type        - The type of phone number.
                 - "work_mobile"
 		        - "work_pager"
 value       - A human-readable phone number.
-              It may be in any telephone number format.`,
+			  It may be in any telephone number format.`,
+		Recursive: true,
 	},
 	"posixAccounts": {
 		AvailableFor: []string{"insert", "patch"},
@@ -401,6 +420,7 @@ username             - The username of the account.`,
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "string",
 		Description:  `Recovery email of the user.`,
+		Recursive:    true,
 	},
 	"recoveryPhone": {
 		AvailableFor: []string{"insert", "patch"},
@@ -408,6 +428,7 @@ username             - The username of the account.`,
 		Description: `Recovery phone of the user.
 The phone number must be in the E.164 format, starting with the plus sign (+).
 Example: +16506661212.`,
+		Recursive: true,
 	},
 	"relations": {
 		AvailableFor: []string{"insert", "patch"},
@@ -439,6 +460,7 @@ type        - The type of relation.
               - "sister"
 			  - "spouse"
 value       - The name of the person the user is related to.`,
+		Recursive: true,
 	},
 	"sshPublicKeys": {
 		AvailableFor: []string{"insert", "patch"},
@@ -454,6 +476,7 @@ key                 - An SSH public key.`,
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `Indicates if user is suspended.`,
+		Recursive:    true,
 	},
 	"websites": {
 		AvailableFor: []string{"insert", "patch"},
@@ -482,6 +505,7 @@ type        - The type or purpose of the website.
 			    - "resume"
 			    - "work"
 value       - The URL of the website.`,
+		Recursive: true,
 	},
 	"customer": {
 		AvailableFor: []string{"list"},
@@ -533,6 +557,7 @@ Acceptable values are:
 		AvailableFor: []string{"makeAdmin"},
 		Type:         "bool",
 		Description:  `Use to remove admin access.`,
+		Recursive:    true,
 	},
 }
 var userFlagsALL = gsmhelpers.GetAllFlags(userFlags)

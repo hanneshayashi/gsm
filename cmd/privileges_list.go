@@ -29,7 +29,7 @@ import (
 // privilegesListCmd represents the list command
 var privilegesListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
+	Short: "Retrieves a paginated list of all privileges for a customer.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/privileges/list",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
