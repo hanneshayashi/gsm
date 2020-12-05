@@ -92,7 +92,7 @@ func FormatError(err error, errKey string) error {
 
 // retryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
 func retryLog(err error, errKey string) bool {
-	sleep(StandardDelay)
+	defer sleep(StandardDelay)
 	if err != nil {
 		if errorIsRetryable(err) {
 			log.Println(FormatError(err, errKey), "- Retrying...")
