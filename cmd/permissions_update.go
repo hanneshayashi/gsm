@@ -29,7 +29,7 @@ import (
 // permissionsUpdateCmd represents the update command
 var permissionsUpdateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "A brief description of your command",
+	Short: "Updates a permission with patch semantics.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

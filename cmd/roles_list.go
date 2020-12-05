@@ -29,7 +29,7 @@ import (
 // rolesListCmd represents the list command
 var rolesListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
+	Short: "Retrieves a paginated list of all the roles in a domain.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roles/list",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

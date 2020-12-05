@@ -29,7 +29,7 @@ import (
 // roleAssignmentsDeleteCmd represents the delete command
 var roleAssignmentsDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "A brief description of your command",
+	Short: "Deletes a role assignment.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

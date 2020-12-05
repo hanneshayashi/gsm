@@ -29,7 +29,7 @@ import (
 // roleAssignmentsInsertCmd represents the insert command
 var roleAssignmentsInsertCmd = &cobra.Command{
 	Use:   "insert",
-	Short: "A brief description of your command",
+	Short: "Creates a role assignment.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

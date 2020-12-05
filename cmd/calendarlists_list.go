@@ -29,13 +29,8 @@ import (
 // calendarListsListCmd represents the list command
 var calendarListsListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Returns the calendars on the user's calendar list.",
+	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/list",
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListCalendarListEntries(flags["minAccessRole"].GetString(), flags["fields"].GetString(), flags["showHidden"].GetBool(), flags["showDeleted"].GetBool())

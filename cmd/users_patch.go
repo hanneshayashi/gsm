@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// usersPatchCmd represents the update command
+// usersPatchCmd represents the patch command
 var usersPatchCmd = &cobra.Command{
 	Use:   "patch",
 	Short: "Updates a user using patch semantics.",
