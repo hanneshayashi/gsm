@@ -132,7 +132,11 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 // MakeAdmin makes a user a super administrator.
 func MakeAdmin(userKey string, status bool) (bool, error) {
 	srv := getUsersService()
-	c := srv.MakeAdmin(userKey, &admin.UserMakeAdmin{Status: status})
+	makeAdmin := &admin.UserMakeAdmin{Status: status}
+	if !makeAdmin.Status {
+		makeAdmin.ForceSendFields = append(makeAdmin.ForceSendFields, "Status")
+	}
+	c := srv.MakeAdmin(userKey, makeAdmin)
 	result, err := gsmhelpers.ActionRetry(userKey, func() error {
 		return c.Do()
 	})
