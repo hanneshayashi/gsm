@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -73,7 +72,6 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 					} else {
 						resultsChan <- resultStruct{FileID: id, Permissions: r}
 					}
-					time.Sleep(200 * time.Millisecond)
 				}
 				wgPermissions.Done()
 			}()

@@ -25,7 +25,6 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -74,7 +73,6 @@ var filesCreateBatchCmd = &cobra.Command{
 						} else {
 							results <- result
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

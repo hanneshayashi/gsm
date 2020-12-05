@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -58,7 +57,6 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{Customer: m["customer"].GetString(), RoleAssignmentID: m["roleAssignmentId"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

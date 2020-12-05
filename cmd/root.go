@@ -47,6 +47,7 @@ var (
 	cfgFile        string
 	dwdSubject     string
 	compressOutput bool
+	standardDelay  int
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
@@ -117,14 +118,14 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig, initLog, auth)
+	cobra.OnInitialize(initLog, initConfig, auth)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
+	rootCmd.PersistentFlags().IntVar(&standardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -132,6 +133,7 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	var err error
 	if cfgFile != "" {
 		// Use config file from the flag.
 		cfgFile = gsmconfig.GetConfigPath(cfgFile)
@@ -166,6 +168,14 @@ func initConfig() {
 		// 	log.Fatalf("Error creating default empty config file: %v", err)
 		// }
 		log.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
+	}
+	if rootCmd.Flags().Changed("standardDelay") {
+		gsmhelpers.StandardDelay, err = rootCmd.Flags().GetInt("standardDelay")
+		if err != nil {
+			log.Fatalln(err)
+		}
+	} else {
+		gsmhelpers.StandardDelay = viper.GetInt("standardDelay")
 	}
 }
 

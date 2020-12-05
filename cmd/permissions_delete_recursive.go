@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -79,7 +78,6 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 					} else {
 						resultsChan <- resultStruct{FileID: id, Result: r}
 					}
-					time.Sleep(200 * time.Millisecond)
 				}
 				wgPermissions.Done()
 			}()

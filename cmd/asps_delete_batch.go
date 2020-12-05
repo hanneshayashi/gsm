@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -58,7 +57,6 @@ var aspsDeleteBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{UserKey: m["userKey"].GetString(), CodeID: m["codeId"].GetInt64(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

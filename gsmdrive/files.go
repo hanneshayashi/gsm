@@ -176,7 +176,6 @@ func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
 // 			Id: fileID,
 // 		}
 // 		err := &googleapi.Error{}
-// 		rand.Seed(time.Now().UnixNano())
 // 		random := rand.Intn(10)
 // 		if random%2 == 0 {
 // 			foo := []string{

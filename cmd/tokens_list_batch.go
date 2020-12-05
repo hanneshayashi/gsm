@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,7 +58,6 @@ var tokensListBatchCmd = &cobra.Command{
 						} else {
 							results <- resultStruct{UserKey: m["userKey"].GetString(), Clients: result}
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

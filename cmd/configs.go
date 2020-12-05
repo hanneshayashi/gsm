@@ -117,6 +117,12 @@ Can be relative to the binary or fully qualified.`,
 		Description:  `The maximum number of threads to use.`,
 		Defaults:     map[string]interface{}{"new": gsmhelpers.MaxThreads(0)},
 	},
+	"standardDelay": {
+		AvailableFor: []string{"new"},
+		Type:         "int",
+		Description:  `Delay in ms to wait after each API call`,
+		Defaults:     map[string]interface{}{"new": 150},
+	},
 }
 
 func init() {
@@ -142,8 +148,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()
 	}
-	if flags["threads"].IsSet() {
-		config.Threads = flags["threads"].GetInt()
-	}
+	config.Threads = flags["threads"].GetInt()
+	config.StandardDelay = flags["standardDelay"].GetInt()
 	return config, nil
 }

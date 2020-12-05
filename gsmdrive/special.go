@@ -20,7 +20,6 @@ package gsmdrive
 import (
 	"fmt"
 	"sync"
-	"time"
 
 	drive "google.golang.org/api/drive/v3"
 )
@@ -84,7 +83,6 @@ func getNewID(oldID string, folderMap map[string]*Folder) (string, error) {
 		}
 	}
 	newFolder, err := createFolder(folderMap[oldID].NewParent, folderMap[oldID].Name)
-	time.Sleep(200 * time.Millisecond)
 	if err != nil {
 		return "", err
 	}
@@ -147,7 +145,6 @@ func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, error) {
 	files := make(chan *drive.File, threads)
 	go func() {
 		for id := range folders {
-			time.Sleep(200 * time.Millisecond)
 			go func(id string) {
 				listFilesRecursive(id, fields, folders, files, wgFolders, wgFiles)
 				wgFolders.Done()

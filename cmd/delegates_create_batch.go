@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -68,7 +67,6 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 						} else {
 							results <- result
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -57,7 +56,6 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{UserKey: m["userKey"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

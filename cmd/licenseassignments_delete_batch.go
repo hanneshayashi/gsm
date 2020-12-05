@@ -23,7 +23,6 @@ import (
 	"gsm/gsmlicensing"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,7 +58,6 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{ProductID: m["productId"].GetString(), SkuID: m["skuId"].GetString(), UserID: m["userId"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -55,7 +54,6 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 						} else {
 							results <- result
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

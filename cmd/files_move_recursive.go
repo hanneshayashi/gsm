@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -75,7 +74,6 @@ The original folders will be preserved at the source!`,
 					} else {
 						finalChan <- u
 					}
-					time.Sleep(200 * time.Millisecond)
 				}
 				wgFiles.Done()
 			}()

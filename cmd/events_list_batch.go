@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,7 +58,6 @@ var eventsListBatchCmd = &cobra.Command{
 						} else {
 							results <- resultStruct{CalendarID: m["calendarId"].GetString(), Events: result}
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

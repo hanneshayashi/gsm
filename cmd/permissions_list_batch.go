@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,7 +58,6 @@ var permissionsListBatchCmd = &cobra.Command{
 						} else {
 							results <- resultStruct{FileID: m["fileId"].GetString(), Permissions: result}
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

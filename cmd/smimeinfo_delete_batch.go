@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,7 +58,6 @@ var smimeInfoDeleteBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{ID: m["id"].GetString(), SendAsEmail: m["sendAsEmail"].GetString(), UserID: m["userId"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

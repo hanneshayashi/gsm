@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -58,7 +57,6 @@ var groupAliasesListBatchCmd = &cobra.Command{
 						} else {
 							results <- resultStruct{GroupKey: m["groupKey"].GetString(), Aliases: result}
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

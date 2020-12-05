@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -62,7 +61,6 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{ResourceID: m["resourceId"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

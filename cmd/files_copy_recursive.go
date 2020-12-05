@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -72,7 +71,6 @@ var filesCopyRecursiveCmd = &cobra.Command{
 					} else {
 						finalChan <- c
 					}
-					time.Sleep(200 * time.Millisecond)
 				}
 				wgFiles.Done()
 			}()

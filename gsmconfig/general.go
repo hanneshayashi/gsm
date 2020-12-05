@@ -32,9 +32,10 @@ type GSMConfig struct {
 	CredentialsFile string   `yaml:"credentialsFile,omitempty"`
 	Mode            string   `yaml:"mode,omitempty"`
 	Subject         string   `yaml:"subject,omitempty"`
+	Threads         int      `yaml:"threads,omitempty"`
+	StandardDelay   int      `yaml:"standardDelay,omitempty"`
 	Scopes          []string `yaml:"scopes,omitempty"`
 	Default         bool     `yaml:"default,omitempty"`
-	Threads         int    `yaml:"threads,omitempty"`
 }
 
 // CfgDir should be set to the directory containing all GSM configuration files

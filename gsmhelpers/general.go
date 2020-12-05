@@ -26,6 +26,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"runtime"
 	"strings"
@@ -40,8 +41,12 @@ import (
 
 const version = "0.1.16"
 
-// StandarRetrier is a retrier object that should be used by every function that calls a Google API
-var StandarRetrier = NewStandardRetrier()
+// StandardRetrier is a retrier object that should be used by every function that calls a Google API
+var StandardRetrier = NewStandardRetrier()
+
+// StandardDelay is the delay (plus a random jitter between 0 and 20) that will be applied after every command.
+// This is can be configured either via the config file or via the --standardDelay flag
+var StandardDelay int
 
 // GetVersion returns the current version
 func GetVersion() string {
@@ -103,6 +108,7 @@ func FormatError(err error, errKey string) error {
 
 // RetryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
 func RetryLog(err error, errKey string) bool {
+	sleep(StandardDelay)
 	if err != nil {
 		if ErrorIsRetryable(err) {
 			log.Println(FormatError(err, errKey), "- Retrying...")
@@ -331,7 +337,7 @@ func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, 
 		}
 		return nil
 	}
-	StandarRetrier.Run(operation)
+	StandardRetrier.Run(operation)
 	if err != nil {
 		return nil, FormatError(err, errKey)
 	}
@@ -348,7 +354,7 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 		}
 		return nil
 	}
-	StandarRetrier.Run(operation)
+	StandardRetrier.Run(operation)
 	if err != nil {
 		return false, FormatError(err, errKey)
 	}
@@ -359,4 +365,15 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 // Error keys are used on error messages to make it easier to debug where an error ocurred
 func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
+}
+
+// sleep will sleep for the supplied amount of milliseconds
+func sleep(ms int) {
+	ms += rand.Intn(20) + 1
+	fmt.Println(ms)
+	time.Sleep(time.Duration(ms) * time.Millisecond)
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }

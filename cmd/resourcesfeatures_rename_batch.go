@@ -23,7 +23,6 @@ import (
 	"gsm/gsmhelpers"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -63,7 +62,6 @@ var resourcesFeaturesRenameBatchCmd = &cobra.Command{
 							log.Println(err)
 						}
 						results <- resultStruct{Featurekey: m["featurekey"].GetString(), Customer: m["customer"].GetString(), Result: result}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

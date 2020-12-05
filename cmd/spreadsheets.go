@@ -21,7 +21,6 @@ import (
 	"gsm/gsmhelpers"
 	"gsm/gsmsheets"
 	"math/rand"
-	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/sheets/v4"
@@ -142,7 +141,6 @@ func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sh
 	if flags["csvFileToUpload"].IsSet() {
 		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
 		if len(csvFilesToUpload) > 0 {
-			rand.Seed(time.Now().UnixNano())
 			batchUpdateSpreadsheetRequest.Requests = []*sheets.Request{}
 			for _, c := range csvFilesToUpload {
 				m := gsmhelpers.FlagToMap(c)

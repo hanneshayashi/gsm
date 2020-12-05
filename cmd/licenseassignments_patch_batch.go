@@ -23,7 +23,6 @@ import (
 	"gsm/gsmlicensing"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,7 +59,6 @@ var licenseAssignmentsPatchBatchCmd = &cobra.Command{
 						} else {
 							results <- result
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()

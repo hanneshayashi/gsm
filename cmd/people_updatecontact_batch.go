@@ -23,7 +23,6 @@ import (
 	"gsm/gsmpeople"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -65,7 +64,6 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 						} else {
 							results <- result
 						}
-						time.Sleep(200 * time.Millisecond)
 					}
 					wg.Done()
 				}()
