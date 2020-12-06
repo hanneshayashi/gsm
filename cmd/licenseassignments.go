@@ -40,7 +40,7 @@ var licenseAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		Description: `A product's unique identifier.
 For more information about products in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
 		Defaults:  map[string]interface{}{"delete": "Google-Apps", "get": "Google-Apps", "insert": "Google-Apps", "listForProduct": "Google-Apps", "listForProductAndSku": "Google-Apps", "patch": "Google-Apps"},
-		Recursive: true,
+		Recursive: []string{"delete", "get", "insert", "patch"},
 	},
 	"skuId": {
 		AvailableFor: []string{"delete", "get", "insert", "listForProductAndSku", "patch"},
@@ -48,7 +48,7 @@ For more information about products in this version of the API, see https://deve
 		Description: `A product SKU's unique identifier.
 For more information about available SKUs in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
 		Required:  []string{"delete", "get", "insert", "listForProduct", "listForProductAndSku", "patch"},
-		Recursive: true,
+		Recursive: []string{"delete", "get", "insert", "patch"},
 	},
 	"skuIdNew": {
 		AvailableFor: []string{"patch"},
@@ -56,7 +56,7 @@ For more information about available SKUs in this version of the API, see https:
 		Description: `The product's new unique identifier.
 For more information about products in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
 		Required:  []string{"patch"},
-		Recursive: true,
+		Recursive: []string{"patch"},
 	},
 	"userId": {
 		AvailableFor: []string{"delete", "get", "insert", "patch"},
@@ -85,7 +85,7 @@ If the user's email address changes, use the new email address in your API reque
 Since a userId is subject to change, do not use a userId value as a key for persistent data.
 This key could break if the current user's email address changes.
 If the userId is suspended, the license status changes.`,
-		Recursive: true,
+		Recursive: []string{"get", "insert", "patch"},
 	},
 }
 var licenseAssignmentFlagsALL = gsmhelpers.GetAllFlags(licenseAssignmentFlags)

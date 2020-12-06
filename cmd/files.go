@@ -135,7 +135,7 @@ Note that for immutable items such as the top level folders of shared drives, My
 		Type:         "string",
 		Description:  `The single parent of the file.`,
 		Required:     []string{"move"},
-		Recursive:    true,
+		Recursive:    []string{"copy", "move"},
 	},
 	"properties": {
 		AvailableFor: []string{"copy", "create", "update"},
@@ -282,7 +282,7 @@ All users with access can copy, download, export, and share the file.`,
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: true,
+		Recursive: []string{"copy", "create", "get", "list", "update"},
 	},
 }
 var fileFlagsALL = gsmhelpers.GetAllFlags(fileFlags)

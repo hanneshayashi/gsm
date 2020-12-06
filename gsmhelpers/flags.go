@@ -35,7 +35,7 @@ type Flag struct {
 	Required       []string
 	AvailableFor   []string
 	ExcludeFromAll bool
-	Recursive      bool
+	Recursive      []string
 }
 
 // Value is the value representation of a flag
@@ -318,7 +318,7 @@ func addFlagsBatch(m map[string]*Flag, flags *pflag.FlagSet, command string) {
 // addFlags adds flags to a command
 func addFlags(m map[string]*Flag, flags *pflag.FlagSet, command string, recursive bool) {
 	for f := range m {
-		if !Contains(command, m[f].AvailableFor) || (recursive && !m[f].Recursive) {
+		if !Contains(command, m[f].AvailableFor) || (recursive && !Contains(command, m[f].Recursive)) {
 			continue
 		}
 		def := m[f].Defaults[command]

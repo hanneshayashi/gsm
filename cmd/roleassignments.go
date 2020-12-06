@@ -40,7 +40,7 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		Type:         "string",
 		Description:  `Immutable ID of the Workspace account.`,
 		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
-		Recursive:    true,
+		Recursive:    []string{"insert", "list"},
 	},
 	"roleAssignmentId": {
 		AvailableFor:   []string{"delete", "get"},
@@ -59,14 +59,14 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		AvailableFor: []string{"insert"},
 		Type:         "string",
 		Description:  `If the role is restricted to an organization unit, this contains the ID for the organization unit the exercise of this role is restricted to.`,
-		Recursive:    true,
+		Recursive:    []string{"insert"},
 	},
 	"roleId": {
 		AvailableFor: []string{"insert", "list"},
 		Type:         "int64",
 		Description:  `The ID of the role that is assigned.`,
 		Required:     []string{"insert"},
-		Recursive:    true,
+		Recursive:    []string{"insert"},
 	},
 	"scopeType": {
 		AvailableFor: []string{"insert"},
@@ -76,7 +76,7 @@ Acceptable values are:
 "CUSTOMER"
 "ORG_UNIT"`,
 		Defaults:  map[string]interface{}{"insert": "CUSTOMER"},
-		Recursive: true,
+		Recursive: []string{"insert"},
 	},
 	"userKey": {
 		AvailableFor: []string{"list"},
@@ -90,7 +90,7 @@ If included in the request, returns role assignments only for this user.`,
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: true,
+		Recursive: []string{"insert", "list"},
 	},
 }
 var roleAssignmentFlagsALL = gsmhelpers.GetAllFlags(roleAssignmentFlags)

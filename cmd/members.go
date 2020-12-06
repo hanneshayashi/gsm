@@ -41,7 +41,7 @@ var memberFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
 		Required:  []string{"delete", "get", "hasMember", "insert", "list", "patch"},
-		Recursive: true,
+		Recursive: []string{"delete", "get", "hasMember", "insert", "patch"},
 	},
 	"memberKey": {
 		AvailableFor: []string{"delete", "get", "hasMember"},
@@ -61,7 +61,7 @@ Acceptable values are:
 "DIGEST": Up to 25 messages bundled into a single message.
 "DISABLED": Remove subscription.
 "NONE": No messages.`,
-		Recursive: true,
+		Recursive: []string{"insert", "patch"},
 	},
 	"role": {
 		AvailableFor: []string{"insert", "patch"},
@@ -73,7 +73,7 @@ Acceptable values are:
 "MEMBER": This role can subscribe to a group, view discussion archives, and view the group's membership list. For more information about member roles, see the administration help center.
 "OWNER": This role can send messages to the group, add or remove members, change member roles, change group's settings, and delete the group. An OWNER must be a member of the group. A group can have more than one OWNER.`,
 		Defaults:  map[string]interface{}{"insert": "MEMBER"},
-		Recursive: true,
+		Recursive: []string{"insert", "patch"},
 	},
 	"includeDerivedMembership": {
 		AvailableFor: []string{"list"},
@@ -99,7 +99,7 @@ If the email address is changed, the API automatically reflects the email addres
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: true,
+		Recursive: []string{"get", "insert", "patch"},
 	},
 }
 var memberFlagsALL = gsmhelpers.GetAllFlags(memberFlags)
