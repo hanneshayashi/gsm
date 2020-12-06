@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -46,7 +45,7 @@ var changesListCmd = &cobra.Command{
 			Changes:            r,
 			NextStartPageToken: nextStartPageToken,
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

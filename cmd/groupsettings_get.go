@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgroupssettings"
 	"gsm/gsmhelpers"
 	"log"
@@ -40,7 +39,7 @@ var groupSettingsGetCmd = &cobra.Command{
 		if flags["ignoreDeprecated"].GetBool() {
 			result = ignoreDeprecatedGroupSettings(result)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

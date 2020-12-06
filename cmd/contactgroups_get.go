@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmhelpers"
 	"gsm/gsmpeople"
 	"log"
@@ -37,7 +36,7 @@ var contactGroupsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting contact group: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

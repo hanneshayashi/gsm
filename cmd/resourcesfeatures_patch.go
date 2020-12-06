@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmadmin"
 	"gsm/gsmhelpers"
 	"log"
@@ -42,7 +41,7 @@ var resourcesFeaturesPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching feature resource %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

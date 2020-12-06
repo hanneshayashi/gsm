@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -39,7 +38,7 @@ https://developers.google.com/drive/api/v3/reference/revisions/delete`,
 		if err != nil {
 			log.Fatalf("Error deleting revision: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

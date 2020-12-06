@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -38,7 +37,7 @@ var filesListRecursiveCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing files %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

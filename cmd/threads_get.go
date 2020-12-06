@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
@@ -37,7 +36,7 @@ var threadsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting thread %s: %v", flags["id"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

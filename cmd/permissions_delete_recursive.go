@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -91,7 +90,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 		wgPermissions.Wait()
 		close(resultsChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
+		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

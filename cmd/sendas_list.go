@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
@@ -38,7 +37,7 @@ The result includes the primary send-as address associated with the account as w
 		if err != nil {
 			log.Fatalf("Error listing send-as aliases: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

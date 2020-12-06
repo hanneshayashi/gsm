@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
@@ -42,7 +41,7 @@ Note that pkcs12 format is required for the key.`,
 		if err != nil {
 			log.Fatalf("Error inserting S/MIME info: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

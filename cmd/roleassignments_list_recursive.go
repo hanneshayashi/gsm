@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/roles/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmadmin"
 	"gsm/gsmhelpers"
 	"log"
@@ -71,7 +70,7 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 		wgOps.Wait()
 		close(finalChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
+		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

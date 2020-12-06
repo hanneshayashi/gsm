@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
@@ -43,7 +42,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateL
 		if err != nil {
 			log.Fatalf("Error updating language settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

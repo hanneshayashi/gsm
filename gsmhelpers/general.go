@@ -162,27 +162,27 @@ func MaxThreads(fThreads int) int {
 	return threads
 }
 
-// PrettyPrint is used to output the result of an API call in the requested format
-func PrettyPrint(i interface{}, format string, compress bool) string {
-	var b []byte
+// StreamOutput streams output in the specified format to stdout
+func StreamOutput(i interface{}, format string, compress bool) error {
 	if format == "json" {
-		if compress {
-			b, _ = json.Marshal(i)
-		} else {
-			b, _ = json.MarshalIndent(i, "", "\t")
+		enc := json.NewEncoder(os.Stdout)
+		if !compress {
+			enc.SetIndent("", "\t")
 		}
+		return enc.Encode(i)
 	}
 	if format == "xml" {
-		if compress {
-			b, _ = xml.Marshal(i)
-		} else {
-			b, _ = xml.MarshalIndent(i, "", "\t")
+		enc := xml.NewEncoder(os.Stdout)
+		if !compress {
+			enc.Indent("", "\t")
 		}
+		return enc.Encode(i)
 	}
 	if format == "yaml" {
-		b, _ = yaml.Marshal(i)
+		enc := yaml.NewEncoder(os.Stdout)
+		return enc.Encode(i)
 	}
-	return string(b)
+	return nil
 }
 
 // CreateDocs creates GSM documentation

@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmhelpers"
 	"gsm/gsmsheets"
 	"log"
@@ -41,7 +40,7 @@ var spreadsheetsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating spreadsheet: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

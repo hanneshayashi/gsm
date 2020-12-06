@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmconfig"
 	"gsm/gsmhelpers"
 	"log"
@@ -37,7 +36,7 @@ var configsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting config: %v", err)
 		}
-		fmt.Println(gsmhelpers.PrettyPrint(result, "yaml", false))
+		gsmhelpers.StreamOutput(result, "yaml", false)
 	},
 }
 

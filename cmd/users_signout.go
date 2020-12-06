@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmadmin"
 	"gsm/gsmhelpers"
 	"log"
@@ -38,7 +37,7 @@ User will have to sign in by authenticating again.`,
 		if err != nil {
 			log.Fatalf("Error signOutting user %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

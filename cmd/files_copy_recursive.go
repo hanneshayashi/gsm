@@ -84,7 +84,7 @@ var filesCopyRecursiveCmd = &cobra.Command{
 		wgFiles.Wait()
 		close(finalChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
+		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

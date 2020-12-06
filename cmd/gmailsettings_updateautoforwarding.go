@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmgmail"
 	"gsm/gsmhelpers"
 	"log"
@@ -42,7 +41,7 @@ A verified forwarding address must be specified when auto-forwarding is enabled.
 		if err != nil {
 			log.Fatalf("Error updating auto-forwarding settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

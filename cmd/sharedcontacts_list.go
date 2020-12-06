@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmadmin"
 	"gsm/gsmhelpers"
 	"log"
@@ -38,9 +37,9 @@ var sharedContactsListCmd = &cobra.Command{
 			log.Fatalf("Error listing shared contacts: %v", err)
 		}
 		if flags["json"].GetBool() {
-			fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+			gsmhelpers.StreamOutput(result, "json", compressOutput)
 		} else {
-			fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "xml", compressOutput))
+			gsmhelpers.StreamOutput(result, "xml", compressOutput)
 		}
 	},
 }

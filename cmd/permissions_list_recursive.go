@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -85,7 +84,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 		wgPermissions.Wait()
 		close(resultsChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
+		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmcalendar"
 	"gsm/gsmhelpers"
 	"log"
@@ -38,7 +37,7 @@ Use calendars.clear for clearing all events on primary calendars.`,
 		if err != nil {
 			log.Fatalf("Error deleting calendar: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 

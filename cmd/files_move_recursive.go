@@ -87,7 +87,7 @@ The original folders will be preserved at the source!`,
 		wgFiles.Wait()
 		close(finalChan)
 		wgFinal.Wait()
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(final, "json", compressOutput))
+		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

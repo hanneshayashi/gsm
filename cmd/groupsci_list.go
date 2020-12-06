@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmadmin"
 	"gsm/gsmci"
 	"gsm/gsmhelpers"
@@ -46,7 +45,7 @@ var groupsCiListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating group %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), gsmhelpers.PrettyPrint(result, "json", compressOutput))
+		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
