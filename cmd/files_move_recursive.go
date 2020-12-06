@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -69,7 +68,7 @@ The original folders will be preserved at the source!`,
 					folder := folderMap[f.Parents[0]]
 					u, err := gsmdrive.UpdateFile(f.Id, folder.NewID, folder.OldParent, "", "", "id", nil, nil, false, false)
 					if err != nil {
-						fmt.Println(err)
+						log.Println(err)
 					} else {
 						finalChan <- u
 					}

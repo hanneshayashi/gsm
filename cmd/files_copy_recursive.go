@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"gsm/gsmdrive"
 	"gsm/gsmhelpers"
 	"log"
@@ -66,7 +65,7 @@ var filesCopyRecursiveCmd = &cobra.Command{
 					folder := folderMap[f.Parents[0]]
 					c, err := gsmdrive.CopyFile(f.Id, "", "", "id,name,mimeType,parents", &drive.File{Parents: []string{folder.NewID}, Name: f.Name}, false, false)
 					if err != nil {
-						fmt.Println(err)
+						log.Println(err)
 					} else {
 						finalChan <- c
 					}
