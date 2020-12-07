@@ -36,10 +36,10 @@ var labelsCmd = &cobra.Command{
 
 var labelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
-		AvailableFor: []string{"create", "delete", "get", "list"},
+		AvailableFor: []string{"create", "delete", "get", "list", "patch"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
+		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me"},
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "patch"},
