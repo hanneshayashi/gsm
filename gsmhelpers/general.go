@@ -105,7 +105,10 @@ func retryLog(err error, errKey string) bool {
 
 // errorIsRetryable checks if a Google API response returned a retryable error
 func errorIsRetryable(err error) bool {
-	gerr := err.(*googleapi.Error)
+	gerr, ok := err.(*googleapi.Error)
+	if !ok {
+		return false
+	}
 	keyWords := []string{
 		"quota",
 		"Quota",
