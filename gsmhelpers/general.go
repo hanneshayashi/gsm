@@ -256,7 +256,7 @@ func CreateDocs(cmd *cobra.Command) {
 	os.Remove(tmpDir)
 }
 
-// getCSVChan uses a FlagSet to read a CSV file and parse it accordingly
+// getCSVReader uses a FlagSet to read a CSV file and parse it accordingly
 func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
 	path := flags["path"].GetString()
 	var delimiter rune
