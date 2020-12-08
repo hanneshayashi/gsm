@@ -28,7 +28,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 
@@ -155,7 +154,7 @@ func MaxThreads(fThreads int) int {
 		if cThreads != 0 {
 			threads = cThreads
 		} else {
-			threads = runtime.NumCPU() * 2
+			threads = 4
 		}
 	}
 	maxThreads := 16
