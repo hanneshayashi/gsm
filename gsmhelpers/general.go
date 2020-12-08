@@ -359,7 +359,7 @@ func FormatErrorKey(s ...string) string {
 
 // sleep will sleep for the supplied amount of milliseconds plus a jitter between 0 and 20
 func sleep(ms int) {
-	ms += rand.Intn(20) + 1
+	ms += rand.Intn(50) + 1
 	time.Sleep(time.Duration(ms) * time.Millisecond)
 }
 
