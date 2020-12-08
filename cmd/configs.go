@@ -94,7 +94,7 @@ Can be relative to the binary or fully qualified.`,
 		AvailableFor: []string{"new"},
 		Type:         "int",
 		Description:  `Delay in ms to wait after each API call`,
-		Defaults:     map[string]interface{}{"new": 200},
+		Defaults:     map[string]interface{}{"new": 300},
 	},
 }
 
