@@ -52,6 +52,8 @@ var (
 	twoStepVerificationService             *admin.TwoStepVerificationService
 	customerDevicesChromeosService         *admin.CustomerDevicesChromeosService
 	customerDevicesChromeosCommandsService *admin.CustomerDevicesChromeosCommandsService
+	usersPhotosService                     *admin.UsersPhotosService
+	schemasService                         *admin.SchemasService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -232,4 +234,18 @@ func getCustomerDevicesChromeosCommandsService() *admin.CustomerDevicesChromeosC
 		customerDevicesChromeosCommandsService = admin.NewCustomerDevicesChromeosCommandsService(getAdminService())
 	}
 	return customerDevicesChromeosCommandsService
+}
+
+func getUsersPhotosService() *admin.UsersPhotosService {
+	if usersPhotosService == nil {
+		usersPhotosService = admin.NewUsersPhotosService(getAdminService())
+	}
+	return usersPhotosService
+}
+
+func getSchemasService() *admin.SchemasService {
+	if schemasService == nil {
+		schemasService = admin.NewSchemasService(getAdminService())
+	}
+	return schemasService
 }
