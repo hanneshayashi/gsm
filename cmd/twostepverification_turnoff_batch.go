@@ -26,21 +26,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// chromeOsDevicesActionBatchCmd represents the batch command
-var chromeOsDevicesActionBatchCmd = &cobra.Command{
+// twoStepVerificationTurnOffBatchCmd represents the batch command
+var twoStepVerificationTurnOffBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch takes actions that affect Chrome OS devices using a CSV file as input",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/action",
+	Short: "Batch turns off two step verification for users using a CSV file as input.",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/twoStepVerification/turnOff",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			ResourceID string `json:"resourceId,omitempty"`
-			Result     bool   `json:"result"`
+			UserKey string `json:"userKey,omitempty"`
+			Result  bool   `json:"result"`
 		}
 		results := make(chan resultStruct, cap)
 		final := []resultStruct{}
@@ -49,16 +49,11 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						a, err := mapToChromeOsDeviceAction(m)
-						if err != nil {
-							log.Printf("Error building chromeOsDeviceAction object: %v", err)
-							continue
-						}
-						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(), m["resourceId"].GetString(), a)
+						result, err := gsmadmin.TurnOffTwoStepVerification(m["userKey"].GetString())
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ResourceID: m["resourceId"].GetString(), Result: result}
+						results <- resultStruct{UserKey: m["userKey"].GetString(), Result: result}
 					}
 					wg.Done()
 				}()
@@ -74,5 +69,5 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(chromeOsDevicesActionCmd, chromeOsDevicesActionBatchCmd, chromeOsDeviceFlags, chromeOsDeviceFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(twoStepVerificationTurnOffCmd, twoStepVerificationTurnOffBatchCmd, twoStepVerificationFlags, twoStepVerificationFlagsALL, batchFlags)
 }

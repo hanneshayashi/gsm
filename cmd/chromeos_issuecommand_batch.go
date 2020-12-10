@@ -26,21 +26,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// chromeOsDevicesActionBatchCmd represents the batch command
-var chromeOsDevicesActionBatchCmd = &cobra.Command{
+// chromeOsIssueCommandBatchCmd represents the batch command
+var chromeOsIssueCommandBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch takes actions that affect Chrome OS devices using a CSV file as input",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/action",
+	Short: "Batch issues commands to Chrome OS devices using a CSV file as input",
+	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos/issueCommand",
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			ResourceID string `json:"resourceId,omitempty"`
-			Result     bool   `json:"result"`
+			DeviceID    string `json:"deviceId,omitempty"`
+			CommandType string `json:"commandType,omitempty"`
+			CommandID   int64  `json:"commandId"`
 		}
 		results := make(chan resultStruct, cap)
 		final := []resultStruct{}
@@ -49,16 +50,16 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						a, err := mapToChromeOsDeviceAction(m)
+						i, err := mapToDirectoryChromeosdevicesIssueCommandRequest(m)
 						if err != nil {
-							log.Printf("Error building chromeOsDeviceAction object: %v", err)
-							continue
+							log.Fatalf("Error building DirectoryChromeosdevicesIssueCommandRequest object: %v", err)
 						}
-						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(), m["resourceId"].GetString(), a)
+						result, err := gsmadmin.IssueCommand(m["customerId"].GetString(), m["deviceId"].GetString(), i)
 						if err != nil {
 							log.Println(err)
+						} else {
+							results <- resultStruct{DeviceID: m["deviceId"].GetString(), CommandID: result, CommandType: i.CommandType}
 						}
-						results <- resultStruct{ResourceID: m["resourceId"].GetString(), Result: result}
 					}
 					wg.Done()
 				}()
@@ -74,5 +75,5 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(chromeOsDevicesActionCmd, chromeOsDevicesActionBatchCmd, chromeOsDeviceFlags, chromeOsDeviceFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(chromeOsIssueCommandCmd, chromeOsIssueCommandBatchCmd, chromeOsFlags, chromeOsFlagsALL, batchFlags)
 }
