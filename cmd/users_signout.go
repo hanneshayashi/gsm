@@ -35,7 +35,7 @@ User will have to sign in by authenticating again.`,
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.SignOutUser(flags["userKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error signOutting user %v", err)
+			log.Fatalf("Error signing out user %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
