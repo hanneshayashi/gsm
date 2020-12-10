@@ -130,6 +130,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 			admin.AdminDirectoryDeviceMobileScope,
 			admin.AdminDirectoryDeviceChromeosScope,
 			admin.AdminDirectoryResourceCalendarScope,
+			admin.AdminDirectoryUserschemaScope,
 			"https://www.google.com/m8/feeds/contacts/",
 			drive.DriveScope,
 			gmail.MailGoogleComScope,
