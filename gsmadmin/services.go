@@ -27,28 +27,31 @@ import (
 )
 
 var (
-	client                    *http.Client
-	adminService              *admin.Service
-	customersService          *admin.CustomersService
-	usersService              *admin.UsersService
-	groupsService             *admin.GroupsService
-	membersService            *admin.MembersService
-	orgunitsService           *admin.OrgunitsService
-	rolesService              *admin.RolesService
-	rolesAssignmentsService   *admin.RoleAssignmentsService
-	privilegesService         *admin.PrivilegesService
-	verificationCodesService  *admin.VerificationCodesService
-	usersAliasesService       *admin.UsersAliasesService
-	groupsAliasesService      *admin.GroupsAliasesService
-	tokensService             *admin.TokensService
-	aspsService               *admin.AspsService
-	domainsService            *admin.DomainsService
-	domainAliasesService      *admin.DomainAliasesService
-	mobiledevicesService      *admin.MobiledevicesService
-	chromeosdevicesService    *admin.ChromeosdevicesService
-	resourcesBuildingsService *admin.ResourcesBuildingsService
-	resourcesCalendarsService *admin.ResourcesCalendarsService
-	resourcesFeaturesService  *admin.ResourcesFeaturesService
+	client                                 *http.Client
+	adminService                           *admin.Service
+	customersService                       *admin.CustomersService
+	usersService                           *admin.UsersService
+	groupsService                          *admin.GroupsService
+	membersService                         *admin.MembersService
+	orgunitsService                        *admin.OrgunitsService
+	rolesService                           *admin.RolesService
+	rolesAssignmentsService                *admin.RoleAssignmentsService
+	privilegesService                      *admin.PrivilegesService
+	verificationCodesService               *admin.VerificationCodesService
+	usersAliasesService                    *admin.UsersAliasesService
+	groupsAliasesService                   *admin.GroupsAliasesService
+	tokensService                          *admin.TokensService
+	aspsService                            *admin.AspsService
+	domainsService                         *admin.DomainsService
+	domainAliasesService                   *admin.DomainAliasesService
+	mobiledevicesService                   *admin.MobiledevicesService
+	chromeosdevicesService                 *admin.ChromeosdevicesService
+	resourcesBuildingsService              *admin.ResourcesBuildingsService
+	resourcesCalendarsService              *admin.ResourcesCalendarsService
+	resourcesFeaturesService               *admin.ResourcesFeaturesService
+	twoStepVerificationService             *admin.TwoStepVerificationService
+	customerDevicesChromeosService         *admin.CustomerDevicesChromeosService
+	customerDevicesChromeosCommandsService *admin.CustomerDevicesChromeosCommandsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -208,4 +211,25 @@ func getResourcesFeaturesService() *admin.ResourcesFeaturesService {
 		resourcesFeaturesService = admin.NewResourcesFeaturesService(getAdminService())
 	}
 	return resourcesFeaturesService
+}
+
+func getTwoStepVerificationService() *admin.TwoStepVerificationService {
+	if twoStepVerificationService == nil {
+		twoStepVerificationService = admin.NewTwoStepVerificationService(getAdminService())
+	}
+	return twoStepVerificationService
+}
+
+func getCustomerDevicesChromeosService() *admin.CustomerDevicesChromeosService {
+	if customerDevicesChromeosService == nil {
+		customerDevicesChromeosService = admin.NewCustomerDevicesChromeosService(getAdminService())
+	}
+	return customerDevicesChromeosService
+}
+
+func getCustomerDevicesChromeosCommandsService() *admin.CustomerDevicesChromeosCommandsService {
+	if customerDevicesChromeosCommandsService == nil {
+		customerDevicesChromeosCommandsService = admin.NewCustomerDevicesChromeosCommandsService(getAdminService())
+	}
+	return customerDevicesChromeosCommandsService
 }
