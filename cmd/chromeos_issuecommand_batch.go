@@ -52,7 +52,8 @@ var chromeOsIssueCommandBatchCmd = &cobra.Command{
 					for m := range maps {
 						i, err := mapToDirectoryChromeosdevicesIssueCommandRequest(m)
 						if err != nil {
-							log.Fatalf("Error building DirectoryChromeosdevicesIssueCommandRequest object: %v", err)
+							log.Printf("Error building DirectoryChromeosdevicesIssueCommandRequest object: %v\n", err)
+							continue
 						}
 						result, err := gsmadmin.IssueCommand(m["customerId"].GetString(), m["deviceId"].GetString(), i)
 						if err != nil {
