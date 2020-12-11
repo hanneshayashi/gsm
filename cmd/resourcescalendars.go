@@ -93,9 +93,9 @@ As an account administrator, you can also use the my_customer alias to represent
 		Description: `The category of the calendar resource. Either CONFERENCE_ROOM or OTHER. Legacy data is set to CATEGORY_UNKNOWN.
 
 Acceptable values are:
-"CATEGORY_UNKNOWN"
-"CONFERENCE_ROOM"
-"OTHER"`,
+CATEGORY_UNKNOWN
+CONFERENCE_ROOM
+OTHER`,
 	},
 	"resourceDescription": {
 		AvailableFor: []string{"insert", "patch"},

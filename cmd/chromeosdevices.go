@@ -59,13 +59,12 @@ The resourceIds are returned in the response from the chromeosdevices.list metho
 		Description: `Action to be taken on the Chrome OS device
 
 Acceptable values are:
-"deprovision": Remove a device from management that is no longer active, being resold, or is being submitted for return / repair, use the deprovision action to dissociate it from management.
-"disable":
-If you believe a device in your organization has been lost or stolen, you can disable the device so that no one else can use it. When a device is disabled, all the user can see when turning on the Chrome device is a screen telling them that it’s been disabled, and your desired contact information of where to return the device.
-Note: Configuration of the message to appear on a disabled device must be completed within the admin console.
-"reenable":
-Re-enable a disabled device when a misplaced device is found or a lost device is returned. You can also use this feature if you accidentally mark a Chrome device as disabled.
-Note: The re-enable action can only be performed on devices marked as disabled.`,
+deprovision  - Remove a device from management that is no longer active, being resold, or is being submitted for return / repair, use the deprovision action to dissociate it from management.
+disable      - If you believe a device in your organization has been lost or stolen, you can disable the device so that no one else can use it.
+               When a device is disabled, all the user can see when turning on the Chrome device is a screen telling them that it has been disabled, and your desired contact information of where to return the device.
+               Note: Configuration of the message to appear on a disabled device must be completed within the admin console.
+ reenable    - Re-enable a disabled device when a misplaced device is found or a lost device is returned. You can also use this feature if you accidentally mark a Chrome device as disabled.
+               Note: The re-enable action can only be performed on devices marked as disabled.`,
 		Required: []string{"action"},
 	},
 	"deprovisionReason": {
@@ -76,10 +75,10 @@ Note: The re-enable action can only be performed on devices marked as disabled.`
 Note: The deprovision reason is audited because it might have implications on licenses for perpetual subscription customers.
 
 Acceptable values are:
-"different_model_replacement": Use if you're upgrading or replacing your device with a newer model of the same device.
-"retiring_device": Use if you're reselling, donating, or permanently removing the device from use.
-"same_model_replacement": Use if a hardware issue was encountered on a device and it is being replaced with the same model or a like-model replacement from a repair vendor / manufacturer.
-"upgrade_transfer": Use if you're replacing your Cloud Ready devices with Chromebooks within one year.`,
+different_model_replacement  - Use if you're upgrading or replacing your device with a newer model of the same device.
+retiring_device              - Use if you're reselling, donating, or permanently removing the device from use.
+same_model_replacement       - Use if a hardware issue was encountered on a device and it is being replaced with the same model or a like-model replacement from a repair vendor / manufacturer.
+upgrade_transfer             - Use if you're replacing your Cloud Ready devices with Chromebooks within one year.`,
 		Required: []string{"action"},
 	},
 	"deviceId": {
@@ -97,8 +96,8 @@ The deviceIds are returned in the response from the chromeosdevices.list method.
 		Description: `Determines whether the response contains the full list of properties or only a subset.
 
 Acceptable values are:
-"BASIC": Excludes the model, meid, orderNumber, willAutoRenew, osVersion, platformVersion, firmwareVersion, macAddress, and bootMode properties.
-"FULL": Includes all metadata fields.`,
+BASIC  - Excludes the model, meid, orderNumber, willAutoRenew, osVersion, platformVersion, firmwareVersion, macAddress, and bootMode properties.
+FULL   - Includes all metadata fields.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
@@ -106,13 +105,13 @@ Acceptable values are:
 		Description: `Device property to use for sorting results.
 
 Acceptable values are:
-"annotatedLocation": Chrome device location as annotated by the administrator.
-"annotatedUser": Chrome device user as annotated by the administrator.
-"lastSync": The date and time the Chrome device was last synchronized with the policy settings in the Admin console.
-"notes": Chrome device notes as annotated by the administrator.
-"serialNumber": The Chrome device serial number entered when the device was enabled.
-"status": Chrome device status. For more information, see the chromeosdevices resource.
-"supportEndDate": Chrome device support end date. This is applicable only for devices purchased directly from Google.`,
+annotatedLocation  - Chrome device location as annotated by the administrator.
+annotatedUser      - Chrome device user as annotated by the administrator.
+lastSync           - The date and time the Chrome device was last synchronized with the policy settings in the Admin console.
+notes              - Chrome device notes as annotated by the administrator.
+serialNumber       - The Chrome device serial number entered when the device was enabled.
+status             - Chrome device status. For more information, see the chromeosdevices resource.
+supportEndDate     - Chrome device support end date. This is applicable only for devices purchased directly from Google.`,
 	},
 	"orgUnitPath": {
 		AvailableFor: []string{"list", "moveToOU", "patch"},
@@ -132,8 +131,8 @@ Acceptable values are:
 		Description: `Whether to return results in ascending or descending order. Must be used with the orderBy parameter.
 
 Acceptable values are:
-"ASCENDING": Ascending order.
-"DESCENDING": Descending order.`,
+ASCENDING   - Ascending order.
+DESCENDING  - Descending order.`,
 	},
 	"deviceIds": {
 		AvailableFor: []string{"moveToOU"},

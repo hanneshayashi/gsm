@@ -86,8 +86,8 @@ Required, unless parentOrgUnitId is set.`,
 		Type:         "string",
 		Description: `Whether to return all sub-organizations or just immediate children.
 Acceptable values are:
-"all": All sub-organizational units.
-"children": Immediate children only (default).`,
+all       - All sub-organizational units.
+children  - Immediate children only (default).`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},

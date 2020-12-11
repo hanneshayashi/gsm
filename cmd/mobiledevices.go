@@ -66,22 +66,22 @@ cancel_remote_wipe_then_block     - Cancels a remote wipe of the device and then
 		Type:         "string",
 		Description: `Restrict information returned to a set of selected fields.
 Acceptable values are:
-"BASIC": Includes only the basic metadata fields (e.g., deviceId, model, status, type, and status)
-"FULL": Includes all metadata fields`,
+BASIC  - Includes only the basic metadata fields (e.g., deviceId, model, status, type, and status)
+FULL   - Includes all metadata fields`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description: `Device property to use for sorting results.
 Acceptable values are:
-"deviceId": The serial number for a Google Sync mobile device. For Android devices, this is a software generated unique identifier.
-"email": The device owner's email address.
-"lastSync": Last policy settings sync date time of the device.
-"model": The mobile device's model.
-"name": The device owner's user name.
-"os": The device's operating system.
-"status": The device status.
-"type": Type of the device.`,
+deviceId  - The serial number for a Google Sync mobile device. For Android devices, this is a software generated unique identifier.
+email     - The device owner's email address.
+lastSync  - Last policy settings sync date time of the device.
+model     - The mobile device's model.
+name      - The device owner's user name.
+os        - The device's operating system.
+status    - The device status.
+type      - Type of the device.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
@@ -94,8 +94,8 @@ See https://developers.google.com/admin-sdk/directory/v1/list-query-operators`,
 		Type:         "string",
 		Description: `Whether to return results in ascending or descending order. Must be used with the orderBy parameter.
 Acceptable values are:
-"ASCENDING": Ascending order.
-"DESCENDING": Descending order.`,
+ASCENDING   - Ascending order.
+DESCENDING  - Descending order.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},

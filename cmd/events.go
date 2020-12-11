@@ -294,8 +294,8 @@ confidential  - The event is private. This value is provided for compatibility r
 		Type:         "string",
 		Description: `The order of the events returned in the result. Optional. The default is an unspecified, stable order.
 Acceptable values are:
-"startTime": Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True)
-"updated": Order by last modification time (ascending).`,
+startTime  - Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True)
+updated    - Order by last modification time (ascending).`,
 	},
 	"timeZone": {
 		AvailableFor: []string{"get", "instances", "list"},

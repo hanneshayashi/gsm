@@ -45,9 +45,9 @@ All fields from these schemas are fetched. This should only be set when projecti
 		Description: `What subset of fields to fetch for this user.
 
 Acceptable values are:
-"basic": Do not include any custom fields for the user. (default)
-"custom": Include custom fields from schemas requested in customFieldMask.
-"full": Include all fields associated with this user.`,
+basic   - Do not include any custom fields for the user. (default)
+custom  - Include custom fields from schemas requested in customFieldMask.
+full    - Include all fields associated with this user.`,
 	},
 	"viewType": {
 		AvailableFor: []string{"get", "list"},
@@ -56,8 +56,8 @@ Acceptable values are:
 For more information, see https://developers.google.com/admin-sdk/directory/v1/guides/manage-users#retrieve_users_non_admin.
 
 Acceptable values are:
-"admin_view": Results include both administrator-only and domain-public fields for the user. (default)
-"domain_public": Results only include fields for the user that are publicly visible to other users in the domain.
+admin_view     - Results include both administrator-only and domain-public fields for the user. (default)
+domain_public  - Results only include fields for the user that are publicly visible to other users in the domain.
                  Contact sharing must be enabled for the domain.`,
 	},
 	"fields": {
@@ -187,10 +187,10 @@ value           - The value of the ID.`,
 		Type:         "string",
 		Description: `Gender.
 Acceptable values are:
-"female"
-"male"
-"other"
-"unknown"`,
+female
+male
+other
+unknown`,
 		Recursive: []string{"patch"},
 	},
 	"hashFunction": {
@@ -530,9 +530,9 @@ Either the customer or the domain parameter must be provided.`,
 		Type:         "string",
 		Description: `Property to use for sorting results.
 Acceptable values are:
-"email": Primary email of the user.
-"familyName": User's family name.
-"givenName": User's given name.`,
+email       - Primary email of the user.
+familyName  - User's family name.
+givenName   - User's given name.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
@@ -550,8 +550,8 @@ For more information on constructing user queries, see https://developers.google
 		Type:         "string",
 		Description: `Whether to return results in ascending or descending order.
 Acceptable values are:
-"ASCENDING": Ascending order.
-"DESCENDING": Descending order.`,
+ASCENDING   - Ascending order.
+DESCENDING  - Descending order.`,
 	},
 	"unmake": {
 		AvailableFor: []string{"makeAdmin"},

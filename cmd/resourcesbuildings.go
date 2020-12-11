@@ -54,9 +54,9 @@ var resourcesBuildingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		Description: `Source from which Building.coordinates are derived.
 
 Acceptable values are:
-"CLIENT_SPECIFIED": Building.coordinates are set to the coordinates included in the request.
-"RESOLVED_FROM_ADDRESS": Building.coordinates are automatically populated based on the postal address.
-"SOURCE_UNSPECIFIED": Defaults to RESOLVED_FROM_ADDRESS if postal address is provided. Otherwise, defaults to CLIENT_SPECIFIED if coordinates are provided. (default)`,
+CLIENT_SPECIFIED       - Building.coordinates are set to the coordinates included in the request.
+RESOLVED_FROM_ADDRESS  - Building.coordinates are automatically populated based on the postal address.
+SOURCE_UNSPECIFIED     - Defaults to RESOLVED_FROM_ADDRESS if postal address is provided. Otherwise, defaults to CLIENT_SPECIFIED if coordinates are provided. (default)`,
 	},
 	"addressLines": {
 		AvailableFor: []string{"insert", "patch"},

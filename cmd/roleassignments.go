@@ -73,8 +73,8 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		Type:         "string",
 		Description: `The scope in which this role is assigned.
 Acceptable values are:
-"CUSTOMER"
-"ORG_UNIT"`,
+CUSTOMER
+ORG_UNIT`,
 		Defaults:  map[string]interface{}{"insert": "CUSTOMER"},
 		Recursive: []string{"insert"},
 	},

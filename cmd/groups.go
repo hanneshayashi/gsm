@@ -84,7 +84,7 @@ To return all domains for a customer account, use the customer query parameter i
 		Type:         "string",
 		Description: `Column to use for sorting results
 Acceptable values are:
-"email": Email of the group.`,
+email  - Email of the group.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
@@ -97,8 +97,8 @@ Complete documentation is at https://developers.google.com/admin-sdk/directory/v
 		Type:         "string",
 		Description: `Whether to return results in ascending or descending order. Only of use when orderBy is also used
 Acceptable values are:
-"ASCENDING": Ascending order.
-"DESCENDING": Descending order.`,
+ASCENDING   - Ascending order.
+DESCENDING  - Descending order.`,
 	},
 	"userKey": {
 		AvailableFor: []string{"list"},
