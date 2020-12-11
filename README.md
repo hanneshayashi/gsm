@@ -1,6 +1,6 @@
 ## GSM
 
-GoSpace Manager - Manage Google Workspace resources using a simple CLI written in Go.
+GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go.
 
 ### Documentation
 
@@ -25,7 +25,7 @@ On the plus-side, you can usually look at the Google API documentation that is l
 
 ### License and Copyright
 
-GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.
+GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
 Copyright © 2020 Hannes Hayashi.
 
 ### Third Party Libraries
@@ -39,7 +39,7 @@ GSM is based on open source technology and would not exist without the incredibl
 ### Features
 
 GSM offers CLI access to over 20 Google API via 50+ main commands and over 
-250 sub commands (plus some 230 custom "batch" commands).
+250 sub commands (plus some 230 custom ["batch" commands](https://gsm.hayashi-ke.online/batch_commands), as well as several handy ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)).
 
 You can use GSM in one of two modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
@@ -53,12 +53,14 @@ You can set up multiple configurations using [gsm configs](https://gsm.hayashi-k
 
 GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to ommit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parseable JSON or XML (mostly what the API returns).
 
+If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output.
+
 *the [configs](https://gsm.hayashi-ke.online/gsm/configs) command is a notable exception.
 
 #### Scripting examples
 
 I highly recommend considering using GSM together with PowerShell or Python when creating scripts.\
-GSM works nicely with PowerShell's ConvertFrom-Json commandlet.
+GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there are some [issues with very large amounts of data](https://gsm.hayashi-ke.online/scripting/#processing-very-large-amounts-of-data-with-powershell)).
 
 You can take a look at some examples under [scripting](https://gsm.hayashi-ke.online/scripting).
 
@@ -71,5 +73,6 @@ As useful as the above may be, sometimes you need to understand what is happenin
 * [setup](https://gsm.hayashi-ke.online/setup)       - How to set up GSM
 * [gsm](https://gsm.hayashi-ke.online/gsm)   - Command overview
 * [batch commands](https://gsm.hayashi-ke.online/batch_commands)     - How to use batch commands
+* [recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
 * [examples](https://gsm.hayashi-ke.online/examples) - See some examples
 * [scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
