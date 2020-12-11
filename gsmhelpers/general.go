@@ -39,19 +39,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const version = "0.1.18"
-
 // StandardRetrier is a retrier object that should be used by every function that calls a Google API
 var StandardRetrier = newStandardRetrier()
 
 // StandardDelay is the delay (plus a random jitter between 0 and 20) that will be applied after every command.
 // This is can be configured either via the config file or via the --standardDelay flag
 var StandardDelay int
-
-// GetVersion returns the current version
-func GetVersion() string {
-	return version
-}
 
 // GetFileContentAsString returns the content of a file as a string
 func GetFileContentAsString(path string) (string, error) {

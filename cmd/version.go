@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"fmt"
-	"gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +29,7 @@ var versionCmd = &cobra.Command{
 	Short: "Return the current version",
 	// Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(gsmhelpers.GetVersion())
+		fmt.Println("0.1.19")
 	},
 }
 
