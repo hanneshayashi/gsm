@@ -114,6 +114,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
+	Version: "0.1.19",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
