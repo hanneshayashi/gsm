@@ -125,6 +125,7 @@ func Execute() {
 		os.Exit(1)
 	}
 	// gsmhelpers.CreateDocs(rootCmd)
+	// gsmhelpers.CreateCrescendoModuleDefs(rootCmd)
 }
 
 func init() {
