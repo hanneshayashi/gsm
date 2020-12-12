@@ -34,6 +34,7 @@ type GSMConfig struct {
 	Subject         string   `yaml:"subject,omitempty"`
 	Threads         int      `yaml:"threads,omitempty"`
 	StandardDelay   int      `yaml:"standardDelay,omitempty"`
+	LogFile         string   `yaml:"logFile,omitempty"`
 	Scopes          []string `yaml:"scopes,omitempty"`
 	Default         bool     `yaml:"default,omitempty"`
 }

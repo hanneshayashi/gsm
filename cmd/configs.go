@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"gsm/gsmconfig"
 	"gsm/gsmhelpers"
 
@@ -96,6 +97,11 @@ Can be relative to the binary or fully qualified.`,
 		Description:  `Delay in ms to wait after each API call`,
 		Defaults:     map[string]interface{}{"new": 300},
 	},
+	"logFile": {
+		AvailableFor: []string{"new"},
+		Type:         "string",
+		Description:  `Path of the log file.`,
+	},
 }
 
 func init() {
@@ -150,6 +156,11 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 		config.Threads = flags["threads"].GetInt()
 	} else {
 		config.Threads = gsmhelpers.MaxThreads(0)
+	}
+	if flags["logFile"].IsSet() {
+		config.LogFile = flags["logFile"].GetString()
+	} else {
+		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
 	}
 	config.StandardDelay = flags["standardDelay"].GetInt()
 	return config, nil

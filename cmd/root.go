@@ -46,6 +46,8 @@ var (
 	cfgDir         string
 	cfgFile        string
 	dwdSubject     string
+	logFile        string
+	home           string
 	compressOutput bool
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
@@ -129,7 +131,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initLog, initConfig, auth)
+	cobra.OnInitialize(setHomeDir, initConfig, initLog, auth)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -137,6 +139,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().StringVar(&logFile, "logFile", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -150,12 +153,6 @@ func initConfig() {
 		cfgFile = gsmconfig.GetConfigPath(cfgFile)
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
 		gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
 		if _, err := os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
 			err = os.MkdirAll(gsmconfig.CfgDir, 0777)
@@ -178,7 +175,7 @@ func initConfig() {
 		// if err != nil {
 		// 	log.Fatalf("Error creating default empty config file: %v", err)
 		// }
-		log.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
+		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("standardDelay") {
 		gsmhelpers.StandardDelay, err = rootCmd.Flags().GetInt("standardDelay")
@@ -187,6 +184,15 @@ func initConfig() {
 		}
 	} else {
 		gsmhelpers.StandardDelay = viper.GetInt("standardDelay")
+	}
+}
+
+func setHomeDir() {
+	var err error
+	home, err = homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 
@@ -221,7 +227,13 @@ func auth() {
 }
 
 func initLog() {
-	file, err := os.OpenFile("gsm.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if logFile == "" {
+		logFile = viper.GetString("logFile")
+		if logFile == "" {
+			logFile = fmt.Sprintf("%s/gsm.log", home)
+		}
+	}
+	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
