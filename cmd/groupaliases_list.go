@@ -29,7 +29,8 @@ import (
 var groupAliasesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists all aliases for a group.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListGroupAliases(flags["groupKey"].GetString(), flags["fields"].GetString())

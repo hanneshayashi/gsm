@@ -33,7 +33,8 @@ var verificationcodesGenerateRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/generate",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

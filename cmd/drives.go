@@ -28,7 +28,8 @@ import (
 var drivesCmd = &cobra.Command{
 	Use:   "drives",
 	Short: "Manage Shared Drives (Part of Drive API)",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives",
+	Long:  "https://developers.google.com/drive/api/v3/reference/drives",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

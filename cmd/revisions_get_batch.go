@@ -34,7 +34,8 @@ var revisionsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags)
 		if err != nil {

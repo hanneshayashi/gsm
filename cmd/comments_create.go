@@ -29,7 +29,8 @@ import (
 var commentsCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a new comment on a file.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/comments/create",
+	Long:  "https://developers.google.com/drive/api/v3/reference/comments/create",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToComment(flags)

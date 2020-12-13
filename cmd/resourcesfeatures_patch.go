@@ -29,7 +29,8 @@ import (
 var resourcesFeaturesPatchCmd = &cobra.Command{
 	Use:   "patch",
 	Short: "Patches a feature resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/patch",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/patch",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFeature(flags)

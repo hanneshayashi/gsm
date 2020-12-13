@@ -29,7 +29,8 @@ import (
 var messagesSendCmd = &cobra.Command{
 	Use:   "send",
 	Short: "Sends the specified message to the recipients in the To, Cc, and Bcc headers.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		message, err := mapToMessage(flags)

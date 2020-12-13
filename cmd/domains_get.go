@@ -29,7 +29,8 @@ import (
 var domainsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieves a domain of the customer.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains/get",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetDomain(flags["customer"].GetString(), flags["domainName"].GetString(), flags["fields"].GetString())

@@ -27,7 +27,8 @@ import (
 var tokensCmd = &cobra.Command{
 	Use:   "tokens",
 	Short: "Managed OAuth access tokens for users (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

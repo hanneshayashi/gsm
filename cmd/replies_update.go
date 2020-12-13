@@ -29,7 +29,8 @@ import (
 var repliesUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Updates a reply with patch semantics.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/replies/update",
+	Long:  "https://developers.google.com/drive/api/v3/reference/replies/update",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToReply(flags)

@@ -34,7 +34,8 @@ var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupMemberFlags)
 		if err != nil {

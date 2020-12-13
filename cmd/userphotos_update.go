@@ -29,7 +29,8 @@ import (
 var userPhotosUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Adds a user or group to the specified group.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/userPhotos/update",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/userPhotos/update",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToUserPhoto(flags)

@@ -32,7 +32,8 @@ var sharedContactsGetCmd = &cobra.Command{
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetSharedContact(flags["url"].GetString())

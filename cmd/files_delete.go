@@ -29,7 +29,8 @@ import (
 var filesDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Permanently deletes a file owned by the user without moving it to the trash. If the file belongs to a shared drive the user must be an organizer on the parent. If the target is a folder, all descendants owned by the user are also deleted.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/delete",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteFile(flags["fileId"].GetString())

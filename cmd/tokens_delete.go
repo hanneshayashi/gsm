@@ -29,7 +29,8 @@ import (
 var tokensDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete all access tokens issued by a user for an application.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteToken(flags["userKey"].GetString(), flags["clientId"].GetString())

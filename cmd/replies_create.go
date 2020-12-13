@@ -29,7 +29,8 @@ import (
 var repliesCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a new reply to a comment.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/replies/create",
+	Long:  "https://developers.google.com/drive/api/v3/reference/replies/create",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToReply(flags)

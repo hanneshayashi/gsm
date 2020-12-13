@@ -29,7 +29,8 @@ import (
 var peopleConnectionsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Provides a list of the authenticated user's contacts.",
-	Long:  `https://developers.google.com/people/api/rest/v1/people.connections/list`,
+	Long:  `https://developers.google.com/people/api/rest/v1/people.connections/list`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.ListPeopleConnections(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())

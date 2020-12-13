@@ -33,7 +33,8 @@ var sharedContactsUpdateCmd = &cobra.Command{
 Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;label=Mobile" --url https://www.google.com/m8/feeds/contacts/example.org/base/a1034b28e4f62f3`,
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := gsmadmin.GetSharedContact(flags["url"].GetString())

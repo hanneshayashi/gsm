@@ -33,7 +33,8 @@ var filesDownloadBatchCmd = &cobra.Command{
 	Long:  `Downloads a (non-Google) file to your local system`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {

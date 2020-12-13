@@ -34,7 +34,8 @@ var filesCopyRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

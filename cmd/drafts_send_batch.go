@@ -34,7 +34,8 @@ var draftsSendBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, draftFlags)
 		if err != nil {

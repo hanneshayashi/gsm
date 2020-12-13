@@ -33,7 +33,8 @@ var repliesDeleteBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/replies/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, replyFlags)
 		if err != nil {

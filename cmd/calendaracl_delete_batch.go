@@ -33,7 +33,8 @@ var calendarACLDeleteBatchCmd = &cobra.Command{
 	Long:  `https://developers.google.com/calendar/v3/reference/acl/delete`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarACLFlags)
 		if err != nil {

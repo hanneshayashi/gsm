@@ -29,7 +29,8 @@ import (
 var threadsModifyCmd = &cobra.Command{
 	Use:   "modify",
 	Short: "Modifies the labels applied to the thread. This applies to all messages in the thread.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ModifyThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabels"].GetStringSlice(), flags["removeLabels"].GetStringSlice())

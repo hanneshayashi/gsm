@@ -34,7 +34,8 @@ var calendarACLInsertBatchCmd = &cobra.Command{
 	Long:  `https://developers.google.com/calendar/v3/reference/acl/insert`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarACLFlags)
 		if err != nil {

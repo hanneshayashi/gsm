@@ -29,7 +29,8 @@ import (
 var groupMembershipsCiCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/create`,
+	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/create`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())

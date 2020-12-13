@@ -29,7 +29,8 @@ import (
 var smimeInfoSetDefaultCmd = &cobra.Command{
 	Use:   "setDefault",
 	Short: "Sets the default S/MIME config for the specified send-as alias.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/setDefault",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/setDefault",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.SetDefaultSmimeInfo(flags["userId"].GetString(), flags["sendAsEmail"].GetString(), flags["id"].GetString())

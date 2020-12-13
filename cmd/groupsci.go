@@ -30,7 +30,8 @@ import (
 var groupsCiCmd = &cobra.Command{
 	Use:   "groupsCi",
 	Short: "Manage Google Groups with the Cloud Identity (Beta) API",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups",
+	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

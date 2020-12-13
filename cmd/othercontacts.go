@@ -28,7 +28,8 @@ import (
 var otherContactsCmd = &cobra.Command{
 	Use:   "otherContacts",
 	Short: "Manage 'other' contacts (Part of People API)",
-	Long:  "https://developers.google.com/people/api/rest/v1/otherContacts",
+	Long:  "https://developers.google.com/people/api/rest/v1/otherContacts",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

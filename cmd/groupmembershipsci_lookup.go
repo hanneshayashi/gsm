@@ -29,7 +29,8 @@ import (
 var groupMembershipsCiLookupCmd = &cobra.Command{
 	Use:   "lookup",
 	Short: "Looks up a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/lookup`,
+	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/lookup`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())

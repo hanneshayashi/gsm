@@ -29,7 +29,8 @@ import (
 var groupMembershipsCiSearchTransitiveGroupsCmd = &cobra.Command{
 	Use:   "searchTransitiveGroups",
 	Short: "Search transitive groups of a member.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/searchTransitiveGroups`,
+	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/searchTransitiveGroups`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())

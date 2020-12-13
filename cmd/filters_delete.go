@@ -29,7 +29,8 @@ import (
 var filtersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a filter.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/delete",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.DeleteFilter(flags["userId"].GetString(), flags["id"].GetString())

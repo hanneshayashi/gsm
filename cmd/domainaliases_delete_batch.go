@@ -33,7 +33,8 @@ var domainAliasesDeleteBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags)
 		if err != nil {

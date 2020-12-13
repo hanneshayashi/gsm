@@ -32,7 +32,8 @@ var groupsCiSearchCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/search
 Examples:
   - Search for security groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.security' in labels"
-  - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,
+  - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmci.SearchGroups(flags["query"].GetString(), flags["view"].GetString(), flags["fields"].GetString())

@@ -28,7 +28,8 @@ import (
 var filesCmd = &cobra.Command{
 	Use:   "files",
 	Short: "Managed files (Part of Drive API)",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

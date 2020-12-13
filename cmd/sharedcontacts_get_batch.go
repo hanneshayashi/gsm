@@ -33,7 +33,8 @@ var sharedContactsGetBatchCmd = &cobra.Command{
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags)
 		if err != nil {

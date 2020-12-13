@@ -29,7 +29,8 @@ import (
 var gmailSettingsGetPopCmd = &cobra.Command{
 	Use:   "getPop",
 	Short: "Gets POP settings.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getPop",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getPop",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetPOPSettings(flags["userId"].GetString(), flags["fields"].GetString())

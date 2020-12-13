@@ -29,7 +29,8 @@ import (
 var roleAssignmentsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Creates a role assignment.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToRoleAssignment(flags)

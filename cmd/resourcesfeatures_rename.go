@@ -29,7 +29,8 @@ import (
 var resourcesFeaturesRenameCmd = &cobra.Command{
 	Use:   "rename",
 	Short: "Renames a feature resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFeatureRename(flags)

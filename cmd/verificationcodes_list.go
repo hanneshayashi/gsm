@@ -29,7 +29,8 @@ import (
 var verificationCodesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Returns the current set of valid backup verification codes for the specified user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListVerificationCodes(flags["userKey"].GetString(), flags["fields"].GetString())

@@ -34,7 +34,8 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags)
 		if err != nil {

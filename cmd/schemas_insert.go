@@ -29,7 +29,8 @@ import (
 var schemasInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Create a custom schema.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSchema(flags)

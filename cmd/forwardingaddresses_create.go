@@ -31,7 +31,8 @@ var forwardingAddressesCreateCmd = &cobra.Command{
 	Short: `Creates a forwarding address.
 If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to pending;
 otherwise, the resource will be created with verification status set to accepted.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create",
+	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToForwardingAddress(flags)

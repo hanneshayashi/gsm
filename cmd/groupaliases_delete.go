@@ -29,7 +29,8 @@ import (
 var groupAliasesDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Removes an alias.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteGroupAlias(flags["groupKey"].GetString(), flags["alias"].GetString())

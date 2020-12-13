@@ -29,7 +29,8 @@ import (
 var mobileDevicesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a paginated list of all mobile devices for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListMobileDevices(flags["customerId"].GetString(), flags["query"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString())

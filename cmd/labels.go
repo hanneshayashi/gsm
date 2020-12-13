@@ -28,7 +28,8 @@ import (
 var labelsCmd = &cobra.Command{
 	Use:   "labels",
 	Short: "Manage users' mailbox labels (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

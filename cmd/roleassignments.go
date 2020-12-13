@@ -28,7 +28,8 @@ import (
 var roleAssignmentsCmd = &cobra.Command{
 	Use:   "roleAssignments",
 	Short: "Manage Role Assignments (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

@@ -30,7 +30,8 @@ import (
 var spreadsheetsCmd = &cobra.Command{
 	Use:   "spreadsheets",
 	Short: "Manage Google Sheets spreadsheets (Part of Sheets API)",
-	Long:  `https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,
+	Long:  `https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

@@ -29,7 +29,8 @@ import (
 var drivesGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets a shared drive's metadata by ID.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives/get",
+	Long:  "https://developers.google.com/drive/api/v3/reference/drives/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetDrive(flags["driveId"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool())

@@ -29,7 +29,8 @@ import (
 var spreadsheetsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets a spreadsheet, returning the newly getd spreadsheet.",
-	Long:  "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
+	Long:  "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmsheets.GetSpreadsheet(flags["spreadsheetId"].GetString(), flags["fields"].GetString(), flags["ranges"].GetStringSlice(), flags["includeGridData"].GetBool())

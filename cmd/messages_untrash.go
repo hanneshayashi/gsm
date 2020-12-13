@@ -29,7 +29,8 @@ import (
 var messagesUntrashCmd = &cobra.Command{
 	Use:   "untrash",
 	Short: "Removes the specified message from the trash.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/untrash",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/untrash",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.UntrashMessage(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString())

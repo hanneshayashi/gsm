@@ -27,7 +27,8 @@ import (
 var colorsCmd = &cobra.Command{
 	Use:   "colors",
 	Short: "Show Calendar and Event color definitions (Part of Calendar API)",
-	Long:  `https://developers.google.com/calendar/v3/reference/colors`,
+	Long:  `https://developers.google.com/calendar/v3/reference/colors`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

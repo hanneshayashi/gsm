@@ -29,7 +29,8 @@ import (
 var drivesHideCmd = &cobra.Command{
 	Use:   "hide",
 	Short: "Hides a shared drive from the default view.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives/hide",
+	Long:  "https://developers.google.com/drive/api/v3/reference/drives/hide",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.HideDrive(flags["driveId"].GetString(), flags["fields"].GetString())

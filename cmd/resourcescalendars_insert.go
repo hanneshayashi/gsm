@@ -29,7 +29,8 @@ import (
 var resourcesCalendarsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Inserts a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToResourceCalendar(flags)

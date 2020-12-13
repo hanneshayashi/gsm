@@ -29,7 +29,8 @@ import (
 var calendarACLInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Creates an access control rule.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/insert`,
+	Long:  `https://developers.google.com/calendar/v3/reference/acl/insert`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToCalendarACLRule(flags)

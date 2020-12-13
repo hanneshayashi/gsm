@@ -29,7 +29,8 @@ import (
 var drivesUnhideCmd = &cobra.Command{
 	Use:   "unhide",
 	Short: "Restores a shared drive to the default view.",
-	Long:  `https://developers.google.com/drive/api/v3/reference/drives/unhide`,
+	Long:  `https://developers.google.com/drive/api/v3/reference/drives/unhide`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.UnhideDrive(flags["driveId"].GetString(), flags["fields"].GetString())

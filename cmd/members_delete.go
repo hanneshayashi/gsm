@@ -29,7 +29,8 @@ import (
 var membersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Removes a member from a group.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteMember(flags["groupKey"].GetString(), flags["memberKey"].GetString())

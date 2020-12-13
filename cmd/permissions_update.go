@@ -29,7 +29,8 @@ import (
 var permissionsUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Updates a permission with patch semantics.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
+	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPermission(flags)

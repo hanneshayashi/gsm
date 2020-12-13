@@ -29,7 +29,8 @@ import (
 var resourcesCalendarsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteResourcesCalendar(flags["customer"].GetString(), flags["calendarResourceId"].GetString())

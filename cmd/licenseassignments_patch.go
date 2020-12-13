@@ -29,7 +29,8 @@ import (
 var licenseAssignmentsPatchCmd = &cobra.Command{
 	Use:   "patch",
 	Short: "Patch a specific user's license by product SKU.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",
+	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		l, err := mapToLicenseAssignment(flags)

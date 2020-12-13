@@ -29,7 +29,8 @@ import (
 var groupSettingsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieves a group's settings identified by the group email address.",
-	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
+	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgroupssettings.GetGroupSettings(flags["groupUniqueId"].GetString(), flags["fields"].GetString())

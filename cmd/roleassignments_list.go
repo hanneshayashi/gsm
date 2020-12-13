@@ -30,7 +30,8 @@ import (
 var roleAssignmentsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a paginated list of all roleAssignments.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		roleID := flags["roleId"].GetInt64()

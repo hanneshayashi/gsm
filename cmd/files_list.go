@@ -29,7 +29,8 @@ import (
 var filesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists or searches files.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListFiles(flags["q"].GetString(), flags["driveId"].GetString(), flags["corpora"].GetString(), flags["includePermissionsForView"].GetString(), flags["orderBy"].GetString(), flags["spaces"].GetString(), flags["fields"].GetString(), flags["includeItemsFromAllDrives"].GetBool())

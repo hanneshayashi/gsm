@@ -29,7 +29,8 @@ import (
 var peopleCreateContactCmd = &cobra.Command{
 	Use:   "createContact",
 	Short: "Create a new contact and return the person resource for that contact.",
-	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
+	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPerson(flags, nil)

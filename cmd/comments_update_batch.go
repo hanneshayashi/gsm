@@ -34,7 +34,8 @@ var commentsUpdateBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/comments/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, commentFlags)
 		if err != nil {

@@ -34,7 +34,8 @@ var attachmentsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, attachmentFlags)
 		if err != nil {

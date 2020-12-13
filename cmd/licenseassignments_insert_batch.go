@@ -34,7 +34,8 @@ var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, licenseAssignmentFlags)
 		if err != nil {

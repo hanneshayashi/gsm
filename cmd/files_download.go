@@ -29,7 +29,8 @@ import (
 var filesDownloadCmd = &cobra.Command{
 	Use:   "download",
 	Short: "Download a file",
-	Long:  `Downloads a (non-Google) file to your local system`,
+	Long:  `Downloads a (non-Google) file to your local system`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DownloadFile(flags["fileId"].GetString(), flags["acknowledgeAbuse"].GetBool())

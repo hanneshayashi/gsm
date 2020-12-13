@@ -33,7 +33,8 @@ var groupsCiDeleteBatchCmd = &cobra.Command{
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags)
 		if err != nil {

@@ -29,7 +29,8 @@ import (
 var verificationCodesGenerateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate new backup verification codes for the user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/generate",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/generate",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GenerateVerificationCodes(flags["userKey"].GetString())

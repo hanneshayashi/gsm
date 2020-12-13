@@ -30,7 +30,8 @@ import (
 var schemasCmd = &cobra.Command{
 	Use:   "schemas",
 	Short: "Manage custom schemas for user accounts (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas",
+	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

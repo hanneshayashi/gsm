@@ -29,7 +29,8 @@ import (
 var eventsInstancesCmd = &cobra.Command{
 	Use:   "instances",
 	Short: "Returns instances of the specified recurring event.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/instances",
+	Long:  "https://developers.google.com/calendar/v3/reference/events/instances",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListInstances(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["originalStart"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["fields"].GetString(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool())

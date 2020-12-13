@@ -29,7 +29,8 @@ import (
 var draftsCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a new draft with the DRAFT label.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/create",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/create",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		d, err := mapToDraft(flags)

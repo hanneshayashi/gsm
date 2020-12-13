@@ -27,7 +27,8 @@ import (
 var attachmentsCmd = &cobra.Command{
 	Use:   "attachments",
 	Short: "Manage (get..) message attachements (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

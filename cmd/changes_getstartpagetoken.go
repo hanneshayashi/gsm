@@ -29,7 +29,8 @@ import (
 var changesGetStartPageTokenCmd = &cobra.Command{
 	Use:   "getStartPageToken",
 	Short: "Gets the starting pageToken for listing future changes.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/changes/getStartPageToken",
+	Long:  "https://developers.google.com/drive/api/v3/reference/changes/getStartPageToken",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetStartPageToken(flags["driveId"].GetString(), flags["fields"].GetString())

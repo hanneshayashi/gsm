@@ -29,7 +29,8 @@ import (
 var eventsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes an event.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/delete",
+	Long:  "https://developers.google.com/calendar/v3/reference/events/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.DeleteEvent(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["sendUpdates"].GetString())

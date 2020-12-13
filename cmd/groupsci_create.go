@@ -32,7 +32,8 @@ var groupsCiCreateCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/how-to/create-dynamic-groups#python
 Examples:
   - Create a dynamic group:
-    gsm groupsCi create --parent customers/{my_customer_id} --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,
+    gsm groupsCi create --parent customers/{my_customer_id} --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		g, err := mapToGroupCi(flags)

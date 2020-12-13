@@ -70,7 +70,8 @@ $ ./gsm completions fish > ~/.config/fish/completions/gsm.fish
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
-	Args:                  cobra.ExactValidArgs(1),
+	Args:                  cobra.ExactValidArgs(1),	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		switch args[0] {
 		case "bash":

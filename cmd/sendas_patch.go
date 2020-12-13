@@ -29,7 +29,8 @@ import (
 var sendAsPatchCmd = &cobra.Command{
 	Use:   "patch",
 	Short: "Patch the specified send-as alias.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSendAs(flags)

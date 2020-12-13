@@ -29,7 +29,8 @@ import (
 var labelsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists all labels in the user's mailbox.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/list",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListLabels(flags["userId"].GetString(), flags["fields"].GetString())

@@ -29,7 +29,8 @@ import (
 var resourcesCalendarsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a list of calendar resources for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListResourcesCalendars(flags["customer"].GetString(), flags["orderBy"].GetString(), flags["query"].GetString(), flags["fields"].GetString())

@@ -29,7 +29,8 @@ import (
 var eventsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Returns events on the specified calendar.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/list",
+	Long:  "https://developers.google.com/calendar/v3/reference/events/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListEvents(flags["calendarId"].GetString(), flags["iCalUID"].GetString(), flags["orderBy"].GetString(), flags["q"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["updatedMin"].GetString(), flags["fields"].GetString(), flags["privateExtendedProperty"].GetStringSlice(), flags["sharedExtendedProperty"].GetStringSlice(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool(), flags["showHiddenInvitations"].GetBool(), flags["singleEvents"].GetBool())

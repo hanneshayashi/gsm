@@ -29,7 +29,8 @@ import (
 var groupAliasesInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Adds an alias for the group.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToGroupAlias(flags)

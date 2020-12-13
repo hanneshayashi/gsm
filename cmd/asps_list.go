@@ -29,7 +29,8 @@ import (
 var aspsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List the ASPs issued by a user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/asps/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/asps/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListAsps(flags["userKey"].GetString(), flags["fields"].GetString())

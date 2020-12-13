@@ -29,7 +29,8 @@ import (
 var chromeOsIssueCommandCmd = &cobra.Command{
 	Use:   "issueCommand",
 	Short: "Takes an issueCommand that affects a Chrome OS Device. This includes deprovisioning, disabling, and re-enabling devices.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/issueCommand",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/issueCommand",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		i, err := mapToDirectoryChromeosdevicesIssueCommandRequest(flags)

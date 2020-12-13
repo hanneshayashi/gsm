@@ -29,7 +29,8 @@ import (
 var resourcesBuildingsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Inserts a building.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBuilding(flags)

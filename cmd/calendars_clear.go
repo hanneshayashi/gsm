@@ -30,7 +30,8 @@ var calendarsClearCmd = &cobra.Command{
 	Use: "clear",
 	Short: `Clears a primary calendar.
 This operation deletes all events associated with the primary calendar of an account.`,
-	Long: "https://developers.google.com/calendar/v3/reference/calendars/clear",
+	Long: "https://developers.google.com/calendar/v3/reference/calendars/clear",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ClearCalendar(flags["calendarId"].GetString())

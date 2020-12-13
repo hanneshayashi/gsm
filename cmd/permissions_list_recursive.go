@@ -36,7 +36,8 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 "files list recursive --folder <folderId> --fields "files(id,name,permissions)"`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

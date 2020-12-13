@@ -34,7 +34,8 @@ var permissionsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags)
 		if err != nil {

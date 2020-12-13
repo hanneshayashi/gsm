@@ -29,7 +29,8 @@ import (
 var attachmentsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets the specified message attachment.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments/get",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetAttachment(flags["userId"].GetString(), flags["messageId"].GetString(), flags["id"].GetString(), flags["fields"].GetString())

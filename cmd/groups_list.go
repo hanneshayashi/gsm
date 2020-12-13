@@ -29,7 +29,8 @@ import (
 var groupsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieve all groups of a domain or of a user given a userKey (paginated).",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListGroups(flags["query"].GetString(), flags["userKey"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString())

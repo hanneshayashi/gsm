@@ -29,7 +29,8 @@ import (
 var resourcesFeaturesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a list of feature resources for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListResourcesFeatures(flags["customer"].GetString(), flags["fields"].GetString())

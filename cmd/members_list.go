@@ -29,7 +29,8 @@ import (
 var membersListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a paginated list of all members in a group.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListMembers(flags["groupKey"].GetString(), flags["roles"].GetString(), flags["fields"].GetString(), flags["includeDerivedMembership"].GetBool())

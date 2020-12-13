@@ -29,7 +29,8 @@ import (
 var eventsQuickAddCmd = &cobra.Command{
 	Use:   "quickAdd",
 	Short: "Creates an event based on a simple text string.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/quickAdd",
+	Long:  "https://developers.google.com/calendar/v3/reference/events/quickAdd",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.QuickAddEvent(flags["calendarId"].GetString(), flags["text"].GetString(), flags["sendUpdates"].GetString(), flags["fields"].GetString())

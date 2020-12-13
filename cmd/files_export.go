@@ -30,7 +30,8 @@ var filesExportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "Exports a Google Doc to the requested MIME type and returns the exported content.",
 	Long: `Please note that the exported content is limited to 10MB.
-https://developers.google.com/drive/api/v3/reference/files/export`,
+https://developers.google.com/drive/api/v3/reference/files/export`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ExportFile(flags["fileId"].GetString(), flags["mimeType"].GetString())

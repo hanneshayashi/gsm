@@ -29,7 +29,8 @@ import (
 var licenseAssignmentsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Insert a specific user's license by product SKU.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",
+	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		l, err := mapToLicenseAssignmentInsert(flags)

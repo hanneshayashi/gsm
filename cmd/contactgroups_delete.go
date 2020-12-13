@@ -29,7 +29,8 @@ import (
 var contactGroupsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete an existing contact group owned by the authenticated user by specifying a contact group resource name.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/delete",
+	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.DeleteContactGroup(flags["resourceName"].GetString(), flags["deleteContacts"].GetBool())

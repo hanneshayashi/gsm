@@ -34,7 +34,8 @@ var messagesUntrashBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/untrash",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, messageFlags)
 		if err != nil {

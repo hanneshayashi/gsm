@@ -34,7 +34,8 @@ var calendarListsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarListFlags)
 		if err != nil {

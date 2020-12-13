@@ -29,7 +29,8 @@ import (
 var gmailSettingsGetLanguageCmd = &cobra.Command{
 	Use:   "getLanguage",
 	Short: "Gets language settings.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getLanguage",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getLanguage",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetLanguageSettings(flags["userId"].GetString(), flags["fields"].GetString())

@@ -27,7 +27,8 @@ import (
 var peopleConnectionsCmd = &cobra.Command{
 	Use:   "peopleConnections",
 	Short: "Information about a person merged from various data sources such as the authenticated user's contacts and profile data. (Part of People API)",
-	Long:  "https://developers.google.com/people/api/rest/v1/people.connections",
+	Long:  "https://developers.google.com/people/api/rest/v1/people.connections",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

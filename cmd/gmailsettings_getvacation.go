@@ -29,7 +29,8 @@ import (
 var gmailSettingsGetVacationCmd = &cobra.Command{
 	Use:   "getVacation",
 	Short: "Gets vacation responder settings.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getVacation",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getVacation",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetVacationResponderSettings(flags["userId"].GetString(), flags["fields"].GetString())

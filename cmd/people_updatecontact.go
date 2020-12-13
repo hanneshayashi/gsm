@@ -29,7 +29,8 @@ import (
 var peopleUpdateContactCmd = &cobra.Command{
 	Use:   "updateContact",
 	Short: "Update contact data for an existing contact person.",
-	Long:  "https://developers.google.com/people/api/rest/v1/people/updateContact",
+	Long:  "https://developers.google.com/people/api/rest/v1/people/updateContact",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := gsmpeople.GetContact(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), "*")

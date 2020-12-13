@@ -29,7 +29,8 @@ import (
 var contactGroupsUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update the name of an existing contact group owned by the authenticated user.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/update",
+	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/update",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := gsmpeople.GetContactGroup(flags["resourceName"].GetString(), "*", 0)

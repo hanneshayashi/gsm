@@ -30,7 +30,8 @@ import (
 var licenseAssignmentsListForProductAndSkuCmd = &cobra.Command{
 	Use:   "listForProductAndSku",
 	Short: "List all users assigned licenses for a specific product SKU.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForProductAndSku",
+	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForProductAndSku",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		customerID := gsmadmin.GetCustomerID(flags["customerId"].GetString())

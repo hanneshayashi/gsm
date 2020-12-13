@@ -29,7 +29,8 @@ import (
 var userPhotosGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieves the user's photo.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/userPhotos/get",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/userPhotos/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetUserPhoto(flags["userKey"].GetString(), flags["fields"].GetString())

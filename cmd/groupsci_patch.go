@@ -32,7 +32,8 @@ var groupsCiPatchCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/how-to/update-group-to-security-group
 Examples:
   - Make group a security group: 
-    gsm groupsCi patch --email group@example.org --updateMask labels --labels "cloudidentity.googleapis.com/groups.security,cloudidentity.googleapis.com/groups.discussion_forum"`,
+    gsm groupsCi patch --email group@example.org --updateMask labels --labels "cloudidentity.googleapis.com/groups.security,cloudidentity.googleapis.com/groups.discussion_forum"`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())

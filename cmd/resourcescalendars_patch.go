@@ -29,7 +29,8 @@ import (
 var resourcesCalendarsPatchCmd = &cobra.Command{
 	Use:   "patch",
 	Short: "Patches a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToResourceCalendar(flags)

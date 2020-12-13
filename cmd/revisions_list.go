@@ -29,7 +29,8 @@ import (
 var revisionsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists a file's revisions.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/list",
+	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListRevisions(flags["fileId"].GetString(), flags["fields"].GetString())

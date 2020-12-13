@@ -19,6 +19,11 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmauth"
 	"github.com/hanneshayashi/gsm/gsmcalendar"
@@ -31,10 +36,6 @@ import (
 	"github.com/hanneshayashi/gsm/gsmlicensing"
 	"github.com/hanneshayashi/gsm/gsmpeople"
 	"github.com/hanneshayashi/gsm/gsmsheets"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
 
 	"github.com/spf13/cobra"
 

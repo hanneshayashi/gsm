@@ -29,7 +29,8 @@ import (
 var peopleSearchDirectoryPeopleCmd = &cobra.Command{
 	Use:   "searchDirectoryPeople",
 	Short: "Delete a contact person. Any non-contact data will not be deleted.",
-	Long:  "https://developers.google.com/people/api/rest/v1/people/searchDirectoryPeople",
+	Long:  "https://developers.google.com/people/api/rest/v1/people/searchDirectoryPeople",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.SearchDirectoryPeople(flags["readMask"].GetString(), flags["sources"].GetString(), flags["query"].GetString(), flags["fields"].GetString(), flags["mergeSources"].GetStringSlice())

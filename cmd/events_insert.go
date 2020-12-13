@@ -29,7 +29,8 @@ import (
 var eventsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Creates an event.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/insert",
+	Long:  "https://developers.google.com/calendar/v3/reference/events/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		event, err := mapToEvent(flags)

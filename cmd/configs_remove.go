@@ -34,7 +34,8 @@ var configsRemoveCmd = &cobra.Command{
 Credential files and tokens will not be removed!`,
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name := flags["name"].GetString()

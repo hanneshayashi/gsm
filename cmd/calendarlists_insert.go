@@ -29,7 +29,8 @@ import (
 var calendarListsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Inserts an existing calendar into the user's calendar list.",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/insert",
+	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		calendarListEntry, err := mapToCalendarListEntry(flags)

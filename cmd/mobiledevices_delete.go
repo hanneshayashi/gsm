@@ -29,7 +29,8 @@ import (
 var mobileDevicesDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Removes a mobile device.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteMobileDevice(flags["customerId"].GetString(), flags["resourceId"].GetString())

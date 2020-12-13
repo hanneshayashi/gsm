@@ -29,7 +29,8 @@ import (
 var orgUnitsInsertCmd = &cobra.Command{
 	Use:   "insert",
 	Short: "Adds an organizational unit.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/insert",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/insert",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		o, err := mapToOrgUnit(flags)

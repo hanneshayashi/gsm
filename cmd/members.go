@@ -28,7 +28,8 @@ import (
 var membersCmd = &cobra.Command{
 	Use:   "members",
 	Short: "Manage group members (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

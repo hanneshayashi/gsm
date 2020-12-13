@@ -34,7 +34,8 @@ var chromeOsCommandsGetBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsCommandFlags)
 		if err != nil {

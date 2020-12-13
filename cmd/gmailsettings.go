@@ -30,7 +30,8 @@ import (
 var gmailSettingsCmd = &cobra.Command{
 	Use:   "gmailSettings",
 	Short: "Manage Gmail settings for users (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

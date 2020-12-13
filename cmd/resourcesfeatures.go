@@ -28,7 +28,8 @@ import (
 var resourcesFeaturesCmd = &cobra.Command{
 	Use:   "resourcesFeatures",
 	Short: "Manage resource features (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

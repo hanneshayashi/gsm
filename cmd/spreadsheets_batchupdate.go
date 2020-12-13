@@ -29,7 +29,8 @@ import (
 var spreadsheetsBatchUpdateCmd = &cobra.Command{
 	Use:   "batchUpdate",
 	Short: "Applies one or more updates to the spreadsheet.",
-	Long:  "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/batchupdate",
+	Long:  "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/batchupdate",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBatchUpdateSpreadsheetRequest(flags)

@@ -29,7 +29,8 @@ import (
 var groupsCiGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieves a group.",
-	Long:  "",
+	Long:  "",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())

@@ -29,7 +29,8 @@ import (
 var rolesDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a role.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roles/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roles/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteRole(flags["customer"].GetString(), flags["roleId"].GetString())

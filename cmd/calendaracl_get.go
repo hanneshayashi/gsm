@@ -29,7 +29,8 @@ import (
 var calendarACLGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Returns an access control rule.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/get`,
+	Long:  `https://developers.google.com/calendar/v3/reference/acl/get`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.GetACL(flags["calendarId"].GetString(), flags["ruleId"].GetString(), flags["fields"].GetString())

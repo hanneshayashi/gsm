@@ -29,7 +29,8 @@ import (
 var contactGroupsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get a specific contact group owned by the authenticated user by specifying a contact group resource name.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/get",
+	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.GetContactGroup(flags["resourceName"].GetString(), flags["fields"].GetString(), flags["maxMembers"].GetInt64())

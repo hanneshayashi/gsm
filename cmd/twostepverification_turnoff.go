@@ -29,7 +29,8 @@ import (
 var twoStepVerificationTurnOffCmd = &cobra.Command{
 	Use:   "turnOff",
 	Short: "Turn off 2-Step Verification for user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
+	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.SignOutUser(flags["userKey"].GetString())

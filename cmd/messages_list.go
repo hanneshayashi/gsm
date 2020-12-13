@@ -29,7 +29,8 @@ import (
 var messagesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists the messages in the user's mailbox.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/list",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListMessages(flags["userId"].GetString(), flags["q"].GetString(), flags["fields"].GetString(), flags["labelIds"].GetStringSlice(), flags["includeSpamTrash"].GetBool())

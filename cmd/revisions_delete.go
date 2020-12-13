@@ -31,7 +31,8 @@ var revisionsDeleteCmd = &cobra.Command{
 	Short: "Permanently deletes a file version.",
 	Long: `You can only delete revisions for files with binary content in Google Drive, like images or videos.
 Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted.
-https://developers.google.com/drive/api/v3/reference/revisions/delete`,
+https://developers.google.com/drive/api/v3/reference/revisions/delete`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteRevision(flags["fileId"].GetString(), flags["revisionId"].GetString())

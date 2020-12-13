@@ -29,7 +29,8 @@ import (
 var gmailSettingsUpdateImapCmd = &cobra.Command{
 	Use:   "updateImap",
 	Short: "Updates IMAP settings.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateImap",
+	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateImap",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		i, err := mapToImapSettings(flags)

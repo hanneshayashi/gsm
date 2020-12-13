@@ -34,7 +34,8 @@ var eventsMoveBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/calendar/v3/reference/events/move",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags)
 		if err != nil {

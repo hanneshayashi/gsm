@@ -31,7 +31,8 @@ var messagesImportCmd = &cobra.Command{
 	Use: "import",
 	Short: `Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP.
 Does not send a message.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/import",
+	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/import",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		internalDateSource := flags["internalDateSource"].GetString()

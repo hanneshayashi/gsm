@@ -29,7 +29,8 @@ import (
 var groupMembershipsCiDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/delete`,
+	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/delete`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())

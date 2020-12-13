@@ -35,7 +35,8 @@ var delegatesGetBatchCmd = &cobra.Command{
 	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)
 		if err != nil {

@@ -29,7 +29,8 @@ import (
 var domainAliasesDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a Domain Alias of the customer.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/delete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/delete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteDomainAlias(flags["customer"].GetString(), flags["domainAliasName"].GetString())

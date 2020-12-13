@@ -29,7 +29,8 @@ import (
 var schemasGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieve a custom schema.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/get",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/get",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetSchema(flags["customerId"].GetString(), flags["schemaKey"].GetString(), flags["fields"].GetString())

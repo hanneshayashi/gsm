@@ -32,7 +32,8 @@ var groupMembershipsCiCheckTransitiveMembershipCmd = &cobra.Command{
 	Long: `A member has membership to a group as long as there is a single viewable transitive membership between the group and the member.
 The actor must have view permissions to at least one transitive membership between the member and group.
 
-https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/checkTransitiveMembership`,
+https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/checkTransitiveMembership`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())

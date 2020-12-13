@@ -29,7 +29,8 @@ import (
 var userAliasesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists all aliases for a user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListUserAliases(flags["userKey"].GetString(), flags["fields"].GetString())

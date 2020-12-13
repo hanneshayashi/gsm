@@ -29,7 +29,8 @@ import (
 var usersListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieves a paginated list of either deleted users or all users in a domain.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/list",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/list",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListUsers(flags["showDeleted"].GetBool(), flags["query"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString(), flags["viewType"].GetString(), flags["customFieldMask"].GetString())

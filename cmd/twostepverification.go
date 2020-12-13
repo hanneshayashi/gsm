@@ -39,7 +39,8 @@ var twoStepVerificationFlagsALL = gsmhelpers.GetAllFlags(userFlags)
 var twoStepVerificationCmd = &cobra.Command{
 	Use:   "twoStepVerification",
 	Short: "Manage Two Step Verification for users (Park of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
+	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

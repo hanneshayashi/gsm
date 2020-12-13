@@ -29,7 +29,8 @@ import (
 var usersUndeleteCmd = &cobra.Command{
 	Use:   "undelete",
 	Short: "Undeletes a deleted user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.UndeletUser(flags["userKey"].GetString(), flags["orgUnitPath"].GetString())

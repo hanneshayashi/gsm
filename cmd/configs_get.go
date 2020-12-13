@@ -32,7 +32,8 @@ var configsGetCmd = &cobra.Command{
 	Long:  ``,
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
-	},
+	},	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.GetConfig(flags["name"].GetString())

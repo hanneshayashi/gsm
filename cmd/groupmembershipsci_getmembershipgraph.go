@@ -29,7 +29,8 @@ import (
 var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 	Use:   "getMembershipGraph",
 	Short: "GetMembershipGraphs a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/getMembershipGraph`,
+	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/getMembershipGraph`,	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())

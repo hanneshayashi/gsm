@@ -29,7 +29,8 @@ import (
 var revisionsUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Updates a revision with patch semantics.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/update",
+	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/update",	
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToRevision(flags)
