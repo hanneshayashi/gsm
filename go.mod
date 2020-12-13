@@ -1,4 +1,4 @@
-module gsm
+module github.com/hanneshayashi/gsm
 
 go 1.15
 

@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 // TurnOffTwoStepVerification turns off 2-Step Verification for user.

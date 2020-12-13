@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmlicensing
 
 import (
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/licensing/v1"

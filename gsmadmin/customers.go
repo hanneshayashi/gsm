@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 
 	admin "google.golang.org/api/admin/directory/v1"

@@ -18,8 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"gsm/gsmhelpers"
-	"gsm/gsmlicensing"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmlicensing"
 	"log"
 	"sync"
 

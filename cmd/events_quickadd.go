@@ -18,8 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"gsm/gsmcalendar"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmcalendar"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 
 	"github.com/spf13/cobra"

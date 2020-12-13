@@ -20,7 +20,7 @@ package cmd
 import (
 	"encoding/base64"
 	"fmt"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io/ioutil"
 	"os"
 

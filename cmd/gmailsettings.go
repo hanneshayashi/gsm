@@ -19,8 +19,8 @@ package cmd
 
 import (
 	"fmt"
-	"gsm/gsmgmail"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmgmail"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/gmail/v1"

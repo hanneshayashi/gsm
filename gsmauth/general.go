@@ -19,7 +19,7 @@ package gsmauth
 import (
 	"encoding/json"
 	"fmt"
-	"gsm/gsmconfig"
+	"github.com/hanneshayashi/gsm/gsmconfig"
 	"log"
 	"net/http"
 	"os"

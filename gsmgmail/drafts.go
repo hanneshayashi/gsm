@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io"
 
 	"google.golang.org/api/gmail/v1"

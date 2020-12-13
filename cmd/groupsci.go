@@ -19,8 +19,8 @@ package cmd
 
 import (
 	"errors"
-	"gsm/gsmci"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmci"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	ci "google.golang.org/api/cloudidentity/v1beta1"

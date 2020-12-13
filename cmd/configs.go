@@ -19,8 +19,8 @@ package cmd
 
 import (
 	"fmt"
-	"gsm/gsmconfig"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmconfig"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"

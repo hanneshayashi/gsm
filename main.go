@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package main
 
-import "gsm/cmd"
+import "github.com/hanneshayashi/gsm/cmd"
 
 func main() {
 	cmd.Execute()

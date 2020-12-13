@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"encoding/json"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	ci "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/googleapi"

@@ -19,8 +19,8 @@ package cmd
 
 import (
 	"fmt"
-	"gsm/gsmadmin"
-	"gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 
 	"github.com/spf13/cobra"
