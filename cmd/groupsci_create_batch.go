@@ -21,6 +21,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -45,12 +46,20 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan map[string]interface{}, cap)
 		final := []map[string]interface{}{}
+		customerID, err := gsmadmin.GetOwnCustomerID()
+		if err != nil {
+			log.Printf("Error determining customer ID: %v\n", err)
+		}
+		parent := "customers/" + customerID
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {
 						g, err := mapToGroupCi(m)
+						if g.Parent == "" {
+							g.Parent = parent
+						}
 						if err != nil {
 							log.Printf("Error building group object: %v\n", err)
 							continue

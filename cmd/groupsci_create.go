@@ -20,6 +20,7 @@ package cmd
 import (
 	"log"
 
+	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -40,6 +41,13 @@ Examples:
 		g, err := mapToGroupCi(flags)
 		if err != nil {
 			log.Fatalf("Error building group object: %v", err)
+		}
+		if g.Parent == "" {
+			customerID, err := gsmadmin.GetOwnCustomerID()
+			if err != nil {
+				log.Fatalf("Error determining customer ID: %v", err)
+			}
+			g.Parent = "customers/" + customerID
 		}
 		result, err := gsmci.CreateGroup(g, flags["initialGroupConfig"].GetString(), flags["fields"].GetString())
 		if err != nil {
