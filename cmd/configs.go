@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,7 +43,7 @@ var configsCmd = &cobra.Command{
 '~/.config/gsm/<config>.yaml'.
 The currently in-use config is always '~/.config/gsm/.gsm.yaml'.
 When you load a config with 'gsm configs load --name <config>, the current .gsm.yaml will be renamed to <name>.yaml and the loaded config will be renamed to .gsm.yaml.
-You can always explicitly specify a config file with the --config flag.`,	
+You can always explicitly specify a config file with the --config flag.`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

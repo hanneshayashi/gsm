@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -27,9 +28,9 @@ import (
 
 // chromeOsDevicesCmd represents the chromeOsDevices command
 var chromeOsDevicesCmd = &cobra.Command{
-	Use:   "chromeOsDevices",
-	Short: "Managed Chrome OS Devices (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",	
+	Use:               "chromeOsDevices",
+	Short:             "Managed Chrome OS Devices (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

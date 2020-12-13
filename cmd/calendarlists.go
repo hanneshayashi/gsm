@@ -18,8 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"strconv"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/calendar/v3"
@@ -27,9 +28,9 @@ import (
 
 // calendarListsCmd represents the calendarLists command
 var calendarListsCmd = &cobra.Command{
-	Use:   "calendarLists",
-	Short: "Manage entries in users' calendar list (Part of Calendar API)",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarList",	
+	Use:               "calendarLists",
+	Short:             "Manage entries in users' calendar list (Part of Calendar API)",
+	Long:              "https://developers.google.com/calendar/v3/reference/calendarList",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

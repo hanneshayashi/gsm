@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	drive "google.golang.org/api/drive/v3"
 	"google.golang.org/api/googleapi"

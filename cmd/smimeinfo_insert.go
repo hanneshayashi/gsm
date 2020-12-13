@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var smimeInfoInsertCmd = &cobra.Command{
 	Use: "insert",
 	Short: `Insert (upload) the given S/MIME config for the specified send-as alias.
 Note that pkcs12 format is required for the key.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/insert",	
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -18,20 +18,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmdrive"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/hanneshayashi/gsm/gsmdrive"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
 // filesCreateCmd represents the create command
 var filesCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a new file or folder. Can also be used to upload files.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/create",	
+	Use:               "create",
+	Short:             "Creates a new file or folder. Can also be used to upload files.",
+	Long:              "https://developers.google.com/drive/api/v3/reference/files/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

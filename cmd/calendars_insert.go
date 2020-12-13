@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // calendarsInsertCmd represents the insert command
 var calendarsInsertCmd = &cobra.Command{
-	Use:   "insert",
-	Short: `Creates a secondary calendar.`,
-	Long:  "https://developers.google.com/calendar/v3/reference/calendars/insert",	
+	Use:               "insert",
+	Short:             `Creates a secondary calendar.`,
+	Long:              "https://developers.google.com/calendar/v3/reference/calendars/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

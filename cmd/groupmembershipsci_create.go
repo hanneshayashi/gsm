@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // groupMembershipsCiCreateCmd represents the create command
 var groupMembershipsCiCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/create`,	
+	Use:               "create",
+	Short:             "Creates a Membership.",
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

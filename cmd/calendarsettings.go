@@ -25,9 +25,9 @@ import (
 
 // calendarSettingsCmd represents the calendarSettings command
 var calendarSettingsCmd = &cobra.Command{
-	Use:   "calendarSettings",
-	Short: "See users' calendar settings (Part of Calendar API)",
-	Long:  "https://developers.google.com/calendar/v3/reference/settings",	
+	Use:               "calendarSettings",
+	Short:             "See users' calendar settings (Part of Calendar API)",
+	Long:              "https://developers.google.com/calendar/v3/reference/settings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

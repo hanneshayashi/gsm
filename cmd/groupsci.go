@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,9 +29,9 @@ import (
 
 // groupsCiCmd represents the groupsCi command
 var groupsCiCmd = &cobra.Command{
-	Use:   "groupsCi",
-	Short: "Manage Google Groups with the Cloud Identity (Beta) API",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups",	
+	Use:               "groupsCi",
+	Short:             "Manage Google Groups with the Cloud Identity (Beta) API",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

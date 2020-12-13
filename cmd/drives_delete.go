@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var drivesDeleteCmd = &cobra.Command{
 	Use: "delete",
 	Short: `Permanently deletes a shared drive for which the user is an organizer.
 The shared drive cannot contain any untrashed items.`,
-	Long: "https://developers.google.com/drive/api/v3/reference/drives/delete",	
+	Long:              "https://developers.google.com/drive/api/v3/reference/drives/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

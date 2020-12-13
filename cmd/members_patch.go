@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // membersPatchCmd represents the patch command
 var membersPatchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Updates the membership properties of a user in the specified group. This method supports patch semantics.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",	
+	Use:               "patch",
+	Short:             "Updates the membership properties of a user in the specified group. This method supports patch semantics.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

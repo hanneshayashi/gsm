@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -34,7 +35,7 @@ var verificationcodesListRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

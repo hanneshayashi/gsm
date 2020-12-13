@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
@@ -34,7 +35,7 @@ var eventsCmd = &cobra.Command{
 	Short: "Manage events in users' calendars (Part of Calendar API)",
 	Long: `This API only works in the user's context. Set the subject to the user's
 email address to use this API!
-https://developers.google.com/calendar/v3/reference/events`,	
+https://developers.google.com/calendar/v3/reference/events`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

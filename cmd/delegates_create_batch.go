@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmgmail"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmgmail"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/gmail/v1"
@@ -42,7 +43,7 @@ Also note that when a new delegate is created, there may be up to a one minute d
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)

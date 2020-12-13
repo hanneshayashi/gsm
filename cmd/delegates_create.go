@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -37,7 +38,7 @@ Note that a delegate user must be referred to by their primary email address, an
 
 Also note that when a new delegate is created, there may be up to a one minute delay before the new delegate is available for use.
 
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,	
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

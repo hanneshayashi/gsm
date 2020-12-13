@@ -26,9 +26,9 @@ import (
 
 // calendarACLCmd represents the calendarAcl command
 var calendarACLCmd = &cobra.Command{
-	Use:   "calendarAcl",
-	Short: "Manage entries in users' calendar acl (Part of Calendar API)",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarAcl",	
+	Use:               "calendarAcl",
+	Short:             "Manage entries in users' calendar acl (Part of Calendar API)",
+	Long:              "https://developers.google.com/calendar/v3/reference/calendarAcl",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

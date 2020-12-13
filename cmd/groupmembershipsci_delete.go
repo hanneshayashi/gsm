@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // groupMembershipsCiDeleteCmd represents the delete command
 var groupMembershipsCiDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Deletes a Membership.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/delete`,	
+	Use:               "delete",
+	Short:             "Deletes a Membership.",
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

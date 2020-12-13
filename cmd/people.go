@@ -20,11 +20,12 @@ package cmd
 import (
 	"bufio"
 	"encoding/base64"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/people/v1"
@@ -32,9 +33,9 @@ import (
 
 // peopleCmd represents the people command
 var peopleCmd = &cobra.Command{
-	Use:   "people",
-	Short: "Manage people's contacts (Part of People API)",
-	Long:  "https://developers.google.com/people/api/rest/v1/people",	
+	Use:               "people",
+	Short:             "Manage people's contacts (Part of People API)",
+	Long:              "https://developers.google.com/people/api/rest/v1/people",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

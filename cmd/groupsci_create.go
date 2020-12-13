@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +33,7 @@ var groupsCiCreateCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/how-to/create-dynamic-groups#python
 Examples:
   - Create a dynamic group:
-    gsm groupsCi create --parent customers/{my_customer_id} --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,	
+    gsm groupsCi create --parent customers/{my_customer_id} --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

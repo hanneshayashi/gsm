@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // gmailSettingsGetAutoForwardingCmd represents the getAutoForwarding command
 var gmailSettingsGetAutoForwardingCmd = &cobra.Command{
-	Use:   "getAutoForwarding",
-	Short: "Gets the auto-forwarding setting for the specified account.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getAutoForwarding",	
+	Use:               "getAutoForwarding",
+	Short:             "Gets the auto-forwarding setting for the specified account.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getAutoForwarding",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

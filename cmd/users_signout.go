@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var usersSignOutCmd = &cobra.Command{
 	Use: "signOut",
 	Short: `Sign a user out of all web and device sessions and reset their sign-in cookies.
 User will have to sign in by authenticating again.`,
-	Long: "https://developers.google.com/admin-sdk/directory/v1/reference/users/signOut",	
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/signOut",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

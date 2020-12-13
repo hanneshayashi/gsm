@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"github.com/hanneshayashi/gsm/gsmpeople"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"github.com/hanneshayashi/gsm/gsmpeople"
 
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,7 @@ var contactGroupsDeleteBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags)

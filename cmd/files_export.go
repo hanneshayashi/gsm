@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var filesExportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "Exports a Google Doc to the requested MIME type and returns the exported content.",
 	Long: `Please note that the exported content is limited to 10MB.
-https://developers.google.com/drive/api/v3/reference/files/export`,	
+https://developers.google.com/drive/api/v3/reference/files/export`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

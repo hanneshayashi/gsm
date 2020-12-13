@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // drivesHideCmd represents the hide command
 var drivesHideCmd = &cobra.Command{
-	Use:   "hide",
-	Short: "Hides a shared drive from the default view.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives/hide",	
+	Use:               "hide",
+	Short:             "Hides a shared drive from the default view.",
+	Long:              "https://developers.google.com/drive/api/v3/reference/drives/hide",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

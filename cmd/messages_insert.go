@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmgmail"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"strings"
+
+	"github.com/hanneshayashi/gsm/gsmgmail"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +32,7 @@ var messagesInsertCmd = &cobra.Command{
 	Use: "insert",
 	Short: `Directly inserts a message into only this user's mailbox similar to IMAP APPEND, bypassing most scanning and classification.
 Does not send a message.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",	
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

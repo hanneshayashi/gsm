@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmdrive"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmdrive"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/drive/v3"
@@ -37,7 +38,7 @@ Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

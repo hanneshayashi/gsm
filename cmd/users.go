@@ -564,9 +564,9 @@ var userFlagsALL = gsmhelpers.GetAllFlags(userFlags)
 
 // usersCmd represents the users command
 var usersCmd = &cobra.Command{
-	Use:   "users",
-	Short: "Manage Users (Park of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users",	
+	Use:               "users",
+	Short:             "Manage Users (Park of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

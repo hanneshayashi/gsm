@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/gmail/v1"
@@ -28,9 +29,9 @@ import (
 
 // filtersCmd represents the filters command
 var filtersCmd = &cobra.Command{
-	Use:   "filters",
-	Short: "Manage users' Gmail message filters (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",	
+	Use:               "filters",
+	Short:             "Manage users' Gmail message filters (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

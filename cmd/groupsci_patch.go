@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +33,7 @@ var groupsCiPatchCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/how-to/update-group-to-security-group
 Examples:
   - Make group a security group: 
-    gsm groupsCi patch --email group@example.org --updateMask labels --labels "cloudidentity.googleapis.com/groups.security,cloudidentity.googleapis.com/groups.discussion_forum"`,	
+    gsm groupsCi patch --email group@example.org --updateMask labels --labels "cloudidentity.googleapis.com/groups.security,cloudidentity.googleapis.com/groups.discussion_forum"`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

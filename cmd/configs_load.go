@@ -19,9 +19,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -34,7 +35,7 @@ var configsLoadCmd = &cobra.Command{
 The current default config will be renamed to '<name>.yaml' and the loaded config will be renamed to '.gsm.yaml'`,
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

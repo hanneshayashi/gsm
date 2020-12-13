@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // tokensListCmd represents the list command
 var tokensListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Returns the set of tokens specified user has issued to 3rd party applications.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",	
+	Use:               "list",
+	Short:             "Returns the set of tokens specified user has issued to 3rd party applications.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

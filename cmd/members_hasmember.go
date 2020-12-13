@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // membersHasMemberCmd represents the hasMember command
 var membersHasMemberCmd = &cobra.Command{
-	Use:   "hasMember",
-	Short: "Checks whether the given user is a member of the group. Membership can be direct or nested.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",	
+	Use:               "hasMember",
+	Short:             "Checks whether the given user is a member of the group. Membership can be direct or nested.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

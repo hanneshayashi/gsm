@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // chromeOsDevicesMoveToOUCmd represents the moveToOU command
 var chromeOsDevicesMoveToOUCmd = &cobra.Command{
-	Use:   "moveToOU",
-	Short: "Move or insert multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/moveDevicesToOu",	
+	Use:               "moveToOU",
+	Short:             "Move or insert multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/moveDevicesToOu",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

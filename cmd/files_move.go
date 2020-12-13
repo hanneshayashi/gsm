@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var filesMoveCmd = &cobra.Command{
 	Use:   "move",
 	Short: "Move a file.",
 	Long: `You can't move folders to Shared Drives with this command!
-Use "files move recursive" instead!`,	
+Use "files move recursive" instead!`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

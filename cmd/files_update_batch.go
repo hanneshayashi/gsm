@@ -18,12 +18,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmdrive"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmdrive"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/drive/v3"
@@ -36,7 +37,7 @@ var filesUpdateBatchCmd = &cobra.Command{
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)

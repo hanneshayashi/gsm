@@ -20,9 +20,10 @@ package cmd
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io/ioutil"
 	"os"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/gmail/v1"
@@ -30,9 +31,9 @@ import (
 
 // messagesCmd represents the messages command
 var messagesCmd = &cobra.Command{
-	Use:   "messages",
-	Short: "Manage users' messages (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages",	
+	Use:               "messages",
+	Short:             "Manage users' messages (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

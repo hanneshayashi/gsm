@@ -18,19 +18,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"strconv"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
 // roleAssignmentsListCmd represents the list command
 var roleAssignmentsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Retrieves a paginated list of all roleAssignments.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/list",	
+	Use:               "list",
+	Short:             "Retrieves a paginated list of all roleAssignments.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -25,9 +25,9 @@ import (
 
 // gmailUsersCmd represents the gmailUsers command
 var gmailUsersCmd = &cobra.Command{
-	Use:   "gmailUsers",
-	Short: "Gmail User Profiles (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users",	
+	Use:               "gmailUsers",
+	Short:             "Gmail User Profiles (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

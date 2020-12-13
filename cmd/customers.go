@@ -26,9 +26,9 @@ import (
 
 // customersCmd represents the customers command
 var customersCmd = &cobra.Command{
-	Use:   "customers",
-	Short: "Implements customers API (Part of Admin SDK).",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/customers",	
+	Use:               "customers",
+	Short:             "Implements customers API (Part of Admin SDK).",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/customers",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

@@ -19,10 +19,11 @@ package gsmauth
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hanneshayashi/gsm/gsmconfig"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/hanneshayashi/gsm/gsmconfig"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"

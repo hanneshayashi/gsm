@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // draftsUpdateCmd represents the update command
 var draftsUpdateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Replaces a draft's content.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",	
+	Use:               "update",
+	Short:             "Replaces a draft's content.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

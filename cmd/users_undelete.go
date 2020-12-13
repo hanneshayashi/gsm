@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // usersUndeleteCmd represents the undelete command
 var usersUndeleteCmd = &cobra.Command{
-	Use:   "undelete",
-	Short: "Undeletes a deleted user.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",	
+	Use:               "undelete",
+	Short:             "Undeletes a deleted user.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

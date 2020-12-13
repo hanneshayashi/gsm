@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var sendAsListCmd = &cobra.Command{
 	Use: "list",
 	Short: `Lists the send-as aliases for the specified account.
 The result includes the primary send-as address associated with the account as well as any custom "from" aliases.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/list",	
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -18,19 +18,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // groupsCiListCmd represents the list command
 var groupsCiListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists the Groups under a customer or namespace.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/list",	
+	Use:               "list",
+	Short:             "Lists the Groups under a customer or namespace.",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

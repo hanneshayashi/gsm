@@ -25,9 +25,9 @@ import (
 
 // verificationCodesCmd represents the verificationCodes command
 var verificationCodesCmd = &cobra.Command{
-	Use:   "verificationCodes",
-	Short: "Manage backup Verification Codes for Users (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes",	
+	Use:               "verificationCodes",
+	Short:             "Manage backup Verification Codes for Users (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

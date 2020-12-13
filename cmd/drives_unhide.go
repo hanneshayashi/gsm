@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // drivesUnhideCmd represents the unhide command
 var drivesUnhideCmd = &cobra.Command{
-	Use:   "unhide",
-	Short: "Restores a shared drive to the default view.",
-	Long:  `https://developers.google.com/drive/api/v3/reference/drives/unhide`,	
+	Use:               "unhide",
+	Short:             "Restores a shared drive to the default view.",
+	Long:              `https://developers.google.com/drive/api/v3/reference/drives/unhide`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

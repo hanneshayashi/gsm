@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // gmailUsersGetProfileCmd represents the getProfile command
 var gmailUsersGetProfileCmd = &cobra.Command{
-	Use:   "getProfile",
-	Short: "Gets the specified user's Gmail profile.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users/getProfile",	
+	Use:               "getProfile",
+	Short:             "Gets the specified user's Gmail profile.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users/getProfile",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

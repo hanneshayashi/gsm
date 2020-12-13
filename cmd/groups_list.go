@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // groupsListCmd represents the list command
 var groupsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Retrieve all groups of a domain or of a user given a userKey (paginated).",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/list",	
+	Use:               "list",
+	Short:             "Retrieve all groups of a domain or of a user given a userKey (paginated).",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

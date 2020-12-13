@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmsheets"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // spreadsheetsGetCmd represents the get command
 var spreadsheetsGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Gets a spreadsheet, returning the newly getd spreadsheet.",
-	Long:  "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",	
+	Use:               "get",
+	Short:             "Gets a spreadsheet, returning the newly getd spreadsheet.",
+	Long:              "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

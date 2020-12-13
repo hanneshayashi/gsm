@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // eventsListCmd represents the list command
 var eventsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Returns events on the specified calendar.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/list",	
+	Use:               "list",
+	Short:             "Returns events on the specified calendar.",
+	Long:              "https://developers.google.com/calendar/v3/reference/events/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

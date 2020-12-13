@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"strconv"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -28,9 +29,9 @@ import (
 
 // schemasCmd represents the schemas command
 var schemasCmd = &cobra.Command{
-	Use:   "schemas",
-	Short: "Manage custom schemas for user accounts (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas",	
+	Use:               "schemas",
+	Short:             "Manage custom schemas for user accounts (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

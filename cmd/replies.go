@@ -26,9 +26,9 @@ import (
 
 // repliesCmd represents the replies command
 var repliesCmd = &cobra.Command{
-	Use:   "replies",
-	Short: "Manage replies to comments (Part of Drive API)",
-	Long:  "https://developers.google.com/drive/api/v3/reference/replies",	
+	Use:               "replies",
+	Short:             "Manage replies to comments (Part of Drive API)",
+	Long:              "https://developers.google.com/drive/api/v3/reference/replies",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

@@ -28,7 +28,7 @@ var aboutCmd = &cobra.Command{
 	Use:   "about",
 	Short: "Information about the user, the user's Drive, and system capabilities (Part of Drive API)",
 	Long: `This API only works with the currently authenticated user!
-https://developers.google.com/drive/api/v3/reference/about`,	
+https://developers.google.com/drive/api/v3/reference/about`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

@@ -26,9 +26,9 @@ import (
 
 // domainsCmd represents the domains command
 var domainsCmd = &cobra.Command{
-	Use:   "domains",
-	Short: "Manage Domains (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains",	
+	Use:               "domains",
+	Short:             "Manage Domains (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/domains",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

@@ -25,9 +25,9 @@ import (
 
 // historyCmd represents the history command
 var historyCmd = &cobra.Command{
-	Use:   "history",
-	Short: "Manage (list..) user's mailbox History (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.history",	
+	Use:               "history",
+	Short:             "Manage (list..) user's mailbox History (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.history",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

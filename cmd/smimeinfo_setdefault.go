@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // smimeInfoSetDefaultCmd represents the setDefault command
 var smimeInfoSetDefaultCmd = &cobra.Command{
-	Use:   "setDefault",
-	Short: "Sets the default S/MIME config for the specified send-as alias.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/setDefault",	
+	Use:               "setDefault",
+	Short:             "Sets the default S/MIME config for the specified send-as alias.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/setDefault",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

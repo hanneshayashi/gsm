@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // orgUnitsDeleteCmd represents the delete command
 var orgUnitsDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Removes an organizational unit.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/delete",	
+	Use:               "delete",
+	Short:             "Removes an organizational unit.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

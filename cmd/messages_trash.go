@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // messagesTrashCmd represents the trash command
 var messagesTrashCmd = &cobra.Command{
-	Use:   "trash",
-	Short: "Moves the specified message to the trash.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",	
+	Use:               "trash",
+	Short:             "Moves the specified message to the trash.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

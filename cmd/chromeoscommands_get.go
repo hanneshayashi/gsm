@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // chromeOsCommandsGetCmd represents the get command
 var chromeOsCommandsGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Gets command data a specific command issued to the device.",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",	
+	Use:               "get",
+	Short:             "Gets command data a specific command issued to the device.",
+	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

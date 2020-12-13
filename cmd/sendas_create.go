@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,7 @@ var sendAsCreateCmd = &cobra.Command{
 If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to pending;
 otherwise, the resource will be created with verification status set to accepted.
 If a signature is provided, Gmail will sanitize the HTML before saving it with the alias.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/create`,	
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

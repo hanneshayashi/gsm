@@ -18,20 +18,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmdrive"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/hanneshayashi/gsm/gsmdrive"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
 // filesUpdateCmd represents the update command
 var filesUpdateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Updates a file's metadata and/or content. This method supports patch semantics.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/update",	
+	Use:               "update",
+	Short:             "Updates a file's metadata and/or content. This method supports patch semantics.",
+	Long:              "https://developers.google.com/drive/api/v3/reference/files/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

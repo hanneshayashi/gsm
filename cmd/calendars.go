@@ -26,9 +26,9 @@ import (
 
 // calendarsCmd represents the calendars command
 var calendarsCmd = &cobra.Command{
-	Use:   "calendars",
-	Short: "Manage users' calendars (Part of Calendar API)",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendars",	
+	Use:               "calendars",
+	Short:             "Manage users' calendars (Part of Calendar API)",
+	Long:              "https://developers.google.com/calendar/v3/reference/calendars",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

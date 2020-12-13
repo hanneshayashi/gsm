@@ -26,9 +26,9 @@ import (
 
 // sharedContactsCmd represents the sharedContacts command
 var sharedContactsCmd = &cobra.Command{
-	Use:   "sharedContacts",
-	Short: "Manage Domain Shared Contacts (Part of Shared Contacts API - not Admin SDK!)",
-	Long:  "https://developers.google.com/admin-sdk/domain-shared-contacts",	
+	Use:               "sharedContacts",
+	Short:             "Manage Domain Shared Contacts (Part of Shared Contacts API - not Admin SDK!)",
+	Long:              "https://developers.google.com/admin-sdk/domain-shared-contacts",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

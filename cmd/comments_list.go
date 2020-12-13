@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // commentsListCmd represents the list command
 var commentsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists a file's comments.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/comments/list",	
+	Use:               "list",
+	Short:             "Lists a file's comments.",
+	Long:              "https://developers.google.com/drive/api/v3/reference/comments/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

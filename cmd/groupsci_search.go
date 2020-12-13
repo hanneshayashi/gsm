@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +33,7 @@ var groupsCiSearchCmd = &cobra.Command{
 	Long: `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/search
 Examples:
   - Search for security groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.security' in labels"
-  - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,	
+  - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

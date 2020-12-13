@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // mobileDevicesListCmd represents the list command
 var mobileDevicesListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Retrieves a paginated list of all mobile devices for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/list",	
+	Use:               "list",
+	Short:             "Retrieves a paginated list of all mobile devices for an account.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

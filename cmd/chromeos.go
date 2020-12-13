@@ -26,9 +26,9 @@ import (
 
 // chromeOsCmd represents the chromeOs command
 var chromeOsCmd = &cobra.Command{
-	Use:   "chromeOs",
-	Short: "Issue Commands to Chrome OS Devices (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos",	
+	Use:               "chromeOs",
+	Short:             "Issue Commands to Chrome OS Devices (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

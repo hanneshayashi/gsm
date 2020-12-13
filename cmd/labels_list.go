@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // labelsListCmd represents the list command
 var labelsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists all labels in the user's mailbox.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/list",	
+	Use:               "list",
+	Short:             "Lists all labels in the user's mailbox.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

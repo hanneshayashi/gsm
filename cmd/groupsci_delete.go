@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // groupsCiDeleteCmd represents the delete command
 var groupsCiDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Deletes a Group.",
-	Long:  "https://cloud.google.com/identity/docs/how-to/delete-dynamic-groups#python",	
+	Use:               "delete",
+	Short:             "Deletes a Group.",
+	Long:              "https://cloud.google.com/identity/docs/how-to/delete-dynamic-groups#python",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

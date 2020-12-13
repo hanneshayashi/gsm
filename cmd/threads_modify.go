@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // threadsModifyCmd represents the modify command
 var threadsModifyCmd = &cobra.Command{
-	Use:   "modify",
-	Short: "Modifies the labels applied to the thread. This applies to all messages in the thread.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",	
+	Use:               "modify",
+	Short:             "Modifies the labels applied to the thread. This applies to all messages in the thread.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

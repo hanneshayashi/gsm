@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmpeople"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // contactGroupsGetCmd represents the get command
 var contactGroupsGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get a specific contact group owned by the authenticated user by specifying a contact group resource name.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/get",	
+	Use:               "get",
+	Short:             "Get a specific contact group owned by the authenticated user by specifying a contact group resource name.",
+	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

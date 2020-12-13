@@ -26,9 +26,9 @@ import (
 
 // groupsCmd represents the groups command
 var groupsCmd = &cobra.Command{
-	Use:   "groups",
-	Short: "Implements the groups API (Part of Admin SDK).",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups",	
+	Use:               "groups",
+	Short:             "Implements the groups API (Part of Admin SDK).",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

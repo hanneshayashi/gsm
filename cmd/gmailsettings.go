@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,9 +29,9 @@ import (
 
 // gmailSettingsCmd represents the gmailSettings command
 var gmailSettingsCmd = &cobra.Command{
-	Use:   "gmailSettings",
-	Short: "Manage Gmail settings for users (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings",	
+	Use:               "gmailSettings",
+	Short:             "Manage Gmail settings for users (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

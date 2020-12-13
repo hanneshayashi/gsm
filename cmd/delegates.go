@@ -26,9 +26,9 @@ import (
 
 // delegatesCmd represents the delegates command
 var delegatesCmd = &cobra.Command{
-	Use:   "delegates",
-	Short: "Manage Gmail Delegates (Part of Gmail API)",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates",	
+	Use:               "delegates",
+	Short:             "Manage Gmail Delegates (Part of Gmail API)",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

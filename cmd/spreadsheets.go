@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"math/rand"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmsheets"
-	"math/rand"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/api/sheets/v4"
@@ -28,9 +29,9 @@ import (
 
 // spreadsheetsCmd represents the spreadsheets command
 var spreadsheetsCmd = &cobra.Command{
-	Use:   "spreadsheets",
-	Short: "Manage Google Sheets spreadsheets (Part of Sheets API)",
-	Long:  `https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,	
+	Use:               "spreadsheets",
+	Short:             "Manage Google Sheets spreadsheets (Part of Sheets API)",
+	Long:              `https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

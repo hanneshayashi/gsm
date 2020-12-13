@@ -25,9 +25,9 @@ import (
 
 // privilegesCmd represents the privileges command
 var privilegesCmd = &cobra.Command{
-	Use:   "privileges",
-	Short: "Manage (list) Privileges (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/privileges",	
+	Use:               "privileges",
+	Short:             "Manage (list) Privileges (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/privileges",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

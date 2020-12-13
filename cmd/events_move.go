@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // eventsMoveCmd represents the move command
 var eventsMoveCmd = &cobra.Command{
-	Use:   "move",
-	Short: "Moves an event to another calendar, i.e. changes an event's organizer.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/move",	
+	Use:               "move",
+	Short:             "Moves an event to another calendar, i.e. changes an event's organizer.",
+	Long:              "https://developers.google.com/calendar/v3/reference/events/move",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

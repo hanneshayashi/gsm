@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,7 @@ var sharedContactsUpdateCmd = &cobra.Command{
 Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;label=Mobile" --url https://www.google.com/m8/feeds/contacts/example.org/base/a1034b28e4f62f3`,
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

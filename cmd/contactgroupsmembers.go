@@ -26,9 +26,9 @@ import (
 
 // contactGroupsMembersCmd represents the contactGroupsMembers command
 var contactGroupsMembersCmd = &cobra.Command{
-	Use:   "contactGroupsMembers",
-	Short: "Modify members of contact groups (Part of People API)",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups.members",	
+	Use:               "contactGroupsMembers",
+	Short:             "Modify members of contact groups (Part of People API)",
+	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups.members",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

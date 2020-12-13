@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // draftsCreateCmd represents the create command
 var draftsCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a new draft with the DRAFT label.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/create",	
+	Use:               "create",
+	Short:             "Creates a new draft with the DRAFT label.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

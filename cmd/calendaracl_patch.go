@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // calendarACLPatchCmd represents the patch command
 var calendarACLPatchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Updates an access control rule. This method supports patch semantics.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/patch`,	
+	Use:               "patch",
+	Short:             "Updates an access control rule. This method supports patch semantics.",
+	Long:              `https://developers.google.com/calendar/v3/reference/acl/patch`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

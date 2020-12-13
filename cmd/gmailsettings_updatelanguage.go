@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +32,7 @@ var gmailSettingsUpdateLanguageCmd = &cobra.Command{
 	Short: "Updates language settings.",
 	Long: `If successful, the return object contains the displayLanguage that was saved for the user, which may differ from the value passed into the request.
 This is because the requested displayLanguage may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateLanguage`,	
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateLanguage`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

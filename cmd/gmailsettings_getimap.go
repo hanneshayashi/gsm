@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // gmailSettingsGetImapCmd represents the getImap command
 var gmailSettingsGetImapCmd = &cobra.Command{
-	Use:   "getImap",
-	Short: "Gets IMAP settings.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getImap",	
+	Use:               "getImap",
+	Short:             "Gets IMAP settings.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getImap",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

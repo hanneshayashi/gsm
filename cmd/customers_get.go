@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // customersGetCmd represents the get command
 var customersGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Retrieves a customer using a an ID or retrieve your own customer without knowing your ID.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/customers/get",	
+	Use:               "get",
+	Short:             "Retrieves a customer using a an ID or retrieve your own customer without knowing your ID.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/customers/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

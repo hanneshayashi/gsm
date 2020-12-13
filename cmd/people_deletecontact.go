@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmpeople"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // peopleDeleteContactCmd represents the deleteContact command
 var peopleDeleteContactCmd = &cobra.Command{
-	Use:   "deleteContact",
-	Short: "Delete a contact person. Any non-contact data will not be deleted.",
-	Long:  "https://developers.google.com/people/api/rest/v1/people/deleteContact",	
+	Use:               "deleteContact",
+	Short:             "Delete a contact person. Any non-contact data will not be deleted.",
+	Long:              "https://developers.google.com/people/api/rest/v1/people/deleteContact",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // calendarACLGetCmd represents the get command
 var calendarACLGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Returns an access control rule.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/get`,	
+	Use:               "get",
+	Short:             "Returns an access control rule.",
+	Long:              `https://developers.google.com/calendar/v3/reference/acl/get`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

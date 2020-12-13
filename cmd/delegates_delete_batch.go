@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmgmail"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmgmail"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
@@ -34,7 +35,7 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)

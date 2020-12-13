@@ -26,9 +26,9 @@ import (
 
 // groupSettingsCmd represents the groupSettings command
 var groupSettingsCmd = &cobra.Command{
-	Use:   "groupSettings",
-	Short: "Manage Group Settings (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups",	
+	Use:               "groupSettings",
+	Short:             "Manage Group Settings (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

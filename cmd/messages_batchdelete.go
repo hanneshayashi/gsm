@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // messagesBatchDeleteCmd represents the messagesBatchDelete command
 var messagesBatchDeleteCmd = &cobra.Command{
-	Use:   "batchDelete",
-	Short: "Deletes many messages by message ID. Provides no guarantees that messages were not already deleted or even existed at all.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/batchDelete",	
+	Use:               "batchDelete",
+	Short:             "Deletes many messages by message ID. Provides no guarantees that messages were not already deleted or even existed at all.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/batchDelete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

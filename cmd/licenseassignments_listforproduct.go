@@ -18,19 +18,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmlicensing"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // licenseAssignmentsListForProductCmd represents the listForproduct command
 var licenseAssignmentsListForProductCmd = &cobra.Command{
-	Use:   "listForProduct",
-	Short: "List all users assigned licenses for a specific product SKU.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForproduct",	
+	Use:               "listForProduct",
+	Short:             "List all users assigned licenses for a specific product SKU.",
+	Long:              "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForproduct",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

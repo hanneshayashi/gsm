@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -34,7 +35,7 @@ var delegatesDeleteCmd = &cobra.Command{
 Note that a delegate user must be referred to by their primary email address, and not an email alias.
 
 This method is only available to service account clients that have been delegated domain-wide authority.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,	
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

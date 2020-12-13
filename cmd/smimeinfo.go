@@ -26,9 +26,9 @@ import (
 
 // smimeInfoCmd represents the smimeInfo command
 var smimeInfoCmd = &cobra.Command{
-	Use:   "smimeInfo",
-	Short: "Manage users' S/MIME configs for send-as aliases",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo",	
+	Use:               "smimeInfo",
+	Short:             "Manage users' S/MIME configs for send-as aliases",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

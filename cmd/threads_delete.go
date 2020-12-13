@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var threadsDeleteCmd = &cobra.Command{
 	Use: "delete",
 	Short: `Immediately and permanently deletes the specified thread.
 This operation cannot be undone. Prefer threads trash instead.`,
-	Long: "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",	
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

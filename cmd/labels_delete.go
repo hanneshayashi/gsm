@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 // labelsDeleteCmd represents the delete command
 var labelsDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",	
+	Use:               "delete",
+	Short:             "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to.",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

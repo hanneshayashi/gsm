@@ -18,19 +18,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmgmail"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"strings"
+
+	"github.com/hanneshayashi/gsm/gsmgmail"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
 // historyListCmd represents the list command
 var historyListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.history/list",	
+	Use:               "list",
+	Short:             "Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).",
+	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.history/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

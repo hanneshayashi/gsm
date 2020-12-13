@@ -19,9 +19,10 @@ package cmd
 
 import (
 	"encoding/base64"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"io/ioutil"
 	"os"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -29,9 +30,9 @@ import (
 
 // userPhotosCmd represents the userPhotos command
 var userPhotosCmd = &cobra.Command{
-	Use:   "userPhotos",
-	Short: "Manage user photos (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.photos",	
+	Use:               "userPhotos",
+	Short:             "Manage user photos (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.photos",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

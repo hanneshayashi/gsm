@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var filesCopyCmd = &cobra.Command{
 	Use: "copy",
 	Short: `Creates a copy of a file and applies any requested updates with patch semantics.
 Use "files copy recursive" to copy folders.`,
-	Long: "https://developers.google.com/drive/api/v3/reference/files/copy",	
+	Long:              "https://developers.google.com/drive/api/v3/reference/files/copy",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

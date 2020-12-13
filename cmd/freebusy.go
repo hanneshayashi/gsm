@@ -26,9 +26,9 @@ import (
 
 // freeBusyCmd represents the freeBusy command
 var freeBusyCmd = &cobra.Command{
-	Use:   "freeBusy",
-	Short: "Query free/busy information (Part of Calendar API)",
-	Long:  "https://developers.google.com/calendar/v3/reference/freebusy",	
+	Use:               "freeBusy",
+	Short:             "Query free/busy information (Part of Calendar API)",
+	Long:              "https://developers.google.com/calendar/v3/reference/freebusy",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

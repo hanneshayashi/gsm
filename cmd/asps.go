@@ -34,7 +34,7 @@ you commonly use when accessing an application through a browser. For more
 information about ASPs and how to create one, see the
 https://http//support.google.com/a/bin/answer.py?amp;answer=1032419.
 
-https://developers.google.com/admin-sdk/directory/v1/reference/asps`,	
+https://developers.google.com/admin-sdk/directory/v1/reference/asps`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
