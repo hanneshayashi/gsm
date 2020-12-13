@@ -74,7 +74,7 @@ This is only applicable to Google Docs.`,
 		Description: `Whether this revision is published.
 This is only applicable to Google Docs.`,
 	},
-	"publishedOutsideDomain	": {
+	"publishedOutsideDomain": {
 		AvailableFor: []string{"update"},
 		Type:         "bool",
 		Description: `Whether this revision is published outside the domain.
