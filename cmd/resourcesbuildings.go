@@ -24,18 +24,18 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesBuildingsCmd represents the resourcesBuildings command
-var resourcesBuildingsCmd = &cobra.Command{
-	Use:   "resourcesBuildings",
-	Short: "Manage Buildings (Resources) (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings",	
+// buildingsCmd represents the buildings command
+var buildingsCmd = &cobra.Command{
+	Use:               "buildings",
+	Short:             "Manage Buildings (Resources) (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
 }
 
-var resourcesBuildingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+var buildingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"buildingId": {
 		AvailableFor:   []string{"delete", "get", "insert", "patch"},
 		Type:           "string",
@@ -134,10 +134,10 @@ For example, ["B2", "B1", "L", "1", "2", "2M", "3", "PH"] Must contain at least 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var resourcesBuildingFlagsALL = gsmhelpers.GetAllFlags(resourcesBuildingFlags)
+var buildingFlagsALL = gsmhelpers.GetAllFlags(buildingFlags)
 
 func init() {
-	rootCmd.AddCommand(resourcesBuildingsCmd)
+	rootCmd.AddCommand(buildingsCmd)
 }
 
 func mapToBuilding(flags map[string]*gsmhelpers.Value) (*admin.Building, error) {

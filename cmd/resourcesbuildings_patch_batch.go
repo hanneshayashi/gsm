@@ -18,26 +18,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesBuildingsPatchBatchCmd represents the batch command
-var resourcesBuildingsPatchBatchCmd = &cobra.Command{
+// buildingsPatchBatchCmd represents the batch command
+var buildingsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, buildingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -52,10 +53,10 @@ var resourcesBuildingsPatchBatchCmd = &cobra.Command{
 					for m := range maps {
 						b, err := mapToBuilding(m)
 						if err != nil {
-							log.Printf("Error building resourcesBuilding object: %v\n", err)
+							log.Printf("Error building building object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.PatchResourcesBuilding(m["customer"].GetString(), m["buildingId"].GetString(), m["coordinatesSource"].GetString(), m["fields"].GetString(), b)
+						result, err := gsmadmin.PatchBuilding(m["customer"].GetString(), m["buildingId"].GetString(), m["coordinatesSource"].GetString(), m["fields"].GetString(), b)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -76,5 +77,5 @@ var resourcesBuildingsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesBuildingsPatchCmd, resourcesBuildingsPatchBatchCmd, resourcesBuildingFlags, resourcesBuildingFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(buildingsPatchCmd, buildingsPatchBatchCmd, buildingFlags, buildingFlagsALL, batchFlags)
 }

@@ -26,8 +26,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsDeleteBatchCmd represents the batch command
-var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
+// buildingsDeleteBatchCmd represents the batch command
+var buildingsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
@@ -36,7 +36,7 @@ var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
 	},	
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, buildingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -54,7 +54,7 @@ var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteResourcesBuilding(m["customer"].GetString(), m["buildingId"].GetString())
+						result, err := gsmadmin.DeleteBuilding(m["customer"].GetString(), m["buildingId"].GetString())
 						if err != nil {
 							log.Println(err)
 						}
@@ -74,5 +74,5 @@ var resourcesBuildingsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesBuildingsDeleteCmd, resourcesBuildingsDeleteBatchCmd, resourcesBuildingFlags, resourcesBuildingFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(buildingsDeleteCmd, buildingsDeleteBatchCmd, buildingFlags, buildingFlagsALL, batchFlags)
 }

@@ -18,33 +18,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsInsertCmd represents the insert command
-var resourcesBuildingsInsertCmd = &cobra.Command{
-	Use:   "insert",
-	Short: "Inserts a building.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",	
+// buildingsInsertCmd represents the insert command
+var buildingsInsertCmd = &cobra.Command{
+	Use:               "insert",
+	Short:             "Inserts a building.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBuilding(flags)
 		if err != nil {
-			log.Fatalf("Error building resourcesBuilding object: %v", err)
+			log.Fatalf("Error building building object: %v", err)
 		}
-		result, err := gsmadmin.InsertResourcesBuilding(flags["customer"].GetString(), flags["coordinatesSource"].GetString(), flags["fields"].GetString(), b)
+		result, err := gsmadmin.InsertBuilding(flags["customer"].GetString(), flags["coordinatesSource"].GetString(), flags["fields"].GetString(), b)
 		if err != nil {
-			log.Fatalf("Error deleting building %v", err)
+			log.Fatalf("Error inserting building: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsInsertCmd, resourcesBuildingFlags)
+	gsmhelpers.InitCommand(buildingsCmd, buildingsInsertCmd, buildingFlags)
 }

@@ -27,8 +27,8 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesBuildingsGetBatchCmd represents the batch command
-var resourcesBuildingsGetBatchCmd = &cobra.Command{
+// buildingsGetBatchCmd represents the batch command
+var buildingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/get",
@@ -37,7 +37,7 @@ var resourcesBuildingsGetBatchCmd = &cobra.Command{
 	},	
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, buildingFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -50,7 +50,7 @@ var resourcesBuildingsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.GetResourcesBuilding(m["customer"].GetString(), m["buildingId"].GetString(), m["fields"].GetString())
+						result, err := gsmadmin.GetBuilding(m["customer"].GetString(), m["buildingId"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -71,5 +71,5 @@ var resourcesBuildingsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesBuildingsGetCmd, resourcesBuildingsGetBatchCmd, resourcesBuildingFlags, resourcesBuildingFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(buildingsGetCmd, buildingsGetBatchCmd, buildingFlags, buildingFlagsALL, batchFlags)
 }

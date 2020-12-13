@@ -25,15 +25,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsDeleteCmd represents the delete command
-var resourcesBuildingsDeleteCmd = &cobra.Command{
+// buildingsDeleteCmd represents the delete command
+var buildingsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes a building.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",	
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.DeleteResourcesBuilding(flags["customer"].GetString(), flags["buildingId"].GetString())
+		result, err := gsmadmin.DeleteBuilding(flags["customer"].GetString(), flags["buildingId"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting building %v", err)
 		}
@@ -42,5 +42,5 @@ var resourcesBuildingsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsDeleteCmd, resourcesBuildingFlags)
+	gsmhelpers.InitCommand(buildingsCmd, buildingsDeleteCmd, buildingFlags)
 }

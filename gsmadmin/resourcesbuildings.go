@@ -24,8 +24,8 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// DeleteResourcesBuilding deletes a building.
-func DeleteResourcesBuilding(customer, buildingID string) (bool, error) {
+// DeleteBuilding deletes a building.
+func DeleteBuilding(customer, buildingID string) (bool, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.Delete(customer, buildingID)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() error {
@@ -34,8 +34,8 @@ func DeleteResourcesBuilding(customer, buildingID string) (bool, error) {
 	return result, err
 }
 
-// GetResourcesBuilding retrieves a building.
-func GetResourcesBuilding(customer, buildingID, fields string) (*admin.Building, error) {
+// GetBuilding retrieves a building.
+func GetBuilding(customer, buildingID, fields string) (*admin.Building, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.Get(customer, buildingID)
 	if fields != "" {
@@ -51,8 +51,8 @@ func GetResourcesBuilding(customer, buildingID, fields string) (*admin.Building,
 	return r, nil
 }
 
-// InsertResourcesBuilding inserts a building.
-func InsertResourcesBuilding(customer, coordinatesSource, fields string, building *admin.Building) (*admin.Building, error) {
+// InsertBuilding inserts a building.
+func InsertBuilding(customer, coordinatesSource, fields string, building *admin.Building) (*admin.Building, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.Insert(customer, building)
 	if fields != "" {
@@ -71,7 +71,7 @@ func InsertResourcesBuilding(customer, coordinatesSource, fields string, buildin
 	return r, nil
 }
 
-func makeListResourceBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall, buildings []*admin.Building, errKey string) ([]*admin.Building, error) {
+func makeListBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall, buildings []*admin.Building, errKey string) ([]*admin.Building, error) {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
@@ -82,25 +82,25 @@ func makeListResourceBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall,
 	buildings = append(buildings, r.Buildings...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		buildings, err = makeListResourceBuildingsCallAndAppend(c, buildings, errKey)
+		buildings, err = makeListBuildingsCallAndAppend(c, buildings, errKey)
 	}
 	return buildings, err
 }
 
-// ListResourcesBuildings retrieves a list of buildings for an account.
-func ListResourcesBuildings(customer, fields string) ([]*admin.Building, error) {
+// ListBuildings retrieves a list of buildings for an account.
+func ListBuildings(customer, fields string) ([]*admin.Building, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.List(customer)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	var buildings []*admin.Building
-	buildings, err := makeListResourceBuildingsCallAndAppend(c, buildings, gsmhelpers.FormatErrorKey(customer))
+	buildings, err := makeListBuildingsCallAndAppend(c, buildings, gsmhelpers.FormatErrorKey(customer))
 	return buildings, err
 }
 
-// PatchResourcesBuilding updates a building. This method supports patch semantics.
-func PatchResourcesBuilding(customer, buildingID, coordinatesSource, fields string, building *admin.Building) (*admin.Building, error) {
+// PatchBuilding updates a building. This method supports patch semantics.
+func PatchBuilding(customer, buildingID, coordinatesSource, fields string, building *admin.Building) (*admin.Building, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.Patch(customer, buildingID, building)
 	if fields != "" {

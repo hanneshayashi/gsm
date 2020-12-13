@@ -18,29 +18,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsListCmd represents the list command
-var resourcesBuildingsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Retrieves a list of buildings for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/list",	
+// buildingsListCmd represents the list command
+var buildingsListCmd = &cobra.Command{
+	Use:               "list",
+	Short:             "Retrieves a list of buildings for an account.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.ListResourcesBuildings(flags["customer"].GetString(), flags["fields"].GetString())
+		result, err := gsmadmin.ListBuildings(flags["customer"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting building %v", err)
+			log.Fatalf("Error listing buildings: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsListCmd, resourcesBuildingFlags)
+	gsmhelpers.InitCommand(buildingsCmd, buildingsListCmd, buildingFlags)
 }

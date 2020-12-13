@@ -18,33 +18,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsPatchCmd represents the patch command
-var resourcesBuildingsPatchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Updates a building. This method supports patch semantics. ",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/patch",	
+// buildingsPatchCmd represents the patch command
+var buildingsPatchCmd = &cobra.Command{
+	Use:               "patch",
+	Short:             "Updates a building. This method supports patch semantics.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBuilding(flags)
 		if err != nil {
-			log.Fatalf("Error building resourcesBuilding object: %v", err)
+			log.Fatalf("Error building building object: %v", err)
 		}
-		result, err := gsmadmin.PatchResourcesBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["coordinatesSource"].GetString(), flags["fields"].GetString(), b)
+		result, err := gsmadmin.PatchBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["coordinatesSource"].GetString(), flags["fields"].GetString(), b)
 		if err != nil {
-			log.Fatalf("Error deleting building %v", err)
+			log.Fatalf("Error patching building: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsPatchCmd, resourcesBuildingFlags)
+	gsmhelpers.InitCommand(buildingsCmd, buildingsPatchCmd, buildingFlags)
 }

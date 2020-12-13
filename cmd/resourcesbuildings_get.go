@@ -25,15 +25,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// resourcesBuildingsGetCmd represents the get command
-var resourcesBuildingsGetCmd = &cobra.Command{
+// buildingsGetCmd represents the get command
+var buildingsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Retrieves a building.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/get",	
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.GetResourcesBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["fields"].GetString())
+		result, err := gsmadmin.GetBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting building %v", err)
 		}
@@ -42,5 +42,5 @@ var resourcesBuildingsGetCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesBuildingsCmd, resourcesBuildingsGetCmd, resourcesBuildingFlags)
+	gsmhelpers.InitCommand(buildingsCmd, buildingsGetCmd, buildingFlags)
 }
