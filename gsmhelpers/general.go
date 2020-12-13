@@ -34,7 +34,6 @@ import (
 	"github.com/eapache/go-resiliency/retrier"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
-	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v3"
@@ -179,74 +178,6 @@ func StreamOutput(i interface{}, format string, compress bool) error {
 		return enc.Encode(i)
 	}
 	return nil
-}
-
-func capFirstLetter(s string) string {
-	return strings.ToUpper(string(s[0])) + string(s[1:])
-}
-
-func createCrescendoModuleDefs(cmd *cobra.Command) {
-	commands := cmd.Commands()
-	type outputHandler struct {
-		ParameterSetName string `json:"ParameterSetName,omitempty"`
-		Handler          string `json:"Handler,omitempty"`
-	}
-	type parameter struct {
-		Name          string `json:"Name,omitempty"`
-		OriginalName  string `json:"OriginalName,omitempty"`
-		ParameterType string `json:"ParameterType,omitempty"`
-		Description   string `json:"Description,omitempty"`
-	}
-	type crescendoDef struct {
-		Schema                  string          `json:"$Schema,omitempty"`
-		Verb                    string          `json:"Verb,omitempty"`
-		Noun                    string          `json:"Noun,omitempty"`
-		OriginalName            string          `json:"OriginalName,omitempty"`
-		OriginalCommandElements []string        `json:"OriginalCommandElements,omitempty"`
-		OutputHandlers          []outputHandler `json:"OutputHandlers,omitempty"`
-		Description             string          `json:"Description,omitempty"`
-		Parameters              []parameter     `json:"Parameters,omitempty"`
-	}
-	for _, command := range commands {
-		cresDef := crescendoDef{
-			Schema:                  "./Microsoft.PowerShell.Crescendo.Schema.json",
-			Verb:                    capFirstLetter(command.Use),
-			Noun:                    capFirstLetter(command.Parent().Use),
-			Description:             command.Short,
-			OriginalName:            "gsm",
-			OriginalCommandElements: append(strings.Split(command.CommandPath(), " ")[1:], "--compressOutput"),
-			OutputHandlers: []outputHandler{
-				{
-					ParameterSetName: "Default",
-					Handler:          "$args[0] | ConvertFrom-Json",
-				},
-			},
-		}
-		command.Flags().VisitAll(func(f *pflag.Flag) {
-			p := parameter{
-				OriginalName: "--" + f.Name,
-				Name:         strings.ToUpper(string(f.Name[0])) + string(f.Name[1:]),
-				Description:  f.Usage,
-			}
-			switch f.Value.Type() {
-			case "bool":
-				p.ParameterType = "switch"
-			default:
-				p.ParameterType = "string"
-			}
-			cresDef.Parameters = append(cresDef.Parameters, p)
-		})
-		file, _ := json.MarshalIndent(cresDef, "", "\t")
-		fileName := "./crescendo/json/" + strings.Join(cresDef.OriginalCommandElements[:len(cresDef.OriginalCommandElements)-1], "_") + ".json"
-		_ = ioutil.WriteFile(fileName, file, 0644)
-	}
-}
-
-func CreateCrescendoModuleDefs(cmd *cobra.Command) {
-	commands := cmd.Commands()
-	for _, command := range commands {
-		createCrescendoModuleDefs(command)
-	}
 }
 
 // CreateDocs creates GSM documentation
