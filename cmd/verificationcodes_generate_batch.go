@@ -31,6 +31,9 @@ var verificationCodesGenerateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch generates backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/generate",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags)
 		if err != nil {

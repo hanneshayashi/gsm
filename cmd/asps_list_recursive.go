@@ -32,6 +32,9 @@ var aspsListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "List the ASPs issued by users by referencing one or more organizational units and/or groups.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

@@ -32,6 +32,9 @@ var eventsMoveBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch moves events to other calendars, i.e. changes an events' organizer using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/move",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags)
 		if err != nil {

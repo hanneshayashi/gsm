@@ -32,6 +32,9 @@ var permissionsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets permissions by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags)
 		if err != nil {

@@ -32,6 +32,9 @@ var configsNewCmd = &cobra.Command{
 	Short: "Create a new config file.",
 	Long: `Config files are saved using the YAML format under
 '~/.config/gsm/<name>.yaml'.`,
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToConfig(flags)

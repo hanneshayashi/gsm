@@ -32,6 +32,9 @@ var tokensListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Returns a list of tokens issued to 3rd party applications by referencing one or more organizational units and/or groups.`,
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

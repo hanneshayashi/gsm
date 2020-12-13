@@ -31,6 +31,9 @@ var groupsCiDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes groups using a CSV file as input.",
 	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags)
 		if err != nil {

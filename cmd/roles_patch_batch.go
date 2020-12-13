@@ -32,6 +32,9 @@ var rolesPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches roles using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roles/patch",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, roleFlags)
 		if err != nil {

@@ -32,6 +32,9 @@ var peopleUpdateContactPhotoBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch update contact photos using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/updateContactPhoto",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
 		if err != nil {

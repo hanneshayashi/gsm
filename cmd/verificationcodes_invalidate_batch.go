@@ -31,6 +31,9 @@ var verificationCodesInvalidateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch invalidates backup verification codes for users using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/invalidate",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, verificationCodeFlags)
 		if err != nil {

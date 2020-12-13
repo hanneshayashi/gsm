@@ -33,6 +33,9 @@ var filesMoveBatchCmd = &cobra.Command{
 	Short: "Batch moves files using a CSV file as input.",
 	Long: `You can't move folders to Shared Drives with this command!
 Use "files move recursive" instead!`,
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {

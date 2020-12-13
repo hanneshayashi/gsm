@@ -31,6 +31,9 @@ var userAliasesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes user aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, userAliasFlags)
 		if err != nil {

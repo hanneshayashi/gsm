@@ -31,6 +31,9 @@ var schemasDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes schemas using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, schemaFlags)
 		if err != nil {

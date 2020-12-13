@@ -32,6 +32,9 @@ var orgUnitsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves organizational units using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, orgUnitFlags)
 		if err != nil {

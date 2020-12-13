@@ -31,6 +31,9 @@ var labelsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified labels using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, labelFlags)
 		if err != nil {

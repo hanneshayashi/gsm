@@ -31,6 +31,9 @@ var drivesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes shared drives' metadata by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/drives/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, driveFlags)
 		if err != nil {

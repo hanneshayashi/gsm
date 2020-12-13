@@ -31,6 +31,9 @@ var sharedContactsCreateCmd = &cobra.Command{
 	Short: "Create a Domain Shared Contact",
 	Long: `https://developers.google.com/admin-sdk/domain-shared-contacts
 Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --familyName "Bauer" --email "displayName=Jack Bauer;address=jack@ctu.gov;primary=false" --email "displayName=Jack bauer;address=jack.bauer@ctu.gov;primary=true" --phoneNumber "phoneNumber=+49 127 12381;primary=true;label=Work" --phoneNumber "phoneNumber=+49 21891238;primary=false;label=Home" --organization "orgName=Counter Terrorist Unit;orgDepartment=Field Agents;orgTitle=Special Agent"`,
+	Annotations: map[string]string{
+		"crescendoFlags": "--json",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSharedContact(flags, nil)

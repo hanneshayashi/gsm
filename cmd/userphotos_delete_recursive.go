@@ -31,12 +31,15 @@ var userPhotosDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Deletes user photos by referencing one or more organizational units and/or groups.`,
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/userphotos/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
 			UserKey string `json:"userKey,omitempty"`
-			Result       bool   `json:"result"`
+			Result  bool   `json:"result"`
 		}
 		finalChan := make(chan resultStruct, threads)
 		final := []resultStruct{}

@@ -31,6 +31,9 @@ var sharedContactsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes Domain Shared Contact via URL / ID using a CSV file as input",
 	Long:  "",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, sharedContactFlags)
 		if err != nil {

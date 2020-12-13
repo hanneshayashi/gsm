@@ -31,6 +31,9 @@ var membersHasMemberBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Checks whether the given user is a member of the group. Membership can be direct or nested.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags)
 		if err != nil {

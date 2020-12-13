@@ -31,6 +31,9 @@ var configsGetScopesCmd = &cobra.Command{
 	Use:   "getScopes",
 	Short: "Returns the scopes of a config file so they can be easily added in the Admin Console",
 	Long:  ``,
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.GetScopes(flags["name"].GetString())

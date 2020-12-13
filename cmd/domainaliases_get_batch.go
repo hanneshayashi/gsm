@@ -32,6 +32,9 @@ var domainAliasesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves domain aliases of the customer using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, domainAliasFlags)
 		if err != nil {

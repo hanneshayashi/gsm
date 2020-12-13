@@ -32,6 +32,9 @@ var filesCopyBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch copies files using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {

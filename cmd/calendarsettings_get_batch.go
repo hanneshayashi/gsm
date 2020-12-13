@@ -32,6 +32,9 @@ var calendarSettingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets calendar settings using a CSV file as input",
 	Long:  "https://developers.google.com/calendar/v3/reference/settings/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarSettingFlags)
 		if err != nil {

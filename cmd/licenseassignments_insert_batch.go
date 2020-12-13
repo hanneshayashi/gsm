@@ -32,6 +32,9 @@ var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Insert inserts users' license asignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, licenseAssignmentFlags)
 		if err != nil {

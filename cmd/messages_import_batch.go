@@ -32,6 +32,9 @@ var messagesImportBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch imports messages using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/import",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, messageFlags)
 		if err != nil {

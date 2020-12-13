@@ -31,6 +31,9 @@ var configsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List current configurations",
 	Long:  ``,
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.ListConfigs()

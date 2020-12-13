@@ -30,6 +30,9 @@ var sharedContactsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets a Domain Shared Contact via its URL / ID",
 	Long:  "",
+	Annotations: map[string]string{
+		"crescendoFlags": "--json",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetSharedContact(flags["url"].GetString())

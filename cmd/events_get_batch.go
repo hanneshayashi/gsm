@@ -32,6 +32,9 @@ var eventsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch returns events using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags)
 		if err != nil {

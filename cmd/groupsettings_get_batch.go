@@ -32,6 +32,9 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups' settings identified by the group email address using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags)
 		if err != nil {

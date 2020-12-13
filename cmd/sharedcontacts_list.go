@@ -30,6 +30,9 @@ var sharedContactsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all shared contacts in your domain",
 	Long:  `Example: gsm sharedContacts list --domain "example.org"`,
+	Annotations: map[string]string{
+		"crescendoFlags": "--json",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListSharedContacts(flags["domain"].GetString())

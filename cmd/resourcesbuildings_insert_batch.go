@@ -32,6 +32,9 @@ var resourcesBuildingsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesBuildingFlags)
 		if err != nil {

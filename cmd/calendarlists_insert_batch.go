@@ -32,6 +32,9 @@ var calendarListsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts existing calendar entries using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/insert",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarListFlags)
 		if err != nil {

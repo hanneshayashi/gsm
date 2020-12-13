@@ -31,6 +31,9 @@ var filesListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively list files in a folder",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))

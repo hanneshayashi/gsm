@@ -30,6 +30,9 @@ var configsGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Return a single GSM config",
 	Long:  ``,
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.GetConfig(flags["name"].GetString())

@@ -32,6 +32,9 @@ var peopleCreateContactBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch create contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
 		if err != nil {

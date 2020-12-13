@@ -32,6 +32,9 @@ var tokensGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch get information about access tokens issued by a user using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, tokenFlags)
 		if err != nil {

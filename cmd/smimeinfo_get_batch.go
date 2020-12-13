@@ -32,6 +32,9 @@ var smimeInfoGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified S/MIME config for the specified send-as aliases using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, smimeInfoFlags)
 		if err != nil {

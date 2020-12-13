@@ -32,6 +32,9 @@ var threadsTrashBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch trashes threads using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/trash",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, threadFlags)
 		if err != nil {

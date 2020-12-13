@@ -32,6 +32,9 @@ var forwardingAddressesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified forwarding addresses using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, forwardingAddressFlags)
 		if err != nil {

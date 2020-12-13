@@ -32,6 +32,9 @@ var verificationcodesListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Returns the current set of valid backup verification codes for users by referencing one or more organizational units and/or groups.`,
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/list",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

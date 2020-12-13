@@ -33,6 +33,9 @@ var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Get users' licenses by product SKU by referencing one or more organizational units and/or groups.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

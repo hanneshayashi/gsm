@@ -32,6 +32,9 @@ var userPhotosGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch get user photos using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/photos/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, userPhotoFlags)
 		if err != nil {

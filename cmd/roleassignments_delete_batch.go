@@ -31,6 +31,9 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieve role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags)
 		if err != nil {

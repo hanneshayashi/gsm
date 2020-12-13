@@ -32,6 +32,9 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates permissions for a file or shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, permissionFlags)
 		if err != nil {

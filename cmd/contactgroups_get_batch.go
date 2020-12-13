@@ -32,6 +32,9 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets contact groups using a CSV file as input.",
 	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, contactGroupFlags)
 		if err != nil {

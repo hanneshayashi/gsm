@@ -32,6 +32,9 @@ var repliesUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates replies to comments using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/replies/update",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, replyFlags)
 		if err != nil {

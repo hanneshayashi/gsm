@@ -32,6 +32,9 @@ var filesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets files or folders's metadata or content by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {

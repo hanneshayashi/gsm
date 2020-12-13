@@ -32,6 +32,9 @@ var calendarsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches secondary calendars using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/calendar/patch",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarFlags)
 		if err != nil {

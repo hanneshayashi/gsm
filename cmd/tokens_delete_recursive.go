@@ -31,6 +31,9 @@ var tokensDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Deletes a token issued to a 3rd party application from users' tokens by referencing one or more organizational units and/or groups.`,
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

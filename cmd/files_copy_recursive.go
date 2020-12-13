@@ -32,6 +32,9 @@ var filesCopyRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively copies a folder to a new destination.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

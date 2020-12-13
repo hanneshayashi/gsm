@@ -127,7 +127,7 @@ func Execute() {
 		os.Exit(1)
 	}
 	// gsmhelpers.CreateDocs(rootCmd)
-	// gsmhelpers.CreateCrescendoModuleDefs(rootCmd)
+	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm_crescendo/json/")
 }
 
 func init() {

@@ -31,6 +31,9 @@ var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags)
 		if err != nil {

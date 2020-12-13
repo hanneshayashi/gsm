@@ -32,6 +32,9 @@ var revisionsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets revisions' metadata or content by ID using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/revisions/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags)
 		if err != nil {

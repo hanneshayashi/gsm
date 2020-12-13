@@ -32,6 +32,9 @@ var eventsQuickAddBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates events based on simple text strings using a CSV file as input.",
 	Long:  "https://developers.google.com/calendar/v3/reference/events/quickAdd",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, eventFlags)
 		if err != nil {

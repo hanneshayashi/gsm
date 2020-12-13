@@ -32,6 +32,9 @@ var filtersGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets filters using a CSV file as input.",
 	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, aspFlags)
 		if err != nil {

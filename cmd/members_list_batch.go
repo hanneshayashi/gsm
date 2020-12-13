@@ -32,6 +32,9 @@ var membersListBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lists group members using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/list",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, memberFlags)
 		if err != nil {

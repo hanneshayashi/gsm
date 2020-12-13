@@ -32,6 +32,9 @@ var drivesCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch Creates a new shared drive using a CSV file as input.",
 	Long:  "https://developers.google.com/drive/api/v3/reference/drives/create",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, driveFlags)
 		if err != nil {

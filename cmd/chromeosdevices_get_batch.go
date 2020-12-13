@@ -32,6 +32,9 @@ var chromeOsDevicesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves Chrome OS devices's properties using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/get",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, chromeOsDeviceFlags)
 		if err != nil {

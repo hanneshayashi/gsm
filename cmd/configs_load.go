@@ -32,6 +32,9 @@ var configsLoadCmd = &cobra.Command{
 	Short: "Load a config file",
 	Long: `Specify a config file to load by name (without file extension).
 The current default config will be renamed to '<name>.yaml' and the loaded config will be renamed to '.gsm.yaml'`,
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name := flags["name"].GetString()

@@ -35,6 +35,9 @@ var filesMoveRecursiveCmd = &cobra.Command{
 all files to the new folders. For each source folder, a new folder will be created at the destination.
 Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())

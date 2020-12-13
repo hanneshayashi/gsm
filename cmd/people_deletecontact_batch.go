@@ -31,6 +31,9 @@ var peopleDeleteContactBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes contacts using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/deleteContact",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
 		if err != nil {

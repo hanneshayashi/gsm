@@ -32,6 +32,9 @@ var roleAssignmentsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",
+	Annotations: map[string]string{
+		"crescendoAttachToParent": "true",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags)
 		if err != nil {
