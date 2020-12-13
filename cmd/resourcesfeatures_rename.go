@@ -18,18 +18,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesFeaturesRenameCmd represents the rename command
-var resourcesFeaturesRenameCmd = &cobra.Command{
-	Use:   "rename",
-	Short: "Renames a feature resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",	
+// featuresRenameCmd represents the rename command
+var featuresRenameCmd = &cobra.Command{
+	Use:               "rename",
+	Short:             "Renames a feature resource.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -38,14 +39,14 @@ var resourcesFeaturesRenameCmd = &cobra.Command{
 			log.Fatalf("Error building feature rename object: %v", err)
 
 		}
-		result, err := gsmadmin.RenameResourcesFeature(flags["customer"].GetString(), flags["oldName"].GetString(), f)
+		result, err := gsmadmin.RenameFeature(flags["customer"].GetString(), flags["oldName"].GetString(), f)
 		if err != nil {
-			log.Fatalf("Error deleting feature resource %v", err)
+			log.Fatalf("Error renaming feature resource: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesFeaturesCmd, resourcesFeaturesRenameCmd, resourcesFeatureFlags)
+	gsmhelpers.InitCommand(featuresCmd, featuresRenameCmd, featureFlags)
 }

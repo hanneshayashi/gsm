@@ -24,18 +24,18 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesFeaturesCmd represents the resourcesFeatures command
-var resourcesFeaturesCmd = &cobra.Command{
-	Use:   "resourcesFeatures",
-	Short: "Manage resource features (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features",	
+// featuresCmd represents the features command
+var featuresCmd = &cobra.Command{
+	Use:               "features",
+	Short:             "Manage resource features (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
 }
 
-var resourcesFeatureFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+var featureFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch", "rename"},
 		Type:         "string",
@@ -78,10 +78,10 @@ As an account administrator, you can also use the my_customer alias to represent
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var resourcesFeatureFlagsALL = gsmhelpers.GetAllFlags(resourcesFeatureFlags)
+var featureFlagsALL = gsmhelpers.GetAllFlags(featureFlags)
 
 func init() {
-	rootCmd.AddCommand(resourcesFeaturesCmd)
+	rootCmd.AddCommand(featuresCmd)
 }
 
 func mapToFeature(flags map[string]*gsmhelpers.Value) (*admin.Feature, error) {

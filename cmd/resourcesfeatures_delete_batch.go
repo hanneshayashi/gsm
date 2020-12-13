@@ -18,25 +18,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesFeaturesDeleteBatchCmd represents the batch command
-var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
+// featuresDeleteBatchCmd represents the batch command
+var featuresDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, featureFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -54,7 +55,7 @@ var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteResourcesFeature(m["customer"].GetString(), m["featureKey"].GetString())
+						result, err := gsmadmin.DeleteFeature(m["customer"].GetString(), m["featureKey"].GetString())
 						if err != nil {
 							log.Println(err)
 						}
@@ -74,5 +75,5 @@ var resourcesFeaturesDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesFeaturesDeleteCmd, resourcesFeaturesDeleteBatchCmd, resourcesFeatureFlags, resourcesFeatureFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(featuresDeleteCmd, featuresDeleteBatchCmd, featureFlags, featureFlagsALL, batchFlags)
 }

@@ -18,29 +18,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesFeaturesDeleteCmd represents the delete command
-var resourcesFeaturesDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Deletes a feature resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",	
+// featuresDeleteCmd represents the delete command
+var featuresDeleteCmd = &cobra.Command{
+	Use:               "delete",
+	Short:             "Deletes a feature resource.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.DeleteResourcesFeature(flags["customer"].GetString(), flags["featureKey"].GetString())
+		result, err := gsmadmin.DeleteFeature(flags["customer"].GetString(), flags["featureKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting feature resource %v", err)
+			log.Fatalf("Error deleting feature resource: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesFeaturesCmd, resourcesFeaturesDeleteCmd, resourcesFeatureFlags)
+	gsmhelpers.InitCommand(featuresCmd, featuresDeleteCmd, featureFlags)
 }

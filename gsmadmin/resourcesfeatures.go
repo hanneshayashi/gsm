@@ -24,8 +24,8 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// DeleteResourcesFeature deletes a feature.
-func DeleteResourcesFeature(customer, featureKey string) (bool, error) {
+// DeleteFeature deletes a feature.
+func DeleteFeature(customer, featureKey string) (bool, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Delete(customer, featureKey)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() error {
@@ -34,8 +34,8 @@ func DeleteResourcesFeature(customer, featureKey string) (bool, error) {
 	return result, err
 }
 
-// GetResourcesFeature retrieves a feature.
-func GetResourcesFeature(customer, featureKey, fields string) (*admin.Feature, error) {
+// GetFeature retrieves a feature.
+func GetFeature(customer, featureKey, fields string) (*admin.Feature, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Get(customer, featureKey)
 	if fields != "" {
@@ -51,8 +51,8 @@ func GetResourcesFeature(customer, featureKey, fields string) (*admin.Feature, e
 	return r, nil
 }
 
-// InsertResourcesFeature inserts a feature.
-func InsertResourcesFeature(customer, fields string, feature *admin.Feature) (*admin.Feature, error) {
+// InsertFeature inserts a feature.
+func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feature, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Insert(customer, feature)
 	if fields != "" {
@@ -68,7 +68,7 @@ func InsertResourcesFeature(customer, fields string, feature *admin.Feature) (*a
 	return r, nil
 }
 
-func makeListResourceFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, features []*admin.Feature, errKey string) ([]*admin.Feature, error) {
+func makeListFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, features []*admin.Feature, errKey string) ([]*admin.Feature, error) {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
@@ -79,25 +79,25 @@ func makeListResourceFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, f
 	features = append(features, r.Features...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		features, err = makeListResourceFeaturesCallAndAppend(c, features, errKey)
+		features, err = makeListFeaturesCallAndAppend(c, features, errKey)
 	}
 	return features, err
 }
 
-// ListResourcesFeatures retrieves a list of features for an account.
-func ListResourcesFeatures(customer, fields string) ([]*admin.Feature, error) {
+// ListFeatures retrieves a list of features for an account.
+func ListFeatures(customer, fields string) ([]*admin.Feature, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.List(customer)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	var features []*admin.Feature
-	features, err := makeListResourceFeaturesCallAndAppend(c, features, gsmhelpers.FormatErrorKey(customer))
+	features, err := makeListFeaturesCallAndAppend(c, features, gsmhelpers.FormatErrorKey(customer))
 	return features, err
 }
 
-// PatchResourcesFeature updates a feature. This method supports patch semantics.
-func PatchResourcesFeature(customer, featureKey, fields string, feature *admin.Feature) (*admin.Feature, error) {
+// PatchFeature updates a feature. This method supports patch semantics.
+func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (*admin.Feature, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Patch(customer, featureKey, feature)
 	if fields != "" {
@@ -113,8 +113,8 @@ func PatchResourcesFeature(customer, featureKey, fields string, feature *admin.F
 	return r, nil
 }
 
-// RenameResourcesFeature renames a feature.
-func RenameResourcesFeature(customer, oldName string, featureRename *admin.FeatureRename) (bool, error) {
+// RenameFeature renames a feature.
+func RenameFeature(customer, oldName string, featureRename *admin.FeatureRename) (bool, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Rename(customer, oldName, featureRename)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, oldName), func() error {

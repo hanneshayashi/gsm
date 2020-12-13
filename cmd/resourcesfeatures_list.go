@@ -18,29 +18,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesFeaturesListCmd represents the list command
-var resourcesFeaturesListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Retrieves a list of feature resources for an account.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/list",	
+// featuresListCmd represents the list command
+var featuresListCmd = &cobra.Command{
+	Use:               "list",
+	Short:             "Retrieves a list of feature resources for an account.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.ListResourcesFeatures(flags["customer"].GetString(), flags["fields"].GetString())
+		result, err := gsmadmin.ListFeatures(flags["customer"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing feature resource %v", err)
+			log.Fatalf("Error listing feature resources: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesFeaturesCmd, resourcesFeaturesListCmd, resourcesFeatureFlags)
+	gsmhelpers.InitCommand(featuresCmd, featuresListCmd, featureFlags)
 }

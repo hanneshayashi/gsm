@@ -18,26 +18,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesFeaturesGetBatchCmd represents the batch command
-var resourcesFeaturesGetBatchCmd = &cobra.Command{
+// featuresGetBatchCmd represents the batch command
+var featuresGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, featureFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -50,7 +51,7 @@ var resourcesFeaturesGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.GetResourcesFeature(m["customer"].GetString(), m["featureKey"].GetString(), m["fields"].GetString())
+						result, err := gsmadmin.GetFeature(m["customer"].GetString(), m["featureKey"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -71,5 +72,5 @@ var resourcesFeaturesGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesFeaturesGetCmd, resourcesFeaturesGetBatchCmd, resourcesFeatureFlags, resourcesFeatureFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(featuresGetCmd, featuresGetBatchCmd, featureFlags, featureFlagsALL, batchFlags)
 }

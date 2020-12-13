@@ -18,26 +18,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesFeaturesPatchBatchCmd represents the batch command
-var resourcesFeaturesPatchBatchCmd = &cobra.Command{
+// featuresPatchBatchCmd represents the batch command
+var featuresPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patchs feature resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesFeatureFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, featureFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -52,10 +53,10 @@ var resourcesFeaturesPatchBatchCmd = &cobra.Command{
 					for m := range maps {
 						f, err := mapToFeature(m)
 						if err != nil {
-							log.Printf("Error building resourceFeature object: %v\n", err)
+							log.Printf("Error building feature object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.PatchResourcesFeature(m["customer"].GetString(), m["featureKey"].GetString(), m["fields"].GetString(), f)
+						result, err := gsmadmin.PatchFeature(m["customer"].GetString(), m["featureKey"].GetString(), m["fields"].GetString(), f)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -76,5 +77,5 @@ var resourcesFeaturesPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesFeaturesPatchCmd, resourcesFeaturesPatchBatchCmd, resourcesFeatureFlags, resourcesFeatureFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(featuresPatchCmd, featuresPatchBatchCmd, featureFlags, featureFlagsALL, batchFlags)
 }
