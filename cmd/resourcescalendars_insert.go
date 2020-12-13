@@ -18,34 +18,35 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesCalendarsInsertCmd represents the insert command
-var resourcesCalendarsInsertCmd = &cobra.Command{
-	Use:   "insert",
-	Short: "Inserts a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",	
+// calendarResourcesInsertCmd represents the insert command
+var calendarResourcesInsertCmd = &cobra.Command{
+	Use:               "insert",
+	Short:             "Inserts a calendar resource.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToResourceCalendar(flags)
+		c, err := mapToCalendarResource(flags)
 		if err != nil {
-			log.Fatalf("Error building resourceCalendar object: %v", err)
+			log.Fatalf("Error building calendarResource object: %v", err)
 
 		}
-		result, err := gsmadmin.InsertResourcesCalendar(flags["customer"].GetString(), flags["fields"].GetString(), c)
+		result, err := gsmadmin.InsertCalendarResource(flags["customer"].GetString(), flags["fields"].GetString(), c)
 		if err != nil {
-			log.Fatalf("Error listing calendar resource %v", err)
+			log.Fatalf("Error inserting calendar resource: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesCalendarsCmd, resourcesCalendarsInsertCmd, resourcesCalendarFlags)
+	gsmhelpers.InitCommand(calendarResourcesCmd, calendarResourcesInsertCmd, calendarResourceFlags)
 }

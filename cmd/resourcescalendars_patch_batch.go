@@ -18,26 +18,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesCalendarsPatchBatchCmd represents the batch command
-var resourcesCalendarsPatchBatchCmd = &cobra.Command{
+// calendarResourcesPatchBatchCmd represents the batch command
+var calendarResourcesPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patchs calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarResourceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -50,12 +51,12 @@ var resourcesCalendarsPatchBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						c, err := mapToResourceCalendar(m)
+						c, err := mapToCalendarResource(m)
 						if err != nil {
-							log.Printf("Error building resourceCalendar object: %v\n", err)
+							log.Printf("Error building calendarResource object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.PatchResourcesCalendar(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString(), c)
+						result, err := gsmadmin.PatchCalendarResource(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString(), c)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -76,5 +77,5 @@ var resourcesCalendarsPatchBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesCalendarsPatchCmd, resourcesCalendarsPatchBatchCmd, resourcesCalendarFlags, resourcesCalendarFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarResourcesPatchCmd, calendarResourcesPatchBatchCmd, calendarResourceFlags, calendarResourceFlagsALL, batchFlags)
 }

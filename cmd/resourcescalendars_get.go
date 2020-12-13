@@ -18,29 +18,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesCalendarsGetCmd represents the get command
-var resourcesCalendarsGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Gets a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/get",	
+// calendarResourcesGetCmd represents the get command
+var calendarResourcesGetCmd = &cobra.Command{
+	Use:               "get",
+	Short:             "Gets a calendar resource.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.GetResourcesCalendar(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString())
+		result, err := gsmadmin.GetCalendarResource(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting calendar resource %v", err)
+			log.Fatalf("Error getting calendar resource: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesCalendarsCmd, resourcesCalendarsGetCmd, resourcesCalendarFlags)
+	gsmhelpers.InitCommand(calendarResourcesCmd, calendarResourcesGetCmd, calendarResourceFlags)
 }

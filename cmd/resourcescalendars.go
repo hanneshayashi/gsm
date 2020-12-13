@@ -24,18 +24,18 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesCalendarsCmd represents the resourcesCalendars command
-var resourcesCalendarsCmd = &cobra.Command{
-	Use:   "resourcesCalendars",
-	Short: "Manage resource calendars (Part of Admin SDK)",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars",	
+// calendarResourcesCmd represents the calendarResources command
+var calendarResourcesCmd = &cobra.Command{
+	Use:               "calendarResources",
+	Short:             "Manage resource calendars (Part of Admin SDK)",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
 }
 
-var resourcesCalendarFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+var calendarResourceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarResourceId": {
 		AvailableFor:   []string{"delete", "get", "patch"},
 		Type:           "string",
@@ -144,73 +144,73 @@ Supported fields include generatedResourceName, resourceName, name, buildingId, 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var resourcesCalendarFlagsALL = gsmhelpers.GetAllFlags(resourcesCalendarFlags)
+var calendarResourceFlagsALL = gsmhelpers.GetAllFlags(calendarResourceFlags)
 
 func init() {
-	rootCmd.AddCommand(resourcesCalendarsCmd)
+	rootCmd.AddCommand(calendarResourcesCmd)
 }
 
-func mapToResourceCalendar(flags map[string]*gsmhelpers.Value) (*admin.CalendarResource, error) {
-	resourceCalendar := &admin.CalendarResource{}
+func mapToCalendarResource(flags map[string]*gsmhelpers.Value) (*admin.CalendarResource, error) {
+	calendarResource := &admin.CalendarResource{}
 	if flags["resourceId"].IsSet() {
-		resourceCalendar.ResourceId = flags["resourceId"].GetString()
-		if resourceCalendar.ResourceId == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "ResourceId")
+		calendarResource.ResourceId = flags["resourceId"].GetString()
+		if calendarResource.ResourceId == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "ResourceId")
 		}
 	}
 	if flags["resourceName"].IsSet() {
-		resourceCalendar.ResourceName = flags["resourceName"].GetString()
-		if resourceCalendar.ResourceName == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "ResourceName")
+		calendarResource.ResourceName = flags["resourceName"].GetString()
+		if calendarResource.ResourceName == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "ResourceName")
 		}
 	}
 	if flags["buildingId"].IsSet() {
-		resourceCalendar.BuildingId = flags["buildingId"].GetString()
-		if resourceCalendar.BuildingId == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "BuildingId")
+		calendarResource.BuildingId = flags["buildingId"].GetString()
+		if calendarResource.BuildingId == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "BuildingId")
 		}
 	}
 	if flags["capacity"].IsSet() {
-		resourceCalendar.Capacity = flags["capacity"].GetInt64()
-		if resourceCalendar.Capacity == 0 {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "Capacity")
+		calendarResource.Capacity = flags["capacity"].GetInt64()
+		if calendarResource.Capacity == 0 {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "Capacity")
 		}
 	}
 	if flags["featureInstances"].IsSet() {
-		resourceCalendar.FeatureInstances = flags["featureInstances"].GetString()
-		if resourceCalendar.FeatureInstances == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "FeatureInstances")
+		calendarResource.FeatureInstances = flags["featureInstances"].GetString()
+		if calendarResource.FeatureInstances == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "FeatureInstances")
 		}
 	}
 	if flags["floorName"].IsSet() {
-		resourceCalendar.FloorName = flags["floorName"].GetString()
-		if resourceCalendar.FloorName == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "FloorName")
+		calendarResource.FloorName = flags["floorName"].GetString()
+		if calendarResource.FloorName == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "FloorName")
 		}
 	}
 	if flags["floorSection"].IsSet() {
-		resourceCalendar.FloorSection = flags["floorSection"].GetString()
-		if resourceCalendar.FloorSection == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "FloorSection")
+		calendarResource.FloorSection = flags["floorSection"].GetString()
+		if calendarResource.FloorSection == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "FloorSection")
 		}
 	}
 	if flags["resourceCategory"].IsSet() {
-		resourceCalendar.ResourceCategory = flags["resourceCategory"].GetString()
-		if resourceCalendar.ResourceCategory == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "ResourceCategory")
+		calendarResource.ResourceCategory = flags["resourceCategory"].GetString()
+		if calendarResource.ResourceCategory == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "ResourceCategory")
 		}
 	}
 	if flags["resourceType"].IsSet() {
-		resourceCalendar.ResourceType = flags["resourceType"].GetString()
-		if resourceCalendar.ResourceType == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "ResourceType")
+		calendarResource.ResourceType = flags["resourceType"].GetString()
+		if calendarResource.ResourceType == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "ResourceType")
 		}
 	}
 	if flags["userVisibleDescription"].IsSet() {
-		resourceCalendar.UserVisibleDescription = flags["userVisibleDescription"].GetString()
-		if resourceCalendar.UserVisibleDescription == "" {
-			resourceCalendar.ForceSendFields = append(resourceCalendar.ForceSendFields, "UserVisibleDescription")
+		calendarResource.UserVisibleDescription = flags["userVisibleDescription"].GetString()
+		if calendarResource.UserVisibleDescription == "" {
+			calendarResource.ForceSendFields = append(calendarResource.ForceSendFields, "UserVisibleDescription")
 		}
 	}
-	return resourceCalendar, nil
+	return calendarResource, nil
 }

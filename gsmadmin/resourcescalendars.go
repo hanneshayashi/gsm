@@ -24,8 +24,8 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// DeleteResourcesCalendar deletes a calendar resource.
-func DeleteResourcesCalendar(customer, calendarResourceID string) (bool, error) {
+// DeleteCalendarResource deletes a calendar resource.
+func DeleteCalendarResource(customer, calendarResourceID string) (bool, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.Delete(customer, calendarResourceID)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() error {
@@ -34,8 +34,8 @@ func DeleteResourcesCalendar(customer, calendarResourceID string) (bool, error) 
 	return result, err
 }
 
-// GetResourcesCalendar retrieves a calendar resource.
-func GetResourcesCalendar(customer, calendarResourceID, fields string) (*admin.CalendarResource, error) {
+// GetCalendarResource retrieves a calendar resource.
+func GetCalendarResource(customer, calendarResourceID, fields string) (*admin.CalendarResource, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.Get(customer, calendarResourceID)
 	if fields != "" {
@@ -51,8 +51,8 @@ func GetResourcesCalendar(customer, calendarResourceID, fields string) (*admin.C
 	return r, nil
 }
 
-// InsertResourcesCalendar inserts a calendar resource.
-func InsertResourcesCalendar(customer, fields string, calendarResource *admin.CalendarResource) (*admin.CalendarResource, error) {
+// InsertCalendarResource inserts a calendar resource.
+func InsertCalendarResource(customer, fields string, calendarResource *admin.CalendarResource) (*admin.CalendarResource, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.Insert(customer, calendarResource)
 	if fields != "" {
@@ -68,7 +68,7 @@ func InsertResourcesCalendar(customer, fields string, calendarResource *admin.Ca
 	return r, nil
 }
 
-func makeListResourceCalendarsCallAndAppend(c *admin.ResourcesCalendarsListCall, calendars []*admin.CalendarResource, errKey string) ([]*admin.CalendarResource, error) {
+func makeListCalendarResourcesCallAndAppend(c *admin.ResourcesCalendarsListCall, calendars []*admin.CalendarResource, errKey string) ([]*admin.CalendarResource, error) {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
@@ -79,13 +79,13 @@ func makeListResourceCalendarsCallAndAppend(c *admin.ResourcesCalendarsListCall,
 	calendars = append(calendars, r.Items...)
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		calendars, err = makeListResourceCalendarsCallAndAppend(c, calendars, errKey)
+		calendars, err = makeListCalendarResourcesCallAndAppend(c, calendars, errKey)
 	}
 	return calendars, err
 }
 
-// ListResourcesCalendars retrieves a list of calendar resources for an account.
-func ListResourcesCalendars(customer, orderBy, query, fields string) ([]*admin.CalendarResource, error) {
+// ListCalendarResources retrieves a list of calendar resources for an account.
+func ListCalendarResources(customer, orderBy, query, fields string) ([]*admin.CalendarResource, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.List(customer)
 	if fields != "" {
@@ -98,12 +98,12 @@ func ListResourcesCalendars(customer, orderBy, query, fields string) ([]*admin.C
 		c = c.Query(query)
 	}
 	var calendars []*admin.CalendarResource
-	calendars, err := makeListResourceCalendarsCallAndAppend(c, calendars, gsmhelpers.FormatErrorKey(customer))
+	calendars, err := makeListCalendarResourcesCallAndAppend(c, calendars, gsmhelpers.FormatErrorKey(customer))
 	return calendars, err
 }
 
-// PatchResourcesCalendar updates a calendar resource. This method supports patch semantics.
-func PatchResourcesCalendar(customer, calendarResourceID, fields string, calendar *admin.CalendarResource) (*admin.CalendarResource, error) {
+// PatchCalendarResource updates a calendar resource. This method supports patch semantics.
+func PatchCalendarResource(customer, calendarResourceID, fields string, calendar *admin.CalendarResource) (*admin.CalendarResource, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.Patch(customer, calendarResourceID, calendar)
 	if fields != "" {

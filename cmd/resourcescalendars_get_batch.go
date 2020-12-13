@@ -18,26 +18,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesCalendarsGetBatchCmd represents the batch command
-var resourcesCalendarsGetBatchCmd = &cobra.Command{
+// calendarResourcesGetBatchCmd represents the batch command
+var calendarResourcesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarResourceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -50,7 +51,7 @@ var resourcesCalendarsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.GetResourcesCalendar(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString())
+						result, err := gsmadmin.GetCalendarResource(m["customer"].GetString(), m["calendarResourceId"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -71,5 +72,5 @@ var resourcesCalendarsGetBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesCalendarsGetCmd, resourcesCalendarsGetBatchCmd, resourcesCalendarFlags, resourcesCalendarFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarResourcesGetCmd, calendarResourcesGetBatchCmd, calendarResourceFlags, calendarResourceFlagsALL, batchFlags)
 }

@@ -18,27 +18,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesCalendarsPatchCmd represents the patch command
-var resourcesCalendarsPatchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Patches a calendar resource.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",	
+// calendarResourcesPatchCmd represents the patch command
+var calendarResourcesPatchCmd = &cobra.Command{
+	Use:               "patch",
+	Short:             "Patches a calendar resource.",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToResourceCalendar(flags)
+		c, err := mapToCalendarResource(flags)
 		if err != nil {
-			log.Fatalf("Error building resourceCalendar object: %v", err)
+			log.Fatalf("Error building calendarResource object: %v", err)
 
 		}
-		result, err := gsmadmin.PatchResourcesCalendar(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString(), c)
+		result, err := gsmadmin.PatchCalendarResource(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString(), c)
 		if err != nil {
 			log.Fatalf("Error patching calendar resource %v", err)
 		}
@@ -47,5 +48,5 @@ var resourcesCalendarsPatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(resourcesCalendarsCmd, resourcesCalendarsPatchCmd, resourcesCalendarFlags)
+	gsmhelpers.InitCommand(calendarResourcesCmd, calendarResourcesPatchCmd, calendarResourceFlags)
 }

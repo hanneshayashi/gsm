@@ -27,8 +27,8 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// resourcesCalendarsInsertBatchCmd represents the batch command
-var resourcesCalendarsInsertBatchCmd = &cobra.Command{
+// calendarResourcesInsertBatchCmd represents the batch command
+var calendarResourcesInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
@@ -37,7 +37,7 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 	},	
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarResourceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -50,12 +50,12 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						c, err := mapToResourceCalendar(m)
+						c, err := mapToCalendarResource(m)
 						if err != nil {
-							log.Printf("Error building resourceCalendar object: %v\n", err)
+							log.Printf("Error building calendarResource object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.InsertResourcesCalendar(m["customer"].GetString(), m["fields"].GetString(), c)
+						result, err := gsmadmin.InsertCalendarResource(m["customer"].GetString(), m["fields"].GetString(), c)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -76,5 +76,5 @@ var resourcesCalendarsInsertBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesCalendarsInsertCmd, resourcesCalendarsInsertBatchCmd, resourcesCalendarFlags, resourcesCalendarFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarResourcesInsertCmd, calendarResourcesInsertBatchCmd, calendarResourceFlags, calendarResourceFlagsALL, batchFlags)
 }

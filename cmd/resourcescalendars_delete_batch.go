@@ -18,25 +18,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
-// resourcesCalendarsDeleteBatchCmd represents the batch command
-var resourcesCalendarsDeleteBatchCmd = &cobra.Command{
+// calendarResourcesDeleteBatchCmd represents the batch command
+var calendarResourcesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes calendar resources using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, resourcesCalendarFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, calendarResourceFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -54,7 +55,7 @@ var resourcesCalendarsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteResourcesCalendar(m["customer"].GetString(), m["calendarResourceId"].GetString())
+						result, err := gsmadmin.DeleteCalendarResource(m["customer"].GetString(), m["calendarResourceId"].GetString())
 						if err != nil {
 							log.Println(err)
 						}
@@ -74,5 +75,5 @@ var resourcesCalendarsDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(resourcesCalendarsDeleteCmd, resourcesCalendarsDeleteBatchCmd, resourcesCalendarFlags, resourcesCalendarFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(calendarResourcesDeleteCmd, calendarResourcesDeleteBatchCmd, calendarResourceFlags, calendarResourceFlagsALL, batchFlags)
 }
