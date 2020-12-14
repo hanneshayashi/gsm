@@ -86,6 +86,12 @@ For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:u
 		Type:         "bool",
 		Description:  `Include drafts from SPAM and TRASH in the results.`,
 	},
+	"attachment": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "stringSlice",
+		Description: `Path to a file that should be attached to the message.
+Can be used multiple times.`,
+	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},
 		Type:         "string",

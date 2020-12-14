@@ -21,6 +21,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -157,6 +158,12 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 		Type:         "string",
 		Description:  "Body or content of the (draft) message",
 	},
+	"attachment": {
+		AvailableFor: []string{"send"},
+		Type:         "stringSlice",
+		Description: `Path to a file that should be attached to the message.
+Can be used multiple times.`,
+	},
 	"fields": {
 		AvailableFor: []string{"get", "import", "insert", "list", "modify", "send", "trash", "untrash"},
 		Type:         "string",
@@ -173,6 +180,10 @@ func init() {
 func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 	message := &gmail.Message{}
 	header := make(map[string]string)
+	var msg string
+	boundary := "asdh9818gdhKA**GSM**adhiu2GSM==="
+	header["Content-Type"] = fmt.Sprintf("multipart/mixed; boundary=\"%s\"", boundary)
+	header["MIME-Version"] = "1.0"
 	if flags["to"].IsSet() {
 		header["To"] = flags["to"].GetString()
 	}
@@ -183,15 +194,35 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 		header["Bcc"] = flags["bcc"].GetString()
 	}
 	header["Subject"] = flags["subject"].GetString()
-	header["MIME-Version"] = "1.0"
-	header["Content-Type"] = `text/html; charset="utf-8"`
-	header["Content-Transfer-Encoding"] = "base64"
-	var msg string
 	for k, v := range header {
 		msg += fmt.Sprintf("%s: %s\n", k, v)
 	}
+	msg += fmt.Sprintf("\n--%s\n", boundary)
+	msg += "Content-Type: text/plain; charset=\"utf-8\"\n"
+	msg += "MIME-Version: 1.0\n"
+	msg += "Content-Transfer-Encoding: 7bit\n\n"
 	body := flags["body"].GetString()
 	msg += "\n" + body
+	if flags["attachment"].IsSet() {
+		attachments := flags["attachment"].GetStringSlice()
+		for _, a := range attachments {
+			file, err := os.Open(a)
+			if err != nil {
+				return nil, err
+			}
+			bytes, err := ioutil.ReadAll(file)
+			if err != nil {
+				return nil, err
+			}
+			msg += fmt.Sprintf("\n--%s\n", boundary)
+			msg += "Content-Type: " + http.DetectContentType(bytes) + "; name=" + file.Name() + "\n"
+			msg += "MIME-Version: 1.0\n"
+			msg += "Content-Transfer-Encoding: base64\n"
+			msg += "Content-Disposition: attachment; filename=\"" + file.Name() + "\"\n\n"
+			msg += base64.StdEncoding.EncodeToString(bytes) + "\n"
+		}
+	}
+	msg += fmt.Sprintf("\n--%s--\n", boundary)
 	message.Raw = base64.URLEncoding.EncodeToString([]byte(msg))
 	return message, nil
 }
