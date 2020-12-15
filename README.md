@@ -64,15 +64,20 @@ GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there a
 
 You can take a look at some examples under [scripting](https://gsm.hayashi-ke.online/scripting).
 
+You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo).\
+Note that this module is still **experimental** and is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module with over 500 functions and 70k lines of code, it seems to work reasonably well :).
+
 #### Logging
 
-As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those time, GSM creates a log file in the same directory as the binary called "gsm.log" that contains error messages.
+As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those time, GSM creates a log file your home directory called "gsm.log" that contains error messages.\
+You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the ``--logFile`` flag when running a command.
 
 ### See Also
 
-* [setup](https://gsm.hayashi-ke.online/setup)       - How to set up GSM
-* [gsm](https://gsm.hayashi-ke.online/gsm)   - Command overview
-* [batch commands](https://gsm.hayashi-ke.online/batch_commands)     - How to use batch commands
-* [recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
-* [examples](https://gsm.hayashi-ke.online/examples) - See some examples
-* [scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
+* [Setup](https://gsm.hayashi-ke.online/setup)       - How to set up GSM
+* [GSM](https://gsm.hayashi-ke.online/gsm)   - Command overview
+* [Batch commands](https://gsm.hayashi-ke.online/batch_commands)     - How to use batch commands
+* [Recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
+* [Examples](https://gsm.hayashi-ke.online/examples) - See some examples
+* [Scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
+* [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo) - Auto-generated PowerShell script
