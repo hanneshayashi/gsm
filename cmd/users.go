@@ -38,6 +38,7 @@ The value can be the user's primary email address, alias email address, or uniqu
 		Type:         "string",
 		Description: `A comma-separated list of schema names.
 All fields from these schemas are fetched. This should only be set when projection=custom`,
+		Recursive: []string{"get"},
 	},
 	"projection": {
 		AvailableFor: []string{"get", "list"},
@@ -48,6 +49,7 @@ Acceptable values are:
 basic   - Do not include any custom fields for the user. (default)
 custom  - Include custom fields from schemas requested in customFieldMask.
 full    - Include all fields associated with this user.`,
+		Recursive: []string{"get"},
 	},
 	"viewType": {
 		AvailableFor: []string{"get", "list"},
@@ -58,14 +60,15 @@ For more information, see https://developers.google.com/admin-sdk/directory/v1/g
 Acceptable values are:
 admin_view     - Results include both administrator-only and domain-public fields for the user. (default)
 domain_public  - Results only include fields for the user that are publicly visible to other users in the domain.
-                 Contact sharing must be enabled for the domain.`,
+				 Contact sharing must be enabled for the domain.`,
+		Recursive: []string{"get"},
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"get", "patch"},
 	},
 	"familyName": {
 		AvailableFor: []string{"insert", "patch"},

@@ -55,6 +55,7 @@ The value can be the user's primary email address, alias email address, or uniqu
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
+		Recursive: []string{"list"},
 	},
 }
 var userAliasFlagsALL = gsmhelpers.GetAllFlags(userAliasFlags)
