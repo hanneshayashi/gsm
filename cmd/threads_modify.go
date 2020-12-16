@@ -34,7 +34,7 @@ var threadsModifyCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmgmail.ModifyThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabels"].GetStringSlice(), flags["removeLabels"].GetStringSlice())
+		result, err := gsmgmail.ModifyThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabelIds"].GetStringSlice(), flags["removeLabelIds"].GetStringSlice())
 		if err != nil {
 			log.Fatalf("Error modifiyng thread %s: %v", flags["id"].GetString(), err)
 		}

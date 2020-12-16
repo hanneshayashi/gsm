@@ -73,7 +73,7 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 	},
 	"labelIds": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         "stringSlice",
 		Description:  `Only return threads with labels that match all of the specified label IDs.`,
 	},
 	"includeSpamTrash": {
