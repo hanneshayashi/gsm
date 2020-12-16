@@ -47,11 +47,11 @@ var userPhotosDeleteRecursiveCmd = &cobra.Command{
 		final := []resultStruct{}
 		wgOps := &sync.WaitGroup{}
 		wgFinal := &sync.WaitGroup{}
-		userphotoKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
+		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		for i := 0; i < threads; i++ {
 			wgOps.Add(1)
 			go func() {
-				for uk := range userphotoKeysUnique {
+				for uk := range userKeysUnique {
 					result, err := gsmadmin.DeleteUserPhoto(uk)
 					if err != nil {
 						log.Println(err)

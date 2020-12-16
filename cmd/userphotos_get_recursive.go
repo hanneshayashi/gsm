@@ -48,12 +48,12 @@ var userPhotosGetRecursiveCmd = &cobra.Command{
 		final := []resultStruct{}
 		wgOps := &sync.WaitGroup{}
 		wgFinal := &sync.WaitGroup{}
-		userphotoKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
+		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		fields := flags["fields"].GetString()
 		for i := 0; i < threads; i++ {
 			wgOps.Add(1)
 			go func() {
-				for uk := range userphotoKeysUnique {
+				for uk := range userKeysUnique {
 					result, err := gsmadmin.GetUserPhoto(uk, fields)
 					if err != nil {
 						log.Println(err)

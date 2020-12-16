@@ -48,7 +48,7 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 		final := []resultStruct{}
 		wgOps := &sync.WaitGroup{}
 		wgFinal := &sync.WaitGroup{}
-		userphotoKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
+		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		p, err := mapToUserPhoto(flags)
 		if err != nil {
 			log.Fatalf("Error building userPhoto object: %v", err)
@@ -57,7 +57,7 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 		for i := 0; i < threads; i++ {
 			wgOps.Add(1)
 			go func() {
-				for uk := range userphotoKeysUnique {
+				for uk := range userKeysUnique {
 					result, err := gsmadmin.UpdateUserPhoto(uk, fields, p)
 					if err != nil {
 						log.Println(err)
