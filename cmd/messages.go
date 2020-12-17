@@ -138,6 +138,13 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 		Type:         "string",
 		Description:  "Subject of the (draft) message",
 	},
+	"from": {
+		AvailableFor: []string{"send"},
+		Type:         "string",
+		Description: `Sender of the (draft) message.
+Must be a valid sendAs address.
+If this is not set, your primary sendAs address will be used automatically.`,
+	},
 	"to": {
 		AvailableFor: []string{"send"},
 		Type:         "string",
@@ -184,6 +191,9 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 	boundary := "asdh9818gdhKA**GSM**adhiu2GSM==="
 	header["Content-Type"] = fmt.Sprintf("multipart/mixed; boundary=\"%s\"", boundary)
 	header["MIME-Version"] = "1.0"
+	if flags["from"].IsSet() {
+		header["From"] = flags["from"].GetString()
+	}
 	if flags["to"].IsSet() {
 		header["To"] = flags["to"].GetString()
 	}
