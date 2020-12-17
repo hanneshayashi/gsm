@@ -18,6 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"encoding/base64"
+	"io/ioutil"
+	"os"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -55,40 +59,17 @@ var smimeInfoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Required:       []string{"delete", "get", "setDefault"},
 		ExcludeFromAll: true,
 	},
-	"issuerCn": {
-		AvailableFor: []string{"insert"},
-		Type:         "string",
-		Description:  `The S/MIME certificate issuer's common name.`,
-	},
-	"isDefault": {
-		AvailableFor: []string{"insert"},
-		Type:         "bool",
-		Description:  `The S/MIME certificate issuer's common name.`,
-	},
-	"expiration": {
-		AvailableFor: []string{"insert"},
-		Type:         "bool",
-		Description:  `When the certificate expires (in milliseconds since epoch).`,
-	},
 	"encryptedKeyPassword": {
 		AvailableFor: []string{"insert"},
-		Type:         "bool",
+		Type:         "string",
 		Description:  `Encrypted key password, when key is encrypted.`,
-	},
-	"pem": {
-		AvailableFor: []string{"insert"},
-		Type:         "bool",
-		Description: `PEM formatted X509 concatenated certificate string (standard base64 encoding).
-Format used for returning key, which includes public key as well as certificate chain (not private key).`,
 	},
 	"pkcs12": {
 		AvailableFor: []string{"insert"},
-		Type:         "bool",
-		Description: `PKCS#12 format containing a single private/public key pair and certificate chain.
+		Type:         "string",
+		Description: `Path to a PKCS#12 format file containing a single private/public key pair and certificate chain.
 This format is only accepted from client for creating a new SmimeInfo and is never returned, because the private key is not intended to be exported.
-PKCS#12 may be encrypted, in which case encryptedKeyPassword should be set appropriately.
-
-A base64-encoded string.`,
+PKCS#12 may be encrypted, in which case encryptedKeyPassword should be set appropriately.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list"},
@@ -105,38 +86,22 @@ func init() {
 
 func mapToSmimeInfo(flags map[string]*gsmhelpers.Value) (*gmail.SmimeInfo, error) {
 	smimeInfo := &gmail.SmimeInfo{}
-	if flags["issuerCn"].IsSet() {
-		smimeInfo.IssuerCn = flags["issuerCn"].GetString()
-		if smimeInfo.IssuerCn == "" {
-			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "IssuerCn")
-		}
-	}
 	if flags["encryptedKeyPassword"].IsSet() {
 		smimeInfo.EncryptedKeyPassword = flags["encryptedKeyPassword"].GetString()
 		if smimeInfo.EncryptedKeyPassword == "" {
 			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "EncryptedKeyPassword")
 		}
 	}
-	if flags["isDefault"].IsSet() {
-		smimeInfo.IsDefault = flags["isDefault"].GetBool()
-		if !smimeInfo.IsDefault {
-			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "IsDefault")
-		}
-	}
-	if flags["expiration"].IsSet() {
-		smimeInfo.Expiration = flags["expiration"].GetInt64()
-		if smimeInfo.Expiration == 0 {
-			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "Expiration")
-		}
-	}
-	if flags["pem"].IsSet() {
-		smimeInfo.Pem = flags["pem"].GetString()
-		if smimeInfo.Pem == "" {
-			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "Pem")
-		}
-	}
 	if flags["pkcs12"].IsSet() {
-		smimeInfo.Pkcs12 = flags["pkcs12"].GetString()
+		f, err := os.Open(flags["pkcs12"].GetString())
+		if err != nil {
+			return nil, err
+		}
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			return nil, err
+		}
+		smimeInfo.Pkcs12 = base64.URLEncoding.EncodeToString(b)
 		if smimeInfo.Pkcs12 == "" {
 			smimeInfo.ForceSendFields = append(smimeInfo.ForceSendFields, "Pkcs12")
 		}
