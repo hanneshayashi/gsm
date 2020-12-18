@@ -43,5 +43,5 @@ var peopleConnectionsListCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(peopleCmd, peopleConnectionsListCmd, peopleFlags)
+	gsmhelpers.InitCommand(peopleConnectionsCmd, peopleConnectionsListCmd, peopleConnectionFlags)
 }
