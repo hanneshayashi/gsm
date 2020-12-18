@@ -36,7 +36,7 @@ var peopleDeleteContactPhotoCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.DeleteContactPhoto(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting contact photo %v", err)
+			log.Fatalf("Error deleting contact photo: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},

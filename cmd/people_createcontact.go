@@ -40,7 +40,7 @@ var peopleCreateContactCmd = &cobra.Command{
 		}
 		result, err := gsmpeople.CreateContact(p, flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error creating contact %v", err)
+			log.Fatalf("Error creating contact: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},

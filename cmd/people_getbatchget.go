@@ -36,7 +36,7 @@ var peopleGetBatchGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.GetContactsBatch(flags["resourceNames"].GetStringSlice(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting contacts %v", err)
+			log.Fatalf("Error getting contacts: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},

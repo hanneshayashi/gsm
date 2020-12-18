@@ -36,7 +36,7 @@ var peopleSearchDirectoryPeopleCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.SearchDirectoryPeople(flags["readMask"].GetString(), flags["sources"].GetString(), flags["query"].GetString(), flags["fields"].GetString(), flags["mergeSources"].GetStringSlice())
 		if err != nil {
-			log.Fatalf("Error searching for contacts %v", err)
+			log.Fatalf("Error searching for contacts: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},

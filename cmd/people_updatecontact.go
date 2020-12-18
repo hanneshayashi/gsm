@@ -44,7 +44,7 @@ var peopleUpdateContactCmd = &cobra.Command{
 		}
 		result, err := gsmpeople.UpdateContact(flags["resourceName"].GetString(), flags["updatePersonFields"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString(), p)
 		if err != nil {
-			log.Fatalf("Error updating contact %v", err)
+			log.Fatalf("Error updating contact: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},

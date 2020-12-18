@@ -36,7 +36,7 @@ var peopleListDirectoryPeopleCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.ListDirectoryPeople(flags["readMask"].GetString(), flags["sources"].GetString(), flags["fields"].GetString(), flags["mergeSources"].GetStringSlice())
 		if err != nil {
-			log.Fatalf("Error listing contacts %v", err)
+			log.Fatalf("Error listing contacts: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
