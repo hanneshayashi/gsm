@@ -1,4 +1,5 @@
 /*
+Package gsmauth provides the authentication mechanisms for Google APIs
 Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
