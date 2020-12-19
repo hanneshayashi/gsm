@@ -151,24 +151,20 @@ func init() {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	var err error
-	if cfgFile != "" {
-		// Use config file from the flag.
-		cfgFile = gsmconfig.GetConfigPath(cfgFile)
-		viper.SetConfigFile(cfgFile)
-	} else {
-		gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
-		if _, err := os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
-			err = os.MkdirAll(gsmconfig.CfgDir, 0777)
-			if err != nil {
-				log.Fatalf("Config dir %s could not be found and could not be created: %v", gsmconfig.CfgDir, err)
-			}
+	gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
+	if _, err := os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
+		err = os.MkdirAll(gsmconfig.CfgDir, 0777)
+		if err != nil {
+			log.Fatalf("Config dir %s could not be found and could not be created: %v", gsmconfig.CfgDir, err)
 		}
-		// Search config in home directory with name ".gsm" (without extension).
-		viper.AddConfigPath(gsmconfig.CfgDir)
-		viper.SetConfigName(".gsm")
-		viper.SetConfigType("yaml")
 	}
-
+	// Search config in home directory with name ".gsm" (without extension).
+	viper.AddConfigPath(gsmconfig.CfgDir)
+	if cfgFile == "" {
+		cfgFile = ".gsm"
+	}
+	viper.SetConfigName(cfgFile)
+	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
