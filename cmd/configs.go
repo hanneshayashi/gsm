@@ -52,7 +52,7 @@ You can always explicitly specify a config file with the --config flag.`,
 
 var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get", "getScopes", "new", "load", "remove"},
+		AvailableFor: []string{"get", "getScopes", "new", "update", "load", "remove"},
 		Type:         "string",
 		Description: `Name of the configuration.
 This (plus ".yaml") will be used as the file name.`,
@@ -60,26 +60,26 @@ This (plus ".yaml") will be used as the file name.`,
 		Defaults: map[string]interface{}{"get": ".gsm", "getScopes": ".gsm"},
 	},
 	"credentialsFile": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "string",
 		Description: `Path to the credential file.
 Can be relative to the binary or fully qualified.`,
 		Required: []string{"new"},
 	},
 	"mode": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "string",
 		Description: `The mode to operate in. Can be:
 [dwd|user]`,
 		Required: []string{"new"},
 	},
 	"subject": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "string",
 		Description:  `The user who should be impersonated with DWD.`,
 	},
 	"scopes": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "stringSlice",
 		Description:  `OAuth Scopes to use.`,
 	},
@@ -89,18 +89,18 @@ Can be relative to the binary or fully qualified.`,
 		Description:  `List detailed information about configs.`,
 	},
 	"threads": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "int",
 		Description:  `The maximum number of threads to use.`,
 	},
 	"standardDelay": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "int",
 		Description:  `Delay in ms to wait after each API call`,
 		Defaults:     map[string]interface{}{"new": 300},
 	},
 	"logFile": {
-		AvailableFor: []string{"new"},
+		AvailableFor: []string{"new", "update"},
 		Type:         "string",
 		Description:  `Path of the log file.`,
 	},
@@ -110,8 +110,7 @@ func init() {
 	rootCmd.AddCommand(configsCmd)
 }
 
-func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, error) {
-	config := &gsmconfig.GSMConfig{}
+func mapToConfig(flags map[string]*gsmhelpers.Value, config *gsmconfig.GSMConfig) (*gsmconfig.GSMConfig, error) {
 	if flags["name"].IsSet() {
 		config.Name = flags["name"].GetString()
 	}

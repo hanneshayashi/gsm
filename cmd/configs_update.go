@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
@@ -27,30 +26,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configsNewCmd represents the new command
-var configsNewCmd = &cobra.Command{
-	Use:   "new",
-	Short: "Create a new config file.",
-	Long: `Config files are saved using the YAML format under
-'~/.config/gsm/<name>.yaml'.`,
+// configsUpdateCmd represents the update command
+var configsUpdateCmd = &cobra.Command{
+	Use:   "update",
+	Short: "Updates the current config.",
+	Long:  `To update a config that is not currently loaded, use the --config flag to load it temporarily.`,
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToConfig(flags, &gsmconfig.GSMConfig{})
+		cOld, err := gsmconfig.GetConfig(cfgFile)
+		if err != nil {
+			log.Fatalf("Error getting config: %v", err)
+		}
+		cNew, err := mapToConfig(flags, cOld)
 		if err != nil {
 			log.Fatalf("Error building config object: %v", err)
 		}
-		result, err := gsmconfig.CreateConfig(c)
+		result, err := gsmconfig.UpdateConfig(cNew, cfgFile)
 		if err != nil {
 			log.Fatalf("Error creating config: %v", err)
 		}
-		fmt.Println(result)
+		gsmhelpers.StreamOutput(result, "yaml", false)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(configsCmd, configsNewCmd, configFlags)
+	gsmhelpers.InitCommand(configsCmd, configsUpdateCmd, configFlags)
 }

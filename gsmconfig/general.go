@@ -42,6 +42,23 @@ type GSMConfig struct {
 // CfgDir should be set to the directory containing all GSM configuration files
 var CfgDir string
 
+// UpdateConfig updates a new config
+func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
+	b, err := yaml.Marshal(config)
+	if err != nil {
+		return nil, err
+	}
+	configPath := GetConfigPath(name)
+	err = ioutil.WriteFile(configPath, b, os.ModeAppend)
+	if name != ".gsm" && config.Name != name {
+		err = os.Rename(configPath, GetConfigPath(config.Name))
+	}
+	if err != nil {
+		return nil, err
+	}
+	return config, err
+}
+
 // CreateConfig creates a new config
 func CreateConfig(config *GSMConfig) (string, error) {
 	b, err := yaml.Marshal(config)
