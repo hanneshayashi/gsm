@@ -4,7 +4,7 @@ GoSpace Manager - Manage Google Workspace resources using a developer-friendly C
 
 ### Documentation
 
-View complete documentation at https://gsm.hayashi-ke.online/
+View complete documentation at https://gsm.hayashi-ke.online/.
 
 ### Introduction
 
@@ -14,7 +14,7 @@ I created this tool first and foremost for myself for the following reasons:
 - Programming is fun!
 
 If you need a mature and battle-tested tool with an active community, feel free to try one of the linked alternatives.\
-GSM does exactly what **I** need, but that does not necessarily mean that it will be useful to everyone.\
+GSM does exactly what I need, but that does not necessarily mean that it will be useful to everyone.\
 However, by making it open source, I hope that I can help someone looking for a solution that other tools don't offer.
 
 ### General Information
@@ -38,8 +38,20 @@ GSM is based on open source technology and would not exist without the incredibl
 
 ### Features
 
-GSM offers CLI access to over 20 Google API via 50+ main commands and over 
-250 sub commands (plus some 230 custom ["batch" commands](https://gsm.hayashi-ke.online/batch_commands), as well as several handy ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)).
+GSM currently supports the following APIs:
+- [Admin SDK API](https://console.cloud.google.com/marketplace/product/google/admin.googleapis.com)
+- [Gmail API](https://console.cloud.google.com/marketplace/product/google/gmail.googleapis.com)
+- [Google Calendar API](https://console.cloud.google.com/marketplace/product/google/calendar-json.googleapis.com)
+- [Contacts API](https://console.cloud.google.com/marketplace/product/google/contacts.googleapis.com)
+- [Google Drive API](https://console.cloud.google.com/marketplace/product/google/drive.googleapis.com)
+- [Cloud Identity](https://console.cloud.google.com/marketplace/product/google/cloudidentity.googleapis.com)
+- [Groups Settings API](https://console.cloud.google.com/marketplace/product/google/groupssettings.googleapis.com)
+- [Enterprise License Manager API](https://console.cloud.google.com/marketplace/product/google/licensing.googleapis.com)
+- [Google People API](https://console.cloud.google.com/marketplace/product/google/people.googleapis.com)
+- [Google Sheets API](https://console.cloud.google.com/marketplace/product/google/sheets.googleapis.com)
+
+Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\
+Overall, GSM supports over **500 commands**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands))** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
 
 You can use GSM in one of two modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
@@ -47,7 +59,7 @@ You can use GSM in one of two modes
 - dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
  You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
 
-You can set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs).
+You can set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
 
 ### Output
 
@@ -69,8 +81,9 @@ Note that this module is still **experimental** and is created with [Crescendo](
 
 #### Logging
 
-As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those time, GSM creates a log file your home directory called "gsm.log" that contains error messages.\
-You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the ``--logFile`` flag when running a command.
+As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
+You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--logFile` flag when running a command.
+You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
 
 ### See Also
 
@@ -80,4 +93,4 @@ You can configure the location and name of the log file, either in your config f
 * [Recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
 * [Examples](https://gsm.hayashi-ke.online/examples) - See some examples
 * [Scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
-* [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo) - Auto-generated PowerShell script
+* [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo) - Auto-generated PowerShell module
