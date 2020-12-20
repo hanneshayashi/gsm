@@ -33,7 +33,7 @@ func PrintLastLines(path string, n int) error {
 	s := string(b)
 	lines := strings.Split(s, "\n")
 	max := len(lines) - 1
-	if n > max {
+	if n > max || n == 0 {
 		n = max
 	}
 	for _, l := range lines[max-n : max] {
