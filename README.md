@@ -39,16 +39,16 @@ GSM is based on open source technology and would not exist without the incredibl
 ### Features
 
 GSM currently supports the following APIs:
-- [Admin SDK API](https://console.cloud.google.com/marketplace/product/google/admin.googleapis.com)
-- [Gmail API](https://console.cloud.google.com/marketplace/product/google/gmail.googleapis.com)
-- [Google Calendar API](https://console.cloud.google.com/marketplace/product/google/calendar-json.googleapis.com)
-- [Contacts API](https://console.cloud.google.com/marketplace/product/google/contacts.googleapis.com)
-- [Google Drive API](https://console.cloud.google.com/marketplace/product/google/drive.googleapis.com)
-- [Cloud Identity](https://console.cloud.google.com/marketplace/product/google/cloudidentity.googleapis.com)
-- [Groups Settings API](https://console.cloud.google.com/marketplace/product/google/groupssettings.googleapis.com)
-- [Enterprise License Manager API](https://console.cloud.google.com/marketplace/product/google/licensing.googleapis.com)
-- [Google People API](https://console.cloud.google.com/marketplace/product/google/people.googleapis.com)
-- [Google Sheets API](https://console.cloud.google.com/marketplace/product/google/sheets.googleapis.com)
+- [Admin SDK Directory API](https://developers.google.com/admin-sdk/directory)
+- [Admin SDK Groups Settings API](https://developers.google.com/admin-sdk/groups-settings/get_started)
+- [Admin SDK Enterprise License Manager API](https://developers.google.com/admin-sdk/licensing/reference/rest)
+- [Cloud Identity Beta API](https://cloud.google.com/identity/docs/reference/rest)
+- [Gmail API](https://developers.google.com/gmail/api/reference/rest)
+- [Google Calendar API](https://developers.google.com/calendar/v3/reference)
+- [Domain Shared Contacts API](https://developers.google.com/admin-sdk/domain-shared-contacts)
+- [Google People API](https://developers.google.com/people/api/rest)
+- [Google Drive API](https://developers.google.com/drive/api/v3/reference)
+- [Google Sheets API](https://developers.google.com/sheets/api/reference/rest) (partly)
 
 Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\
 Overall, GSM supports over **500 commands**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands))** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
