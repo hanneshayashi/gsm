@@ -36,7 +36,7 @@ var schemasGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetSchema(flags["customerId"].GetString(), flags["schemaKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error geting schema: %v", err)
+			log.Fatalf("Error getting schema: %v", err)
 		}
 		gsmhelpers.StreamOutput(result, "json", compressOutput)
 	},
