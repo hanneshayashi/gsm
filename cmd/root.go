@@ -35,6 +35,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmlicensing"
 	"github.com/hanneshayashi/gsm/gsmpeople"
+	"github.com/hanneshayashi/gsm/gsmreports"
 	"github.com/hanneshayashi/gsm/gsmsheets"
 
 	// crescengo "github.com/hanneshayashi/crescengo"
@@ -222,6 +223,7 @@ func auth() {
 		gsmlicensing.SetClient(client)
 		gsmpeople.SetClient(client)
 		gsmsheets.SetClient(client)
+		gsmreports.SetClient(client)
 	}
 }
 

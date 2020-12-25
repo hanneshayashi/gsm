@@ -25,6 +25,7 @@ import (
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
+	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
@@ -151,6 +152,8 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, config *gsmconfig.GSMConfig
 			people.DirectoryReadonlyScope,
 			people.ContactsOtherReadonlyScope,
 			sheets.SpreadsheetsScope,
+			reports.AdminReportsAuditReadonlyScope,
+			reports.AdminReportsUsageReadonlyScope,
 		}
 	}
 	if flags["threads"].IsSet() {
