@@ -115,6 +115,8 @@ func errorIsRetryable(err error) bool {
 				return true
 			}
 		}
+	} else if gerr.Code == 500 {
+		return true
 	}
 	return false
 }
