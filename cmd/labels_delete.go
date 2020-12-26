@@ -38,7 +38,7 @@ var labelsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting label: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -39,6 +39,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmsheets"
 
 	// crescengo "github.com/hanneshayashi/crescengo"
+	// crescengo "github.com/hanneshayashi/gsm/crescengo"
 
 	"github.com/spf13/cobra"
 
@@ -53,6 +54,7 @@ var (
 	logFile        string
 	home           string
 	compressOutput bool
+	streamOutput   bool
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
@@ -131,7 +133,7 @@ func Execute() {
 		os.Exit(1)
 	}
 	// gsmhelpers.CreateDocs(rootCmd)
-	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm_crescendo/json/")
+	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm_crescendo/json/", "--compressOutput", "--streamOutput")
 }
 
 func init() {
@@ -142,6 +144,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
+	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
 	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	rootCmd.PersistentFlags().StringVar(&logFile, "logFile", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	// Cobra also supports local flags, which will only run

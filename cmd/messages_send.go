@@ -42,7 +42,7 @@ var messagesSendCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error sending message: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

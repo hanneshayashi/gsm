@@ -42,7 +42,7 @@ var draftsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating draft: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

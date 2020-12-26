@@ -38,7 +38,7 @@ var licenseAssignmentsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting licenseAssignment: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

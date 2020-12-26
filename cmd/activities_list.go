@@ -40,7 +40,14 @@ For more information about the activity report's parameters, see the activity pa
 		if err != nil {
 			log.Fatalf("Error listing activities: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for i := range result {
+				enc.Encode(result[i])
+			}
+		} else {
+			gsmhelpers.Output(result, "json", compressOutput)
+		}
 	},
 }
 

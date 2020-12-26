@@ -40,7 +40,7 @@ For more information about the customer report's parameters, see the Customers U
 		if err != nil {
 			log.Fatalf("Error getting Customer Usage Reports: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

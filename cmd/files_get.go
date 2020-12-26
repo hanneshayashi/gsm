@@ -38,7 +38,7 @@ var filesGetCmd = &cobra.Command{
 		if err != nil {
 			log.Println(err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

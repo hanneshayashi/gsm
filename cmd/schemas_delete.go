@@ -38,7 +38,7 @@ var schemasDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting schemas: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

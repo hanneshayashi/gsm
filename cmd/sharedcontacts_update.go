@@ -51,9 +51,9 @@ Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;l
 			log.Fatalf("Error creating shared contact: %v", err)
 		}
 		if flags["json"].GetBool() {
-			gsmhelpers.StreamOutput(result, "json", compressOutput)
+			gsmhelpers.Output(result, "json", compressOutput)
 		} else {
-			gsmhelpers.StreamOutput(result, "xml", compressOutput)
+			gsmhelpers.Output(result, "xml", compressOutput)
 		}
 	},
 }

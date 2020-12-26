@@ -42,7 +42,7 @@ var schemasInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting schema: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -61,7 +61,7 @@ var filesUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating file %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

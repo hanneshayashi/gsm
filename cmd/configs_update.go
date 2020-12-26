@@ -49,7 +49,7 @@ var configsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating config: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "yaml", false)
+		gsmhelpers.Output(result, "yaml", false)
 	},
 }
 

@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/roles/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -34,7 +35,7 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleassignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -43,61 +44,66 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 			UserKey        string                `json:"userKey,omitempty"`
 			RoleAssignment *admin.RoleAssignment `json:"roleAssignment,omitempty"`
 		}
-		finalChan := make(chan resultStruct, threads)
-		final := []resultStruct{}
+		results := make(chan resultStruct, threads)
 		userIdsUnique := make(chan string, threads)
-		wgGets := &sync.WaitGroup{}
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		var wgUserIds sync.WaitGroup
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		customer := flags["customer"].GetString()
 		fields := flags["fields"].GetString()
-		for i := 0; i < threads; i++ {
-			wgGets.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					u, err := gsmadmin.GetUser(uk, "id", "", "", "")
-					if err != nil {
-						log.Println(err)
-					} else {
-						userIdsUnique <- u.Id
-					}
-				}
-				wgGets.Done()
-			}()
-		}
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uid := range userIdsUnique {
-					r, err := mapToRoleAssignment(flags)
-					if err != nil {
-						log.Fatalf("Error building role assignment object: %v", err)
-					}
-					r.AssignedTo = uid
-					result, err := gsmadmin.InsertRoleAssignment(customer, fields, r)
-					if err != nil {
-						log.Println(err)
-					} else {
-						finalChan <- resultStruct{UserKey: uid, RoleAssignment: result}
-					}
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wgUserIds.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						u, err := gsmadmin.GetUser(uk, "id", "", "", "")
+						if err != nil {
+							log.Println(err)
+						} else {
+							userIdsUnique <- u.Id
+						}
+					}
+					wgUserIds.Done()
+				}()
+			}
+			wgUserIds.Wait()
+			close(userIdsUnique)
+		}()
+		go func() {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uid := range userIdsUnique {
+						r, err := mapToRoleAssignment(flags)
+						if err != nil {
+							log.Fatalf("Error building role assignment object: %v", err)
+						}
+						r.AssignedTo = uid
+						result, err := gsmadmin.InsertRoleAssignment(customer, fields, r)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- resultStruct{UserKey: uid, RoleAssignment: result}
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgGets.Wait()
-		close(userIdsUnique)
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

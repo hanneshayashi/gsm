@@ -45,7 +45,6 @@ var commentsGetBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		results := make(chan *drive.Comment, cap)
-		final := []*drive.Comment{}
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -64,10 +63,18 @@ var commentsGetBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		for res := range results {
-			final = append(final, res)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*drive.Comment{}
+			for res := range results {
+				final = append(final, res)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

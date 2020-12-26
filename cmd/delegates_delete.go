@@ -43,7 +43,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 		if err != nil {
 			log.Fatalf("Error deleting delegate: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

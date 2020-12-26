@@ -38,7 +38,7 @@ var usersMakeAdminCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error changing user's admin status %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

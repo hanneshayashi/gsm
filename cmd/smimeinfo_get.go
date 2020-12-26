@@ -38,7 +38,7 @@ var smimeInfoGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting S/MIME info: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

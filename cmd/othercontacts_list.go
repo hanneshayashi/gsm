@@ -39,7 +39,14 @@ var otherContactsListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing other contacts %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for i := range result {
+				enc.Encode(result[i])
+			}
+		} else {
+			gsmhelpers.Output(result, "json", compressOutput)
+		}
 	},
 }
 

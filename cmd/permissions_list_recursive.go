@@ -50,46 +50,47 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 			FileID      string              `json:"fileId,omitempty"`
 			Permissions []*drive.Permission `json:"permissions,omitempty"`
 		}
-		resultsChan := make(chan resultStruct, threads)
-		final := []resultStruct{}
-		wgPermissions := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan resultStruct, threads)
+		wg := &sync.WaitGroup{}
 		idChan := make(chan string, threads)
 		fields := flags["fields"].GetString()
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
-		wgPermissions.Add(1)
 		go func() {
 			for _, f := range files {
 				idChan <- f.Id
 			}
 			close(idChan)
-			wgPermissions.Done()
 		}()
-		for i := 0; i < threads; i++ {
-			wgPermissions.Add(1)
-			go func() {
-				for id := range idChan {
-					r, err := gsmdrive.ListPermissions(id, "", fields, useDomainAdminAccess)
-					if err != nil {
-						log.Println(err)
-					} else {
-						resultsChan <- resultStruct{FileID: id, Permissions: r}
-					}
-				}
-				wgPermissions.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range resultsChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for id := range idChan {
+						r, err := gsmdrive.ListPermissions(id, "", fields, useDomainAdminAccess)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- resultStruct{FileID: id, Permissions: r}
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgPermissions.Wait()
-		close(resultsChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

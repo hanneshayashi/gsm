@@ -40,39 +40,42 @@ var usersGetRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		finalChan := make(chan *admin.User, threads)
-		final := []*admin.User{}
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan *admin.User, threads)
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		fields := flags["fields"].GetString()
 		projection := flags["projection"].GetString()
 		customFieldMask := flags["customFieldMask"].GetString()
 		viewType := flags["viewType"].GetString()
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					result, err := gsmadmin.GetUser(uk, fields, projection, customFieldMask, viewType)
-					if err != nil {
-						log.Println(err)
-					}
-					finalChan <- result
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						result, err := gsmadmin.GetUser(uk, fields, projection, customFieldMask, viewType)
+						if err != nil {
+							log.Println(err)
+						}
+						results <- result
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*admin.User{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

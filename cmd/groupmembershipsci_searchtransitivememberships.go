@@ -42,7 +42,7 @@ var groupMembershipsCiSearchTransitiveMembershipsCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error searching transitive groups: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

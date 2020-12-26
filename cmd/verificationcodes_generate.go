@@ -38,7 +38,7 @@ var verificationCodesGenerateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error generating backup verification codes %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

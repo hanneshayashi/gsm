@@ -43,8 +43,11 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan string, cap)
-		final := []string{}
+		type resultStruct struct {
+			Email string `json:"email,omitempty"`
+			Name  string `json:"name,omitempty"`
+		}
+		results := make(chan resultStruct, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -54,7 +57,7 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- result
+							results <- resultStruct{Email: m["email"].GetString(), Name: result}
 						}
 					}
 					wg.Done()
@@ -63,10 +66,18 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		for res := range results {
-			final = append(final, res)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for res := range results {
+				final = append(final, res)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

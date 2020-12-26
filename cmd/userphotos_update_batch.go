@@ -49,7 +49,6 @@ var userPhotosUpdateBatchCmd = &cobra.Command{
 			UserPhoto *admin.UserPhoto `json:"userPhoto,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
-		final := []resultStruct{}
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -73,10 +72,18 @@ var userPhotosUpdateBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		for res := range results {
-			final = append(final, res)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for res := range results {
+				final = append(final, res)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

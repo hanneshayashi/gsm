@@ -38,7 +38,7 @@ var messagesTrashCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error trashing message: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

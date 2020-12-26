@@ -41,7 +41,7 @@ Examples:
 		if err != nil {
 			log.Fatalf("Error searchingb for groups: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

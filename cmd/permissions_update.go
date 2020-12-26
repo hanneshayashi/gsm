@@ -42,7 +42,7 @@ var permissionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating permission %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

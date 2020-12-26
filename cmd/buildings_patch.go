@@ -42,7 +42,7 @@ var buildingsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching building: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

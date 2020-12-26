@@ -38,7 +38,7 @@ var domainsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting domain %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

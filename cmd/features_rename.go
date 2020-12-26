@@ -43,7 +43,7 @@ var featuresRenameCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error renaming feature resource: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

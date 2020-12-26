@@ -45,7 +45,7 @@ var groupSettingsPatchCmd = &cobra.Command{
 		if flags["ignoreDeprecated"].GetBool() {
 			result = ignoreDeprecatedGroupSettings(result)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

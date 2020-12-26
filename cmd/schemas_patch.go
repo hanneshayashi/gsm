@@ -42,7 +42,7 @@ var schemasPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching schema: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

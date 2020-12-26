@@ -38,7 +38,7 @@ var sendAsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting send-as: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

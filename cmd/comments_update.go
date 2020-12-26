@@ -42,7 +42,7 @@ var commentsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating comment: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

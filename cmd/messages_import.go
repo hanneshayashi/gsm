@@ -49,7 +49,7 @@ Does not send a message.`,
 		if err != nil {
 			log.Fatalf("Error importing message: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -38,7 +38,7 @@ var mobileDevicesDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting mobile device %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

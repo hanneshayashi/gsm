@@ -43,7 +43,7 @@ Use "files copy recursive" to copy folders.`,
 		if err != nil {
 			log.Fatalf("Error creating file %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

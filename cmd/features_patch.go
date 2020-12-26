@@ -43,7 +43,7 @@ var featuresPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching feature resource: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

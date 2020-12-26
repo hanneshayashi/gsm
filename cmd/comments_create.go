@@ -42,7 +42,7 @@ var commentsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating comment on file %s: %v", flags["fileId"].GetString(), err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

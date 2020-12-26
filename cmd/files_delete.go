@@ -38,7 +38,7 @@ var filesDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting file %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -45,7 +45,6 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		results := make(chan map[string]interface{}, cap)
-		final := []map[string]interface{}{}
 		customerID, err := gsmadmin.GetOwnCustomerID()
 		if err != nil {
 			log.Printf("Error determining customer ID: %v\n", err)
@@ -77,10 +76,18 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		for res := range results {
-			final = append(final, res)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []map[string]interface{}{}
+			for res := range results {
+				final = append(final, res)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

@@ -40,44 +40,47 @@ var membersInsertRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		finalChan := make(chan *admin.Member, threads)
-		final := []*admin.Member{}
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan *admin.Member, threads)
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		groupKey := flags["groupKey"].GetString()
 		fields := flags["fields"].GetString()
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					m, err := mapToMember(flags)
-					if err != nil {
-						log.Printf("Error building user object: %v\n", err)
-						continue
-					}
-					m.Email = uk
-					result, err := gsmadmin.InsertMember(groupKey, fields, m)
-					if err != nil {
-						log.Println(err)
-					} else {
-						finalChan <- result
-					}
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						m, err := mapToMember(flags)
+						if err != nil {
+							log.Printf("Error building user object: %v\n", err)
+							continue
+						}
+						m.Email = uk
+						result, err := gsmadmin.InsertMember(groupKey, fields, m)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*admin.Member{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

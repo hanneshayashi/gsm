@@ -18,10 +18,11 @@ along with this program. If not, see <http://www.gnu.org/roles/>.
 package cmd
 
 import (
-	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"log"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -34,7 +35,7 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleassignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
-	},	
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -43,38 +44,41 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 			UserKey         string                  `json:"userKey,omitempty"`
 			RoleAssignments []*admin.RoleAssignment `json:"roleAssignments,omitempty"`
 		}
-		finalChan := make(chan resultStruct, threads)
-		final := []resultStruct{}
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan resultStruct, threads)
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		customer := flags["customer"].GetString()
 		fields := flags["fields"].GetString()
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					result, err := gsmadmin.ListRoleAssignments(customer, "", uk, fields)
-					if err != nil {
-						log.Println(err)
-					} else {
-						finalChan <- resultStruct{UserKey: uk, RoleAssignments: result}
-					}
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						result, err := gsmadmin.ListRoleAssignments(customer, "", uk, fields)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- resultStruct{UserKey: uk, RoleAssignments: result}
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

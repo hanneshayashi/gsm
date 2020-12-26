@@ -43,7 +43,7 @@ This operation is used to add a private copy of an existing event to a calendar.
 		if err != nil {
 			log.Fatalf("Error importing event: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

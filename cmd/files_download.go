@@ -38,7 +38,7 @@ var filesDownloadCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error downloading file: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

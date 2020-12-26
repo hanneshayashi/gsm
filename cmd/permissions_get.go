@@ -38,7 +38,7 @@ var permissionsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting permission %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

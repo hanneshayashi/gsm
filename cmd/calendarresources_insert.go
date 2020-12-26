@@ -43,7 +43,7 @@ var calendarResourcesInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting calendar resource: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

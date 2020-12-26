@@ -38,7 +38,7 @@ var threadsTrashCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error trashing thread %s: %v", flags["id"].GetString(), err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

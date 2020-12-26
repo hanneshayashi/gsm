@@ -38,7 +38,7 @@ var buildingsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting building %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

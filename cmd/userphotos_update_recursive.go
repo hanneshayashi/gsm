@@ -44,40 +44,43 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 			UserKey   string           `json:"userKey,omitempty"`
 			UserPhoto *admin.UserPhoto `json:"userPhoto,omitempty"`
 		}
-		finalChan := make(chan resultStruct, threads)
-		final := []resultStruct{}
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan resultStruct, threads)
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		p, err := mapToUserPhoto(flags)
 		if err != nil {
 			log.Fatalf("Error building userPhoto object: %v", err)
 		}
 		fields := flags["fields"].GetString()
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					result, err := gsmadmin.UpdateUserPhoto(uk, fields, p)
-					if err != nil {
-						log.Println(err)
-					}
-					finalChan <- resultStruct{UserKey: uk, UserPhoto: result}
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						result, err := gsmadmin.UpdateUserPhoto(uk, fields, p)
+						if err != nil {
+							log.Println(err)
+						}
+						results <- resultStruct{UserKey: uk, UserPhoto: result}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []resultStruct{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

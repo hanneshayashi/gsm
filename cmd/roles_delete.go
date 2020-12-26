@@ -38,7 +38,7 @@ var rolesDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting role: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

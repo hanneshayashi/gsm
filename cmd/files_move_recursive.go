@@ -49,49 +49,50 @@ The original folders will be preserved at the source!`,
 			log.Fatalf("Error getting files and folders: %v", err)
 		}
 		filesChan := make(chan *drive.File, threads)
-		finalChan := make(chan *drive.File, threads)
-		final := []*drive.File{}
-		wgFiles := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan *drive.File, threads)
+		var wg sync.WaitGroup
 		folderMap[folderID].NewParent = flags["parent"].GetString()
-		wgFiles.Add(1)
 		go func() {
 			for _, f := range files {
 				filesChan <- f
 			}
 			close(filesChan)
-			wgFiles.Done()
 		}()
 		err = gsmdrive.CopyFolders(folderMap, "")
 		if err != nil {
 			log.Fatalf("Error creating new folder structure: %v", err)
 		}
-		for i := 0; i < threads; i++ {
-			wgFiles.Add(1)
-			go func() {
-				for f := range filesChan {
-					folder := folderMap[f.Parents[0]]
-					u, err := gsmdrive.UpdateFile(f.Id, folder.NewID, folder.OldParent, "", "", "id", nil, nil, false, false)
-					if err != nil {
-						log.Println(err)
-					} else {
-						finalChan <- u
-					}
-				}
-				wgFiles.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for f := range filesChan {
+						folder := folderMap[f.Parents[0]]
+						u, err := gsmdrive.UpdateFile(f.Id, folder.NewID, folder.OldParent, "", "", "id", nil, nil, false, false)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- u
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*drive.File{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgFiles.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

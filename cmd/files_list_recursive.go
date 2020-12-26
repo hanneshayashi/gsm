@@ -42,7 +42,7 @@ var filesListRecursiveCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing files %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

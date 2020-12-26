@@ -38,7 +38,7 @@ var sendAsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting send-as: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

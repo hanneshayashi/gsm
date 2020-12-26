@@ -137,7 +137,7 @@ func Contains(s string, slice []string) bool {
 	return false
 }
 
-// MaxThreads returns the maximum number of threads (goroutines that should be spawned)
+// MaxThreads returns the maximum number of threads (goroutines) that should be spawned
 func MaxThreads(fThreads int) int {
 	var threads int
 	if fThreads != 0 {
@@ -157,13 +157,19 @@ func MaxThreads(fThreads int) int {
 	return threads
 }
 
-// StreamOutput streams output in the specified format to stdout
-func StreamOutput(i interface{}, format string, compress bool) error {
+// GetJSONEncoder returns a new json encoder
+func GetJSONEncoder(indent bool) *json.Encoder {
+	enc := json.NewEncoder(os.Stdout)
+	if indent {
+		enc.SetIndent("", "\t")
+	}
+	return enc
+}
+
+// Output streams output in the specified format to stdout
+func Output(i interface{}, format string, compress bool) error {
 	if format == "json" {
-		enc := json.NewEncoder(os.Stdout)
-		if !compress {
-			enc.SetIndent("", "\t")
-		}
+		enc := GetJSONEncoder(!compress)
 		return enc.Encode(i)
 	}
 	if format == "xml" {

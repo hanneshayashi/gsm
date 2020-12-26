@@ -38,7 +38,7 @@ var messagesBatchDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error batch deleting messages: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

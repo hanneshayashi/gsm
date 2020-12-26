@@ -38,7 +38,7 @@ var calendarsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting calendar: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

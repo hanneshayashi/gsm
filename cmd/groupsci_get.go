@@ -42,7 +42,7 @@ var groupsCiGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting group %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

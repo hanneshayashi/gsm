@@ -47,9 +47,9 @@ Example: gsm sharedContacts create --domain "example.org" --givenName "Jack" --f
 			log.Fatalf("Error creating shared contact: %v", err)
 		}
 		if flags["json"].GetBool() {
-			gsmhelpers.StreamOutput(result, "json", compressOutput)
+			gsmhelpers.Output(result, "json", compressOutput)
 		} else {
-			gsmhelpers.StreamOutput(result, "xml", compressOutput)
+			gsmhelpers.Output(result, "xml", compressOutput)
 		}
 	},
 }

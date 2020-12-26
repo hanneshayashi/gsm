@@ -38,7 +38,7 @@ var threadsModifyCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error modifiyng thread %s: %v", flags["id"].GetString(), err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

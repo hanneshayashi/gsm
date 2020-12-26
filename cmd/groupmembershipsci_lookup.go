@@ -42,7 +42,7 @@ var groupMembershipsCiLookupCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error looking up membership %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

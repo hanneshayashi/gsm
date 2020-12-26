@@ -40,7 +40,7 @@ For more information about the entities report's parameters, see the Entities Us
 		if err != nil {
 			log.Fatalf("Error getting Entity Usage Reports: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

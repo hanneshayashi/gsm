@@ -41,7 +41,7 @@ var draftsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting draft: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

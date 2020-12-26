@@ -41,43 +41,46 @@ var licenseAssignmentsPatchRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		final := []*licensing.LicenseAssignment{}
-		finalChan := make(chan *licensing.LicenseAssignment, threads)
-		wgOps := &sync.WaitGroup{}
-		wgFinal := &sync.WaitGroup{}
+		results := make(chan *licensing.LicenseAssignment, threads)
+		var wg sync.WaitGroup
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		productID := flags["productId"].GetString()
 		skuID := flags["skuId"].GetString()
 		fields := flags["fields"].GetString()
-		for i := 0; i < threads; i++ {
-			wgOps.Add(1)
-			go func() {
-				for uk := range userKeysUnique {
-					l, err := mapToLicenseAssignment(flags)
-					if err != nil {
-						log.Fatalf("Error building licenseAssignmentPatch object: %v", err)
-					}
-					result, err := gsmlicensing.PatchLicenseAssignment(productID, skuID, uk, fields, l)
-					if err != nil {
-						log.Println(err)
-					} else {
-						finalChan <- result
-					}
-				}
-				wgOps.Done()
-			}()
-		}
-		wgFinal.Add(1)
 		go func() {
-			for r := range finalChan {
+			for i := 0; i < threads; i++ {
+				wg.Add(1)
+				go func() {
+					for uk := range userKeysUnique {
+						l, err := mapToLicenseAssignment(flags)
+						if err != nil {
+							log.Fatalf("Error building licenseAssignmentPatch object: %v", err)
+						}
+						result, err := gsmlicensing.PatchLicenseAssignment(productID, skuID, uk, fields, l)
+						if err != nil {
+							log.Println(err)
+						} else {
+							results <- result
+						}
+					}
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			close(results)
+		}()
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*licensing.LicenseAssignment{}
+			for r := range results {
 				final = append(final, r)
 			}
-			wgFinal.Done()
-		}()
-		wgOps.Wait()
-		close(finalChan)
-		wgFinal.Wait()
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

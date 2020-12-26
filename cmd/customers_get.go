@@ -38,7 +38,7 @@ var customersGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting customer %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

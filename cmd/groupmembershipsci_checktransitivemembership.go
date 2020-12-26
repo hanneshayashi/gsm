@@ -45,7 +45,7 @@ https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships
 		if err != nil {
 			log.Fatalf("Error checking transitive group membership %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

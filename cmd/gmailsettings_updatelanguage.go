@@ -44,7 +44,7 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateL
 		if err != nil {
 			log.Fatalf("Error updating language settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

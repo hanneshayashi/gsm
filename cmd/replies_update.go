@@ -42,7 +42,7 @@ var repliesUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating reply: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -44,7 +44,6 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		results := make(chan map[string]interface{}, cap)
-		final := []map[string]interface{}{}
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -73,10 +72,18 @@ var groupsCiPatchBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		for res := range results {
-			final = append(final, res)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []map[string]interface{}{}
+			for res := range results {
+				final = append(final, res)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.StreamOutput(final, "json", compressOutput)
 	},
 }
 

@@ -42,7 +42,7 @@ var calendarACLInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting calendar acl rule: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

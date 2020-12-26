@@ -40,7 +40,7 @@ For more information about the user report's parameters, see the Users Usage par
 		if err != nil {
 			log.Fatalf("Error getting User Usage Reports: %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

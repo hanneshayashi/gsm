@@ -38,7 +38,7 @@ var attachmentsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting attachment with id %s: %v", flags["id"].GetString(), err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 

@@ -38,7 +38,7 @@ var usersDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting user %v", err)
 		}
-		gsmhelpers.StreamOutput(result, "json", compressOutput)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 
