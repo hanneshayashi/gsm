@@ -31,6 +31,9 @@ var logShowCmd = &cobra.Command{
 	Use:               "show",
 	Short:             "Shows the current log.",
 	Long:              "",
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

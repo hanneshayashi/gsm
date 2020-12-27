@@ -28,9 +28,12 @@ import (
 
 // logClearCmd represents the clear command
 var logClearCmd = &cobra.Command{
-	Use:               "clear",
-	Short:             "Clears the current log.",
-	Long:              "",
+	Use:   "clear",
+	Short: "Clears the current log.",
+	Long:  "",
+	Annotations: map[string]string{
+		"crescendoOutput": "$args[0]",
+	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := gsmlog.Clear(logFile)
