@@ -39,6 +39,7 @@ var logFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"show"},
 		Type:         "int",
 		Description:  "Number of lines to return",
+		Defaults:     map[string]interface{}{"show": 3},
 	},
 }
 
