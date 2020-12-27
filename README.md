@@ -51,7 +51,7 @@ GSM currently supports the following APIs:
 - [Google Sheets API](https://developers.google.com/sheets/api/reference/rest) (partly)
 
 Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\
-Overall, GSM supports over **65 [commands](https://gsm.hayashi-ke/gsm)**, with each subcommand representing an API endpoint. This amounts to over **500 commands in total**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
+Overall, GSM supports over **65 [main commands](https://gsm.hayashi-ke/gsm)**, with one representing an API with multiple methods. This amounts to over **500 commands in total**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
 
 You can use GSM in one of two modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
