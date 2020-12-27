@@ -52,7 +52,7 @@ var membersInsertRecursiveCmd = &cobra.Command{
 					for uk := range userKeysUnique {
 						m, err := mapToMember(flags)
 						if err != nil {
-							log.Printf("Error building user object: %v\n", err)
+							log.Printf("Error building member object: %v\n", err)
 							continue
 						}
 						m.Email = uk
