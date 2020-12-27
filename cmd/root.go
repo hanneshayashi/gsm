@@ -145,8 +145,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
-	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "standardDelay", 0, "This delay (plus a random jitter between 0 and 20) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
-	rootCmd.PersistentFlags().StringVar(&logFile, "logFile", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
+	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
