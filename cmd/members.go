@@ -37,12 +37,12 @@ var membersCmd = &cobra.Command{
 
 var memberFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"groupKey": {
-		AvailableFor: []string{"delete", "get", "hasMember", "insert", "list", "patch"},
+		AvailableFor: []string{"delete", "get", "hasMember", "insert", "list", "patch", "set"},
 		Type:         "string",
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
-		Required:  []string{"delete", "get", "hasMember", "insert", "list", "patch"},
-		Recursive: []string{"delete", "get", "hasMember", "insert", "patch"},
+		Required:  []string{"delete", "get", "hasMember", "insert", "list", "patch", "set"},
+		Recursive: []string{"delete", "get", "hasMember", "insert", "patch", "set"},
 	},
 	"memberKey": {
 		AvailableFor: []string{"delete", "get", "hasMember"},
@@ -53,7 +53,7 @@ The value can be the member's (group or user) primary email address, alias, or u
 		Required: []string{"delete", "get", "hasMember", "insert"},
 	},
 	"delivery_settings": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "patch", "set"},
 		Type:         "string",
 		Description: `Defines mail delivery preferences of member.
 Acceptable values are:
@@ -62,10 +62,10 @@ DAILY     - No more than one message a day.
 DIGEST    - Up to 25 messages bundled into a single message.
 DISABLED  - Remove subscription.
 NONE      - No messages.`,
-		Recursive: []string{"insert", "patch"},
+		Recursive: []string{"insert", "patch", "set"},
 	},
 	"role": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "patch", "set"},
 		Type:         "string",
 		Description: `The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1. For more information about a member's role, see the administration help center.
 
@@ -73,8 +73,8 @@ Acceptable values are:
 MANAGER  - This role is only available if the Google Groups for Business is enabled using the Admin console. A MANAGER role can do everything done by an OWNER role except make a member an OWNER or delete the group. A group can have multiple MANAGER members.
 MEMBER   - This role can subscribe to a group, view discussion archives, and view the group's membership list. For more information about member roles, see the administration help center.
 OWNER    - This role can send messages to the group, add or remove members, change member roles, change group's settings, and delete the group. An OWNER must be a member of the group. A group can have more than one OWNER.`,
-		Defaults:  map[string]interface{}{"insert": "MEMBER"},
-		Recursive: []string{"insert", "patch"},
+		Defaults:  map[string]interface{}{"insert": "MEMBER", "set": "MEMBER"},
+		Recursive: []string{"insert", "patch", "set"},
 	},
 	"includeDerivedMembership": {
 		AvailableFor: []string{"list"},
@@ -95,12 +95,19 @@ This property is required when adding a member to a group.
 The email must be unique and cannot be an alias of another group.
 If the email address is changed, the API automatically reflects the email address changes.`,
 	},
+	"emails": {
+		AvailableFor: []string{"set"},
+		Type:         "stringSlice",
+		Description: `A member's email address.
+This flag can be used multiple times.
+If it is not set, the group will be cleared of all members!`,
+	},
 	"fields": {
-		AvailableFor: []string{"get", "insert", "list", "patch"},
+		AvailableFor: []string{"get", "insert", "list", "patch", "set"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: []string{"get", "insert", "patch"},
+		Recursive: []string{"get", "insert", "patch", "set"},
 	},
 }
 var memberFlagsALL = gsmhelpers.GetAllFlags(memberFlags)

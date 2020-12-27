@@ -20,7 +20,10 @@ package gsmadmin
 import (
 	"fmt"
 	"log"
+	"strings"
 	"sync"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 // GetUniqueUsersChannelRecursive returns a channel containing unique email addresses of all users inside the specified orgUnits and groups
@@ -79,4 +82,40 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 		close(userKeysUnique)
 	}()
 	return userKeysUnique, nil
+}
+
+// GetMembersToSet compares the list of current members of a group to the specified emailAddresses.
+// The function will return a list of members to be added and / or removed.
+func GetMembersToSet(groupKey string, threads int, emailAddresses ...string) (<-chan string, <-chan string, error) {
+	currentMembers, err := ListMembers(groupKey, "", "members(email)", false)
+	membersToAdd := make(chan string, threads)
+	membersToRemove := make(chan string, threads)
+	if err != nil {
+		return nil, nil, err
+	}
+	var cLower []string
+	for _, cm := range currentMembers {
+		cLower = append(cLower, strings.ToLower(cm.Email))
+	}
+	var nLower []string
+	for _, e := range emailAddresses {
+		nLower = append(nLower, strings.ToLower(e))
+	}
+	go func() {
+		for _, n := range nLower {
+			if !gsmhelpers.Contains(n, cLower) {
+				membersToAdd <- n
+			}
+		}
+		close(membersToAdd)
+	}()
+	go func() {
+		for _, c := range cLower {
+			if !gsmhelpers.Contains(c, nLower) {
+				membersToRemove <- c
+			}
+		}
+		close(membersToRemove)
+	}()
+	return membersToAdd, membersToRemove, nil
 }
