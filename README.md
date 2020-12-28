@@ -8,7 +8,19 @@ View complete documentation at https://gsm.hayashi-ke.online/.
 
 ### Introduction
 
-I created this tool first and foremost for myself for the following reasons:
+GSM is a no-dependency, free and open source command line interface (CLI) for managing Google Workspace resources. You don't need any software except for the [GSM binary](https://github.com/hanneshayashi/gsm/releases) itself and it is easy to [set up](https://gsm.hayashi-ke.online/setup).
+
+GSM is extremely powerful and flexible, especially when used in [scripts](https://gsm.hayashi-ke.online/scripting) to implement your own custom logic for your specific use case. Since GSM supports pretty much every API endpoint that Google offers for Workspace, there shouldn't really be anything you can't do with GSM, as long as the API supports it.\
+You can also [configure](https://gsm.hayashi-ke.online/gsm/configs) pretty much every aspect of GSM, because everyone likes having choices.
+
+GSM also supports many custom commands for common tasks to make your life easier, such as
+- ["move"](https://gsm.hayashi-ke.online/gsm/files/move/recursive/) (or [copy](https://gsm.hayashi-ke.online/gsm/files/copy/recursive/)) a folder to a Shared Drive
+- ["sync"](https://gsm.hayashi-ke.online/gsm/members/set/recursive/) an organizational unit (OU) to a group
+- [send emails](https://gsm.hayashi-ke.online/gsm/messages/send/) (with attachments) via the Gmail API (without SMTP auth)
+
+and many more.
+
+I initially created GSM first and foremost for myself for the following reasons:
 - I wanted to get better at Go
 - The existing tools like [GAM](https://github.com/jay0lee/GAM) and [PSGSuite](https://github.com/SCRT-HQ/PSGSuite), while excellent, did not fit my use cases sometimes and I wanted to have the flexibility to quickly make changes myself
 - Programming is fun!
