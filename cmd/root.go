@@ -147,6 +147,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
 	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
+	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

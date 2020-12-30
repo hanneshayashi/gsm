@@ -46,6 +46,10 @@ var StandardRetrier = newStandardRetrier()
 // This is can be configured either via the config file or via the --standardDelay flag
 var StandardDelay int
 
+// RetryOn defines the HTTP error codes that should be retried on.
+// Note that GSM will always attempt to retry on a 403 error code with a message that indicates a quota / rate limit error
+var RetryOn []int
+
 // GetFileContentAsString returns the content of a file as a string
 func GetFileContentAsString(path string) (string, error) {
 	f, err := os.Open(path)
@@ -95,6 +99,15 @@ func retryLog(err error, errKey string) bool {
 	return false
 }
 
+func containsInt(i int, slice []int) bool {
+	for j := range slice {
+		if i == slice[j] {
+			return true
+		}
+	}
+	return false
+}
+
 // errorIsRetryable checks if a Google API response returned a retryable error
 func errorIsRetryable(err error) bool {
 	gerr, ok := err.(*googleapi.Error)
@@ -103,19 +116,17 @@ func errorIsRetryable(err error) bool {
 	}
 	keyWords := []string{
 		"quota",
-		"Quota",
 		"limit",
-		"Limit",
 		"rate",
-		"Rate",
 	}
 	if gerr.Code == 403 {
+		msg := strings.ToLower(gerr.Message)
 		for _, kw := range keyWords {
-			if strings.Contains(gerr.Message, kw) {
+			if strings.Contains(msg, kw) {
 				return true
 			}
 		}
-	} else if gerr.Code == 500 {
+	} else if containsInt(gerr.Code, RetryOn) {
 		return true
 	}
 	return false
