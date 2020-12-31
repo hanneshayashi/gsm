@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.74.0 // indirect
 	github.com/eapache/go-resiliency v1.2.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.1.3
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
