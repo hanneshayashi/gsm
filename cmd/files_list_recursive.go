@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -38,11 +39,22 @@ var filesListRecursiveCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
+		results, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
 		if err != nil {
 			log.Fatalf("Error listing files %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for r := range results {
+				enc.Encode(r)
+			}
+		} else {
+			final := []*drive.File{}
+			for r := range results {
+				final = append(final, r)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
 	},
 }
 

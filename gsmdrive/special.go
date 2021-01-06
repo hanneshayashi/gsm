@@ -26,20 +26,11 @@ import (
 	drive "google.golang.org/api/drive/v3"
 )
 
-// Folder represents a structure useful for copying Drive folder trees to a new destination
-type Folder struct {
-	NewID     string
-	OldParent string
-	NewParent string
-	Name      string
-	Root      bool
-}
-
 const folderMimetype = "application/vnd.google-apps.folder"
 
-// IsFolder returns true if the file object is a folder, otherwise false
+// isFolder returns true if the file object is a folder, otherwise false
 // Make sure that the MimeType property is actually set.
-func IsFolder(f *drive.File) bool {
+func isFolder(f *drive.File) bool {
 	if f.MimeType == folderMimetype {
 		return true
 	}
@@ -47,17 +38,22 @@ func IsFolder(f *drive.File) bool {
 }
 
 // CopyFolders creates a copy of a Drive folder structure at a new destination
-func CopyFolders(folderMap map[string]*Folder, destination string) error {
-	var err error
-	for k := range folderMap {
-		if folderMap[k].NewID == "" {
-			folderMap[k].NewID, err = getNewID(k, folderMap)
-			if err != nil {
-				return err
-			}
-		}
+func CopyFolders(folders <-chan *drive.File, destination string) (map[string]string, error) {
+	folderMap := make(map[string]string)
+	root := <-folders
+	newRoot, err := createFolder(destination, root.Name)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	folderMap[root.Id] = newRoot.Id
+	for k := range folders {
+		newF, err := createFolder(folderMap[k.Parents[0]], k.Name)
+		if err != nil {
+			return nil, err
+		}
+		folderMap[k.Id] = newF.Id
+	}
+	return folderMap, err
 }
 
 func createFolder(parent, name string) (*drive.File, error) {
@@ -73,105 +69,80 @@ func createFolder(parent, name string) (*drive.File, error) {
 	return newFolder, nil
 }
 
-func getNewID(oldID string, folderMap map[string]*Folder) (string, error) {
-	if folderMap[oldID].NewID != "" {
-		return folderMap[oldID].NewID, nil
-	}
-	var err error
-	if !folderMap[oldID].Root {
-		folderMap[oldID].NewParent, err = getNewID(folderMap[oldID].OldParent, folderMap)
-		if err != nil {
-			return "", err
-		}
-	}
-	newFolder, err := createFolder(folderMap[oldID].NewParent, folderMap[oldID].Name)
-	if err != nil {
-		return "", err
-	}
-	folderMap[oldID].NewID = newFolder.Id
-	return folderMap[oldID].NewID, nil
-}
-
 // GetFilesAndFolders recursively gets all files and folders below a parent folder and separates them,
-// returning a map[string]*folder for folders and a simple list for files.
-func GetFilesAndFolders(folderID string, threads int) (folderMap map[string]*Folder, files []*drive.File, err error) {
-	folderMap = make(map[string]*Folder)
-	root, err := GetFile(folderID, "id,mimeType,name,parents", "")
+// returning two channels - one for files and one for folders.
+func GetFilesAndFolders(folderID string, threads int) (<-chan *drive.File, <-chan *drive.File, error) {
+	folder, err := GetFolder(folderID)
 	if err != nil {
-		return nil, nil, err
-	}
-	if !IsFolder(root) {
-		return nil, nil, fmt.Errorf("%s is not a folder", folderID)
+		return nil, nil, fmt.Errorf("Error getting folder: %v", err)
 	}
 	items, err := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, i := range items {
-		if IsFolder(i) {
-			folderMap[i.Id] = &Folder{OldParent: i.Parents[0], Name: i.Name}
-		} else {
-			files = append(files, i)
+	files := make(chan *drive.File, threads)
+	folders := make(chan *drive.File, threads)
+	folders <- folder
+	wg := &sync.WaitGroup{}
+	go func() {
+		for i := range items {
+			if isFolder(i) {
+				folders <- i
+			} else {
+				wg.Add(1)
+				go func(i *drive.File) {
+					files <- i
+					wg.Done()
+				}(i)
+			}
 		}
-	}
-	folderMap[folderID] = &Folder{Name: root.Name, OldParent: root.Parents[0], Root: true}
-	return folderMap, files, nil
+		close(folders)
+		wg.Wait()
+		close(files)
+	}()
+	return files, folders, nil
 }
 
-func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wgFolders, wgFiles *sync.WaitGroup) error {
-	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true)
+func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) error {
+	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, cap)
 	if err != nil {
 		return err
 	}
-	for _, f := range result {
-		wgFiles.Add(1)
+	wg.Add(1)
+	for f := range result {
 		files <- f
-		if IsFolder(f) {
-			wgFolders.Add(1)
+		if isFolder(f) {
+			wg.Add(1)
 			folders <- f.Id
 		}
 	}
+	wg.Done()
 	return nil
 }
 
 // ListFilesRecursive lists all files and foldes in a parent folder recursively
-func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, error) {
-	final := []*drive.File{}
-	wgFolders := &sync.WaitGroup{}
-	wgFiles := &sync.WaitGroup{}
-	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true)
-	if err != nil {
-		return nil, err
-	}
+func ListFilesRecursive(id, fields string, threads int) (<-chan *drive.File, error) {
+	wg := &sync.WaitGroup{}
 	folders := make(chan string, threads)
 	files := make(chan *drive.File, threads)
+	wg.Add(1)
+	folders <- id
 	go func() {
-		for id := range folders {
-			go func(id string) {
-				listFilesRecursive(id, fields, folders, files, wgFolders, wgFiles)
-				wgFolders.Done()
-			}(id)
+		for i := 0; i < threads; i++ {
+			go func() {
+				for id := range folders {
+					listFilesRecursive(id, fields, folders, files, wg, threads)
+					wg.Done()
+				}
+			}()
 		}
 	}()
 	go func() {
-		for f := range files {
-			final = append(final, f)
-			wgFiles.Done()
-		}
+		wg.Wait()
+		close(folders)
+		close(files)
 	}()
-	for _, f := range result {
-		wgFiles.Add(1)
-		files <- f
-		if IsFolder(f) {
-			wgFolders.Add(1)
-			folders <- f.Id
-		}
-	}
-	wgFolders.Wait()
-	close(folders)
-	wgFiles.Wait()
-	close(files)
-	return final, nil
+	return files, nil
 }
 
 // GetPermissionID returns the permissionId from a flag set if either the permissionId itself, or the emailAddress is set.
@@ -241,11 +212,11 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 
 // GetFolder returns the file if it can be found AND is a folder, otherwise, it returns an error
 func GetFolder(folderID string) (*drive.File, error) {
-	folder, err := GetFile(folderID, "id,mimeType", "")
+	folder, err := GetFile(folderID, "id,name,mimeType,parents", "")
 	if err != nil {
 		return nil, err
 	}
-	if !IsFolder(folder) {
+	if !isFolder(folder) {
 		return nil, fmt.Errorf("%s is not a folder", folderID)
 	}
 	return folder, nil

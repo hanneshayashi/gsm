@@ -52,25 +52,18 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 		}
 		results := make(chan resultStruct, threads)
 		wg := &sync.WaitGroup{}
-		idChan := make(chan string, threads)
 		fields := flags["fields"].GetString()
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
-		go func() {
-			for _, f := range files {
-				idChan <- f.Id
-			}
-			close(idChan)
-		}()
 		go func() {
 			for i := 0; i < threads; i++ {
 				wg.Add(1)
 				go func() {
-					for id := range idChan {
-						r, err := gsmdrive.ListPermissions(id, "", fields, useDomainAdminAccess)
+					for file := range files {
+						r, err := gsmdrive.ListPermissions(file.Id, "", fields, useDomainAdminAccess)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{FileID: id, Permissions: r}
+							results <- resultStruct{FileID: file.Id, Permissions: r}
 						}
 					}
 					wg.Done()

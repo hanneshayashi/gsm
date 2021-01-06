@@ -83,10 +83,10 @@ There isn't extra information required for a anyone type.`,
 		Recursive: []string{"create", "update"},
 	},
 	"domain": {
-		AvailableFor: []string{"create", "get", "update"},
+		AvailableFor: []string{"create", "delete", "get", "update"},
 		Type:         "string",
 		Description:  "The domain to which this permission refers.",
-		Recursive:    []string{"create", "update"},
+		Recursive:    []string{"create", "delete", "update"},
 	},
 	"allowFileDiscovery": {
 		AvailableFor: []string{"create", "update"},

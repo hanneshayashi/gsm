@@ -55,7 +55,6 @@ var permissionsUpdateRecursiveCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup
-		idChan := make(chan string, threads)
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
 		removeExpiration := flags["removeExpiration"].GetBool()
 		fields := flags["fields"].GetString()
@@ -68,22 +67,15 @@ var permissionsUpdateRecursiveCmd = &cobra.Command{
 			log.Fatalf("Unable to determine permissionId: %v", err)
 		}
 		go func() {
-			idChan <- folderID
-			for _, f := range files {
-				idChan <- f.Id
-			}
-			close(idChan)
-		}()
-		go func() {
 			for i := 0; i < threads; i++ {
 				wg.Add(1)
 				go func() {
-					for id := range idChan {
-						r, err := gsmdrive.UpdatePermission(id, permissionID, fields, useDomainAdminAccess, removeExpiration, p)
+					for file := range files {
+						r, err := gsmdrive.UpdatePermission(file.Id, permissionID, fields, useDomainAdminAccess, removeExpiration, p)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{FileID: id, Permission: r}
+							results <- resultStruct{FileID: file.Id, Permission: r}
 						}
 					}
 					wg.Done()

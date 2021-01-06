@@ -224,26 +224,28 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	return r, nil
 }
 
-func makeListFilesCallAndAppend(c *drive.FilesListCall, files []*drive.File, errKey string) ([]*drive.File, error) {
+func listFiles(c *drive.FilesListCall, files chan *drive.File, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, gsmhelpers.FormatError(err, errKey)
+		return gsmhelpers.FormatError(err, errKey)
 	}
 	r, _ := result.(*drive.FileList)
-	files = append(files, r.Files...)
+	for _, file := range r.Files {
+		files <- file
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		files, err = makeListFilesCallAndAppend(c, files, errKey)
+		err = listFiles(c, files, errKey)
 	}
-	return files, err
+	return nil
 }
 
 // ListFiles lists or searches files.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-files.
-func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool) ([]*drive.File, error) {
+func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool, cap int) (<-chan *drive.File, error) {
 	srv := getFilesService()
 	c := srv.List().SupportsAllDrives(true).IncludeItemsFromAllDrives(includeItemsFromAllDrives).PageSize(1000)
 	if q != "" {
@@ -267,8 +269,12 @@ func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var files []*drive.File
-	files, err := makeListFilesCallAndAppend(c, files, gsmhelpers.FormatErrorKey("List files"))
+	files := make(chan *drive.File, cap)
+	var err error
+	go func() {
+		err = listFiles(c, files, gsmhelpers.FormatErrorKey("List files"))
+		close(files)
+	}()
 	return files, err
 }
 

@@ -39,17 +39,14 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		p, err := mapToPermission(flags)
-		if err != nil {
-			log.Fatalf("Error building permission object: %v", err)
-		}
 		folderID := flags["folderId"].GetString()
-		folder, err := gsmdrive.GetFile(folderID, "id,mimeType", "")
+		_, err := gsmdrive.GetFolder(folderID)
 		if err != nil {
 			log.Fatalf("Error getting folder: %v", err)
 		}
-		if !gsmdrive.IsFolder(folder) {
-			log.Fatalf("%s is not a folder", folderID)
+		p, err := mapToPermission(flags)
+		if err != nil {
+			log.Fatalf("Error building permission object: %v", err)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		files, err := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
@@ -62,7 +59,6 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup
-		idChan := make(chan string, threads)
 		fields := flags["fields"].GetString()
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
 		emailMessage := flags["emailMessage"].GetString()
@@ -70,28 +66,21 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		transferOwnership := flags["transferOwnership"].GetBool()
 		moveToNewOwnersRoot := flags["moveToNewOwnersRoot"].GetBool()
 		go func() {
-			idChan <- folderID
-			for _, f := range files {
-				idChan <- f.Id
-			}
-			close(idChan)
-		}()
-		go func() {
 			for i := 0; i < threads; i++ {
 				wg.Add(1)
 				go func() {
-					for id := range idChan {
+					for file := range files {
 						var move bool
-						if moveToNewOwnersRoot && id == folderID {
+						if moveToNewOwnersRoot && file.Id == folderID {
 							move = true
 						} else {
 							move = false
 						}
-						r, err := gsmdrive.CreatePermission(id, emailMessage, fields, useDomainAdminAccess, sendNotificationEmail, transferOwnership, move, p)
+						r, err := gsmdrive.CreatePermission(file.Id, emailMessage, fields, useDomainAdminAccess, sendNotificationEmail, transferOwnership, move, p)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{FileID: id, Permissions: r}
+							results <- resultStruct{FileID: file.Id, Permissions: r}
 						}
 					}
 					wg.Done()
