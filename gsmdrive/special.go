@@ -19,8 +19,10 @@ package gsmdrive
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	drive "google.golang.org/api/drive/v3"
 )
 
@@ -170,4 +172,81 @@ func ListFilesRecursive(id, fields string, threads int) ([]*drive.File, error) {
 	wgFiles.Wait()
 	close(files)
 	return final, nil
+}
+
+// GetPermissionID returns the permissionId from a flag set if either the permissionId itself, or the emailAddress is set.
+// Otherwise, it will return an error.
+func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
+	set := 0
+	possibleFlags := []string{
+		"permissionId",
+		"emailAddress",
+		"domain",
+	}
+	for _, pf := range possibleFlags {
+		if flags[pf].IsSet() {
+			set++
+		}
+	}
+	if set != 1 {
+		return "", fmt.Errorf("Exactly one of %s must be set", strings.Join(possibleFlags, ", "))
+	}
+	if flags["permissionId"].IsSet() {
+		return flags["permissionId"].GetString(), nil
+	}
+	var permissionID string
+	var fileID string
+	if flags["folderId"].IsSet() {
+		fileID = flags["folderId"].GetString()
+	} else {
+		fileID = flags["fileId"].GetString()
+	}
+	if flags["emailAddress"].IsSet() {
+		emailAddress := strings.ToLower(flags["emailAddress"].GetString())
+		permissions, err := ListPermissions(fileID, "", "permissions(emailAddress,id)", flags["useDomainAdminAccess"].GetBool())
+		if err != nil {
+			return "", err
+		}
+		pFound := false
+		for _, p := range permissions {
+			if strings.ToLower(p.EmailAddress) == emailAddress {
+				permissionID = p.Id
+				pFound = true
+				break
+			}
+		}
+		if !pFound {
+			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")
+		}
+	} else {
+		domain := strings.ToLower(flags["domain"].GetString())
+		permissions, err := ListPermissions(fileID, "", "permissions(domain,id)", flags["useDomainAdminAccess"].GetBool())
+		if err != nil {
+			return "", err
+		}
+		pFound := false
+		for _, p := range permissions {
+			if strings.ToLower(p.Domain) == domain {
+				permissionID = p.Id
+				pFound = true
+				break
+			}
+		}
+		if !pFound {
+			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")
+		}
+	}
+	return permissionID, nil
+}
+
+// GetFolder returns the file if it can be found AND is a folder, otherwise, it returns an error
+func GetFolder(folderID string) (*drive.File, error) {
+	folder, err := GetFile(folderID, "id,mimeType", "")
+	if err != nil {
+		return nil, err
+	}
+	if !IsFolder(folder) {
+		return nil, fmt.Errorf("%s is not a folder", folderID)
+	}
+	return folder, nil
 }

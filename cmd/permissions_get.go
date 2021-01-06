@@ -34,9 +34,13 @@ var permissionsGetCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.GetPermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool())
+		permissionID, err := gsmdrive.GetPermissionID(flags)
 		if err != nil {
-			log.Fatalf("Error getting permission %v", err)
+			log.Fatalf("Unable to determine permissionId: %v", err)
+		}
+		result, err := gsmdrive.GetPermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool())
+		if err != nil {
+			log.Fatalf("Error getting permission: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

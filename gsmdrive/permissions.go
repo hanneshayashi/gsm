@@ -105,6 +105,8 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 // UpdatePermission updates a permission with patch semantics.
 func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess, removeExpiration bool, permission *drive.Permission) (*drive.Permission, error) {
 	srv := getPermissionsService()
+	permission.EmailAddress = ""
+	permission.Domain = ""
 	c := srv.Update(fileID, permissionID, permission).SupportsAllDrives(true).UseDomainAdminAccess(useDomainAdminAccess).RemoveExpiration(removeExpiration)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))

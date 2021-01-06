@@ -46,15 +46,15 @@ var permissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor:   []string{"delete", "get", "update"},
 		Type:           "string",
 		Description:    "The ID of the permission.",
-		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
-		Recursive:      []string{"delete"},
+		Recursive:      []string{"delete", "update"},
 	},
 	"emailAddress": {
-		AvailableFor: []string{"create"},
-		Type:         "string",
-		Description:  "The email address of the user or group to which this permission refers.",
-		Recursive:    []string{"create"},
+		AvailableFor:   []string{"create", "delete", "get", "update"},
+		Type:           "string",
+		Description:    "The email address of the user or group to which this permission refers.",
+		ExcludeFromAll: true,
+		Recursive:      []string{"create", "delete", "update"},
 	},
 	"moveToNewOwnersRoot": {
 		AvailableFor: []string{"create", "update"},
@@ -83,7 +83,7 @@ There isn't extra information required for a anyone type.`,
 		Recursive: []string{"create", "update"},
 	},
 	"domain": {
-		AvailableFor: []string{"create", "update"},
+		AvailableFor: []string{"create", "get", "update"},
 		Type:         "string",
 		Description:  "The domain to which this permission refers.",
 		Recursive:    []string{"create", "update"},
@@ -114,18 +114,18 @@ While new values may be supported in the future, the following are currently all
 		AvailableFor: []string{"create", "delete", "get", "list", "update"},
 		Type:         "bool",
 		Description:  "Issue the request as a domain administrator; if set to true, then the requester will be granted access if the file ID parameter refers to a shared drive and the requester is an administrator of the domain to which the shared drive belongs.",
-		Recursive:    []string{"create", "delete", "list"},
+		Recursive:    []string{"create", "delete", "list", "update"},
 	},
 	"sendNotificationEmail": {
-		AvailableFor: []string{"create", "update"},
+		AvailableFor: []string{"create"},
 		Type:         "bool",
 		Description: `Whether to send a notification email when sharing to users or groups.
 This defaults to true for users and groups, and is not allowed for other requests.
 It must not be disabled for ownership transfers.`,
-		Recursive: []string{"create", "update"},
+		Recursive: []string{"create"},
 	},
 	"view": {
-		AvailableFor: []string{"create", "update"},
+		AvailableFor: []string{"create"},
 		Type:         "string",
 		Description: `Indicates the view for this permission.
 Only populated for permissions that belong to a view. published is the only supported value.`,
@@ -140,6 +140,7 @@ Only 'published' is supported.`,
 		AvailableFor: []string{"update"},
 		Type:         "bool",
 		Description:  `Whether to remove the expiration date.`,
+		Recursive:    []string{"update"},
 	},
 	"expirationTime": {
 		AvailableFor: []string{"update"},
@@ -148,13 +149,14 @@ Only 'published' is supported.`,
 They can only be set on user and group permissions
 The time must be in the future
 The time cannot be more than a year in the future`,
+		Recursive: []string{"update"},
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: []string{"create", "list"},
+		Recursive: []string{"create", "list", "update"},
 	},
 }
 var permissionFlagsALL = gsmhelpers.GetAllFlags(permissionFlags)

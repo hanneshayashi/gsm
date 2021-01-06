@@ -38,9 +38,13 @@ var permissionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building permission object: %v", err)
 		}
-		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), p)
+		permissionID, err := gsmdrive.GetPermissionID(flags)
 		if err != nil {
-			log.Fatalf("Error updating permission %v", err)
+			log.Fatalf("Unable to determine permissionId: %v", err)
+		}
+		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), p)
+		if err != nil {
+			log.Fatalf("Error updating permission: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

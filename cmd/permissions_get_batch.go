@@ -44,17 +44,27 @@ var permissionsGetBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan *drive.Permission, cap)
+		type resultStruct struct {
+			FileID     string            `json:"fileId,omitempty"`
+			Permission *drive.Permission `json:"permission,omitempty"`
+		}
+		results := make(chan resultStruct, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.GetPermission(m["fileId"].GetString(), m["permissionId"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool())
+						permissionID, err := gsmdrive.GetPermissionID(m)
+						if err != nil {
+							log.Printf("Unable to determine permissionId: %v", err)
+							continue
+						}
+						fileID := m["fileId"].GetString()
+						result, err := gsmdrive.GetPermission(fileID, permissionID, m["fields"].GetString(), m["useDomainAdminAccess"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- result
+							results <- resultStruct{FileID: fileID, Permission: result}
 						}
 					}
 					wg.Done()
@@ -69,7 +79,7 @@ var permissionsGetBatchCmd = &cobra.Command{
 				enc.Encode(r)
 			}
 		} else {
-			final := []*drive.Permission{}
+			final := []resultStruct{}
 			for res := range results {
 				final = append(final, res)
 			}

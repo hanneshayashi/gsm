@@ -23,15 +23,16 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
 
-// permissionsDeleteRecursiveCmd represents the recursive command
-var permissionsDeleteRecursiveCmd = &cobra.Command{
+// permissionsUpdateRecursiveCmd represents the recursive command
+var permissionsUpdateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: "Recursively deletes a permission from a folder and all of its children.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Short: "Recursively updates a permission on a folder and all of its children.",
+	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -39,12 +40,9 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		folderID := flags["folderId"].GetString()
-		folder, err := gsmdrive.GetFile(folderID, "id,mimeType", "")
+		_, err := gsmdrive.GetFolder(folderID)
 		if err != nil {
 			log.Fatalf("Error getting folder: %v", err)
-		}
-		if !gsmdrive.IsFolder(folder) {
-			log.Fatalf("%s is not a folder", folderID)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		files, err := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
@@ -52,13 +50,19 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error listing files: %v", err)
 		}
 		type resultStruct struct {
-			FileID string `json:"fileId,omitempty"`
-			Result bool   `json:"result,omitempty"`
+			FileID     string            `json:"fileId,omitempty"`
+			Permission *drive.Permission `json:"permission,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup
 		idChan := make(chan string, threads)
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
+		removeExpiration := flags["removeExpiration"].GetBool()
+		fields := flags["fields"].GetString()
+		p, err := mapToPermission(flags)
+		if err != nil {
+			log.Fatalf("Error building permission object: %v", err)
+		}
 		permissionID, err := gsmdrive.GetPermissionID(flags)
 		if err != nil {
 			log.Fatalf("Unable to determine permissionId: %v", err)
@@ -75,11 +79,11 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for id := range idChan {
-						r, err := gsmdrive.DeletePermission(id, permissionID, useDomainAdminAccess)
+						r, err := gsmdrive.UpdatePermission(id, permissionID, fields, useDomainAdminAccess, removeExpiration, p)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{FileID: id, Result: r}
+							results <- resultStruct{FileID: id, Permission: r}
 						}
 					}
 					wg.Done()
@@ -104,5 +108,5 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(permissionsDeleteCmd, permissionsDeleteRecursiveCmd, permissionFlags, recursiveFileFlags)
+	gsmhelpers.InitRecursiveCommand(permissionsUpdateCmd, permissionsUpdateRecursiveCmd, permissionFlags, recursiveFileFlags)
 }

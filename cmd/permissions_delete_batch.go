@@ -54,11 +54,17 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeletePermission(m["fileId"].GetString(), m["permissionId"].GetString(), m["useDomainAdminAccess"].GetBool())
+						permissionID, err := gsmdrive.GetPermissionID(m)
+						if err != nil {
+							log.Printf("Unable to determine permissionId: %v", err)
+							continue
+						}
+						fileID := m["fileId"].GetString()
+						result, err := gsmdrive.DeletePermission(fileID, permissionID, m["useDomainAdminAccess"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{FileID: m["fileId"].GetString(), PermissionID: m["permissionId"].GetString(), Result: result}
+						results <- resultStruct{FileID: fileID, PermissionID: permissionID, Result: result}
 					}
 					wg.Done()
 				}()
