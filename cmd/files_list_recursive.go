@@ -23,7 +23,6 @@ import (
 	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // filesListRecursiveCmd represents the recursive command
@@ -37,7 +36,7 @@ var filesListRecursiveCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		results := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), viper.GetInt("threads"))
+		results := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
