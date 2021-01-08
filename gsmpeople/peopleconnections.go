@@ -24,27 +24,29 @@ import (
 	"google.golang.org/api/people/v1"
 )
 
-func makeListPeopleConnectionsCallAndAppend(c *people.PeopleConnectionsListCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+func listPeopleConnections(c *people.PeopleConnectionsListCall, ch chan *people.Person, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*people.ListConnectionsResponse)
-	ps = append(ps, r.Connections...)
+	for _, i := range r.Connections {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		ps, err = makeListPeopleConnectionsCallAndAppend(c, ps, errKey)
+		err = listPeopleConnections(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return ps, nil
+	return nil
 }
 
 // ListPeopleConnections provides a list of the authenticated user's contacts.
-func ListPeopleConnections(resourceName, personFields, sources, fields string) ([]*people.Person, error) {
+func ListPeopleConnections(resourceName, personFields, sources, fields string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getPeopleConnectionsService()
 	c := srv.List(resourceName)
 	if personFields != "" {
@@ -53,7 +55,15 @@ func ListPeopleConnections(resourceName, personFields, sources, fields string) (
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var people []*people.Person
-	people, err := makeListPeopleConnectionsCallAndAppend(c, people, gsmhelpers.FormatErrorKey(resourceName))
-	return people, err
+	ch := make(chan *people.Person, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listPeopleConnections(c, ch, gsmhelpers.FormatErrorKey(resourceName))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

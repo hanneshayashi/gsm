@@ -70,26 +70,28 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	return r, nil
 }
 
-func makeListRoleAssignmentsCallAndAppend(c *admin.RoleAssignmentsListCall, roleAssignments []*admin.RoleAssignment, errKey string) ([]*admin.RoleAssignment, error) {
+func listRoleAssignments(c *admin.RoleAssignmentsListCall, ch chan *admin.RoleAssignment, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.RoleAssignments)
-	roleAssignments = append(roleAssignments, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		roleAssignments, err = makeListRoleAssignmentsCallAndAppend(c, roleAssignments, errKey)
+		err = listRoleAssignments(c, ch, errKey)
 	}
-	return roleAssignments, err
+	return err
 }
 
 // ListRoleAssignments retrieves a paginated list of all roleAssignments.
-func ListRoleAssignments(customer, roleID, userKey, fields string) ([]*admin.RoleAssignment, error) {
+func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-chan *admin.RoleAssignment, <-chan error) {
 	srv := getRoleAssignmentsService()
-	c := srv.List(customer)
+	c := srv.List(customer).MaxResults(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -99,7 +101,15 @@ func ListRoleAssignments(customer, roleID, userKey, fields string) ([]*admin.Rol
 	if userKey != "" {
 		c = c.UserKey(userKey)
 	}
-	var roleAssignments []*admin.RoleAssignment
-	roleAssignments, err := makeListRoleAssignmentsCallAndAppend(c, roleAssignments, gsmhelpers.FormatErrorKey(customer, roleID, userKey))
-	return roleAssignments, err
+	ch := make(chan *admin.RoleAssignment, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listRoleAssignments(c, ch, gsmhelpers.FormatErrorKey(customer, roleID, userKey))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

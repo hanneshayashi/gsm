@@ -42,10 +42,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files, err := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", threads)
-		if err != nil {
-			log.Fatalf("Error listing files: %v", err)
-		}
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", threads)
 		type resultStruct struct {
 			FileID      string              `json:"fileId,omitempty"`
 			Permissions []*drive.Permission `json:"permissions,omitempty"`
@@ -59,11 +56,16 @@ If you are not specifying a folder in a Shared Drive, you can simply use "files 
 				wg.Add(1)
 				go func() {
 					for file := range files {
-						r, err := gsmdrive.ListPermissions(file.Id, "", fields, useDomainAdminAccess)
-						if err != nil {
-							log.Println(err)
+						result, err := gsmdrive.ListPermissions(file.Id, "", fields, useDomainAdminAccess, threads)
+						r := resultStruct{FileID: file.Id}
+						for i := range result {
+							r.Permissions = append(r.Permissions, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- resultStruct{FileID: file.Id, Permissions: r}
+							results <- r
 						}
 					}
 					wg.Done()

@@ -114,26 +114,28 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	return r, nil
 }
 
-func makeListMessagesCallAndAppend(c *gmail.UsersMessagesListCall, messages []*gmail.Message, errKey string) ([]*gmail.Message, error) {
+func listMessages(c *gmail.UsersMessagesListCall, ch chan *gmail.Message, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*gmail.ListMessagesResponse)
-	messages = append(messages, r.Messages...)
+	for _, i := range r.Messages {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		messages, err = makeListMessagesCallAndAppend(c, messages, errKey)
+		err = listMessages(c, ch, errKey)
 	}
-	return messages, err
+	return err
 }
 
 // ListMessages lists the messages in the user's mailbox.
-func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool) ([]*gmail.Message, error) {
+func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool, cap int) (<-chan *gmail.Message, <-chan error) {
 	srv := getUsersMessagesService()
-	c := srv.List(userID)
+	c := srv.List(userID).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -143,9 +145,17 @@ func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash 
 	if q != "" {
 		c = c.Q(q)
 	}
-	var messages []*gmail.Message
-	messages, err := makeListMessagesCallAndAppend(c, messages, gsmhelpers.FormatErrorKey(userID))
-	return messages, err
+	ch := make(chan *gmail.Message, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listMessages(c, ch, gsmhelpers.FormatErrorKey(userID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // ModifyMessage modifies the labels on the specified message.

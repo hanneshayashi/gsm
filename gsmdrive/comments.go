@@ -68,35 +68,45 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	return r, nil
 }
 
-func makeListCommentsCallAndAppend(c *drive.CommentsListCall, comments []*drive.Comment, errKey string) ([]*drive.Comment, error) {
+func listComments(c *drive.CommentsListCall, ch chan *drive.Comment, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*drive.CommentList)
-	comments = append(comments, r.Comments...)
+	for _, i := range r.Comments {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		comments, err = makeListCommentsCallAndAppend(c, comments, errKey)
+		err = listComments(c, ch, errKey)
 	}
-	return comments, err
+	return err
 }
 
 // ListComments lists a file's comments.
-func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool) ([]*drive.Comment, error) {
+func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool, cap int) (<-chan *drive.Comment, <-chan error) {
 	srv := getCommentsService()
-	c := srv.List(fileID).IncludeDeleted(includeDeleted)
+	c := srv.List(fileID).IncludeDeleted(includeDeleted).PageSize(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if startModifiedTime != "" {
 		c = c.StartModifiedTime(startModifiedTime)
 	}
-	var comments []*drive.Comment
-	comments, err := makeListCommentsCallAndAppend(c, comments, gsmhelpers.FormatErrorKey(fileID))
-	return comments, err
+	ch := make(chan *drive.Comment, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listComments(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdateComment updates a comment with patch semantics.

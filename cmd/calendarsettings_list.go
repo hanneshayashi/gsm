@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/calendar/v3"
 
 	"github.com/spf13/cobra"
 )
@@ -34,17 +35,22 @@ var calendarSettingsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcalendar.ListSettings(flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing setting: %v", err)
-		}
+		result, err := gsmcalendar.ListSettings(flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*calendar.Setting{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing calendar settings: %v", e)
 		}
 	},
 }

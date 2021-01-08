@@ -26,35 +26,45 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeListMembersCallAndAppend(c *ci.GroupsMembershipsListCall, members []*ci.Membership, errKey string) ([]*ci.Membership, error) {
+func listMembers(c *ci.GroupsMembershipsListCall, ch chan *ci.Membership, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*ci.ListMembershipsResponse)
-	members = append(members, r.Memberships...)
+	for _, i := range r.Memberships {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		members, err = makeListMembersCallAndAppend(c, members, errKey)
+		err = listMembers(c, ch, errKey)
 	}
-	return members, err
+	return err
 }
 
 // ListMembers lists the members of a group
-func ListMembers(parent, fields, view string) ([]*ci.Membership, error) {
+func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <-chan error) {
 	srv := getGroupsMembershipsService()
-	c := srv.List(parent)
+	c := srv.List(parent).PageSize(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if view != "" {
 		c.View(view)
 	}
-	var members []*ci.Membership
-	members, err := makeListMembersCallAndAppend(c, members, gsmhelpers.FormatErrorKey(parent))
-	return members, err
+	ch := make(chan *ci.Membership, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listMembers(c, ch, gsmhelpers.FormatErrorKey(parent))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // CheckTransitiveMembership checks a potential member for membership in a group.

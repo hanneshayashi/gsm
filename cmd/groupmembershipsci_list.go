@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	ci "google.golang.org/api/cloudidentity/v1beta1"
 
 	"github.com/spf13/cobra"
 )
@@ -34,21 +35,29 @@ var groupMembershipsCiListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
-		if err != nil {
-			log.Fatalf("%v", err)
+		parent, er := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
+		if er != nil {
+			log.Fatalf("Error determining group name: %v", er)
 		}
-		result, err := gsmci.ListMembers(parent, flags["fields"].GetString(), flags["view"].GetString())
+		result, err := gsmci.ListMembers(parent, flags["fields"].GetString(), flags["view"].GetString(), gsmhelpers.MaxThreads(0))
 		if err != nil {
-			log.Fatalf("Error listing members %v", err)
+			log.Fatalf("Error listing members: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*ci.Membership{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing members: %v", e)
 		}
 	},
 }

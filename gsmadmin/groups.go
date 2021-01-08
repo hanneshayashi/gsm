@@ -68,26 +68,28 @@ func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
 	return r, nil
 }
 
-func makeListGroupsCallAndAppend(c *admin.GroupsListCall, groups []*admin.Group, errKey string) ([]*admin.Group, error) {
+func listGroups(c *admin.GroupsListCall, ch chan *admin.Group, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Groups)
-	groups = append(groups, r.Groups...)
+	for _, i := range r.Groups {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)
+		err = listGroups(c, ch, errKey)
 	}
-	return groups, err
+	return err
 }
 
 // ListGroups retrieve all groups of a domain or of a user given a userKey (paginated)
-func ListGroups(filter, userKey, domain, customer, fields string) ([]*admin.Group, error) {
+func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-chan *admin.Group, <-chan error) {
 	srv := getGroupsService()
-	c := srv.List()
+	c := srv.List().MaxResults(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -102,9 +104,17 @@ func ListGroups(filter, userKey, domain, customer, fields string) ([]*admin.Grou
 	if domain != "" {
 		c = c.Domain(domain)
 	}
-	var groups []*admin.Group
-	groups, err := makeListGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(customer))
-	return groups, err
+	ch := make(chan *admin.Group, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listGroups(c, ch, gsmhelpers.FormatErrorKey(customer))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchGroup updates a group's properties. This method supports patch semantics.

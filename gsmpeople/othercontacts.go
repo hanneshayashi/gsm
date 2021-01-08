@@ -41,34 +41,44 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, sources []st
 	return r, nil
 }
 
-func makeListOtherContactsCallAndAppend(c *people.OtherContactsListCall, otherContacts []*people.Person, errKey string) ([]*people.Person, error) {
+func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, errKey string) ( error) {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return  err
 	}
 	r, _ := result.(*people.ListOtherContactsResponse)
-	otherContacts = append(otherContacts, r.OtherContacts...)
+	for _, i := range r.OtherContacts {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		otherContacts, err = makeListOtherContactsCallAndAppend(c, otherContacts, errKey)
+		 err = listOtherContacts(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return  err
 		}
 	}
-	return otherContacts, nil
+	return  nil
 }
 
 // ListOtherContacts lists all "Other contacts", that is contacts that are not in a contact group.
 // "Other contacts" are typically auto created contacts from interactions.
-func ListOtherContacts(readMask, fields string) ([]*people.Person, error) {
+func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person,<-chan error) {
 	srv := getOtherContactsService()
-	c := srv.List().ReadMask(readMask)
+	c := srv.List().ReadMask(readMask).PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var otherContacts []*people.Person
-	otherContacts, err := makeListOtherContactsCallAndAppend(c, otherContacts, gsmhelpers.FormatErrorKey("List other contacts"))
-	return otherContacts, err
+	ch := make(chan *people.Person, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listOtherContacts(c, ch, gsmhelpers.FormatErrorKey("List other contacts"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

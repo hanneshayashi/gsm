@@ -50,11 +50,16 @@ var eventsInstancesBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmcalendar.ListInstances(m["calendarId"].GetString(), m["eventId"].GetString(), m["originalStart"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["fields"].GetString(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool())
-						if err != nil {
-							log.Println(err)
+						result, err := gsmcalendar.ListEventInstances(m["calendarId"].GetString(), m["eventId"].GetString(), m["originalStart"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["fields"].GetString(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool(), cap)
+						r := []*calendar.Event{}
+						for i := range result {
+							r = append(r, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- result
+							results <- r
 						}
 					}
 					wg.Done()

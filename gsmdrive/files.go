@@ -224,7 +224,7 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	return r, nil
 }
 
-func listFiles(c *drive.FilesListCall, files chan *drive.File, errKey string) error {
+func listFiles(c *drive.FilesListCall, ch chan *drive.File, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
@@ -232,12 +232,12 @@ func listFiles(c *drive.FilesListCall, files chan *drive.File, errKey string) er
 		return gsmhelpers.FormatError(err, errKey)
 	}
 	r, _ := result.(*drive.FileList)
-	for _, file := range r.Files {
-		files <- file
+	for _, i := range r.Files {
+		ch <- i
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		err = listFiles(c, files, errKey)
+		err = listFiles(c, ch, errKey)
 	}
 	return nil
 }
@@ -245,7 +245,7 @@ func listFiles(c *drive.FilesListCall, files chan *drive.File, errKey string) er
 // ListFiles lists or searches files.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-files.
-func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool, cap int) (<-chan *drive.File, error) {
+func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool, cap int) (<-chan *drive.File, <-chan error) {
 	srv := getFilesService()
 	c := srv.List().SupportsAllDrives(true).IncludeItemsFromAllDrives(includeItemsFromAllDrives).PageSize(1000)
 	if q != "" {
@@ -269,13 +269,17 @@ func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	files := make(chan *drive.File, cap)
-	var err error
+	ch := make(chan *drive.File, cap)
+	err := make(chan error, 1)
 	go func() {
-		err = listFiles(c, files, gsmhelpers.FormatErrorKey("List files"))
-		close(files)
+		e := listFiles(c, ch, gsmhelpers.FormatErrorKey("List files"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
 	}()
-	return files, err
+	return ch, err
 }
 
 // UpdateFile updates a file's metadata and/or content. This method supports patch semantics.

@@ -82,35 +82,45 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 	return r, nil
 }
 
-func makeListMembersCallAndAppend(c *admin.MembersListCall, members []*admin.Member, errKey string) ([]*admin.Member, error) {
+func listMembers(c *admin.MembersListCall, ch chan *admin.Member, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Members)
-	members = append(members, r.Members...)
+	for _, i := range r.Members {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		members, err = makeListMembersCallAndAppend(c, members, errKey)
+		err = listMembers(c, ch, errKey)
 	}
-	return members, err
+	return err
 }
 
 // ListMembers retrieves a paginated list of all members in a group.
-func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool) ([]*admin.Member, error) {
+func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, cap int) (<-chan *admin.Member, <-chan error) {
 	srv := getMembersService()
-	c := srv.List(groupKey).IncludeDerivedMembership(includeDerivedMembership)
+	c := srv.List(groupKey).IncludeDerivedMembership(includeDerivedMembership).MaxResults(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if roles != "" {
 		c = c.Roles(roles)
 	}
-	var members []*admin.Member
-	members, err := makeListMembersCallAndAppend(c, members, gsmhelpers.FormatErrorKey(groupKey))
-	return members, err
+	ch := make(chan *admin.Member, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listMembers(c, ch, gsmhelpers.FormatErrorKey(groupKey))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchMember updates the membership properties of a user in the specified group. This method supports patch semantics.

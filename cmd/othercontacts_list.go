@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmpeople"
+	"google.golang.org/api/people/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -35,17 +36,22 @@ var otherContactsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmpeople.ListOtherContacts(flags["readMask"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing other contacts %v", err)
-		}
+		result, err := gsmpeople.ListOtherContacts(flags["readMask"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*people.Person{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing other contacts: %v", e)
 		}
 	},
 }

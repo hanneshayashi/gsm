@@ -54,11 +54,17 @@ var commentsListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.ListComments(m["fileId"].GetString(), m["startModifiedTime"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool())
-						if err != nil {
-							log.Println(err)
+						fileID := m["fileId"].GetString()
+						result, err := gsmdrive.ListComments(fileID, m["startModifiedTime"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool(), cap)
+						r := resultStruct{FileID: fileID}
+						for i := range result {
+							r.Comments = append(r.Comments, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- resultStruct{FileID: m["fileId"].GetString(), Comments: result}
+							results <- r
 						}
 					}
 					wg.Done()

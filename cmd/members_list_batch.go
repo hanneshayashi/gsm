@@ -54,11 +54,17 @@ var membersListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.ListMembers(m["groupKey"].GetString(), m["roles"].GetString(), m["fields"].GetString(), m["includeDerivedMembership"].GetBool())
-						if err != nil {
-							log.Println(err)
+						groupKey := m["groupKey"].GetString()
+						result, err := gsmadmin.ListMembers(groupKey, m["roles"].GetString(), m["fields"].GetString(), m["includeDerivedMembership"].GetBool(), cap)
+						r := resultStruct{GroupKey: groupKey}
+						for i := range result {
+							r.Members = append(r.Members, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- resultStruct{GroupKey: m["groupKey"].GetString(), Members: result}
+							results <- r
 						}
 					}
 					wg.Done()

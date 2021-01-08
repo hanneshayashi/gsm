@@ -94,24 +94,26 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	return r, nil
 }
 
-func makeListInstancesCallAndAppend(c *calendar.EventsInstancesCall, eventInstances []*calendar.Event, errKey string) ([]*calendar.Event, error) {
+func listEventInstances(c *calendar.EventsInstancesCall, ch chan *calendar.Event, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*calendar.Events)
-	eventInstances = append(eventInstances, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		eventInstances, err = makeListInstancesCallAndAppend(c, eventInstances, errKey)
+		err = listEventInstances(c, ch, errKey)
 	}
-	return eventInstances, err
+	return err
 }
 
-// ListInstances returns instances of the specified recurring event.
-func ListInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMin, fields string, maxAttendees int64, showDeleted bool) ([]*calendar.Event, error) {
+// ListEventInstances returns instances of the specified recurring event.
+func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMin, fields string, maxAttendees int64, showDeleted bool, cap int) (<-chan *calendar.Event, <-chan error) {
 	srv := getEventsService()
 	c := srv.Instances(calendarID, eventID).ShowDeleted(showDeleted)
 	if fields != "" {
@@ -129,31 +131,41 @@ func ListInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMi
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	var eventInstances []*calendar.Event
-	eventInstances, err := makeListInstancesCallAndAppend(c, eventInstances, gsmhelpers.FormatErrorKey(calendarID, eventID))
-	return eventInstances, err
+	ch := make(chan *calendar.Event, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listEventInstances(c, ch, gsmhelpers.FormatErrorKey(calendarID, eventID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
-func makeListEventsCallAndAppend(c *calendar.EventsListCall, events []*calendar.Event, errKey string) ([]*calendar.Event, error) {
+func listEvents(c *calendar.EventsListCall, ch chan *calendar.Event, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*calendar.Events)
-	events = append(events, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		events, err = makeListEventsCallAndAppend(c, events, errKey)
+		err = listEvents(c, ch, errKey)
 	}
-	return events, err
+	return err
 }
 
 // ListEvents returns events on the specified calendar.
-func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, updatedMin, fields string, privateExtendedProperties, sharedExtendedProperties []string, maxAttendees int64, showDeleted, showHiddenInvitations, singleEvents bool) ([]*calendar.Event, error) {
+func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, updatedMin, fields string, privateExtendedProperties, sharedExtendedProperties []string, maxAttendees int64, showDeleted, showHiddenInvitations, singleEvents bool, cap int) (<-chan *calendar.Event, <-chan error) {
 	srv := getEventsService()
-	c := srv.List(calendarID).ShowDeleted(showDeleted).ShowHiddenInvitations(showHiddenInvitations).SingleEvents(singleEvents)
+	c := srv.List(calendarID).ShowDeleted(showDeleted).ShowHiddenInvitations(showHiddenInvitations).SingleEvents(singleEvents).MaxResults(2500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -187,9 +199,17 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 	if updatedMin != "" {
 		c = c.UpdatedMin(updatedMin)
 	}
-	var events []*calendar.Event
-	events, err := makeListEventsCallAndAppend(c, events, gsmhelpers.FormatErrorKey(calendarID))
-	return events, err
+	ch := make(chan *calendar.Event, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listEvents(c, ch, gsmhelpers.FormatErrorKey(calendarID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // MoveEvent moves an event to another calendar, i.e. changes an event's organizer.

@@ -124,27 +124,29 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	return r, nil
 }
 
-func makeListDirectoryPeopleCallAndAppend(c *people.PeopleListDirectoryPeopleCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *people.Person, errKey string) (error) {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return  err
 	}
 	r, _ := result.(*people.ListDirectoryPeopleResponse)
-	ps = append(ps, r.People...)
+	for _, i := range r.People {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		ps, err = makeListDirectoryPeopleCallAndAppend(c, ps, errKey)
+		 err = listDirectoryPeople(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return  err
 		}
 	}
-	return ps, nil
+	return  nil
 }
 
 // ListDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory.
-func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string) ([]*people.Person, error) {
+func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string, cap int) (<-chan *people.Person,<-chan error) {
 	srv := getpService()
 	c := srv.ListDirectoryPeople().ReadMask(readMask).Sources(sources)
 	if mergeSources != nil {
@@ -153,9 +155,17 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var people []*people.Person
-	people, err := makeListDirectoryPeopleCallAndAppend(c, people, gsmhelpers.FormatErrorKey("List people"))
-	return people, err
+	ch := make(chan *people.Person, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listDirectoryPeople(c, ch, gsmhelpers.FormatErrorKey("List people"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 func makeSearchDirectoryPeopleCallAndAppend(c *people.PeopleSearchDirectoryPeopleCall, ps []*people.Person, errKey string) ([]*people.Person, error) {

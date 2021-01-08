@@ -54,11 +54,17 @@ var calendarACLListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmcalendar.ListACLs(m["calendarId"].GetString(), m["fields"].GetString(), m["showDeleted"].GetBool())
-						if err != nil {
-							log.Println(err)
+						calendarID := m["calendarId"].GetString()
+						result, err := gsmcalendar.ListACLs(calendarID, m["fields"].GetString(), m["showDeleted"].GetBool(), cap)
+						r := resultStruct{CalendarID: calendarID}
+						for i := range result {
+							r.Rules = append(r.Rules, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- resultStruct{CalendarID: m["calendarId"].GetString(), Rules: result}
+							results <- r
 						}
 					}
 					wg.Done()

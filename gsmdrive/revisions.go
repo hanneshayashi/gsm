@@ -82,32 +82,42 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	return file.OriginalFilename, err
 }
 
-func makeListRevisionsCallAndAppend(c *drive.RevisionsListCall, revisions []*drive.Revision, errKey string) ([]*drive.Revision, error) {
+func listRevisions(c *drive.RevisionsListCall, ch chan *drive.Revision, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*drive.RevisionList)
-	revisions = append(revisions, r.Revisions...)
+	for _, i := range r.Revisions {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		revisions, err = makeListRevisionsCallAndAppend(c, revisions, errKey)
+		err = listRevisions(c, ch, errKey)
 	}
-	return revisions, err
+	return err
 }
 
 // ListRevisions lists a file's revisions.
-func ListRevisions(fileID, fields string) ([]*drive.Revision, error) {
+func ListRevisions(fileID, fields string, cap int) (<-chan *drive.Revision, <-chan error) {
 	srv := getRevisionsService()
 	c := srv.List(fileID)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var revisions []*drive.Revision
-	revisions, err := makeListRevisionsCallAndAppend(c, revisions, gsmhelpers.FormatErrorKey(fileID))
-	return revisions, err
+	ch := make(chan *drive.Revision, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listRevisions(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdateRevision updates a revision with patch semantics.

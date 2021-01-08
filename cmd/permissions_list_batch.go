@@ -54,11 +54,17 @@ var permissionsListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.ListPermissions(m["fileId"].GetString(), m["includePermissionsForView"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool())
-						if err != nil {
-							log.Println(err)
+						fileID := m["fileId"].GetString()
+						result, err := gsmdrive.ListPermissions(fileID, m["includePermissionsForView"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), cap)
+						r := resultStruct{FileID: fileID}
+						for i := range result {
+							r.Permissions = append(r.Permissions, i)
+						}
+						e := <-err
+						if e != nil {
+							log.Println(e)
 						} else {
-							results <- resultStruct{FileID: m["fileId"].GetString(), Permissions: result}
+							results <- r
 						}
 					}
 					wg.Done()

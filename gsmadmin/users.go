@@ -77,26 +77,28 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	return r, nil
 }
 
-func makeListUsersCallAndAppend(c *admin.UsersListCall, users []*admin.User, errKey string) ([]*admin.User, error) {
+func listUsers(c *admin.UsersListCall, ch chan *admin.User, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Users)
-	users = append(users, r.Users...)
+	for _, i := range r.Users {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		users, err = makeListUsersCallAndAppend(c, users, errKey)
+		err = listUsers(c, ch, errKey)
 	}
-	return users, err
+	return err
 }
 
 // ListUsers retrieves a paginated list of either deleted users or all users in a domain.
-func ListUsers(showDeleted bool, query, domain, customer, fields, projection, orderBy, sortOrder, viewType, customFieldMask string) ([]*admin.User, error) {
+func ListUsers(showDeleted bool, query, domain, customer, fields, projection, orderBy, sortOrder, viewType, customFieldMask string, cap int) (<-chan *admin.User, <-chan error) {
 	srv := getUsersService()
-	c := srv.List().Customer(customer)
+	c := srv.List().Customer(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -124,9 +126,17 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 	if customFieldMask != "" {
 		c = c.CustomFieldMask(customFieldMask)
 	}
-	var users []*admin.User
-	users, err := makeListUsersCallAndAppend(c, users, gsmhelpers.FormatErrorKey(customer))
-	return users, err
+	ch := make(chan *admin.User, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listUsers(c, ch, gsmhelpers.FormatErrorKey(customer))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // MakeAdmin makes a user a super administrator.

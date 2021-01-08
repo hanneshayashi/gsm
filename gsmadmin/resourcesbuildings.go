@@ -71,32 +71,41 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	return r, nil
 }
 
-func makeListBuildingsCallAndAppend(c *admin.ResourcesBuildingsListCall, buildings []*admin.Building, errKey string) ([]*admin.Building, error) {
+func listBuildings(c *admin.ResourcesBuildingsListCall, ch chan *admin.Building, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Buildings)
-	buildings = append(buildings, r.Buildings...)
+	for _, i := range r.Buildings {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		buildings, err = makeListBuildingsCallAndAppend(c, buildings, errKey)
+		err = listBuildings(c, ch, errKey)
 	}
-	return buildings, err
+	return err
 }
 
 // ListBuildings retrieves a list of buildings for an account.
-func ListBuildings(customer, fields string) ([]*admin.Building, error) {
+func ListBuildings(customer, fields string, cap int) (<-chan *admin.Building, <-chan error) {
 	srv := getResourcesBuildingsService()
-	c := srv.List(customer)
+	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var buildings []*admin.Building
-	buildings, err := makeListBuildingsCallAndAppend(c, buildings, gsmhelpers.FormatErrorKey(customer))
-	return buildings, err
+	ch := make(chan *admin.Building, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listBuildings(c, ch, gsmhelpers.FormatErrorKey(customer))
+		if err != nil {
+			err <- e
+		}
+		close(ch)
+	}()
+	return ch, err
 }
 
 // PatchBuilding updates a building. This method supports patch semantics.

@@ -24,26 +24,28 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeListHistoryCallAndAppend(c *gmail.UsersHistoryListCall, history []*gmail.History, errKey string) ([]*gmail.History, error) {
+func listHistory(c *gmail.UsersHistoryListCall, ch chan *gmail.History, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*gmail.ListHistoryResponse)
-	history = append(history, r.History...)
+	for _, i := range r.History {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		history, err = makeListHistoryCallAndAppend(c, history, errKey)
+		err = listHistory(c, ch, errKey)
 	}
-	return history, err
+	return err
 }
 
 // ListHistory lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).
-func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyTypes ...string) ([]*gmail.History, error) {
+func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyTypes []string, cap int) (<-chan *gmail.History, <-chan error) {
 	srv := getUsersHistoryService()
-	c := srv.List(userID).StartHistoryId(startHistoryID)
+	c := srv.List(userID).StartHistoryId(startHistoryID).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -53,10 +55,15 @@ func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyT
 	if historyTypes != nil {
 		c = c.HistoryTypes(historyTypes...)
 	}
-	var history []*gmail.History
-	history, err := makeListHistoryCallAndAppend(c, history, gsmhelpers.FormatErrorKey(userID))
-	if err != nil {
-		return nil, err
-	}
-	return history, nil
+	ch := make(chan *gmail.History, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listHistory(c, ch, gsmhelpers.FormatErrorKey(userID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

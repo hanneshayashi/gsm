@@ -41,30 +41,40 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 	return r, nil
 }
 
-func makeListSettingsCallAndAppend(c *calendar.SettingsListCall, settings []*calendar.Setting, errKey string) ([]*calendar.Setting, error) {
+func listSettings(c *calendar.SettingsListCall, ch chan *calendar.Setting, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*calendar.Settings)
-	settings = append(settings, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		settings, err = makeListSettingsCallAndAppend(c, settings, errKey)
+		err = listSettings(c, ch, errKey)
 	}
-	return settings, err
+	return err
 }
 
 // ListSettings returns all user settings for the authenticated user.
-func ListSettings(fields string) ([]*calendar.Setting, error) {
+func ListSettings(fields string, cap int) (<-chan *calendar.Setting, <-chan error) {
 	srv := getSettingsService()
-	c := srv.List()
+	c := srv.List().MaxResults(250)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var settings []*calendar.Setting
-	settings, err := makeListSettingsCallAndAppend(c, settings, gsmhelpers.FormatErrorKey("List settings"))
-	return settings, err
+	ch := make(chan *calendar.Setting, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listSettings(c, ch, gsmhelpers.FormatErrorKey("List settings"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

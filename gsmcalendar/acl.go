@@ -68,32 +68,42 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	return r, nil
 }
 
-func makeListACLsCallAndAppend(c *calendar.AclListCall, acls []*calendar.AclRule, errKey string) ([]*calendar.AclRule, error) {
+func listACLs(c *calendar.AclListCall, ch chan *calendar.AclRule, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*calendar.Acl)
-	acls = append(acls, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		acls, err = makeListACLsCallAndAppend(c, acls, errKey)
+		err = listACLs(c, ch, errKey)
 	}
-	return acls, err
+	return err
 }
 
 // ListACLs returns the rules in the access control list for the calendar.
-func ListACLs(calendarID, fields string, showDeleted bool) ([]*calendar.AclRule, error) {
+func ListACLs(calendarID, fields string, showDeleted bool, cap int) (<-chan *calendar.AclRule, <-chan error) {
 	srv := getACLService()
-	c := srv.List(calendarID).ShowDeleted(showDeleted)
+	c := srv.List(calendarID).ShowDeleted(showDeleted).MaxResults(250)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var acls []*calendar.AclRule
-	acls, err := makeListACLsCallAndAppend(c, acls, gsmhelpers.FormatErrorKey(calendarID))
-	return acls, err
+	ch := make(chan *calendar.AclRule, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listACLs(c, ch, gsmhelpers.FormatErrorKey(calendarID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchACL updates an access control rule. This method supports patch semantics.

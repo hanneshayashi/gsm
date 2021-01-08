@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	admin "google.golang.org/api/admin/directory/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -34,17 +35,22 @@ var usersListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.ListUsers(flags["showDeleted"].GetBool(), flags["query"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString(), flags["viewType"].GetString(), flags["customFieldMask"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing users %v", err)
-		}
+		result, err := gsmadmin.ListUsers(flags["showDeleted"].GetBool(), flags["query"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString(), flags["viewType"].GetString(), flags["customFieldMask"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*admin.User{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing users: %v", e)
 		}
 	},
 }

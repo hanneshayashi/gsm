@@ -23,6 +23,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	ci "google.golang.org/api/cloudidentity/v1beta1"
 
 	"github.com/spf13/cobra"
 )
@@ -43,17 +44,22 @@ var groupsCiListCmd = &cobra.Command{
 			}
 			parent = "customers/" + customerID
 		}
-		result, err := gsmci.ListGroups(parent, flags["view"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error updating group %v", err)
-		}
+		result, err := gsmci.ListGroups(parent, flags["view"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*ci.Group{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing groups: %v", e)
 		}
 	},
 }

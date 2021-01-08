@@ -68,32 +68,42 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	return r, nil
 }
 
-func makeListRepliesCallAndAppend(c *drive.RepliesListCall, replies []*drive.Reply, errKey string) ([]*drive.Reply, error) {
+func listReplies(c *drive.RepliesListCall, ch chan *drive.Reply, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*drive.ReplyList)
-	replies = append(replies, r.Replies...)
+	for _, i := range r.Replies {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		replies, err = makeListRepliesCallAndAppend(c, replies, errKey)
+		err = listReplies(c, ch, errKey)
 	}
-	return replies, err
+	return err
 }
 
 // ListReplies Lists a comment's replies.
-func ListReplies(fileID, commentID, fields string, includeDeleted bool) ([]*drive.Reply, error) {
+func ListReplies(fileID, commentID, fields string, includeDeleted bool, cap int) (<-chan *drive.Reply, <-chan error) {
 	srv := getRepliesService()
 	c := srv.List(fileID, commentID).IncludeDeleted(includeDeleted)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var replies []*drive.Reply
-	replies, err := makeListRepliesCallAndAppend(c, replies, gsmhelpers.FormatErrorKey(fileID, commentID))
-	return replies, err
+	ch := make(chan *drive.Reply, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listReplies(c, ch, gsmhelpers.FormatErrorKey(fileID, commentID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdateReply updates a reply with patch semantics.

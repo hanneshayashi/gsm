@@ -58,29 +58,31 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 	return r, nil
 }
 
-func makeListThreadsCallAndAppend(c *gmail.UsersThreadsListCall, threads []*gmail.Thread, errKey string) ([]*gmail.Thread, error) {
+func listThreads(c *gmail.UsersThreadsListCall, ch chan *gmail.Thread, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*gmail.ListThreadsResponse)
-	threads = append(threads, r.Threads...)
+	for _, i := range r.Threads {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		threads, err = makeListThreadsCallAndAppend(c, threads, errKey)
+		err = listThreads(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return threads, nil
+	return nil
 }
 
 // ListThreads lists the threads in the user's mailbox.
-func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash bool) ([]*gmail.Thread, error) {
+func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash bool, cap int) (<-chan *gmail.Thread, <-chan error) {
 	srv := getUsersThreadsService()
-	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash)
+	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -90,12 +92,17 @@ func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash b
 	if len(labelIDs) > 0 {
 		c = c.LabelIds(labelIDs...)
 	}
-	var threads []*gmail.Thread
-	threads, err := makeListThreadsCallAndAppend(c, threads, gsmhelpers.FormatErrorKey(userID))
-	if err != nil {
-		return nil, err
-	}
-	return threads, nil
+	ch := make(chan *gmail.Thread, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listThreads(c, ch, gsmhelpers.FormatErrorKey(userID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // ModifyThread modifies the labels applied to the thread. This applies to all messages in the thread.

@@ -76,41 +76,48 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	return r, nil
 }
 
-func makeListDraftsCallAndAppend(c *gmail.UsersDraftsListCall, drafts []*gmail.Draft, errKey string) ([]*gmail.Draft, error) {
+func listDrafts(c *gmail.UsersDraftsListCall, ch chan *gmail.Draft, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*gmail.ListDraftsResponse)
-	drafts = append(drafts, r.Drafts...)
+	for _, i := range r.Drafts {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		drafts, err = makeListDraftsCallAndAppend(c, drafts, errKey)
+		err = listDrafts(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return drafts, err
+	return err
 }
 
 // ListDrafts lists the drafts in the user's mailbox.
-func ListDrafts(userID, q, fields string, includeSpamTrash bool) ([]*gmail.Draft, error) {
+func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-chan *gmail.Draft, <-chan error) {
 	srv := getUsersDraftsService()
-	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash)
+	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if q != "" {
 		c = c.Q(q)
 	}
-	var drafts []*gmail.Draft
-	drafts, err := makeListDraftsCallAndAppend(c, drafts, gsmhelpers.FormatErrorKey(userID))
-	if err != nil {
-		return nil, err
-	}
-	return drafts, nil
+	ch := make(chan *gmail.Draft, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listDrafts(c, ch, gsmhelpers.FormatErrorKey(userID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // SendDraft sends the specified, existing draft to the recipients in the To, Cc, and Bcc headers.

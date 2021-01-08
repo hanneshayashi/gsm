@@ -54,26 +54,28 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	return r, nil
 }
 
-func makeListChromeOsDevicesCallAndAppend(c *admin.ChromeosdevicesListCall, chromeosDevices []*admin.ChromeOsDevice, errKey string) ([]*admin.ChromeOsDevice, error) {
+func listChromeOsDevices(c *admin.ChromeosdevicesListCall, ch chan *admin.ChromeOsDevice, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.ChromeOsDevices)
-	chromeosDevices = append(chromeosDevices, r.Chromeosdevices...)
+	for _, i := range r.Chromeosdevices {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		chromeosDevices, err = makeListChromeOsDevicesCallAndAppend(c, chromeosDevices, errKey)
+		err = listChromeOsDevices(c, ch, errKey)
 	}
-	return chromeosDevices, err
+	return nil
 }
 
 // ListChromeOsDevices retrieves a paginated list of Chrome OS devices within an account.
-func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection string) ([]*admin.ChromeOsDevice, error) {
+func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection string, cap int) (<-chan *admin.ChromeOsDevice, <-chan error) {
 	srv := getChromeosdevicesService()
-	c := srv.List(customerID)
+	c := srv.List(customerID).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -86,9 +88,17 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 	if orgUnitPath != "" {
 		c = c.OrgUnitPath(orgUnitPath)
 	}
-	var chromeOsDevices []*admin.ChromeOsDevice
-	chromeOsDevices, err := makeListChromeOsDevicesCallAndAppend(c, chromeOsDevices, gsmhelpers.FormatErrorKey(customerID))
-	return chromeOsDevices, err
+	ch := make(chan *admin.ChromeOsDevice, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listChromeOsDevices(c, ch, gsmhelpers.FormatErrorKey(customerID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // MoveChromeOSDevicesToOU moves or inserts multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.

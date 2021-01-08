@@ -23,6 +23,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	admin "google.golang.org/api/admin/directory/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -40,17 +41,22 @@ var roleAssignmentsListCmd = &cobra.Command{
 		if roleID != 0 {
 			roleIDString = strconv.FormatInt(roleID, 10)
 		}
-		result, err := gsmadmin.ListRoleAssignments(flags["customer"].GetString(), roleIDString, flags["userKey"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing role assignments %v", err)
-		}
+		result, err := gsmadmin.ListRoleAssignments(flags["customer"].GetString(), roleIDString, flags["userKey"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*admin.RoleAssignment{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing role assignments: %v", e)
 		}
 	},
 }

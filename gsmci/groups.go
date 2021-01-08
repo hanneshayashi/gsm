@@ -114,35 +114,45 @@ func LookupGroup(email string) (string, error) {
 	return r.Name, nil
 }
 
-func makeListGroupsCallAndAppend(c *ci.GroupsListCall, groups []*ci.Group, errKey string) ([]*ci.Group, error) {
+func listGroups(c *ci.GroupsListCall, ch chan *ci.Group, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*ci.ListGroupsResponse)
-	groups = append(groups, r.Groups...)
+	for _, i := range r.Groups {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeListGroupsCallAndAppend(c, groups, errKey)
+		err = listGroups(c, ch, errKey)
 	}
-	return groups, err
+	return err
 }
 
 // ListGroups retrieves a list of groups
-func ListGroups(parent, view, fields string) ([]*ci.Group, error) {
+func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
 	srv := getGroupsService()
-	c := srv.List().Parent(parent)
+	c := srv.List().Parent(parent).PageSize(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if view != "" {
 		c.View(view)
 	}
-	var groups []*ci.Group
-	groups, err := makeListGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(parent))
-	return groups, err
+	ch := make(chan *ci.Group, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listGroups(c, ch, gsmhelpers.FormatErrorKey(parent))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 func makeSearchGroupsCallAndAppend(c *ci.GroupsSearchCall, groups []*ci.Group, errKey string) ([]*ci.Group, error) {

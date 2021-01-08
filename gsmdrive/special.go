@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"sync"
 
@@ -76,10 +77,7 @@ func GetFilesAndFolders(folderID string, threads int) (<-chan *drive.File, <-cha
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error getting folder: %v", err)
 	}
-	items, err := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
-	if err != nil {
-		return nil, nil, err
-	}
+	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
 	files := make(chan *drive.File, threads)
 	folders := make(chan *drive.File, threads)
 	folders <- folder
@@ -105,9 +103,6 @@ func GetFilesAndFolders(folderID string, threads int) (<-chan *drive.File, <-cha
 
 func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) error {
 	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, cap)
-	if err != nil {
-		return err
-	}
 	wg.Add(1)
 	for f := range result {
 		files <- f
@@ -117,11 +112,15 @@ func listFilesRecursive(id, fields string, folders chan string, files chan *driv
 		}
 	}
 	wg.Done()
+	e := <-err
+	if e != nil {
+		return e
+	}
 	return nil
 }
 
 // ListFilesRecursive lists all files and foldes in a parent folder recursively
-func ListFilesRecursive(id, fields string, threads int) (<-chan *drive.File, error) {
+func ListFilesRecursive(id, fields string, threads int) <-chan *drive.File {
 	wg := &sync.WaitGroup{}
 	folders := make(chan string, threads)
 	files := make(chan *drive.File, threads)
@@ -131,7 +130,10 @@ func ListFilesRecursive(id, fields string, threads int) (<-chan *drive.File, err
 		for i := 0; i < threads; i++ {
 			go func() {
 				for id := range folders {
-					listFilesRecursive(id, fields, folders, files, wg, threads)
+					err := listFilesRecursive(id, fields, folders, files, wg, threads)
+					if err != nil {
+						log.Println(err)
+					}
 					wg.Done()
 				}
 			}()
@@ -142,7 +144,7 @@ func ListFilesRecursive(id, fields string, threads int) (<-chan *drive.File, err
 		close(folders)
 		close(files)
 	}()
-	return files, nil
+	return files
 }
 
 // GetPermissionID returns the permissionId from a flag set if either the permissionId itself, or the emailAddress is set.
@@ -174,34 +176,36 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 	}
 	if flags["emailAddress"].IsSet() {
 		emailAddress := strings.ToLower(flags["emailAddress"].GetString())
-		permissions, err := ListPermissions(fileID, "", "permissions(emailAddress,id)", flags["useDomainAdminAccess"].GetBool())
-		if err != nil {
-			return "", err
-		}
+		permissions, err := ListPermissions(fileID, "", "permissions(emailAddress,id)", flags["useDomainAdminAccess"].GetBool(), gsmhelpers.MaxThreads(0))
 		pFound := false
-		for _, p := range permissions {
+		for p := range permissions {
 			if strings.ToLower(p.EmailAddress) == emailAddress {
 				permissionID = p.Id
 				pFound = true
 				break
 			}
 		}
+		e := <-err
+		if e != nil {
+			return "", e
+		}
 		if !pFound {
 			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")
 		}
 	} else {
 		domain := strings.ToLower(flags["domain"].GetString())
-		permissions, err := ListPermissions(fileID, "", "permissions(domain,id)", flags["useDomainAdminAccess"].GetBool())
-		if err != nil {
-			return "", err
-		}
+		permissions, err := ListPermissions(fileID, "", "permissions(domain,id)", flags["useDomainAdminAccess"].GetBool(), gsmhelpers.MaxThreads(0))
 		pFound := false
-		for _, p := range permissions {
+		for p := range permissions {
 			if strings.ToLower(p.Domain) == domain {
 				permissionID = p.Id
 				pFound = true
 				break
 			}
+		}
+		e := <-err
+		if e != nil {
+			return "", e
 		}
 		if !pFound {
 			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")

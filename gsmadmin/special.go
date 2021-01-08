@@ -19,7 +19,6 @@ package gsmadmin
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"sync"
 
@@ -27,23 +26,25 @@ import (
 )
 
 // GetUniqueUsersChannelRecursive returns a channel containing unique email addresses of all users inside the specified orgUnits and groups
-func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int) (<-chan string, error) {
+func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int) (<-chan string, <-chan error) {
 	wgOrgUnits := &sync.WaitGroup{}
 	wgGroups := &sync.WaitGroup{}
 	wgUnique := &sync.WaitGroup{}
 	userKeys := make(chan string, threads)
 	userKeysUnique := make(chan string, threads)
 	done := make(map[string]struct{})
+	errChan := make(chan error, 2)
 	wgOrgUnits.Add(1)
 	go func() {
 		for _, o := range orgUnits {
-			us, err := ListUsers(false, fmt.Sprintf("orgUnitPath=%s", o), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "")
-			if err != nil {
-				log.Println(err)
-			} else {
-				for _, u := range us {
-					userKeys <- u.PrimaryEmail
-				}
+			us, err := ListUsers(false, fmt.Sprintf("orgUnitPath=%s", o), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "", threads)
+			for u := range us {
+				userKeys <- u.PrimaryEmail
+			}
+			e := <-err
+			if e != nil {
+				errChan <- e
+				break
 			}
 		}
 		wgOrgUnits.Done()
@@ -51,15 +52,16 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	wgGroups.Add(1)
 	go func() {
 		for _, g := range groupEmails {
-			mems, err := ListMembers(g, "", "members(email,type),nextPageToken", true)
-			if err != nil {
-				log.Println(err)
-			} else {
-				for _, m := range mems {
-					if m.Type == "USER" {
-						userKeys <- m.Email
-					}
+			mems, err := ListMembers(g, "", "members(email,type),nextPageToken", true, threads)
+			for m := range mems {
+				if m.Type == "USER" {
+					userKeys <- m.Email
 				}
+			}
+			e := <-err
+			if e != nil {
+				errChan <- e
+				break
 			}
 		}
 		wgGroups.Done()
@@ -80,23 +82,25 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 		close(userKeys)
 		wgUnique.Wait()
 		close(userKeysUnique)
+		close(errChan)
 	}()
-	return userKeysUnique, nil
+	return userKeysUnique, errChan
 }
 
 // GetMembersToSet compares the list of current members of a group to the specified emailAddresses.
 // The function will return a list of members to be added and / or removed.
 func GetMembersToSet(groupKey string, threads int, emailAddresses ...string) (<-chan string, <-chan string, error) {
-	currentMembers, err := ListMembers(groupKey, "", "members(email)", false)
-	membersToAdd := make(chan string, threads)
-	membersToRemove := make(chan string, threads)
-	if err != nil {
-		return nil, nil, err
-	}
+	currentMembers, err := ListMembers(groupKey, "", "members(email)", false, threads)
 	var cLower []string
-	for _, cm := range currentMembers {
+	for cm := range currentMembers {
 		cLower = append(cLower, strings.ToLower(cm.Email))
 	}
+	e := <-err
+	if e != nil {
+		return nil, nil, e
+	}
+	membersToAdd := make(chan string, threads)
+	membersToRemove := make(chan string, threads)
 	var nLower []string
 	for _, e := range emailAddresses {
 		nLower = append(nLower, strings.ToLower(e))

@@ -23,6 +23,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmlicensing"
+	"google.golang.org/api/licensing/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -36,17 +37,22 @@ var licenseAssignmentsListForProductAndSkuCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		customerID := gsmadmin.GetCustomerID(flags["customerId"].GetString())
-		result, err := gsmlicensing.ListLicenseAssignmentsForProductAndSku(flags["productId"].GetString(), flags["skuId"].GetString(), customerID, flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing license assignments for product: %v", err)
-		}
+		result, err := gsmlicensing.ListLicenseAssignmentsForProductAndSku(flags["productId"].GetString(), flags["skuId"].GetString(), customerID, flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*licensing.LicenseAssignment{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing license assignments for product and sku: %v", e)
 		}
 	},
 }

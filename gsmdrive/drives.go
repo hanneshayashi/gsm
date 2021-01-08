@@ -88,26 +88,28 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	return r, nil
 }
 
-func makeListDrivesCallAndAppend(c *drive.DrivesListCall, drives []*drive.Drive, errKey string) ([]*drive.Drive, error) {
+func listDrives(c *drive.DrivesListCall, ch chan *drive.Drive, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*drive.DriveList)
-	drives = append(drives, r.Drives...)
+	for _, i := range r.Drives {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		drives, err = makeListDrivesCallAndAppend(c, drives, errKey)
+		err = listDrives(c, ch, errKey)
 	}
-	return drives, err
+	return err
 }
 
 // ListDrives lists the user's shared drives.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-shareddrives.
-func ListDrives(filter, fields string, useDomainAdminAccess bool) ([]*drive.Drive, error) {
+func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Drive, <-chan error) {
 	srv := getDrivesService()
 	c := srv.List().UseDomainAdminAccess(useDomainAdminAccess)
 	if fields != "" {
@@ -116,9 +118,17 @@ func ListDrives(filter, fields string, useDomainAdminAccess bool) ([]*drive.Driv
 	if filter != "" {
 		c = c.Q(filter)
 	}
-	var drives []*drive.Drive
-	drives, err := makeListDrivesCallAndAppend(c, drives, gsmhelpers.FormatErrorKey("List drives"))
-	return drives, err
+	ch := make(chan *drive.Drive, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listDrives(c, ch, gsmhelpers.FormatErrorKey("List drives"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UnhideDrive restores a shared drive to the default view.

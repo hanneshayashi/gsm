@@ -64,26 +64,28 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	return r, nil
 }
 
-func makeListMobileDevicesCallAndAppend(c *admin.MobiledevicesListCall, mobileDevices []*admin.MobileDevice, errKey string) ([]*admin.MobileDevice, error) {
+func listMobileDevices(c *admin.MobiledevicesListCall, ch chan *admin.MobileDevice, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.MobileDevices)
-	mobileDevices = append(mobileDevices, r.Mobiledevices...)
+	for _, i := range r.Mobiledevices {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		mobileDevices, err = makeListMobileDevicesCallAndAppend(c, mobileDevices, errKey)
+		err = listMobileDevices(c, ch, errKey)
 	}
-	return mobileDevices, err
+	return err
 }
 
 // ListMobileDevices retrieves a paginated list of all mobile devices for an account.
-func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder string) ([]*admin.MobileDevice, error) {
+func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder string, cap int) (<-chan *admin.MobileDevice, <-chan error) {
 	srv := getMobiledevicesService()
-	c := srv.List(customerID)
+	c := srv.List(customerID).MaxResults(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -99,7 +101,15 @@ func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder
 	if sortOrder != "" {
 		c = c.SortOrder(sortOrder)
 	}
-	var mobileDevices []*admin.MobileDevice
-	mobileDevices, err := makeListMobileDevicesCallAndAppend(c, mobileDevices, gsmhelpers.FormatErrorKey(customerID))
-	return mobileDevices, err
+	ch := make(chan *admin.MobileDevice, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listMobileDevices(c, ch, gsmhelpers.FormatErrorKey(customerID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

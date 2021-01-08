@@ -68,26 +68,28 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	return r, nil
 }
 
-func makeListCalendarResourcesCallAndAppend(c *admin.ResourcesCalendarsListCall, calendars []*admin.CalendarResource, errKey string) ([]*admin.CalendarResource, error) {
+func listCalendarResources(c *admin.ResourcesCalendarsListCall, ch chan *admin.CalendarResource, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.CalendarResources)
-	calendars = append(calendars, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		calendars, err = makeListCalendarResourcesCallAndAppend(c, calendars, errKey)
+		err = listCalendarResources(c, ch, errKey)
 	}
-	return calendars, err
+	return err
 }
 
 // ListCalendarResources retrieves a list of calendar resources for an account.
-func ListCalendarResources(customer, orderBy, query, fields string) ([]*admin.CalendarResource, error) {
+func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-chan *admin.CalendarResource, <-chan error) {
 	srv := getResourcesCalendarsService()
-	c := srv.List(customer)
+	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -97,9 +99,17 @@ func ListCalendarResources(customer, orderBy, query, fields string) ([]*admin.Ca
 	if query != "" {
 		c = c.Query(query)
 	}
-	var calendars []*admin.CalendarResource
-	calendars, err := makeListCalendarResourcesCallAndAppend(c, calendars, gsmhelpers.FormatErrorKey(customer))
-	return calendars, err
+	ch := make(chan *admin.CalendarResource, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listCalendarResources(c, ch, gsmhelpers.FormatErrorKey(customer))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchCalendarResource updates a calendar resource. This method supports patch semantics.

@@ -71,60 +71,80 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	return r, nil
 }
 
-func makeListLicenseAssignmentsForProductCallAndAppend(c *licensing.LicenseAssignmentsListForProductCall, licenseAssignments []*licensing.LicenseAssignment, errKey string) ([]*licensing.LicenseAssignment, error) {
+func listLicenseAssignmentsForProduct(c *licensing.LicenseAssignmentsListForProductCall, ch chan *licensing.LicenseAssignment, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	licenseAssignments = append(licenseAssignments, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		licenseAssignments, err = makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments, errKey)
+		err = listLicenseAssignmentsForProduct(c, ch, errKey)
 	}
-	return licenseAssignments, err
+	return err
 }
 
 // ListLicenseAssignmentsForProduct list all users assigned licenses for a specific product SKU.
-func ListLicenseAssignmentsForProduct(productID, customerID, fields string) ([]*licensing.LicenseAssignment, error) {
+func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap int) (<-chan *licensing.LicenseAssignment, <-chan error) {
 	srv := getLicenseAssignmentsService()
-	c := srv.ListForProduct(productID, customerID)
+	c := srv.ListForProduct(productID, customerID).MaxResults(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var licenseAssignments []*licensing.LicenseAssignment
-	licenseAssignments, err := makeListLicenseAssignmentsForProductCallAndAppend(c, licenseAssignments, gsmhelpers.FormatErrorKey(productID, customerID))
-	return licenseAssignments, err
+	ch := make(chan *licensing.LicenseAssignment, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listLicenseAssignmentsForProduct(c, ch, gsmhelpers.FormatErrorKey(productID, customerID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
-func makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c *licensing.LicenseAssignmentsListForProductAndSkuCall, licenseAssignments []*licensing.LicenseAssignment, errKey string) ([]*licensing.LicenseAssignment, error) {
+func listLicenseAssignmentsForProductAndSku(c *licensing.LicenseAssignmentsListForProductAndSkuCall, ch chan *licensing.LicenseAssignment, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	licenseAssignments = append(licenseAssignments, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		licenseAssignments, err = makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments, errKey)
+		err = listLicenseAssignmentsForProductAndSku(c, ch, errKey)
 	}
-	return licenseAssignments, err
+	return err
 }
 
 // ListLicenseAssignmentsForProductAndSku list all users assigned licenses for a specific product SKU.
-func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields string) ([]*licensing.LicenseAssignment, error) {
+func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields string, cap int) (<-chan *licensing.LicenseAssignment, <-chan error) {
 	srv := getLicenseAssignmentsService()
-	c := srv.ListForProductAndSku(productID, skuID, customerID)
+	c := srv.ListForProductAndSku(productID, skuID, customerID).MaxResults(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var licenseAssignments []*licensing.LicenseAssignment
-	licenseAssignments, err := makeListLicenseAssignmentsForProductAndSkuCallAndAppend(c, licenseAssignments, gsmhelpers.FormatErrorKey(productID, skuID, customerID))
-	return licenseAssignments, err
+	ch := make(chan *licensing.LicenseAssignment, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listLicenseAssignmentsForProductAndSku(c, ch, gsmhelpers.FormatErrorKey(productID, skuID, customerID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchLicenseAssignment reassign a user's product SKU with a different SKU in the same product.

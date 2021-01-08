@@ -68,32 +68,42 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	return r, nil
 }
 
-func makeListRolesCallAndAppend(c *admin.RolesListCall, roles []*admin.Role, errKey string) ([]*admin.Role, error) {
+func listRoles(c *admin.RolesListCall, ch chan *admin.Role, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Roles)
-	roles = append(roles, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		roles, err = makeListRolesCallAndAppend(c, roles, errKey)
+		err = listRoles(c, ch, errKey)
 	}
-	return roles, err
+	return err
 }
 
 // ListRoles retrieves a paginated list of all the roles in a domain.
-func ListRoles(customer, fields string) ([]*admin.Role, error) {
+func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan error) {
 	srv := getRolesService()
-	c := srv.List(customer)
+	c := srv.List(customer).MaxResults(10000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var roles []*admin.Role
-	roles, err := makeListRolesCallAndAppend(c, roles, customer)
-	return roles, err
+	ch := make(chan *admin.Role, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listRoles(c, ch, customer)
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchRole updates a role. This method supports patch semantics.

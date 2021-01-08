@@ -71,24 +71,26 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	return r, nil
 }
 
-func makeListPermissionsCallAndAppend(c *drive.PermissionsListCall, permissions []*drive.Permission, errKey string) ([]*drive.Permission, error) {
+func listPermissions(c *drive.PermissionsListCall, ch chan *drive.Permission, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*drive.PermissionList)
-	permissions = append(permissions, r.Permissions...)
+	for _, i := range r.Permissions {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		permissions, err = makeListPermissionsCallAndAppend(c, permissions, errKey)
+		err = listPermissions(c, ch, errKey)
 	}
-	return permissions, err
+	return err
 }
 
 // ListPermissions lists a file's or shared drive's permissions.
-func ListPermissions(fileID, includePermissionsForView, fields string, useDomainAdminAccess bool) ([]*drive.Permission, error) {
+func ListPermissions(fileID, includePermissionsForView, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Permission, <-chan error) {
 	srv := getPermissionsService()
 	c := srv.List(fileID).SupportsAllDrives(true).UseDomainAdminAccess(useDomainAdminAccess)
 	if fields != "" {
@@ -97,9 +99,17 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 	if includePermissionsForView != "" {
 		c = c.IncludePermissionsForView(includePermissionsForView)
 	}
-	var permissions []*drive.Permission
-	permissions, err := makeListPermissionsCallAndAppend(c, permissions, gsmhelpers.FormatErrorKey(fileID))
-	return permissions, err
+	ch := make(chan *drive.Permission, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listPermissions(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdatePermission updates a permission with patch semantics.

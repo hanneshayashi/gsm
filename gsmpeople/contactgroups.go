@@ -94,36 +94,46 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	return r, nil
 }
 
-func makeListContactGroupsCallAndAppend(c *people.ContactGroupsListCall, contactGroups []*people.ContactGroup, errKey string) ([]*people.ContactGroup, error) {
+func listContactGroups(c *people.ContactGroupsListCall, ch chan *people.ContactGroup, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*people.ListContactGroupsResponse)
-	contactGroups = append(contactGroups, r.ContactGroups...)
+	for _, i := range r.ContactGroups {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		contactGroups, err = makeListContactGroupsCallAndAppend(c, contactGroups, errKey)
+		err = listContactGroups(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return contactGroups, nil
+	return nil
 }
 
 // ListContactGroups lists all contact groups owned by the authenticated user.
 // Members of the contact groups are not populated.
-func ListContactGroups(fields string) ([]*people.ContactGroup, error) {
+func ListContactGroups(fields string, cap int) (<-chan *people.ContactGroup, <-chan error) {
 	srv := getContactGroupsService()
-	c := srv.List()
+	c := srv.List().PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var contactGroups []*people.ContactGroup
-	contactGroups, err := makeListContactGroupsCallAndAppend(c, contactGroups, gsmhelpers.FormatErrorKey("List contact groups"))
-	return contactGroups, err
+	ch := make(chan *people.ContactGroup, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listContactGroups(c, ch, gsmhelpers.FormatErrorKey("List contact groups"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdateContactGroup updates a new contact group owned by the authenticated user.

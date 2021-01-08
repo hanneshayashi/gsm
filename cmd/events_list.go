@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/calendar/v3"
 
 	"github.com/spf13/cobra"
 )
@@ -34,17 +35,22 @@ var eventsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcalendar.ListEvents(flags["calendarId"].GetString(), flags["iCalUID"].GetString(), flags["orderBy"].GetString(), flags["q"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["updatedMin"].GetString(), flags["fields"].GetString(), flags["privateExtendedProperty"].GetStringSlice(), flags["sharedExtendedProperty"].GetStringSlice(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool(), flags["showHiddenInvitations"].GetBool(), flags["singleEvents"].GetBool())
-		if err != nil {
-			log.Fatalf("Error listing events: %v", err)
-		}
+		result, err := gsmcalendar.ListEvents(flags["calendarId"].GetString(), flags["iCalUID"].GetString(), flags["orderBy"].GetString(), flags["q"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["updatedMin"].GetString(), flags["fields"].GetString(), flags["privateExtendedProperty"].GetStringSlice(), flags["sharedExtendedProperty"].GetStringSlice(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool(), flags["showHiddenInvitations"].GetBool(), flags["singleEvents"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*calendar.Event{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing events: %v", e)
 		}
 	},
 }

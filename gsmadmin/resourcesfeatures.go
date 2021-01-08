@@ -68,32 +68,42 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	return r, nil
 }
 
-func makeListFeaturesCallAndAppend(c *admin.ResourcesFeaturesListCall, features []*admin.Feature, errKey string) ([]*admin.Feature, error) {
+func listFeatures(c *admin.ResourcesFeaturesListCall, ch chan *admin.Feature, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*admin.Features)
-	features = append(features, r.Features...)
+	for _, i := range r.Features {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		features, err = makeListFeaturesCallAndAppend(c, features, errKey)
+		err = listFeatures(c, ch, errKey)
 	}
-	return features, err
+	return err
 }
 
 // ListFeatures retrieves a list of features for an account.
-func ListFeatures(customer, fields string) ([]*admin.Feature, error) {
+func ListFeatures(customer, fields string, cap int) (<-chan *admin.Feature, <-chan error) {
 	srv := getResourcesFeaturesService()
-	c := srv.List(customer)
+	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var features []*admin.Feature
-	features, err := makeListFeaturesCallAndAppend(c, features, gsmhelpers.FormatErrorKey(customer))
-	return features, err
+	ch := make(chan *admin.Feature, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listFeatures(c, ch, gsmhelpers.FormatErrorKey(customer))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchFeature updates a feature. This method supports patch semantics.
