@@ -74,5 +74,6 @@ func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameter
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

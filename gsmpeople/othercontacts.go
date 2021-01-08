@@ -41,12 +41,12 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, sources []st
 	return r, nil
 }
 
-func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, errKey string) ( error) {
+func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return  err
+		return err
 	}
 	r, _ := result.(*people.ListOtherContactsResponse)
 	for _, i := range r.OtherContacts {
@@ -54,17 +54,17 @@ func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, 
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		 err = listOtherContacts(c, ch, errKey)
+		err = listOtherContacts(c, ch, errKey)
 		if err != nil {
-			return  err
+			return err
 		}
 	}
-	return  nil
+	return nil
 }
 
 // ListOtherContacts lists all "Other contacts", that is contacts that are not in a contact group.
 // "Other contacts" are typically auto created contacts from interactions.
-func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person,<-chan error) {
+func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getOtherContactsService()
 	c := srv.List().ReadMask(readMask).PageSize(1000)
 	if fields != "" {
@@ -80,5 +80,6 @@ func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person,
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

@@ -165,6 +165,7 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -209,6 +210,7 @@ func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

@@ -76,5 +76,6 @@ func ListSettings(fields string, cap int) (<-chan *calendar.Setting, <-chan erro
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

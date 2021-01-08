@@ -114,6 +114,7 @@ func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-ch
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

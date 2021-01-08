@@ -120,6 +120,7 @@ func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, 
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

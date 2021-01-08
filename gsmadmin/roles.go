@@ -103,6 +103,7 @@ func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan err
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

@@ -103,6 +103,7 @@ func ListACLs(calendarID, fields string, showDeleted bool, cap int) (<-chan *cal
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

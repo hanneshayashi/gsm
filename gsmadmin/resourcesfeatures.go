@@ -103,6 +103,7 @@ func ListFeatures(customer, fields string, cap int) (<-chan *admin.Feature, <-ch
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

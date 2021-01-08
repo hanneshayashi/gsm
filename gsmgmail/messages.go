@@ -155,6 +155,7 @@ func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash 
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

@@ -98,6 +98,7 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

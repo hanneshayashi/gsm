@@ -117,6 +117,7 @@ func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-cha
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

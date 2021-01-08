@@ -84,5 +84,6 @@ func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTim
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

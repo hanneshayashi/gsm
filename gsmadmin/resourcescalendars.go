@@ -109,6 +109,7 @@ func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

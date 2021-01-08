@@ -152,6 +152,7 @@ func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan 
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -193,5 +194,6 @@ func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

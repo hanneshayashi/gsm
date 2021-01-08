@@ -65,5 +65,6 @@ func ListPeopleConnections(resourceName, personFields, sources, fields string, c
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

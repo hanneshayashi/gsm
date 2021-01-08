@@ -106,6 +106,7 @@ func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDelet
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

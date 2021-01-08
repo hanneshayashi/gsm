@@ -65,5 +65,6 @@ func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyT
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

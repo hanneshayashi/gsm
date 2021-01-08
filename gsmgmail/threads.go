@@ -102,6 +102,7 @@ func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash b
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

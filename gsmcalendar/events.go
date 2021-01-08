@@ -141,6 +141,7 @@ func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, t
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -209,6 +210,7 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

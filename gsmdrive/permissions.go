@@ -109,6 +109,7 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

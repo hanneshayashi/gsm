@@ -128,6 +128,7 @@ func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-ch
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

@@ -106,6 +106,7 @@ func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool,
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

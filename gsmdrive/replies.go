@@ -103,6 +103,7 @@ func ListReplies(fileID, commentID, fields string, includeDeleted bool, cap int)
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

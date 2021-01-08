@@ -111,5 +111,6 @@ func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-c
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

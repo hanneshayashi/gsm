@@ -64,6 +64,7 @@ func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -218,6 +219,7 @@ func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.G
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -256,5 +258,6 @@ func SearchTransitiveMemberships(parent, fields string, cap int) (<-chan *ci.Mem
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

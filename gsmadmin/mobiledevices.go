@@ -111,5 +111,6 @@ func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

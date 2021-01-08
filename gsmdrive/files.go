@@ -279,6 +279,7 @@ func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, 
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

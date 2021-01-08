@@ -69,5 +69,6 @@ func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, para
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }

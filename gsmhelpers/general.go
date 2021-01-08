@@ -369,6 +369,11 @@ func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }
 
+// Sleep sleeps for StandardDelay ms
+func Sleep() {
+	sleep(StandardDelay)
+}
+
 // sleep will sleep for the supplied amount of milliseconds plus a jitter between 0 and 20
 func sleep(ms int) {
 	ms += rand.Intn(50) + 1

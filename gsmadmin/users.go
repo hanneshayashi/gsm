@@ -136,6 +136,7 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

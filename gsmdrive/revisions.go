@@ -117,6 +117,7 @@ func ListRevisions(fileID, fields string, cap int) (<-chan *drive.Revision, <-ch
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

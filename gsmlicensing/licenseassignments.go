@@ -106,6 +106,7 @@ func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap 
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
@@ -144,6 +145,7 @@ func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 

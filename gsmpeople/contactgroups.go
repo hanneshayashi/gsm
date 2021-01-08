@@ -133,6 +133,7 @@ func ListContactGroups(fields string, cap int) (<-chan *people.ContactGroup, <-c
 		close(ch)
 		close(err)
 	}()
+	gsmhelpers.Sleep()
 	return ch, err
 }
 
