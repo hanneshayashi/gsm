@@ -98,7 +98,6 @@ Can be relative to the binary or fully qualified.`,
 		AvailableFor: []string{"new", "update"},
 		Type:         "int",
 		Description:  `Delay in ms to wait after each API call`,
-		Defaults:     map[string]interface{}{"new": 300},
 	},
 	"logFile": {
 		AvailableFor: []string{"new", "update"},
@@ -111,21 +110,40 @@ func init() {
 	rootCmd.AddCommand(configsCmd)
 }
 
-func mapToConfig(flags map[string]*gsmhelpers.Value, config *gsmconfig.GSMConfig) (*gsmconfig.GSMConfig, error) {
+func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMConfig) (*gsmconfig.GSMConfig, error) {
+	config := &gsmconfig.GSMConfig{}
 	if flags["name"].IsSet() {
 		config.Name = flags["name"].GetString()
+	} else if configOld != nil {
+		config.Name = configOld.Name
+	} else {
+		return nil, fmt.Errorf("Name is required")
 	}
 	if flags["credentialsFile"].IsSet() {
 		config.CredentialsFile = flags["credentialsFile"].GetString()
+	} else if configOld != nil {
+		config.CredentialsFile = configOld.CredentialsFile
+	} else {
+		return nil, fmt.Errorf("CredentialsFile is required")
 	}
 	if flags["mode"].IsSet() {
 		config.Mode = flags["mode"].GetString()
+	} else if configOld != nil {
+		config.Mode = configOld.Mode
+	} else {
+		return nil, fmt.Errorf("Mode is required")
 	}
 	if flags["subject"].IsSet() {
 		config.Subject = flags["subject"].GetString()
+	} else if configOld != nil {
+		config.Subject = configOld.Subject
+	} else if config.Mode == "dwd" {
+		return nil, fmt.Errorf("Subject is required when mode is 'dwd'")
 	}
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()
+	} else if configOld != nil {
+		config.Scopes = configOld.Scopes
 	} else {
 		config.Scopes = []string{admin.AdminDirectoryUserScope,
 			admin.AdminDirectoryCustomerScope,
@@ -158,14 +176,24 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, config *gsmconfig.GSMConfig
 	}
 	if flags["threads"].IsSet() {
 		config.Threads = flags["threads"].GetInt()
+	} else if configOld != nil {
+		config.Threads = configOld.Threads
 	} else {
 		config.Threads = gsmhelpers.MaxThreads(0)
 	}
 	if flags["logFile"].IsSet() {
 		config.LogFile = flags["logFile"].GetString()
+	} else if configOld != nil {
+		config.LogFile = configOld.LogFile
 	} else {
 		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
 	}
-	config.StandardDelay = flags["standardDelay"].GetInt()
+	if flags["standardDelay"].IsSet() {
+		config.StandardDelay = flags["standardDelay"].GetInt()
+	} else if configOld != nil {
+		config.StandardDelay = configOld.StandardDelay
+	} else {
+		config.StandardDelay = 300
+	}
 	return config, nil
 }
