@@ -186,9 +186,11 @@ func initConfig() {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		fmt.Println(gsmhelpers.StandardDelay)
 	} else {
 		gsmhelpers.StandardDelay = viper.GetInt("standardDelay")
+	}
+	if streamOutput {
+		compressOutput = true
 	}
 }
 
