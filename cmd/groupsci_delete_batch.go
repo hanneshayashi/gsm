@@ -55,7 +55,7 @@ var groupsCiDeleteBatchCmd = &cobra.Command{
 					for m := range maps {
 						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
 						if err != nil {
-							log.Printf("Error resolving group name: %v\n", err)
+							log.Printf("Error determining group name: %v\n", err)
 							continue
 						}
 						result, err := gsmci.DeleteGroup(name)
