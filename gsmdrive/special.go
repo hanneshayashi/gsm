@@ -101,22 +101,24 @@ func GetFilesAndFolders(folderID string, threads int) (<-chan *drive.File, <-cha
 	return files, folders, nil
 }
 
-func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) error {
+func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) {
 	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, cap)
 	wg.Add(1)
-	for f := range result {
-		files <- f
-		if isFolder(f) {
-			wg.Add(1)
-			folders <- f.Id
+	go func() {
+		for f := range result {
+			files <- f
+			if isFolder(f) {
+				wg.Add(1)
+				folders <- f.Id
+			}
 		}
-	}
-	wg.Done()
-	e := <-err
-	if e != nil {
-		return e
-	}
-	return nil
+		wg.Done()
+	}()
+	go func() {
+		for e := range err {
+			log.Println(e)
+		}
+	}()
 }
 
 // ListFilesRecursive lists all files and foldes in a parent folder recursively
@@ -130,10 +132,7 @@ func ListFilesRecursive(id, fields string, threads int) <-chan *drive.File {
 		for i := 0; i < threads; i++ {
 			go func() {
 				for id := range folders {
-					err := listFilesRecursive(id, fields, folders, files, wg, threads)
-					if err != nil {
-						log.Println(err)
-					}
+					listFilesRecursive(id, fields, folders, files, wg, threads)
 					wg.Done()
 				}
 			}()
