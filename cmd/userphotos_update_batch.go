@@ -59,11 +59,12 @@ var userPhotosUpdateBatchCmd = &cobra.Command{
 							log.Printf("Error building userPhoto object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.UpdateUserPhoto(m["userKey"].GetString(), m["fields"].GetString(), p)
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.UpdateUserPhoto(userKey, m["fields"].GetString(), p)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), UserPhoto: result}
+							results <- resultStruct{UserKey: userKey, UserPhoto: result}
 						}
 					}
 					wg.Done()

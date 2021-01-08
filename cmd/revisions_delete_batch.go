@@ -54,11 +54,13 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeleteRevision(m["fileId"].GetString(), m["revisionId"].GetString())
+						fileID := m["fileId"].GetString()
+						revisionID := m["revisionId"].GetString()
+						result, err := gsmdrive.DeleteRevision(fileID, revisionID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{FileID: m["fileId"].GetString(), RevisionID: m["revisionId"].GetString(), Result: result}
+						results <- resultStruct{FileID: fileID, RevisionID: revisionID, Result: result}
 					}
 					wg.Done()
 				}()

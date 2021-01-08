@@ -53,11 +53,12 @@ var userPhotosDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteUserPhoto(m["userKey"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.DeleteUserPhoto(userKey)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), Result: result}
+							results <- resultStruct{UserKey: userKey, Result: result}
 						}
 					}
 					wg.Done()

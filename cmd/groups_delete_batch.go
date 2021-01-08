@@ -53,11 +53,12 @@ var groupsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteGroup(m["groupKey"].GetString())
+						groupKey := m["groupKey"].GetString()
+						result, err := gsmadmin.DeleteGroup(groupKey)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{GroupKey: m["groupKey"].GetString(), Result: result}
+						results <- resultStruct{GroupKey: groupKey, Result: result}
 					}
 					wg.Done()
 				}()

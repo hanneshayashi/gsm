@@ -54,11 +54,13 @@ var forwardingAddressesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.DeleteForwardingAddress(m["userId"].GetString(), m["forwardingEmail"].GetString())
+						userID := m["userId"].GetString()
+						forwardingEmail := m["forwardingEmail"].GetString()
+						result, err := gsmgmail.DeleteForwardingAddress(userID, forwardingEmail)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ForwardingEmail: m["forwardingEmail"].GetString(), UserID: m["userId"].GetString(), Result: result}
+						results <- resultStruct{ForwardingEmail: forwardingEmail, UserID: userID, Result: result}
 					}
 					wg.Done()
 				}()

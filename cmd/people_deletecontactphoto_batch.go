@@ -53,11 +53,12 @@ var peopleDeleteContactPhotoBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmpeople.DeleteContactPhoto(m["resourceName"].GetString(), m["personFields"].GetString(), m["sources"].GetString(), m["fields"].GetString())
+						resourceName := m["resourceName"].GetString()
+						result, err := gsmpeople.DeleteContactPhoto(resourceName, m["personFields"].GetString(), m["sources"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ResourceName: m["resourceName"].GetString(), Result: result}
+						results <- resultStruct{ResourceName: resourceName, Result: result}
 					}
 					wg.Done()
 				}()

@@ -53,11 +53,12 @@ var usersDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteUser(m["userKey"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.DeleteUser(userKey)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{UserKey: m["userKey"].GetString(), Result: result}
+						results <- resultStruct{UserKey: userKey, Result: result}
 					}
 					wg.Done()
 				}()

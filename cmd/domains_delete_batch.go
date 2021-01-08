@@ -54,11 +54,13 @@ var domainsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteDomain(m["customer"].GetString(), m["domainName"].GetString())
+						customer := m["customer"].GetString()
+						domainName := m["domainName"].GetString()
+						result, err := gsmadmin.DeleteDomain(customer, domainName)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Customer: m["customer"].GetString(), DomainName: m["domainName"].GetString(), Result: result}
+						results <- resultStruct{Customer: customer, DomainName: domainName, Result: result}
 					}
 					wg.Done()
 				}()

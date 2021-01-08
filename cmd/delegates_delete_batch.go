@@ -55,11 +55,13 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.DeleteDelegate(m["userId"].GetString(), m["delegateEmail"].GetString())
+						userID := m["userId"].GetString()
+						delegateEmail := m["delegateEmail"].GetString()
+						result, err := gsmgmail.DeleteDelegate(userID, delegateEmail)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{UserID: m["userId"].GetString(), DelegateEmail: m["delegateEmail"].GetString(), Result: result}
+						results <- resultStruct{UserID: userID, DelegateEmail: delegateEmail, Result: result}
 					}
 					wg.Done()
 				}()

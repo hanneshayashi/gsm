@@ -54,11 +54,13 @@ var featuresDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteFeature(m["customer"].GetString(), m["featureKey"].GetString())
+						customer := m["customer"].GetString()
+						featureKey := m["featureKey"].GetString()
+						result, err := gsmadmin.DeleteFeature(customer, featureKey)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Featurekey: m["featurekey"].GetString(), Customer: m["customer"].GetString(), Result: result}
+						results <- resultStruct{Featurekey: featureKey, Customer: customer, Result: result}
 					}
 					wg.Done()
 				}()

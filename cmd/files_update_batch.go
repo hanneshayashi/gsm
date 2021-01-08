@@ -58,25 +58,28 @@ var filesUpdateBatchCmd = &cobra.Command{
 							continue
 						}
 						var removeParents string
+						fileID := m["fileId"].GetString()
+						fields := m["fields"].GetString()
 						if m["parent"].IsSet() {
 							f.Parents = nil
-							fOld, err := gsmdrive.GetFile(m["fileId"].GetString(), m["fields"].GetString(), "")
+							fOld, err := gsmdrive.GetFile(fileID, fields, "")
 							if err != nil {
-								log.Printf("Error getting existing file %s: %v\n", m["fileId"].GetString(), err)
+								log.Printf("Error getting existing file %s: %v\n", fileID, err)
 								continue
 							}
 							removeParents = strings.Join(fOld.Parents, ",")
 						}
 						var content *os.File
 						if m["localFilePath"].IsSet() {
-							content, err = os.Open(m["localFilePath"].GetString())
+							localFilePath := m["localFilePath"].GetString()
+							content, err = os.Open(localFilePath)
 							if err != nil {
-								log.Printf("Error opening file %s: %v", m["localFilePath"].GetString(), err)
+								log.Printf("Error opening file %s: %v", localFilePath, err)
 								continue
 							}
 							defer content.Close()
 						}
-						result, err := gsmdrive.UpdateFile(m["fileId"].GetString(), m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString(), f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
+						result, err := gsmdrive.UpdateFile(fileID, m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), fields, f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {

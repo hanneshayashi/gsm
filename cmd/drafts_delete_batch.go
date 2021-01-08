@@ -54,11 +54,13 @@ var draftsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.DeleteDraft(m["userId"].GetString(), m["id"].GetString())
+						userID := m["userId"].GetString()
+						id := m["id"].GetString()
+						result, err := gsmgmail.DeleteDraft(userID, id)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{UserID: m["userId"].GetString(), ID: m["id"].GetString(), Result: result}
+						results <- resultStruct{UserID: userID, ID: id, Result: result}
 					}
 					wg.Done()
 				}()

@@ -54,11 +54,12 @@ var userPhotosGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.GetUserPhoto(m["userKey"].GetString(), m["fields"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.GetUserPhoto(userKey, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), UserPhoto: result}
+							results <- resultStruct{UserKey: userKey, UserPhoto: result}
 						}
 					}
 					wg.Done()

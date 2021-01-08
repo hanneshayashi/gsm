@@ -46,7 +46,7 @@ var verificationCodesListBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		type resultStruct struct {
 			UserKey           string                    `json:"userKey,omitempty"`
-			VerificationCodes []*admin.VerificationCode `json:"verification_codes,omitempty"`
+			VerificationCodes []*admin.VerificationCode `json:"verificationCodes,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
@@ -54,11 +54,12 @@ var verificationCodesListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.ListVerificationCodes(m["userKey"].GetString(), m["fields"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.ListVerificationCodes(userKey, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), VerificationCodes: result}
+							results <- resultStruct{UserKey: userKey, VerificationCodes: result}
 						}
 					}
 					wg.Done()

@@ -54,11 +54,12 @@ var chromeOsCommandsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.GetCommand(m["customerId"].GetString(), m["deviceId"].GetString(), m["fields"].GetString(), m["commandId"].GetInt64())
+						deviceID := m["deviceId"].GetString()
+						result, err := gsmadmin.GetCommand(m["customerId"].GetString(), deviceID, m["fields"].GetString(), m["commandId"].GetInt64())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{DeviceID: m["deviceId"].GetString(), Command: result}
+							results <- resultStruct{DeviceID: deviceID, Command: result}
 						}
 					}
 					wg.Done()

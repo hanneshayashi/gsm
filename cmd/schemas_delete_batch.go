@@ -53,11 +53,12 @@ var schemasDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteSchema(m["customerId"].GetString(), m["schemaKey"].GetString())
+						schemaKey := m["schemaKey"].GetString()
+						result, err := gsmadmin.DeleteSchema(m["customerId"].GetString(), schemaKey)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{SchemaKey: m["schemaKey"].GetString(), Result: result}
+						results <- resultStruct{SchemaKey: schemaKey, Result: result}
 					}
 					wg.Done()
 				}()

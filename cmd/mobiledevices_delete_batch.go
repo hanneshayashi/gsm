@@ -54,11 +54,13 @@ var mobileDevicesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteMobileDevice(m["customerId"].GetString(), m["resourceId"].GetString())
+						customerID := m["customerId"].GetString()
+						resourceID := m["resourceId"].GetString()
+						result, err := gsmadmin.DeleteMobileDevice(customerID, resourceID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CustomerID: m["customerId"].GetString(), ResourceID: m["resourceId"].GetString(), Result: result}
+						results <- resultStruct{CustomerID: customerID, ResourceID: resourceID, Result: result}
 					}
 					wg.Done()
 				}()

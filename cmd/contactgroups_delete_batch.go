@@ -53,11 +53,12 @@ var contactGroupsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmpeople.DeleteContactGroup(m["resourceName"].GetString(), m["deleteContacts"].GetBool())
+						resourceName := m["resourceName"].GetString()
+						result, err := gsmpeople.DeleteContactGroup(resourceName, m["deleteContacts"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ResourceName: m["resourceName"].GetString(), Result: result}
+						results <- resultStruct{ResourceName: resourceName, Result: result}
 					}
 					wg.Done()
 				}()

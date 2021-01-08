@@ -59,11 +59,13 @@ var mobileDevicesActionBatchCmd = &cobra.Command{
 							log.Printf("Error building mobile device action object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.TakeActionOnMobileDevice(m["customerId"].GetString(), m["resourceId"].GetString(), a)
+						customerID := m["customerId"].GetString()
+						resourceID := m["resourceId"].GetString()
+						result, err := gsmadmin.TakeActionOnMobileDevice(customerID, resourceID, a)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CustomerID: m["customerId"].GetString(), ResourceID: m["resourceId"].GetString(), Result: result}
+						results <- resultStruct{CustomerID: customerID, ResourceID: resourceID, Result: result}
 					}
 					wg.Done()
 				}()

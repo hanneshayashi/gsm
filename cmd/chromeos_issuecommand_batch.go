@@ -59,11 +59,12 @@ var chromeOsIssueCommandBatchCmd = &cobra.Command{
 							log.Printf("Error building DirectoryChromeosdevicesIssueCommandRequest object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.IssueCommand(m["customerId"].GetString(), m["deviceId"].GetString(), i)
+						deviceID := m["deviceId"].GetString()
+						result, err := gsmadmin.IssueCommand(m["customerId"].GetString(), deviceID, i)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{DeviceID: m["deviceId"].GetString(), CommandID: result, CommandType: i.CommandType}
+							results <- resultStruct{DeviceID: deviceID, CommandID: result, CommandType: i.CommandType}
 						}
 					}
 					wg.Done()

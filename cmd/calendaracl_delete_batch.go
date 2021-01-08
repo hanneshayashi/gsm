@@ -54,11 +54,13 @@ var calendarACLDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmcalendar.DeleteACL(m["calendarId"].GetString(), m["ruleId"].GetString())
+						calendarID := m["calendarId"].GetString()
+						ruleID := m["ruleId"].GetString()
+						result, err := gsmcalendar.DeleteACL(calendarID, ruleID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CalendarID: m["calendarId"].GetString(), RuleID: m["ruleId"].GetString(), Result: result}
+						results <- resultStruct{CalendarID: calendarID, RuleID: ruleID, Result: result}
 					}
 					wg.Done()
 				}()

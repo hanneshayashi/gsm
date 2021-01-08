@@ -53,11 +53,12 @@ var usersMakeAdminBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.MakeAdmin(m["userKey"].GetString(), !m["unmake"].GetBool())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.MakeAdmin(userKey, !m["unmake"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{UserKey: m["userKey"].GetString(), Result: result}
+						results <- resultStruct{UserKey: userKey, Result: result}
 					}
 					wg.Done()
 				}()

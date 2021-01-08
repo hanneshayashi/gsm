@@ -53,11 +53,12 @@ var drivesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeleteDrive(m["driveId"].GetString())
+						driveID := m["driveId"].GetString()
+						result, err := gsmdrive.DeleteDrive(driveID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{DriveID: m["driveId"].GetString(), Result: result}
+						results <- resultStruct{DriveID: driveID, Result: result}
 					}
 					wg.Done()
 				}()

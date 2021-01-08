@@ -55,11 +55,14 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmlicensing.DeleteLicenseAssignment(m["productId"].GetString(), m["skuId"].GetString(), m["userId"].GetString())
+						productID := m["productId"].GetString()
+						skuID := m["skuId"].GetString()
+						userID := m["userId"].GetString()
+						result, err := gsmlicensing.DeleteLicenseAssignment(productID, skuID, userID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ProductID: m["productId"].GetString(), SkuID: m["skuId"].GetString(), UserID: m["userId"].GetString(), Result: result}
+						results <- resultStruct{ProductID: productID, SkuID: skuID, UserID: userID, Result: result}
 					}
 					wg.Done()
 				}()

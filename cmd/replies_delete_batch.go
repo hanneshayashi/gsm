@@ -55,11 +55,14 @@ var repliesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeleteReply(m["fileId"].GetString(), m["commentId"].GetString(), m["replyId"].GetString())
+						fileID := m["fileId"].GetString()
+						commentID := m["commentId"].GetString()
+						replyID := m["replyId"].GetString()
+						result, err := gsmdrive.DeleteReply(fileID, commentID, replyID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CommentID: m["commentId"].GetString(), FileID: m["fileId"].GetString(), ReplyID: m["replyId"].GetString(), Result: result}
+						results <- resultStruct{CommentID: commentID, FileID: fileID, ReplyID: replyID, Result: result}
 					}
 					wg.Done()
 				}()

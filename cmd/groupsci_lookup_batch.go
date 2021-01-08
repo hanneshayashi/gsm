@@ -53,11 +53,12 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmci.LookupGroup(m["email"].GetString())
+						email := m["email"].GetString()
+						result, err := gsmci.LookupGroup(email)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{Email: m["email"].GetString(), Name: result}
+							results <- resultStruct{Email: email, Name: result}
 						}
 					}
 					wg.Done()

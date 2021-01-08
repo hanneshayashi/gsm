@@ -54,11 +54,13 @@ var calendarResourcesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteCalendarResource(m["customer"].GetString(), m["calendarResourceId"].GetString())
+						customer := m["customer"].GetString()
+						calendarResourceID := m["calendarResourceId"].GetString()
+						result, err := gsmadmin.DeleteCalendarResource(customer, calendarResourceID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CalendarResourceID: m["calendarResourceId"].GetString(), Customer: m["customer"].GetString(), Result: result}
+						results <- resultStruct{CalendarResourceID: calendarResourceID, Customer: customer, Result: result}
 					}
 					wg.Done()
 				}()

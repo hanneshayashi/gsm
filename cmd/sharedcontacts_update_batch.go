@@ -49,7 +49,8 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						s, err := gsmadmin.GetSharedContact(m["url"].GetString())
+						url := m["url"].GetString()
+						s, err := gsmadmin.GetSharedContact(url)
 						if err != nil {
 							log.Printf("Error getting shared contact: %v\n", err)
 							continue
@@ -59,7 +60,7 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 							log.Printf("Error building shared contact object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.UpdateSharedContact(m["url"].GetString(), s)
+						result, err := gsmadmin.UpdateSharedContact(url, s)
 						if err != nil {
 							log.Println(err)
 						} else {

@@ -54,11 +54,13 @@ var domainAliasesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteDomainAlias(m["customer"].GetString(), m["domainAliasName"].GetString())
+						customer := m["customer"].GetString()
+						domainAliasName := m["domainAliasName"].GetString()
+						result, err := gsmadmin.DeleteDomainAlias(customer, domainAliasName)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Customer: m["customer"].GetString(), DomainAliasName: m["domainAliasName"].GetString(), Result: result}
+						results <- resultStruct{Customer: customer, DomainAliasName: domainAliasName, Result: result}
 					}
 					wg.Done()
 				}()

@@ -54,11 +54,13 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteRoleAssignment(m["customer"].GetString(), m["roleAssignmentId"].GetString())
+						customer := m["customer"].GetString()
+						roleAssignmentID := m["roleAssignmentId"].GetString()
+						result, err := gsmadmin.DeleteRoleAssignment(customer, roleAssignmentID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Customer: m["customer"].GetString(), RoleAssignmentID: m["roleAssignmentId"].GetString(), Result: result}
+						results <- resultStruct{Customer: customer, RoleAssignmentID: roleAssignmentID, Result: result}
 					}
 					wg.Done()
 				}()

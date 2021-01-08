@@ -55,11 +55,14 @@ var smimeInfoDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.DeleteSmimeInfo(m["userId"].GetString(), m["sendAsEmail"].GetString(), m["id"].GetString())
+						userID := m["userId"].GetString()
+						sendAsEmail := m["sendAsEmail"].GetString()
+						id := m["id"].GetString()
+						result, err := gsmgmail.DeleteSmimeInfo(userID, sendAsEmail, id)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ID: m["id"].GetString(), SendAsEmail: m["sendAsEmail"].GetString(), UserID: m["userId"].GetString(), Result: result}
+						results <- resultStruct{ID: id, SendAsEmail: sendAsEmail, UserID: userID, Result: result}
 					}
 					wg.Done()
 				}()

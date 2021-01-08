@@ -54,11 +54,13 @@ var tokensDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteToken(m["userKey"].GetString(), m["clientId"].GetString())
+						userKey := m["userKey"].GetString()
+						clientID := m["clientId"].GetString()
+						result, err := gsmadmin.DeleteToken(userKey, clientID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ClientID: m["clientId"].GetString(), UserKey: m["userKey"].GetString(), Result: result}
+						results <- resultStruct{ClientID: clientID, UserKey: userKey, Result: result}
 					}
 					wg.Done()
 				}()

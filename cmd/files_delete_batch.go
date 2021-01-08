@@ -53,11 +53,12 @@ var filesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeleteFile(m["fileId"].GetString())
+						fileID := m["fileId"].GetString()
+						result, err := gsmdrive.DeleteFile(fileID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{FileID: m["fileId"].GetString(), Result: result}
+						results <- resultStruct{FileID: fileID, Result: result}
 					}
 					wg.Done()
 				}()

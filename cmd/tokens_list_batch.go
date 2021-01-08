@@ -54,11 +54,12 @@ var tokensListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.ListTokens(m["userKey"].GetString(), m["fields"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.ListTokens(userKey, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), Clients: result}
+							results <- resultStruct{UserKey: userKey, Clients: result}
 						}
 					}
 					wg.Done()

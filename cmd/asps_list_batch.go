@@ -54,11 +54,12 @@ var aspsListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.ListAsps(m["userKey"].GetString(), m["fields"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.ListAsps(userKey, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), Asps: result}
+							results <- resultStruct{UserKey: userKey, Asps: result}
 						}
 					}
 					wg.Done()

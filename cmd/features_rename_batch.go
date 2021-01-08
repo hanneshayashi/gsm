@@ -59,11 +59,12 @@ var featuresRenameBatchCmd = &cobra.Command{
 							log.Printf("Error building feature rename object: %v\n", err)
 							continue
 						}
-						result, err := gsmadmin.RenameFeature(m["customer"].GetString(), m["oldName"].GetString(), f)
+						customer := m["customer"].GetString()
+						result, err := gsmadmin.RenameFeature(customer, m["oldName"].GetString(), f)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Featurekey: m["featurekey"].GetString(), Customer: m["customer"].GetString(), Result: result}
+						results <- resultStruct{Featurekey: m["featurekey"].GetString(), Customer: customer, Result: result}
 					}
 					wg.Done()
 				}()

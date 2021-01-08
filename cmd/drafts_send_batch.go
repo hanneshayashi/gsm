@@ -50,12 +50,13 @@ var draftsSendBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						draft, err := gsmgmail.GetDraft(m["userId"].GetString(), m["id"].GetString(), "FULL", "*")
+						userID := m["userId"].GetString()
+						draft, err := gsmgmail.GetDraft(userID, m["id"].GetString(), "FULL", "*")
 						if err != nil {
 							log.Printf("Error getting draft: %v\n", err)
 							continue
 						}
-						result, err := gsmgmail.SendDraft(m["userId"].GetString(), draft)
+						result, err := gsmgmail.SendDraft(userID, draft)
 						if err != nil {
 							log.Println(err)
 						} else {

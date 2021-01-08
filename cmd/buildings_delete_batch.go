@@ -54,11 +54,13 @@ var buildingsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteBuilding(m["customer"].GetString(), m["buildingId"].GetString())
+						customer := m["customer"].GetString()
+						buildingID := m["buildingId"].GetString()
+						result, err := gsmadmin.DeleteBuilding(customer, buildingID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{BuildingID: m["buildingId"].GetString(), Customer: m["customer"].GetString(), Result: result}
+						results <- resultStruct{BuildingID: buildingID, Customer: customer, Result: result}
 					}
 					wg.Done()
 				}()

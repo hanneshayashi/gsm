@@ -59,9 +59,10 @@ var filesCreateBatchCmd = &cobra.Command{
 						}
 						var content *os.File
 						if m["localFilePath"].IsSet() {
-							content, err = os.Open(m["localFilePath"].GetString())
+							localFilePath := m["localFilePath"].GetString()
+							content, err = os.Open(localFilePath)
 							if err != nil {
-								log.Printf("Error opening file %s: %v", m["localFilePath"].GetString(), err)
+								log.Printf("Error opening file %s: %v", localFilePath, err)
 								continue
 							}
 							defer content.Close()

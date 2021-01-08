@@ -53,11 +53,12 @@ var userAliasesListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.ListUserAliases(m["userKey"].GetString(), m["fields"].GetString())
+						userKey := m["userKey"].GetString()
+						result, err := gsmadmin.ListUserAliases(userKey, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{UserKey: m["userKey"].GetString(), Aliases: result}
+							results <- resultStruct{UserKey: userKey, Aliases: result}
 						}
 					}
 					wg.Done()

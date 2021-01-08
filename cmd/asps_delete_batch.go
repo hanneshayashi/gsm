@@ -54,11 +54,13 @@ var aspsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteAsp(m["userKey"].GetString(), m["codeId"].GetInt64())
+						userKey := m["userKey"].GetString()
+						codeID := m["codeId"].GetInt64()
+						result, err := gsmadmin.DeleteAsp(userKey, codeID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{UserKey: m["userKey"].GetString(), CodeID: m["codeId"].GetInt64(), Result: result}
+						results <- resultStruct{UserKey: userKey, CodeID: codeID, Result: result}
 					}
 					wg.Done()
 				}()

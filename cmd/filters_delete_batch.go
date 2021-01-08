@@ -54,11 +54,13 @@ var filtersDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.DeleteFilter(m["userId"].GetString(), m["id"].GetString())
+						userID := m["userId"].GetString()
+						id := m["id"].GetString()
+						result, err := gsmgmail.DeleteFilter(userID, id)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ID: m["id"].GetString(), UserID: m["userId"].GetString(), Result: result}
+						results <- resultStruct{ID: id, UserID: userID, Result: result}
 					}
 					wg.Done()
 				}()

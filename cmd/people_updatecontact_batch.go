@@ -50,7 +50,10 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						p, err := gsmpeople.GetContact(m["resourceName"].GetString(), m["personFields"].GetString(), m["sources"].GetString(), "*")
+						resourceName := m["resourceName"].GetString()
+						personFields := m["personFields"].GetString()
+						sources := m["sources"].GetString()
+						p, err := gsmpeople.GetContact(resourceName, personFields, sources, "*")
 						if err != nil {
 							log.Printf("Error getting contact: %v\n", err)
 							continue
@@ -60,7 +63,7 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 							log.Printf("Error building person object: %v\n", err)
 							continue
 						}
-						result, err := gsmpeople.UpdateContact(m["resourceName"].GetString(), m["updatePersonFields"].GetString(), m["personFields"].GetString(), m["sources"].GetString(), m["fields"].GetString(), p)
+						result, err := gsmpeople.UpdateContact(resourceName, m["updatePersonFields"].GetString(), personFields, sources, m["fields"].GetString(), p)
 						if err != nil {
 							log.Println(err)
 						} else {

@@ -54,11 +54,13 @@ var membersHasMemberBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.HasMember(m["groupKey"].GetString(), m["memberKey"].GetString())
+						groupKey := m["groupKey"].GetString()
+						memberKey := m["memberKey"].GetString()
+						result, err := gsmadmin.HasMember(groupKey, memberKey)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{GroupKey: m["groupKey"].GetString(), MemberKey: m["memberKey"].GetString(), Result: result}
+							results <- resultStruct{GroupKey: groupKey, MemberKey: memberKey, Result: result}
 						}
 					}
 					wg.Done()

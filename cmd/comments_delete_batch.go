@@ -54,11 +54,13 @@ var commentsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DeleteComment(m["fileId"].GetString(), m["commentId"].GetString())
+						fileID := m["fileId"].GetString()
+						commentID := m["commentId"].GetString()
+						result, err := gsmdrive.DeleteComment(fileID, commentID)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{FileID: m["fileId"].GetString(), CommentID: m["commentId"].GetString(), Result: result}
+						results <- resultStruct{FileID: fileID, CommentID: commentID, Result: result}
 					}
 					wg.Done()
 				}()

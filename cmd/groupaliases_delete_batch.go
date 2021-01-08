@@ -54,11 +54,13 @@ var groupAliasesDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteGroupAlias(m["groupKey"].GetString(), m["alias"].GetString())
+						groupKey := m["groupKey"].GetString()
+						alias := m["alias"].GetString()
+						result, err := gsmadmin.DeleteGroupAlias(groupKey, alias)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{Alias: m["alias"].GetString(), GroupKey: m["groupKey"].GetString(), Result: result}
+						results <- resultStruct{Alias: alias, GroupKey: groupKey, Result: result}
 					}
 					wg.Done()
 				}()

@@ -58,11 +58,12 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 							log.Printf("Error building chromeOsDeviceAction object: %v", err)
 							continue
 						}
-						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(), m["resourceId"].GetString(), a)
+						resourceID := m["resourceId"].GetString()
+						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(),resourceID, a)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ResourceID: m["resourceId"].GetString(), Result: result}
+						results <- resultStruct{ResourceID:resourceID, Result: result}
 					}
 					wg.Done()
 				}()

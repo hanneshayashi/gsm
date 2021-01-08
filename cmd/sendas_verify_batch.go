@@ -54,11 +54,13 @@ var sendAsVerifyBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmgmail.VerifySendAs(m["userId"].GetString(), m["sendAsEmail"].GetString())
+						userID := m["userId"].GetString()
+						sendAsEmail := m["sendAsEmail"].GetString()
+						result, err := gsmgmail.VerifySendAs(userID, sendAsEmail)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{SendAsEmail: m["sendAsEmail"].GetString(), UserID: m["userId"].GetString(), Result: result}
+						results <- resultStruct{SendAsEmail: sendAsEmail, UserID: userID, Result: result}
 					}
 					wg.Done()
 				}()

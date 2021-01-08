@@ -50,7 +50,8 @@ var contactGroupsUpdateBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						c, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), "*", 0)
+						resourceName := m["resourceName"].GetString()
+						c, err := gsmpeople.GetContactGroup(resourceName, "*", 0)
 						if err != nil {
 							log.Printf("Error getting contact group: %v\n", err)
 							continue
@@ -60,7 +61,7 @@ var contactGroupsUpdateBatchCmd = &cobra.Command{
 							log.Printf("Error building updateContactGroupRequest object: %v\n", err)
 							continue
 						}
-						result, err := gsmpeople.UpdateContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), u)
+						result, err := gsmpeople.UpdateContactGroup(resourceName, m["fields"].GetString(), u)
 						if err != nil {
 							log.Println(err)
 						} else {

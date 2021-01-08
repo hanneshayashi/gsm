@@ -54,11 +54,13 @@ var orgUnitsDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmadmin.DeleteOrgUnit(m["customerId"].GetString(), m["orgUnitPath"].GetString())
+						customerID := m["customerId"].GetString()
+						orgUnitPath := m["orgUnitPath"].GetString()
+						result, err := gsmadmin.DeleteOrgUnit(customerID, orgUnitPath)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{CustomerID: m["customerId"].GetString(), OrgUnitPath: m["orgUnitPath"].GetString(), Result: result}
+						results <- resultStruct{CustomerID: customerID, OrgUnitPath: orgUnitPath, Result: result}
 					}
 					wg.Done()
 				}()
