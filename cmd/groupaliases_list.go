@@ -36,7 +36,7 @@ var groupAliasesListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListGroupAliases(flags["groupKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing group aliases %v", err)
+			log.Fatalf("Error listing group aliases: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

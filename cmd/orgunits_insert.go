@@ -40,7 +40,7 @@ var orgUnitsInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertOrgUnit(flags["customerId"].GetString(), flags["fields"].GetString(), o)
 		if err != nil {
-			log.Fatalf("Error inserting org unit %v", err)
+			log.Fatalf("Error inserting org unit: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

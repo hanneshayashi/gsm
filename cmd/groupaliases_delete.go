@@ -36,7 +36,7 @@ var groupAliasesDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteGroupAlias(flags["groupKey"].GetString(), flags["alias"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting group alias %v", err)
+			log.Fatalf("Error deleting group alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

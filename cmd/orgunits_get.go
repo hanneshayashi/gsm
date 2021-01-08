@@ -36,7 +36,7 @@ var orgUnitsGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetOrgUnit(flags["customerId"].GetString(), flags["orgUnitPath"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting org unit %v", err)
+			log.Fatalf("Error getting org unit: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

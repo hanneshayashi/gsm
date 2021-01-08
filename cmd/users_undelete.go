@@ -36,7 +36,7 @@ var usersUndeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.UndeletUser(flags["userKey"].GetString(), flags["orgUnitPath"].GetString())
 		if err != nil {
-			log.Fatalf("Error undeleting user %v", err)
+			log.Fatalf("Error undeleting user: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

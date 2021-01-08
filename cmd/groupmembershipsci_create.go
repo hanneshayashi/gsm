@@ -36,7 +36,7 @@ var groupMembershipsCiCreateCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		m, err := mapToGroupMemberShipCi(flags)
 		if err != nil {
@@ -44,7 +44,7 @@ var groupMembershipsCiCreateCmd = &cobra.Command{
 		}
 		result, err := gsmci.CreateMembership(parent, flags["fields"].GetString(), m)
 		if err != nil {
-			log.Fatalf("Error creating membership %v", err)
+			log.Fatalf("Error creating membership: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

@@ -36,7 +36,7 @@ var mobileDevicesDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteMobileDevice(flags["customerId"].GetString(), flags["resourceId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting mobile device %v", err)
+			log.Fatalf("Error deleting mobile device: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

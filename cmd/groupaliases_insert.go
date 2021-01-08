@@ -40,7 +40,7 @@ var groupAliasesInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertGroupAlias(flags["groupKey"].GetString(), flags["fields"].GetString(), a)
 		if err != nil {
-			log.Fatalf("Error inserting group alias %v", err)
+			log.Fatalf("Error inserting group alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

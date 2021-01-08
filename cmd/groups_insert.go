@@ -40,7 +40,7 @@ var groupsInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertGroup(g, flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error inserting group %v", err)
+			log.Fatalf("Error inserting group: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

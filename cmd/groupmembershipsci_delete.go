@@ -36,11 +36,11 @@ var groupMembershipsCiDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		result, err := gsmci.DeleteMembership(name)
 		if err != nil {
-			log.Fatalf("Error deleting membership %v", err)
+			log.Fatalf("Error deleting membership: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

@@ -36,7 +36,7 @@ var membersDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteMember(flags["groupKey"].GetString(), flags["memberKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting member %v", err)
+			log.Fatalf("Error deleting member: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

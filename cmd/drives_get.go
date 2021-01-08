@@ -36,7 +36,7 @@ var drivesGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetDrive(flags["driveId"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool())
 		if err != nil {
-			log.Fatalf("Error getting drive %v", err)
+			log.Fatalf("Error getting drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

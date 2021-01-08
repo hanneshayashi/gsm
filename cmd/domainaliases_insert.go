@@ -40,7 +40,7 @@ var domainAliasesInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertDomainAlias(flags["customer"].GetString(), flags["fields"].GetString(), d)
 		if err != nil {
-			log.Fatalf("Error inserting domain alias %v", err)
+			log.Fatalf("Error inserting domain alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

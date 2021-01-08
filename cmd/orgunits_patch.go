@@ -40,7 +40,7 @@ var orgUnitsPatchCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.PatchOrgUnit(flags["customerId"].GetString(), flags["orgUnitPath"].GetString(), flags["fields"].GetString(), o)
 		if err != nil {
-			log.Fatalf("Error patching org unit %v", err)
+			log.Fatalf("Error patching org unit: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

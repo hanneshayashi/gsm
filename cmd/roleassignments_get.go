@@ -36,7 +36,7 @@ var roleAssignmentsGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetRoleAssignment(flags["customer"].GetString(), flags["roleAssignmentId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting role assignment %v", err)
+			log.Fatalf("Error getting role assignment: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

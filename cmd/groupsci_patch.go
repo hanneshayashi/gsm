@@ -39,7 +39,7 @@ Examples:
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		g, err := mapToGroupCi(flags)
 		if err != nil {
@@ -47,7 +47,7 @@ Examples:
 		}
 		result, err := gsmci.PatchGroup(name, flags["updateMask"].GetString(), flags["fields"].GetString(), g)
 		if err != nil {
-			log.Fatalf("Error patching group %v", err)
+			log.Fatalf("Error patching group: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

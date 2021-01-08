@@ -36,7 +36,7 @@ var usersGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetUser(flags["userKey"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["customFieldMask"].GetString(), flags["viewType"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting user %v", err)
+			log.Fatalf("Error getting user: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

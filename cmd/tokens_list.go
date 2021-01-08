@@ -36,7 +36,7 @@ var tokensListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListTokens(flags["userKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing token %v", err)
+			log.Fatalf("Error listing tokens: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

@@ -36,11 +36,11 @@ var groupMembershipsCiLookupCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		result, err := gsmci.LookupMembership(parent, flags["memberKeyId"].GetString(), flags["memberKeyNamespace"].GetString())
 		if err != nil {
-			log.Fatalf("Error looking up membership %v", err)
+			log.Fatalf("Error looking up membership: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

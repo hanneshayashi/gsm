@@ -36,11 +36,11 @@ var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		result, err := gsmci.GetMembershipGraph(parent, flags["query"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting membership graph %v", err)
+			log.Fatalf("Error getting membership graph: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

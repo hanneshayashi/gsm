@@ -36,7 +36,7 @@ var userPhotosGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetUserPhoto(flags["userKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting user photo %v", err)
+			log.Fatalf("Error getting user photo: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

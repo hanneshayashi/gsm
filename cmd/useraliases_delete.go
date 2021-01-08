@@ -36,7 +36,7 @@ var userAliasesDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteUserAlias(flags["userKey"].GetString(), flags["alias"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting user alias %v", err)
+			log.Fatalf("Error deleting user alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

@@ -36,7 +36,7 @@ var userAliasesListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListUserAliases(flags["userKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing user aliases %v", err)
+			log.Fatalf("Error listing user aliases: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

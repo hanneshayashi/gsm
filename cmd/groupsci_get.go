@@ -40,7 +40,7 @@ var groupsCiGetCmd = &cobra.Command{
 		}
 		result, err := gsmci.GetGroup(name, flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting group %v", err)
+			log.Fatalf("Error getting group: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

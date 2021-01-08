@@ -40,7 +40,7 @@ var permissionsCreateCmd = &cobra.Command{
 		}
 		result, err := gsmdrive.CreatePermission(flags["fileId"].GetString(), flags["emailMessage"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["sendNotificationEmail"].GetBool(), flags["transferOwnership"].GetBool(), flags["moveToNewOwnersRoot"].GetBool(), p)
 		if err != nil {
-			log.Fatalf("Error creating permission %v", err)
+			log.Fatalf("Error creating permission: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

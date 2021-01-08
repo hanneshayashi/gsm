@@ -40,7 +40,7 @@ var userAliasesInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertUserAlias(flags["userKey"].GetString(), flags["fields"].GetString(), a)
 		if err != nil {
-			log.Fatalf("Error deleting user alias %v", err)
+			log.Fatalf("Error inserting user alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

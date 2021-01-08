@@ -40,7 +40,7 @@ var peopleUpdateContactPhotoCmd = &cobra.Command{
 		}
 		result, err := gsmpeople.UpdateContactPhoto(flags["resourceName"].GetString(), flags["fields"].GetString(), u)
 		if err != nil {
-			log.Fatalf("Error updating contact %v", err)
+			log.Fatalf("Error updating photo of other contact: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

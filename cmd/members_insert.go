@@ -40,7 +40,7 @@ var membersInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertMember(flags["groupKey"].GetString(), flags["fields"].GetString(), m)
 		if err != nil {
-			log.Fatalf("Error inserting member %v", err)
+			log.Fatalf("Error inserting member: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

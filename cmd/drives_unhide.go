@@ -36,7 +36,7 @@ var drivesUnhideCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.UnhideDrive(flags["driveId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error unhiding drive %v", err)
+			log.Fatalf("Error unhiding drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

@@ -37,7 +37,7 @@ The shared drive cannot contain any untrashed items.`,
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteDrive(flags["driveId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting drive %v", err)
+			log.Fatalf("Error deleting drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

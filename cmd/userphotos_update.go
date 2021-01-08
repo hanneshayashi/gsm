@@ -40,7 +40,7 @@ var userPhotosUpdateCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.UpdateUserPhoto(flags["userKey"].GetString(), flags["fields"].GetString(), p)
 		if err != nil {
-			log.Fatalf("Error updateing user photo %v", err)
+			log.Fatalf("Error updating user photo: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

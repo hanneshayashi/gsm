@@ -59,7 +59,7 @@ var filesUpdateCmd = &cobra.Command{
 		}
 		result, err := gsmdrive.UpdateFile(flags["fileId"].GetString(), flags["parent"].GetString(), removeParents, flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString(), f, content, flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool())
 		if err != nil {
-			log.Fatalf("Error updating file %v", err)
+			log.Fatalf("Error updating file: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

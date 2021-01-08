@@ -53,7 +53,7 @@ var filesCreateCmd = &cobra.Command{
 		}
 		result, err := gsmdrive.CreateFile(f, content, flags["ignoreDefaultVisibility"].GetBool(), flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool(), flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error creating file %v", err)
+			log.Fatalf("Error creating file: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

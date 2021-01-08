@@ -41,7 +41,7 @@ Use "files copy recursive" to copy folders.`,
 		}
 		result, err := gsmdrive.CopyFile(flags["fileId"].GetString(), flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString(), f, flags["ignoreDefaultVisibility"].GetBool(), flags["keepRevisionForever"].GetBool())
 		if err != nil {
-			log.Fatalf("Error creating file %v", err)
+			log.Fatalf("Error copying file: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

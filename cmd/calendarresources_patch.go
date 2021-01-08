@@ -41,7 +41,7 @@ var calendarResourcesPatchCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.PatchCalendarResource(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString(), c)
 		if err != nil {
-			log.Fatalf("Error patching calendar resource %v", err)
+			log.Fatalf("Error patching calendar resource: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

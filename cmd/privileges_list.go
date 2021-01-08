@@ -36,7 +36,7 @@ var privilegesListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListPrivileges(flags["customer"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing privileges %v", err)
+			log.Fatalf("Error listing privileges: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

@@ -39,11 +39,11 @@ https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Error determining group name: %v", err)
 		}
 		result, err := gsmci.CheckTransitiveMembership(parent, flags["query"].GetString())
 		if err != nil {
-			log.Fatalf("Error checking transitive group membership %v", err)
+			log.Fatalf("Error checking transitive group membership: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

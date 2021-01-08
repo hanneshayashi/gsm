@@ -36,7 +36,7 @@ var membersGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetMember(flags["groupKey"].GetString(), flags["memberKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting member %v", err)
+			log.Fatalf("Error getting member: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

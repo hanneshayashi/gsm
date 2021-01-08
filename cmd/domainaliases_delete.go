@@ -36,7 +36,7 @@ var domainAliasesDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteDomainAlias(flags["customer"].GetString(), flags["domainAliasName"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting domain alias %v", err)
+			log.Fatalf("Error deleting domain alias: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

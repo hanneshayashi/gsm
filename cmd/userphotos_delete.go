@@ -36,7 +36,7 @@ var userPhotosDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteUserPhoto(flags["userKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting user photo %v", err)
+			log.Fatalf("Error deleting user photo: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

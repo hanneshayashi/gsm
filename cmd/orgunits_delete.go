@@ -36,7 +36,7 @@ var orgUnitsDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteOrgUnit(flags["customerId"].GetString(), flags["orgUnitPath"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting org unit %v", err)
+			log.Fatalf("Error deleting org unit: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

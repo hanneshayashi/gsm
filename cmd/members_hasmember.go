@@ -36,7 +36,7 @@ var membersHasMemberCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.HasMember(flags["groupKey"].GetString(), flags["memberKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error checking if user is member of group %v", err)
+			log.Fatalf("Error checking if user is member of group: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

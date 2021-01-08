@@ -40,7 +40,7 @@ var mobileDevicesActionCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.TakeActionOnMobileDevice(flags["customerId"].GetString(), flags["resourceId"].GetString(), a)
 		if err != nil {
-			log.Fatalf("Error taking action on mobile device %v", err)
+			log.Fatalf("Error taking action on mobile device: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

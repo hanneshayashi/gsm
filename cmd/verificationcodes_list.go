@@ -36,7 +36,7 @@ var verificationCodesListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListVerificationCodes(flags["userKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing backup verification codes %v", err)
+			log.Fatalf("Error listing backup verification codes: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

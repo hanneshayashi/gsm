@@ -40,7 +40,7 @@ var drivesCreateCmd = &cobra.Command{
 		}
 		result, err := gsmdrive.CreateDrive(d, flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error creating drive %v", err)
+			log.Fatalf("Error creating drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

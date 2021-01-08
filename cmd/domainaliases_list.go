@@ -36,7 +36,7 @@ var domainAliasesListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListDomainAliases(flags["customer"].GetString(), flags["parentDomainName"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error listing domain aliases %v", err)
+			log.Fatalf("Error listing domain aliases: %v", err)
 		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

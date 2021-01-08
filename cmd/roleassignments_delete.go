@@ -36,7 +36,7 @@ var roleAssignmentsDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteRoleAssignment(flags["customer"].GetString(), flags["roleAssignmentId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting role assignment %v", err)
+			log.Fatalf("Error deleting role assignment: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

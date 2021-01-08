@@ -36,7 +36,7 @@ var buildingsGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting building %v", err)
+			log.Fatalf("Error getting building: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

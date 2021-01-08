@@ -40,7 +40,7 @@ var drivesUpdateCmd = &cobra.Command{
 		}
 		result, err := gsmdrive.UpdateDrive(flags["driveId"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), d)
 		if err != nil {
-			log.Fatalf("Error updating drive %v", err)
+			log.Fatalf("Error updating drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

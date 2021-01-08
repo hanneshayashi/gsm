@@ -36,7 +36,7 @@ var drivesHideCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.HideDrive(flags["driveId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error hiding drive %v", err)
+			log.Fatalf("Error hiding drive: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

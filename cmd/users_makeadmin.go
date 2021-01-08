@@ -36,7 +36,7 @@ var usersMakeAdminCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.MakeAdmin(flags["userKey"].GetString(), !flags["unmake"].GetBool())
 		if err != nil {
-			log.Fatalf("Error changing user's admin status %v", err)
+			log.Fatalf("Error changing user's admin status: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

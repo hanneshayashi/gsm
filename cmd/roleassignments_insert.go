@@ -40,7 +40,7 @@ var roleAssignmentsInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertRoleAssignment(flags["customer"].GetString(), flags["fields"].GetString(), r)
 		if err != nil {
-			log.Fatalf("Error deleting role assignment %v", err)
+			log.Fatalf("Error deleting role assignment: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

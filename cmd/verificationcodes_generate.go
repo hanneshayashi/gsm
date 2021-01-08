@@ -36,7 +36,7 @@ var verificationCodesGenerateCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GenerateVerificationCodes(flags["userKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error generating backup verification codes %v", err)
+			log.Fatalf("Error generating backup verification codes: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

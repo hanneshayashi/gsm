@@ -36,7 +36,7 @@ var twoStepVerificationTurnOffCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.SignOutUser(flags["userKey"].GetString())
 		if err != nil {
-			log.Fatalf("Error turning off two-step verification %v", err)
+			log.Fatalf("Error turning off two-step verification: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

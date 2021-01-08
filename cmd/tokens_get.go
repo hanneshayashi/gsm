@@ -36,7 +36,7 @@ var tokensGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetToken(flags["userKey"].GetString(), flags["clientId"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting token %v", err)
+			log.Fatalf("Error getting token: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

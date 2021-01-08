@@ -40,7 +40,7 @@ var usersPatchCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.PatchUser(flags["userKey"].GetString(), flags["fields"].GetString(), u)
 		if err != nil {
-			log.Fatalf("Error patching user %v", err)
+			log.Fatalf("Error patching user: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

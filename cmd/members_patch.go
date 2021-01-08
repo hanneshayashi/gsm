@@ -40,7 +40,7 @@ var membersPatchCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.PatchMember(flags["groupKey"].GetString(), flags["memberKey"].GetString(), flags["fields"].GetString(), m)
 		if err != nil {
-			log.Fatalf("Error patching member %v", err)
+			log.Fatalf("Error patching member: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

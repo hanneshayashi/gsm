@@ -36,7 +36,7 @@ var filesDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteFile(flags["fileId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting file %v", err)
+			log.Fatalf("Error deleting file: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

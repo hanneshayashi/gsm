@@ -40,7 +40,7 @@ var usersInsertCmd = &cobra.Command{
 		}
 		result, err := gsmadmin.InsertUser(u, flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error inserting user %v", err)
+			log.Fatalf("Error inserting user: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

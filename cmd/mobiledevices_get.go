@@ -36,7 +36,7 @@ var mobileDevicesGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetMobileDevice(flags["customerId"].GetString(), flags["resourceId"].GetString(), flags["projection"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting mobile device %v", err)
+			log.Fatalf("Error getting mobile device: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

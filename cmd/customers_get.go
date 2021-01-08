@@ -36,7 +36,7 @@ var customersGetCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetCustomer(flags["customerKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting customer %v", err)
+			log.Fatalf("Error getting customer: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

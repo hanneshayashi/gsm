@@ -36,7 +36,7 @@ var buildingsDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteBuilding(flags["customer"].GetString(), flags["buildingId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting building %v", err)
+			log.Fatalf("Error deleting building: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

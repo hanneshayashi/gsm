@@ -36,7 +36,7 @@ var tokensDeleteCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteToken(flags["userKey"].GetString(), flags["clientId"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting token %v", err)
+			log.Fatalf("Error deleting token: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

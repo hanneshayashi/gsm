@@ -40,7 +40,7 @@ var otherContactsCopyOtherContactToMyContactsGroupCmd = &cobra.Command{
 		}
 		result, err := gsmpeople.CopyOtherContactToMyContactsGroup(flags["resourceName"].GetString(), flags["fields"].GetString(), flags["sources"].GetStringSlice(), c)
 		if err != nil {
-			log.Fatalf("Error copying other contact %v", err)
+			log.Fatalf("Error copying other contact: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},

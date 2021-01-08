@@ -40,7 +40,7 @@ var groupMembershipsCiModifyMembershipRolesCmd = &cobra.Command{
 		}
 		result, err := gsmci.ModifyMembershipRoles(flags["name"].GetString(), flags["fields"].GetString(), m)
 		if err != nil {
-			log.Fatalf("Error creating membership %v", err)
+			log.Fatalf("Error creating membership: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},
