@@ -68,24 +68,45 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	return r, nil
 }
 
+func listCalendarListEntries(c *calendar.CalendarListListCall, ch chan *calendar.CalendarListEntry, errKey string) error {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return err
+	}
+	r, _ := result.(*calendar.CalendarList)
+	for _, i := range r.Items {
+		ch <- i
+	}
+	if r.NextPageToken != "" {
+		c := c.PageToken(r.NextPageToken)
+		err = listCalendarListEntries(c, ch, errKey)
+	}
+	return err
+}
+
 // ListCalendarListEntries returns the calendars on the user's calendar list.
-func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDeleted bool) ([]*calendar.CalendarListEntry, error) {
+func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDeleted bool, cap int) (<-chan *calendar.CalendarListEntry, <-chan error) {
 	srv := getCalendarListService()
-	c := srv.List().ShowDeleted(showDeleted).ShowHidden(showHidden)
+	c := srv.List().ShowDeleted(showDeleted).ShowHidden(showHidden).MaxResults(250)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if minAccessRole != "" {
 		c = c.MinAccessRole(minAccessRole)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("List calendar list entries"), func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return nil, err
-	}
-	r, _ := result.(*calendar.CalendarList)
-	return r.Items, nil
+	ch := make(chan *calendar.CalendarListEntry, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listCalendarListEntries(c, ch, gsmhelpers.FormatErrorKey("List calendar list entries"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // PatchCalendarListEntry updates an existing calendar on the user's calendar list. This method supports patch semantics.
