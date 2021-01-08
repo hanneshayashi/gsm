@@ -181,11 +181,12 @@ func initConfig() {
 		// }
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
-	if rootCmd.Flags().Changed("standardDelay") {
-		gsmhelpers.StandardDelay, err = rootCmd.Flags().GetInt("standardDelay")
+	if rootCmd.Flags().Changed("delay") {
+		gsmhelpers.StandardDelay, err = rootCmd.Flags().GetInt("delay")
 		if err != nil {
 			log.Fatalln(err)
 		}
+		fmt.Println(gsmhelpers.StandardDelay)
 	} else {
 		gsmhelpers.StandardDelay = viper.GetInt("standardDelay")
 	}
