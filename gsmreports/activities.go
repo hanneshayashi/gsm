@@ -23,28 +23,30 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeActivitiesListCallAndAppend(c *reports.ActivitiesListCall, activities []*reports.Activity, errKey string) ([]*reports.Activity, error) {
+func listActivities(c *reports.ActivitiesListCall, ch chan *reports.Activity, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*reports.Activities)
-	activities = append(activities, r.Items...)
+	for _, i := range r.Items {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		activities, err = makeActivitiesListCallAndAppend(c, activities, errKey)
+		err = listActivities(c, ch, errKey)
 	}
-	return activities, err
+	return err
 }
 
 // ListActivities retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 // For more information, see the guides for administrator and Google Drive activity reports.
 // For more information about the activity report's parameters, see the activity parameters reference guides.
-func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTime, eventName, filters, groupIDFilter, orgUnitID, startTime, fields string) ([]*reports.Activity, error) {
+func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTime, eventName, filters, groupIDFilter, orgUnitID, startTime, fields string, cap int) (<-chan *reports.Activity, <-chan error) {
 	srv := getActivitiesService()
-	c := srv.List(userKey, applicationName)
+	c := srv.List(userKey, applicationName).MaxResults(1000)
 	if actorIPAddress != "" {
 		c.ActorIpAddress(actorIPAddress)
 	}
@@ -72,7 +74,15 @@ func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTim
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var activities []*reports.Activity
-	activities, err := makeActivitiesListCallAndAppend(c, activities, gsmhelpers.FormatErrorKey(userKey, applicationName))
-	return activities, err
+	ch := make(chan *reports.Activity, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := listActivities(c, ch, gsmhelpers.FormatErrorKey(userKey, applicationName))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

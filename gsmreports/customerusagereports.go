@@ -23,25 +23,27 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeCustomerUsageReportsGetCallAndAppend(c *reports.CustomerUsageReportsGetCall, usageReports []*reports.UsageReport, errKey string) ([]*reports.UsageReport, error) {
+func getCustomerUsageReport(c *reports.CustomerUsageReportsGetCall, ch chan *reports.UsageReport, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*reports.UsageReports)
-	usageReports = append(usageReports, r.UsageReports...)
+	for _, i := range r.UsageReports {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		usageReports, err = makeCustomerUsageReportsGetCallAndAppend(c, usageReports, errKey)
+		err = getCustomerUsageReport(c, ch, errKey)
 	}
-	return usageReports, err
+	return err
 }
 
 // GetCustomerUsageReport retrieves a report which is a collection of properties and statistics for a specific customer's account.
 // For more information, see the Customers Usage Report guide. For more information about the customer report's parameters, see the Customers Usage parameters reference guides.
-func GetCustomerUsageReport(date, customerID, parameters, fields string) ([]*reports.UsageReport, error) {
+func GetCustomerUsageReport(date, customerID, parameters, fields string, cap int) (<-chan *reports.UsageReport, <-chan error) {
 	srv := getCustomerUsageReportsService()
 	c := srv.Get(date)
 	if customerID != "" {
@@ -53,7 +55,15 @@ func GetCustomerUsageReport(date, customerID, parameters, fields string) ([]*rep
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var usageReports []*reports.UsageReport
-	usageReports, err := makeCustomerUsageReportsGetCallAndAppend(c, usageReports, gsmhelpers.FormatErrorKey(date, customerID, parameters))
-	return usageReports, err
+	ch := make(chan *reports.UsageReport, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := getCustomerUsageReport(c, ch, gsmhelpers.FormatErrorKey(date, customerID, parameters))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

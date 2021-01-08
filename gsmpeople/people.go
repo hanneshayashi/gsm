@@ -124,12 +124,12 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	return r, nil
 }
 
-func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *people.Person, errKey string) (error) {
+func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *people.Person, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return  err
+		return err
 	}
 	r, _ := result.(*people.ListDirectoryPeopleResponse)
 	for _, i := range r.People {
@@ -137,16 +137,16 @@ func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *peopl
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		 err = listDirectoryPeople(c, ch, errKey)
+		err = listDirectoryPeople(c, ch, errKey)
 		if err != nil {
-			return  err
+			return err
 		}
 	}
-	return  nil
+	return nil
 }
 
 // ListDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory.
-func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string, cap int) (<-chan *people.Person,<-chan error) {
+func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getpService()
 	c := srv.ListDirectoryPeople().ReadMask(readMask).Sources(sources)
 	if mergeSources != nil {
@@ -168,38 +168,48 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 	return ch, err
 }
 
-func makeSearchDirectoryPeopleCallAndAppend(c *people.PeopleSearchDirectoryPeopleCall, ps []*people.Person, errKey string) ([]*people.Person, error) {
+func searchDirectoryPeople(c *people.PeopleSearchDirectoryPeopleCall, ch chan *people.Person, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*people.SearchDirectoryPeopleResponse)
-	ps = append(ps, r.People...)
+	for _, i := range r.People {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		ps, err = makeSearchDirectoryPeopleCallAndAppend(c, ps, errKey)
+		err = searchDirectoryPeople(c, ch, errKey)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return ps, nil
+	return nil
 }
 
 // SearchDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.
-func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources []string) ([]*people.Person, error) {
+func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getpService()
-	c := srv.SearchDirectoryPeople().ReadMask(readMask).Sources(sources).Query(query)
+	c := srv.SearchDirectoryPeople().ReadMask(readMask).Sources(sources).Query(query).PageSize(500)
 	if mergeSources != nil {
 		c.MergeSources(mergeSources...)
 	}
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var people []*people.Person
-	people, err := makeSearchDirectoryPeopleCallAndAppend(c, people, gsmhelpers.FormatErrorKey("Search directory"))
-	return people, err
+	ch := make(chan *people.Person, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := searchDirectoryPeople(c, ch, gsmhelpers.FormatErrorKey("Search directory"))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
 // UpdateContact updates a new contact and returns the person resource for that contact.

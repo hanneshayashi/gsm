@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmreports"
+	reports "google.golang.org/api/admin/reports/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -36,11 +37,23 @@ For more information about the entities report's parameters, see the Entities Us
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmreports.GetEntityUsageReport(flags["entityType"].GetString(), flags["entityKey"].GetString(), flags["date"].GetString(), flags["customerId"].GetString(), flags["filters"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error getting Entity Usage Reports: %v", err)
+		result, err := gsmreports.GetEntityUsageReport(flags["entityType"].GetString(), flags["entityKey"].GetString(), flags["date"].GetString(), flags["customerId"].GetString(), flags["filters"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for i := range result {
+				enc.Encode(i)
+			}
+		} else {
+			final := []*reports.UsageReport{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error getting Entity Usage Reports: %v", e)
+		}
 	},
 }
 

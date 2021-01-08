@@ -22,31 +22,37 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmreports"
+	reports "google.golang.org/api/admin/reports/v1"
 
 	"github.com/spf13/cobra"
 )
 
 // activitiesListCmd represents the list command
 var activitiesListCmd = &cobra.Command{
-	Use:               "list",
-	Short:             `Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
+	Use: "list",
+	Short: `Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 For more information, see the guides for administrator and Google Drive activity reports.
 For more information about the activity report's parameters, see the activity parameters reference guides.`,
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmreports.ListActivities(flags["userKey"].GetString(), flags["applicationName"].GetString(), flags["actorIpAddress"].GetString(), flags["customerId"].GetString(), flags["endTime"].GetString(), flags["eventName"].GetString(), flags["filters"].GetString(), flags["groupIdFilter"].GetString(), flags["orgUnitId"].GetString(),flags["startTime"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error listing activities: %v", err)
-		}
+		result, err := gsmreports.ListActivities(flags["userKey"].GetString(), flags["applicationName"].GetString(), flags["actorIpAddress"].GetString(), flags["customerId"].GetString(), flags["endTime"].GetString(), flags["eventName"].GetString(), flags["filters"].GetString(), flags["groupIdFilter"].GetString(), flags["orgUnitId"].GetString(), flags["startTime"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				enc.Encode(i)
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			final := []*reports.Activity{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
+		}
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing activities: %v", e)
 		}
 	},
 }

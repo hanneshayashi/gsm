@@ -23,25 +23,27 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeUserUsageReportsGetCallAndAppend(c *reports.UserUsageReportGetCall, usageReports []*reports.UsageReport, errKey string) ([]*reports.UsageReport, error) {
+func getUserUsageReport(c *reports.UserUsageReportGetCall, ch chan *reports.UsageReport, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*reports.UsageReports)
-	usageReports = append(usageReports, r.UsageReports...)
+	for _, i := range r.UsageReports {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		usageReports, err = makeUserUsageReportsGetCallAndAppend(c, usageReports, errKey)
+		err = getUserUsageReport(c, ch, errKey)
 	}
-	return usageReports, err
+	return err
 }
 
 // GetUserUsageReport Retrieves a report which is a collection of properties and statistics for a set of users with the account.
 // For more information, see the User Usage Report guide. For more information about the user report's parameters, see the Users Usage parameters reference guides.
-func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameters, groupIDFilter, fields string) ([]*reports.UsageReport, error) {
+func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameters, groupIDFilter, fields string, cap int) (<-chan *reports.UsageReport, <-chan error) {
 	srv := getUserUsageReportsService()
 	c := srv.Get(userKey, date)
 	if customerID != "" {
@@ -62,7 +64,15 @@ func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameter
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var usageReports []*reports.UsageReport
-	usageReports, err := makeUserUsageReportsGetCallAndAppend(c, usageReports, gsmhelpers.FormatErrorKey(userKey, date))
-	return usageReports, err
+	ch := make(chan *reports.UsageReport, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := getUserUsageReport(c, ch, gsmhelpers.FormatErrorKey(userKey, date))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

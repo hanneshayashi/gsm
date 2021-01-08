@@ -23,26 +23,28 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func makeEntityUsageReportsGetCallAndAppend(c *reports.EntityUsageReportsGetCall, usageReports []*reports.UsageReport, errKey string) ([]*reports.UsageReport, error) {
+func getEntityUsageReport(c *reports.EntityUsageReportsGetCall, ch chan *reports.UsageReport, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*reports.UsageReports)
-	usageReports = append(usageReports, r.UsageReports...)
+	for _, i := range r.UsageReports {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
-		usageReports, err = makeEntityUsageReportsGetCallAndAppend(c, usageReports, errKey)
+		err = getEntityUsageReport(c, ch, errKey)
 	}
-	return usageReports, err
+	return err
 }
 
 // GetEntityUsageReport retrieves a report which is a collection of properties and statistics for entities used by users within the account.
 // For more information, see the Entities Usage Report guide.
 // For more information about the entities report's parameters, see the Entities Usage parameters reference guides.
-func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, parameters, fields string) ([]*reports.UsageReport, error) {
+func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, parameters, fields string, cap int) (<-chan *reports.UsageReport, <-chan error) {
 	srv := getEntityUsageReportsService()
 	c := srv.Get(entityType, entityKey, date)
 	if customerID != "" {
@@ -57,7 +59,15 @@ func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, para
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var usageReports []*reports.UsageReport
-	usageReports, err := makeEntityUsageReportsGetCallAndAppend(c, usageReports, gsmhelpers.FormatErrorKey(entityType, entityKey, date))
-	return usageReports, err
+	ch := make(chan *reports.UsageReport, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := getEntityUsageReport(c, ch, gsmhelpers.FormatErrorKey(entityType, entityKey, date))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

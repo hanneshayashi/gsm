@@ -155,33 +155,43 @@ func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan 
 	return ch, err
 }
 
-func makeSearchGroupsCallAndAppend(c *ci.GroupsSearchCall, groups []*ci.Group, errKey string) ([]*ci.Group, error) {
+func searchGroups(c *ci.GroupsSearchCall, ch chan *ci.Group, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*ci.SearchGroupsResponse)
-	groups = append(groups, r.Groups...)
+	for _, i := range r.Groups {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		groups, err = makeSearchGroupsCallAndAppend(c, groups, errKey)
+		err = searchGroups(c, ch, errKey)
 	}
-	return groups, err
+	return err
 }
 
 // SearchGroups searches for Groups matching a specified query.
-func SearchGroups(query, view, fields string) ([]*ci.Group, error) {
+func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
 	srv := getGroupsService()
-	c := srv.Search().Query(query)
+	c := srv.Search().Query(query).PageSize(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	if view != "" {
 		c.View(view)
 	}
-	var groups []*ci.Group
-	groups, err := makeSearchGroupsCallAndAppend(c, groups, gsmhelpers.FormatErrorKey(query))
-	return groups, err
+	ch := make(chan *ci.Group, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := searchGroups(c, ch, gsmhelpers.FormatErrorKey(query))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }

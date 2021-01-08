@@ -22,6 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	ci "google.golang.org/api/cloudidentity/v1beta1"
 
 	"github.com/spf13/cobra"
 )
@@ -34,15 +35,27 @@ var groupMembershipsCiSearchTransitiveGroupsCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
-		if err != nil {
-			log.Fatalf("%v", err)
+		parent, er := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
+		if er != nil {
+			log.Fatalf("Error determining group name: %v", er)
 		}
-		result, err := gsmci.SearchTransitiveGroups(parent, flags["query"].GetString(), flags["fields"].GetString())
-		if err != nil {
-			log.Fatalf("Error searching transitive groups: %v", err)
+		result, err := gsmci.SearchTransitiveGroups(parent, flags["query"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		if streamOutput {
+			enc := gsmhelpers.GetJSONEncoder(false)
+			for i := range result {
+				enc.Encode(i)
+			}
+		} else {
+			final := []*ci.GroupRelation{}
+			for i := range result {
+				final = append(final, i)
+			}
+			gsmhelpers.Output(final, "json", compressOutput)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error searching for transitive groups: %v", e)
+		}
 	},
 }
 

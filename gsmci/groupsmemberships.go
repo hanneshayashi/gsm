@@ -183,58 +183,78 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	return r.Membership, nil
 }
 
-func makeSearchTransitiveGroupsCallAndAppend(c *ci.GroupsMembershipsSearchTransitiveGroupsCall, members []*ci.GroupRelation, errKey string) ([]*ci.GroupRelation, error) {
+func searchTransitiveGroups(c *ci.GroupsMembershipsSearchTransitiveGroupsCall, ch chan *ci.GroupRelation, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*ci.SearchTransitiveGroupsResponse)
-	members = append(members, r.Memberships...)
+	for _, i := range r.Memberships {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		members, err = makeSearchTransitiveGroupsCallAndAppend(c, members, errKey)
+		err = searchTransitiveGroups(c, ch, errKey)
 	}
-	return members, err
+	return err
 }
 
 // SearchTransitiveGroups searches transitive groups of a member.
-func SearchTransitiveGroups(parent, query, fields string) ([]*ci.GroupRelation, error) {
+func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.GroupRelation, <-chan error) {
 	srv := getGroupsMembershipsService()
-	c := srv.SearchTransitiveGroups(parent).Query(query)
+	c := srv.SearchTransitiveGroups(parent).Query(query).PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var memberships []*ci.GroupRelation
-	memberships, err := makeSearchTransitiveGroupsCallAndAppend(c, memberships, gsmhelpers.FormatErrorKey(parent, query))
-	return memberships, err
+	ch := make(chan *ci.GroupRelation, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := searchTransitiveGroups(c, ch, gsmhelpers.FormatErrorKey(parent, query))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
 
-func makeSearchTransitiveMembershipsCallAndAppend(c *ci.GroupsMembershipsSearchTransitiveMembershipsCall, members []*ci.MemberRelation, errKey string) ([]*ci.MemberRelation, error) {
+func searchTransitiveMemberships(c *ci.GroupsMembershipsSearchTransitiveMembershipsCall, ch chan *ci.MemberRelation, errKey string) error {
 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	r, _ := result.(*ci.SearchTransitiveMembershipsResponse)
-	members = append(members, r.Memberships...)
+	for _, i := range r.Memberships {
+		ch <- i
+	}
 	if r.NextPageToken != "" {
 		c := c.PageToken(r.NextPageToken)
-		members, err = makeSearchTransitiveMembershipsCallAndAppend(c, members, errKey)
+		err = searchTransitiveMemberships(c, ch, errKey)
 	}
-	return members, err
+	return err
 }
 
 // SearchTransitiveMemberships search transitive memberships of a group.
-func SearchTransitiveMemberships(parent, fields string) ([]*ci.MemberRelation, error) {
+func SearchTransitiveMemberships(parent, fields string, cap int) (<-chan *ci.MemberRelation, <-chan error) {
 	srv := getGroupsMembershipsService()
 	c := srv.SearchTransitiveMemberships(parent)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	var memberships []*ci.MemberRelation
-	memberships, err := makeSearchTransitiveMembershipsCallAndAppend(c, memberships, gsmhelpers.FormatErrorKey(parent))
-	return memberships, err
+	ch := make(chan *ci.MemberRelation, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := searchTransitiveMemberships(c, ch, gsmhelpers.FormatErrorKey(parent))
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	return ch, err
 }
