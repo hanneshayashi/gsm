@@ -589,6 +589,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Addresses = addressesMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Addresses")
+			user.NullFields = append(user.NullFields, "Addresses")
 		}
 	}
 	if flags["archived"].IsSet() {
@@ -614,6 +615,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Emails = emailsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Emails")
+			user.NullFields = append(user.NullFields, "Emails")
 		}
 	}
 	if flags["externalIds"].IsSet() {
@@ -627,6 +629,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.ExternalIds = externalIdsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "ExternalIds")
+			user.NullFields = append(user.NullFields, "ExternalIds")
 		}
 	}
 	if flags["customGender"].IsSet() || flags["genderType"].IsSet() {
@@ -657,6 +660,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Ims = imsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Ims")
+			user.NullFields = append(user.NullFields, "Ims")
 		}
 	}
 	if flags["includeInGlobalAddressList"].IsSet() {
@@ -682,6 +686,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Keywords = keywordsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Keywords")
+			user.NullFields = append(user.NullFields, "Keywords")
 		}
 	}
 	if flags["languages"].IsSet() {
@@ -695,6 +700,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Languages = languagesMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Languages")
+			user.NullFields = append(user.NullFields, "Languages")
 		}
 	}
 	if flags["locations"].IsSet() {
@@ -708,6 +714,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Locations = locationsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Locations")
+			user.NullFields = append(user.NullFields, "Locations")
 		}
 	}
 	if flags["familyName"].IsSet() || flags["givenName"].IsSet() {
@@ -753,6 +760,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Organizations = organizationsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Organizations")
+			user.NullFields = append(user.NullFields, "Organizations")
 		}
 	}
 	if flags["password"].IsSet() {
@@ -772,6 +780,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Phones = phonesMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Phones")
+			user.NullFields = append(user.NullFields, "Phones")
 		}
 	}
 	if flags["posixAccounts"].IsSet() {
@@ -785,6 +794,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.PosixAccounts = posixaccountsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "PosixAccounts")
+			user.NullFields = append(user.NullFields, "PosixAccounts")
 		}
 	}
 	if flags["primaryEmail"].IsSet() {
@@ -816,6 +826,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Relations = relationsMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Relations")
+			user.NullFields = append(user.NullFields, "Relations")
 		}
 	}
 	if flags["sshPublicKeys"].IsSet() {
@@ -829,6 +840,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.SshPublicKeys = sshPublicKeysMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "SshPublicKeys")
+			user.NullFields = append(user.NullFields, "SshPublicKeys")
 		}
 	}
 	if flags["suspended"].IsSet() {
@@ -848,6 +860,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 			user.Websites = websitesMap
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Websites")
+			user.NullFields = append(user.NullFields, "Websites")
 		}
 	}
 	return user, nil
