@@ -193,7 +193,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 	} else if configOld != nil {
 		config.StandardDelay = configOld.StandardDelay
 	} else {
-		config.StandardDelay = 300
+		config.StandardDelay = 500
 	}
 	return config, nil
 }
