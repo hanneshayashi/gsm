@@ -28,32 +28,34 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
-// usersPatchRecursiveCmd represents the recursive command
-var usersPatchRecursiveCmd = &cobra.Command{
-	Use:   "recursive",
-	Short: `Updates users by referencing one or more organizational units and/or groups.`,
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/patch",
+// usersUpdateBatchCmd represents the usersUpdateBatch command
+var usersUpdateBatchCmd = &cobra.Command{
+	Use:   "batch",
+	Short: "Batch updatees users using a CSV file as input",
+	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		u, err := mapToUser(flags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, userFlags)
 		if err != nil {
-			log.Fatalf("Error building user object: %v", err)
+			log.Fatalln(err)
 		}
-		results := make(chan *admin.User, threads)
 		var wg sync.WaitGroup
-		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
-		fields := flags["fields"].GetString()
+		cap := cap(maps)
+		results := make(chan *admin.User, cap)
 		go func() {
-			for i := 0; i < threads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
-					for uk := range userKeysUnique {
-						result, err := gsmadmin.PatchUser(uk, fields, u)
+					for m := range maps {
+						u, err := mapToUser(m)
+						if err != nil {
+							log.Printf("Error building user object: %v\n", err)
+							continue
+						}
+						result, err := gsmadmin.UpdateUser(m["userKey"].GetString(), m["fields"].GetString(), u)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -73,8 +75,8 @@ var usersPatchRecursiveCmd = &cobra.Command{
 			}
 		} else {
 			final := []*admin.User{}
-			for r := range results {
-				final = append(final, r)
+			for res := range results {
+				final = append(final, res)
 			}
 			gsmhelpers.Output(final, "json", compressOutput)
 		}
@@ -82,5 +84,5 @@ var usersPatchRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(usersPatchCmd, usersPatchRecursiveCmd, userFlags, recursiveUserFlags)
+	gsmhelpers.InitBatchCommand(usersUpdateCmd, usersUpdateBatchCmd, userFlags, userFlagsALL, batchFlags)
 }

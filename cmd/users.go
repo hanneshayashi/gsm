@@ -26,11 +26,11 @@ import (
 
 var userFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
-		AvailableFor: []string{"delete", "get", "makeAdmin", "patch", "signOut", "undelete"},
+		AvailableFor: []string{"delete", "get", "makeAdmin", "update", "signOut", "undelete"},
 		Type:         "string",
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
-		Required:       []string{"delete", "get", "makeAdmin", "patch", "signOut", "undelete"},
+		Required:       []string{"delete", "get", "makeAdmin", "update", "signOut", "undelete"},
 		ExcludeFromAll: true,
 	},
 	"customFieldMask": {
@@ -64,28 +64,28 @@ domain_public  - Results only include fields for the user that are publicly visi
 		Recursive: []string{"get"},
 	},
 	"fields": {
-		AvailableFor: []string{"get", "insert", "list", "patch"},
+		AvailableFor: []string{"get", "insert", "list", "update"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: []string{"get", "patch"},
+		Recursive: []string{"get", "update"},
 	},
 	"familyName": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description:  `The user's last name. Required when creating a user account.`,
 		Required:     []string{"insert"},
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"givenName": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description:  `The user's first name. Required when creating a user account.`,
 		Required:     []string{"insert"},
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"password": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `Stores the password for the user account.
 The user's password value is required when creating a user account.
@@ -96,10 +96,10 @@ We recommend sending the password property value as a base 16 bit, hexadecimal-e
 If a hashFunction is specified, the password must be a valid hash key.
 The password value is never returned in the API's response body.`,
 		Required:  []string{"insert"},
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"primaryEmail": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `The user's primary email address.
 This property is required in a request to create a user account.
@@ -108,7 +108,7 @@ The primaryEmail must be unique and cannot be an alias of another user.`,
 		ExcludeFromAll: true,
 	},
 	"addresses": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `Specifies addresses for the user. May be used multiple times in the form of:
 '--addresses "country=...;countryCode=..;customType=..."', etc.
@@ -131,23 +131,23 @@ type                - The address type.
                         - "home"
                         - "other"
 						- "work"`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"archived": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "bool",
 		Description:  `Indicates if user is archived.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"changePasswordAtNextLogin": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "bool",
 		Description: `Indicates if the user is forced to change their password at next login.
 This setting doesn't apply when the user signs in via a third-party identity provider.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"emails": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `Specifies email addresses for the user. May be used multiple times in the form of:
 '--emails "address=...;customType=..;primary=..."', etc.
@@ -163,7 +163,7 @@ type        - The type of the email account.
                 - "work"`,
 	},
 	"externalIds": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `Specifies externalIds for the user. May be used multiple times in the form of:
 '--externalIds "customType=...;type=..;value=..."'
@@ -180,13 +180,13 @@ type        - The type of the ID.
 value           - The value of the ID.`,
 	},
 	"customGender": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description:  `Custom gender.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"genderType": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `Gender.
 Acceptable values are:
@@ -194,17 +194,17 @@ female
 male
 other
 unknown`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"hashFunction": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `Stores the hash format of the password property.
 We recommend sending the password property value as a base 16 bit hexadecimal-encoded hash value.
 Set the hashFunction values as either the SHA-1, MD5, or crypt hash format.`,
 	},
 	"ims": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `The user's Instant Messenger (IM) accounts.
 A user account can have multiple ims properties.
@@ -237,20 +237,20 @@ type            - The type of the IM account.
                    - "work"`,
 	},
 	"includeInGlobalAddressList": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "bool",
 		Description: `Indicates if the user's profile is visible in the Workspace global address list when the contact sharing feature is enabled for the domain.
 For more information about excluding user profiles, see the administration help center.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"ipWhitelisted": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "bool",
 		Description:  `If true, the user's IP address is white listed.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"keywords": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `The user's keywords. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
@@ -267,10 +267,10 @@ type        - Each entry can have a type which indicates standard type of that e
                 - "occupation"
 				- "outlook"
 value  -      Keyword.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"languages": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `The user's languages. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
@@ -283,10 +283,10 @@ customLanguage  - Other language.
 languageCode    - Language Code.
                   Should be used for storing Google III LanguageCode string representation for language.
 				  Illegal values cause SchemaException.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"locations": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `The user's locations. The maximum allowed data size for this field is 10Kb.
 May be used multiple times in the form of:
@@ -306,33 +306,33 @@ type          - The location type.
                   - "custom"
                   - "default"
 				  - "desk"`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"notesContentType": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `Content type of note, either plain text or HTML.
 Default is plain text. Possible values are:
 text_plain
 text_html`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"notesValue": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description:  `Contents of notes.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"orgUnitPath": {
-		AvailableFor: []string{"insert", "patch", "undelete"},
+		AvailableFor: []string{"insert", "update", "undelete"},
 		Type:         "string",
 		Description: `The full path of the parent organization associated with the user.
 If the parent organization is the top-level, it is represented as a forward slash (/).`,
 		Required:  []string{"undelete"},
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"organizations": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `A list of organizations the user belongs to. The maximum allowed data size for this field is 10Kb.
 May be used multiple times in the form of:
@@ -358,10 +358,10 @@ type                - The type of organization.
                         - "school"
                         - "unknown"
 						- "work"`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"phones": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `A list of the user's phone numbers. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
@@ -395,10 +395,10 @@ type        - The type of phone number.
 		        - "work_pager"
 value       - A human-readable phone number.
 			  It may be in any telephone number format.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"posixAccounts": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `A list of POSIX account information for the user.
 May be used multiple times in the form of:
@@ -420,21 +420,21 @@ uid                  - The POSIX compliant user ID.
 username             - The username of the account.`,
 	},
 	"recoveryEmail": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description:  `Recovery email of the user.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"recoveryPhone": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "string",
 		Description: `Recovery phone of the user.
 The phone number must be in the E.164 format, starting with the plus sign (+).
 Example: +16506661212.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"relations": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `A list of the user's relationships to other users.
 The maximum allowed data size for this field is 2Kb.
@@ -463,10 +463,10 @@ type        - The type of relation.
               - "sister"
 			  - "spouse"
 value       - The name of the person the user is related to.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"sshPublicKeys": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `A list of SSH public keys.
 May be used multiple times in the form of:
@@ -476,13 +476,13 @@ expirationTimeUsec  - An expiration time in microseconds since epoch.
 key                 - An SSH public key.`,
 	},
 	"suspended": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "bool",
 		Description:  `Indicates if user is suspended.`,
-		Recursive:    []string{"patch"},
+		Recursive:    []string{"update"},
 	},
 	"websites": {
-		AvailableFor: []string{"insert", "patch"},
+		AvailableFor: []string{"insert", "update"},
 		Type:         "stringSlice",
 		Description: `The user's websites.
 The maximum allowed data size for this field is 2Kb.
@@ -508,7 +508,7 @@ type        - The type or purpose of the website.
 			    - "resume"
 			    - "work"
 value       - The URL of the website.`,
-		Recursive: []string{"patch"},
+		Recursive: []string{"update"},
 	},
 	"customer": {
 		AvailableFor: []string{"list"},

@@ -26,11 +26,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// usersPatchCmd represents the patch command
-var usersPatchCmd = &cobra.Command{
-	Use:               "patch",
+// usersUpdateCmd represents the update command
+var usersUpdateCmd = &cobra.Command{
+	Use:               "update",
 	Short:             "Updates a user using patch semantics.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/patch",
+	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -38,14 +38,14 @@ var usersPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building user object: %v", err)
 		}
-		result, err := gsmadmin.PatchUser(flags["userKey"].GetString(), flags["fields"].GetString(), u)
+		result, err := gsmadmin.UpdateUser(flags["userKey"].GetString(), flags["fields"].GetString(), u)
 		if err != nil {
-			log.Fatalf("Error patching user: %v", err)
+			log.Fatalf("Error updating user: %v", err)
 		}
 		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(usersCmd, usersPatchCmd, userFlags)
+	gsmhelpers.InitCommand(usersCmd, usersUpdateCmd, userFlags)
 }

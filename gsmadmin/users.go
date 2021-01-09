@@ -154,10 +154,10 @@ func MakeAdmin(userKey string, status bool) (bool, error) {
 	return result, err
 }
 
-// PatchUser updates a user using patch semantics.
-func PatchUser(userKey, fields string, user *admin.User) (*admin.User, error) {
+// UpdateUser updates a user using patch semantics.
+func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	srv := getUsersService()
-	c := srv.Patch(userKey, user)
+	c := srv.Update(userKey, user)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
