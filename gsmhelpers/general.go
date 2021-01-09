@@ -43,7 +43,7 @@ import (
 var StandardRetrier = newStandardRetrier()
 
 // StandardDelay is the delay (plus a random jitter between 0 and 20) that will be applied after every command.
-// This is can be configured either via the config file or via the --standardDelay flag
+// This is can be configured either via the config file or via the --delay flag
 var StandardDelay int
 
 // RetryOn defines the HTTP error codes that should be retried on.
