@@ -44,22 +44,18 @@ The original folders will be preserved at the source!`,
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		folderID := flags["folderId"].GetString()
-		files, folders, err := gsmdrive.GetFilesAndFolders(folderID, threads)
+		results := make(chan *drive.File, threads)
+		files, err := gsmdrive.CopyFoldersAndReturnFilesWithNewParents(folderID, flags["parent"].GetString(), results, threads)
 		if err != nil {
 			log.Fatalf("Error getting files and folders: %v", err)
 		}
-		results := make(chan *drive.File, threads)
 		var wg sync.WaitGroup
-		folderMap, err := gsmdrive.CopyFolders(folders, flags["parent"].GetString())
-		if err != nil {
-			log.Fatalf("Error creating new folder structure: %v", err)
-		}
 		go func() {
 			for i := 0; i < threads; i++ {
 				wg.Add(1)
 				go func() {
 					for f := range files {
-						u, err := gsmdrive.UpdateFile(f.Id, folderMap[f.Parents[0]], f.Parents[0], "", "", "id", nil, nil, false, false)
+						u, err := gsmdrive.UpdateFile(f.Id, f.Parents[1], f.Parents[0], "", "", "id", nil, nil, false, false)
 						if err != nil {
 							log.Println(err)
 						} else {

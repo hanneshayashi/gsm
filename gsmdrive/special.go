@@ -38,25 +38,6 @@ func isFolder(f *drive.File) bool {
 	return false
 }
 
-// CopyFolders creates a copy of a Drive folder structure at a new destination
-func CopyFolders(folders <-chan *drive.File, destination string) (map[string]string, error) {
-	folderMap := make(map[string]string)
-	root := <-folders
-	newRoot, err := createFolder(destination, root.Name)
-	if err != nil {
-		return nil, err
-	}
-	folderMap[root.Id] = newRoot.Id
-	for k := range folders {
-		newF, err := createFolder(folderMap[k.Parents[0]], k.Name)
-		if err != nil {
-			return nil, err
-		}
-		folderMap[k.Id] = newF.Id
-	}
-	return folderMap, err
-}
-
 func createFolder(parent, name string) (*drive.File, error) {
 	f := &drive.File{
 		MimeType: folderMimetype,
@@ -70,35 +51,39 @@ func createFolder(parent, name string) (*drive.File, error) {
 	return newFolder, nil
 }
 
-// GetFilesAndFolders recursively gets all files and folders below a parent folder and separates them,
-// returning two channels - one for files and one for folders.
-func GetFilesAndFolders(folderID string, threads int) (<-chan *drive.File, <-chan *drive.File, error) {
-	folder, err := GetFolder(folderID)
+// CopyFoldersAndReturnFilesWithNewParents creates copy of each folder in the supplied channel,
+// adds the new ID to the parents propertie of the files in the source folder and returns the files in a channel.
+func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, results chan *drive.File, threads int) (<-chan *drive.File, error) {
+	root, err := GetFolder(folderID)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Error getting folder: %v", err)
+		return nil, fmt.Errorf("Error getting folder: %v", err)
 	}
+	folderMap := make(map[string]string)
+	newRoot, err := createFolder(destination, root.Name)
+	if err != nil {
+		return nil, err
+	}
+	folderMap[root.Id] = newRoot.Id
 	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
 	files := make(chan *drive.File, threads)
-	folders := make(chan *drive.File, threads)
-	folders <- folder
-	wg := &sync.WaitGroup{}
 	go func() {
 		for i := range items {
 			if isFolder(i) {
-				folders <- i
+				newF, err := createFolder(folderMap[i.Parents[0]], i.Name)
+				if err != nil {
+					log.Println(err)
+				} else {
+					results <- newF
+					folderMap[i.Id] = newF.Id
+				}
 			} else {
-				wg.Add(1)
-				go func(i *drive.File) {
-					files <- i
-					wg.Done()
-				}(i)
+				i.Parents = append(i.Parents, folderMap[i.Parents[0]])
+				files <- i
 			}
 		}
-		close(folders)
-		wg.Wait()
 		close(files)
 	}()
-	return files, folders, nil
+	return files, nil
 }
 
 func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) {
