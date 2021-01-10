@@ -77,7 +77,7 @@ You can set up multiple configurations using [gsm configs](https://gsm.hayashi-k
 
 GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to ommit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parseable JSON or XML (mostly what the API returns).
 
-If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output.
+If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output. Depending on the tools you use and how you want to build your workflow, you may also want to consider using the `--streamOutput` flag, which will cause GSM to stream single objects directly to stdout. This may be significantly faster and use a lot less memory, but keep in mind that not all applications can properly utilize a stream of JSON objects.
 
 *the [configs](https://gsm.hayashi-ke.online/gsm/configs) command is a notable exception.
 
@@ -89,12 +89,12 @@ GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there a
 You can take a look at some examples under [scripting](https://gsm.hayashi-ke.online/scripting).
 
 You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo).\
-Note that this module is still **experimental** and is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module with over 500 functions and 70k lines of code, it seems to work reasonably well :).
+Note that this module is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module, it seems to work reasonably well. The module also automatically utilizes streaming.
 
 #### Logging
 
 As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
-You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--logFile` flag when running a command.
+You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--log` flag when running a command.
 You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
 
 ### See Also
