@@ -42,7 +42,7 @@ var schemaFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
 		Type:         "string",
-		Description:  `Immutable ID of the G Suite account.`,
+		Description:  `Immutable ID of the Workspace account.`,
 		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
 	},
 	"schemaKey": {

@@ -38,7 +38,7 @@ var activityFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"list"},
 		Type:         "string",
-		Description:  `Represents the profile ID or the user email for which the data should be filtered. Can be all for all information, or userKey for a user's unique G Suite profile ID or their primary email address.`,
+		Description:  `Represents the profile ID or the user email for which the data should be filtered. Can be all for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
 		Defaults:     map[string]interface{}{"list": "all"},
 	},
 	"applicationName": {
@@ -46,11 +46,11 @@ var activityFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Application name for which the events are to be retrieved.
 The following values are accepted:
-ACCESS_TRANSPARENCY   - The G Suite Access Transparency activity reports return information about different types of Access Transparency activity events.
+ACCESS_TRANSPARENCY   - The Workspace Access Transparency activity reports return information about different types of Access Transparency activity events.
 ADMIN                 - The Admin console application's activity reports return account information about different types of administrator activity events.
-CALENDAR              - The G Suite Calendar application's activity reports return information about various Calendar activity events.
+CALENDAR              - The Workspace Calendar application's activity reports return information about various Calendar activity events.
 CHAT                  - The Chat activity reports return information about various Chat activity events.
-DRIVE                 - The Google Drive application's activity reports return information about various Google Drive activity events. The Drive activity report is only available for G Suite Business customers.
+DRIVE                 - The Google Drive application's activity reports return information about various Google Drive activity events. The Drive activity report is only available for Workspace Business customers.
 GCP                   - The Google Cloud Platform application's activity reports return information about various GCP activity events.
 GPLUS                 - The Google+ application's activity reports return information about various Google+ activity events.
 GROUPS                - The Google Groups application's activity reports return information about various Groups activity events.
@@ -101,7 +101,7 @@ An API report has three basic time concepts:
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description: `The name of the event being queried by the API.
-Each eventName is related to a specific G Suite service or feature which the API organizes into types of events.
+Each eventName is related to a specific Workspace service or feature which the API organizes into types of events.
 An example is the Google Calendar events in the Admin console application's reports.
 The Calendar Settings type structure has all of the Calendar eventName activities reported by the API.
 When an administrator changes a Calendar setting, the API reports this activity in the Calendar Settings type and eventName parameters.

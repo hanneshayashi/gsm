@@ -41,7 +41,7 @@ var userUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 		AvailableFor: []string{"get"},
 		Type:         "string",
 		Description: `Represents the profile ID or the user email for which the data should be filtered.
-Can be "all" for all information, or userKey for a user's unique G Suite profile ID or their primary email address.`,
+Can be "all" for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
 		Defaults: map[string]interface{}{"get": "all"},
 	},
 	"date": {
