@@ -113,7 +113,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "gsm",
-	Short: "GoSpace Manager - Manage Google Workspace resources using a simple CLI written in Golang",
+	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
 	Long: `GSM is free software licenced under the GPLv3 (https://gsm.hayashi-ke.online/license).
 Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
@@ -122,7 +122,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
-	Version: "0.2.2",
+	Version: "0.2.3",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
