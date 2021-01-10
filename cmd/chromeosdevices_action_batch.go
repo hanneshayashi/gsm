@@ -1,6 +1,6 @@
 /*
 Package cmd contains the commands available to the end user
-Copyright © 2020 Hannes Hayashi
+Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,11 +59,11 @@ var chromeOsDevicesActionBatchCmd = &cobra.Command{
 							continue
 						}
 						resourceID := m["resourceId"].GetString()
-						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(),resourceID, a)
+						result, err := gsmadmin.TakeActionOnChromeOsDevice(m["customerId"].GetString(), resourceID, a)
 						if err != nil {
 							log.Println(err)
 						}
-						results <- resultStruct{ResourceID:resourceID, Result: result}
+						results <- resultStruct{ResourceID: resourceID, Result: result}
 					}
 					wg.Done()
 				}()

@@ -1,6 +1,6 @@
 /*
 Package cmd contains the commands available to the end user
-Copyright © 2020 Hannes Hayashi
+Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ import (
 
 // logShowCmd represents the show command
 var logShowCmd = &cobra.Command{
-	Use:               "show",
-	Short:             "Shows the current log.",
-	Long:              "",
+	Use:   "show",
+	Short: "Shows the current log.",
+	Long:  "",
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
 	},

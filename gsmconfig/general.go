@@ -1,6 +1,6 @@
 /*
 Package gsmconfig is responsible for all functions pertaining to the configuration of GSM
-Copyright © 2020 Hannes Hayashi
+Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

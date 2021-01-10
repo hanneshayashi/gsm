@@ -1,6 +1,6 @@
 /*
 Package cmd contains the commands available to the end user
-Copyright © 2020 Hannes Hayashi
+Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error getting folder: %v", err)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files:= gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
+		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
 		type resultStruct struct {
 			FileID string `json:"fileId,omitempty"`
 			Result bool   `json:"result,omitempty"`

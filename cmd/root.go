@@ -1,6 +1,6 @@
 /*
 Package cmd contains the commands available to the end user
-Copyright © 2020 Hannes Hayashi
+Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a simple CLI written in Golang",
 	Long: `GSM is free software licenced under the GPLv3 (https://gsm.hayashi-ke.online/license).
-Copyright © 2020 Hannes Hayashi.
+Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
