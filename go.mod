@@ -3,15 +3,15 @@ module github.com/hanneshayashi/gsm
 go 1.15
 
 require (
-	cloud.google.com/go v0.74.0 // indirect
+	cloud.google.com/go v0.76.0 // indirect
 	github.com/eapache/go-resiliency v1.2.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/google/uuid v1.1.4
+	github.com/google/uuid v1.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mitchellh/mapstructure v1.4.0 // indirect
+	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
@@ -21,13 +21,11 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.6.1 // indirect
-	golang.org/x/net v0.0.0-20201224014010-6772e930b67b
-	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
-	golang.org/x/sys v0.0.0-20210108172913-0df2131ae363 // indirect
-	golang.org/x/text v0.3.5 // indirect
-	google.golang.org/api v0.36.0
-	google.golang.org/genproto v0.0.0-20210108203827-ffc7fda8c3d7 // indirect
+	go.opencensus.io v0.22.6 // indirect
+	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
+	golang.org/x/oauth2 v0.0.0-20210201163806-010130855d6c
+	google.golang.org/api v0.39.0
+	google.golang.org/genproto v0.0.0-20210207032614-bba0dbe2a9ea // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
