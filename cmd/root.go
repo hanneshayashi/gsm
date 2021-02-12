@@ -90,6 +90,12 @@ var (
 			Type:         "int",
 			Description:  "Specify the number of threads that should be used for recursive commands (overrides value in config file. Max 16)",
 		},
+		"excludeFolders": {
+			AvailableFor: []string{"recursive"},
+			Type:         "stringSlice",
+			Description: `Ids of folders to exclude.
+Note that due to the way permissions are automatically inherited in Drive, this may not have the desired result for permission commands!`,
+		},
 	}
 	recursiveUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"orgUnit": {

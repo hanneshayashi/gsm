@@ -37,10 +37,10 @@ var drivesCmd = &cobra.Command{
 
 var driveFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"driveId": {
-		AvailableFor:   []string{"delete", "get", "hide", "unhide", "update"},
+		AvailableFor:   []string{"delete", "get", "hide", "unhide", "update", "getSize"},
 		Type:           "string",
 		Description:    "The ID of the shared drive",
-		Required:       []string{"delete", "get", "hide", "unhide", "update"},
+		Required:       []string{"delete", "get", "hide", "unhide", "update", "getSize"},
 		ExcludeFromAll: true,
 	},
 	"themeId": {
@@ -93,6 +93,11 @@ It can only be set on a drive.drives.update request that does not set themeId.	`
 		Type:         "string",
 		Description: `Query string for searching shared drives.
 See the https://developers.google.com/drive/api/v3/search-shareddrives for supported syntax.`,
+	},
+	"includeTrash": {
+		AvailableFor: []string{"getSize"},
+		Type:         "bool",
+		Description:  `Whether to include trashed items.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},

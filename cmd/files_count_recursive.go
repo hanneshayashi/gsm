@@ -20,38 +20,28 @@ package cmd
 import (
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
+// filesCountRecursiveCmd represents the recursive command
+var filesCountRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+	Short: "Recursively count files in a folder",
+	Long: `If you need to know the size of a Shared Drive, use
+"gsm drives getSize", because it will be faster!`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		results := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				enc.Encode(r)
-			}
-		} else {
-			final := []*drive.File{}
-			for r := range results {
-				final = append(final, r)
-			}
-			gsmhelpers.Output(final, "json", compressOutput)
-		}
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
+		result := gsmdrive.CountFilesAndFolders(files)
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFileFlags)
+	gsmhelpers.InitRecursiveCommand(filesCountCmd, filesCountRecursiveCmd, fileFlags, recursiveFileFlags)
 }

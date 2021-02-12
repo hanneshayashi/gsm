@@ -18,40 +18,40 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
-	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
+// drivesGetSizeCmd represents the getSize command
+var drivesGetSizeCmd = &cobra.Command{
+	Use:   "getSize",
+	Short: "Counts the files in a Shared Drive and returns their number and total size",
+	Long: `If you need to know the size of a folder, use
+"gsm files count recursive"!`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		results := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				enc.Encode(r)
-			}
-		} else {
-			final := []*drive.File{}
-			for r := range results {
-				final = append(final, r)
-			}
-			gsmhelpers.Output(final, "json", compressOutput)
+		var q string
+		if !flags["includeTrash"].GetBool() {
+			q = "trashed = false"
 		}
+		files, err := gsmdrive.ListFiles(q, flags["driveId"].GetString(), "drive", "", "", "drive", "files(mimeType,size),nextPageToken", true, gsmhelpers.MaxThreads(0))
+		result := gsmdrive.CountFilesAndFolders(files)
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error counting files: %v", e)
+		}
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFileFlags)
+	gsmhelpers.InitCommand(drivesCmd, drivesGetSizeCmd, driveFlags)
 }

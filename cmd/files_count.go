@@ -18,40 +18,33 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
 
-// filesListRecursiveCmd represents the recursive command
-var filesListRecursiveCmd = &cobra.Command{
-	Use:   "recursive",
-	Short: "Recursively list files in a folder",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/list",
-	Annotations: map[string]string{
-		"crescendoAttachToParent": "true",
-	},
+// filesCountCmd represents the count command
+var filesCountCmd = &cobra.Command{
+	Use:               "count",
+	Short:             "Count files in a folder and returns their number and size.",
+	Long:              "Use the recursive subcommand to also scan subfolders",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		results := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), flags["fields"].GetString(), flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				enc.Encode(r)
-			}
-		} else {
-			final := []*drive.File{}
-			for r := range results {
-				final = append(final, r)
-			}
-			gsmhelpers.Output(final, "json", compressOutput)
+		filesCh, err := gsmdrive.ListFiles(fmt.Sprintf("'%s' in parents", flags["folderId"].GetString()), "", "allDrives", "", "", "", "files(mimeType,size),nextPageToken", true, gsmhelpers.MaxThreads(0))
+		result := gsmdrive.CountFilesAndFolders(filesCh)
+		e := <-err
+		if e != nil {
+			log.Fatalf("Error listing files: %v", e)
 		}
+		gsmhelpers.Output(result, "json", compressOutput)
 	},
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListCmd, filesListRecursiveCmd, fileFlags, recursiveFileFlags)
+	gsmhelpers.InitCommand(filesCmd, filesCountCmd, fileFlags)
 }

@@ -44,7 +44,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error getting folder: %v", err)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", threads)
+		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
 		type resultStruct struct {
 			FileID string `json:"fileId,omitempty"`
 			Result bool   `json:"result,omitempty"`

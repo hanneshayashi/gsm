@@ -29,6 +29,13 @@ import (
 
 const folderMimetype = "application/vnd.google-apps.folder"
 
+// FolderSize represents the size of a Drive folder or Shared Drive
+type FolderSize struct {
+	Files   int64 `json:"files,omitempty"`
+	Folders int64 `json:"folders,omitempty"`
+	Size    int64 `json:"size,omitempty"`
+}
+
 // isFolder returns true if the file object is a folder, otherwise false
 // Make sure that the MimeType property is actually set.
 func isFolder(f *drive.File) bool {
@@ -53,7 +60,7 @@ func createFolder(parent, name string) (*drive.File, error) {
 
 // CopyFoldersAndReturnFilesWithNewParents creates copy of each folder in the supplied channel,
 // adds the new ID to the parents propertie of the files in the source folder and returns the files in a channel.
-func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, results chan *drive.File, threads int) (<-chan *drive.File, error) {
+func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, results chan *drive.File, excludeFolders []string, threads int) (<-chan *drive.File, error) {
 	root, err := GetFolder(folderID)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting folder: %v", err)
@@ -64,8 +71,9 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 		return nil, err
 	}
 	folderMap[root.Id] = newRoot.Id
-	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", threads)
+	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", excludeFolders, threads)
 	files := make(chan *drive.File, threads)
+	results <- newRoot
 	go func() {
 		for i := range items {
 			if isFolder(i) {
@@ -86,28 +94,8 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 	return files, nil
 }
 
-func listFilesRecursive(id, fields string, folders chan string, files chan *drive.File, wg *sync.WaitGroup, cap int) {
-	result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, cap)
-	wg.Add(1)
-	go func() {
-		for f := range result {
-			files <- f
-			if isFolder(f) {
-				wg.Add(1)
-				folders <- f.Id
-			}
-		}
-		wg.Done()
-	}()
-	go func() {
-		for e := range err {
-			log.Println(e)
-		}
-	}()
-}
-
 // ListFilesRecursive lists all files and foldes in a parent folder recursively
-func ListFilesRecursive(id, fields string, threads int) <-chan *drive.File {
+func ListFilesRecursive(id, fields string, excludeFolders []string, threads int) <-chan *drive.File {
 	wg := &sync.WaitGroup{}
 	folders := make(chan string, threads)
 	files := make(chan *drive.File, threads)
@@ -117,8 +105,26 @@ func ListFilesRecursive(id, fields string, threads int) <-chan *drive.File {
 		for i := 0; i < threads; i++ {
 			go func() {
 				for id := range folders {
-					listFilesRecursive(id, fields, folders, files, wg, threads)
-					wg.Done()
+					result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, threads)
+					go func() {
+						for f := range result {
+							if isFolder(f) {
+								if !gsmhelpers.Contains(f.Id, excludeFolders) {
+									wg.Add(1)
+									files <- f
+									folders <- f.Id
+								}
+							} else {
+								files <- f
+							}
+						}
+						wg.Done()
+					}()
+					go func() {
+						for e := range err {
+							log.Println(e)
+						}
+					}()
 				}
 			}()
 		}
@@ -208,4 +214,18 @@ func GetFolder(folderID string) (*drive.File, error) {
 		return nil, fmt.Errorf("%s is not a folder", folderID)
 	}
 	return folder, nil
+}
+
+// CountFilesAndFolders returns the number of files in a channel and their size
+func CountFilesAndFolders(filesCh <-chan *drive.File) (folderSize *FolderSize) {
+	folderSize = &FolderSize{}
+	for f := range filesCh {
+		if isFolder(f) {
+			folderSize.Folders++
+		} else {
+			folderSize.Files++
+			folderSize.Size += f.Size
+		}
+	}
+	return folderSize
 }

@@ -42,7 +42,7 @@ var filesCopyRecursiveCmd = &cobra.Command{
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		folderID := flags["folderId"].GetString()
 		results := make(chan *drive.File, threads)
-		files, err := gsmdrive.CopyFoldersAndReturnFilesWithNewParents(folderID, flags["parent"].GetString(), results, threads)
+		files, err := gsmdrive.CopyFoldersAndReturnFilesWithNewParents(folderID, flags["parent"].GetString(), results, flags["excludeFolders"].GetStringSlice(), threads)
 		if err != nil {
 			log.Fatalf("Error getting files and folders: %v", err)
 		}

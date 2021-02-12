@@ -278,6 +278,11 @@ All users with access can copy, download, export, and share the file.`,
 		Type:         "bool",
 		Description:  `Whether the user is acknowledging the risk of downloading known malware or other abusive files.`,
 	},
+	"folderId": {
+		AvailableFor: []string{"count"},
+		Type:         "string",
+		Description:  `Id of the folder.`,
+	},
 	"fields": {
 		AvailableFor: []string{"copy", "create", "get", "list", "update"},
 		Type:         "string",
