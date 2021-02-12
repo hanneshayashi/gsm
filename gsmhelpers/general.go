@@ -86,7 +86,7 @@ func FormatError(err error, errKey string) error {
 	return fmt.Errorf("%s: %v", errKey, err)
 }
 
-// retryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error ocurred or if the error is not retryable
+// retryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error occurred or if the error is not retryable
 func retryLog(err error, errKey string) bool {
 	defer sleep(StandardDelay)
 	if err != nil {
@@ -364,7 +364,7 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 }
 
 // FormatErrorKey formats an error key.
-// Error keys are used on error messages to make it easier to debug where an error ocurred
+// Error keys are used on error messages to make it easier to debug where an error occurred
 func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }
