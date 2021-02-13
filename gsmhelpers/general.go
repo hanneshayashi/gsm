@@ -250,7 +250,7 @@ func CreateDocs(cmd *cobra.Command) {
 			}
 			lines = append(lines, scanner.Text())
 		}
-		if err := scanner.Err(); err != nil {
+		if err = scanner.Err(); err != nil {
 			log.Fatal(err)
 		}
 		n, err := os.Create(newPath + "/_index.md")
