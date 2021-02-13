@@ -25,7 +25,7 @@ import (
 )
 
 // CopyOtherContactToMyContactsGroup copies an "Other contact" to a new contact in the user's "myContacts" group
-func CopyOtherContactToMyContactsGroup(resourceName, fields string, sources []string, copyOtherContactToMyContactsGroupRequest *people.CopyOtherContactToMyContactsGroupRequest) (*people.Person, error) {
+func CopyOtherContactToMyContactsGroup(resourceName, fields string, copyOtherContactToMyContactsGroupRequest *people.CopyOtherContactToMyContactsGroupRequest) (*people.Person, error) {
 	srv := getOtherContactsService()
 	c := srv.CopyOtherContactToMyContactsGroup(resourceName, copyOtherContactToMyContactsGroupRequest)
 	if fields != "" {

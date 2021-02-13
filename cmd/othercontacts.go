@@ -123,5 +123,12 @@ func mapToCopyOtherContactToMyContactsGroupRequest(flags map[string]*gsmhelpers.
 			copyOtherContactToMyContactsGroupRequest.ForceSendFields = append(copyOtherContactToMyContactsGroupRequest.ForceSendFields, "ReadMask")
 		}
 	}
+	if flags["sources"].IsSet() {
+		copyOtherContactToMyContactsGroupRequest.Sources = flags["sources"].GetStringSlice()
+		if len(copyOtherContactToMyContactsGroupRequest.Sources) == 0 {
+			copyOtherContactToMyContactsGroupRequest.ForceSendFields = append(copyOtherContactToMyContactsGroupRequest.ForceSendFields, "Sources")
+			copyOtherContactToMyContactsGroupRequest.NullFields = append(copyOtherContactToMyContactsGroupRequest.NullFields, "Sources")
+		}
+	}
 	return copyOtherContactToMyContactsGroupRequest, nil
 }
