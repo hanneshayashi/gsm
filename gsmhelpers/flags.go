@@ -34,15 +34,15 @@ type Flag struct {
 	Description    string
 	Required       []string
 	AvailableFor   []string
-	ExcludeFromAll bool
 	Recursive      []string
+	ExcludeFromAll bool
 }
 
 // Value is the value representation of a flag
 type Value struct {
-	Index   int64
 	Value   interface{}
 	Type    string
+	Index   int64
 	Changed bool
 	AllFlag bool
 }
