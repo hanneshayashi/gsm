@@ -163,7 +163,7 @@ func init() {
 func initConfig() {
 	var err error
 	gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
-	if _, err := os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
+	if _, err = os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
 		err = os.MkdirAll(gsmconfig.CfgDir, 0777)
 		if err != nil {
 			log.Fatalf("Config dir %s could not be found and could not be created: %v", gsmconfig.CfgDir, err)
@@ -179,7 +179,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
+	if err = viper.ReadInConfig(); err != nil {
 		// log.Printf("Error reading config file: %v", err)
 		// _, err = gsmconfig.CreateConfig(&gsmconfig.GSMConfig{Name: ".gsm"})
 		// if err != nil {

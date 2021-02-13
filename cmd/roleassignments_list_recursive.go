@@ -54,12 +54,12 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for uk := range userKeysUnique {
-						result, err := gsmadmin.ListRoleAssignments(customer, "", uk, fields, threads)
+						result, er := gsmadmin.ListRoleAssignments(customer, "", uk, fields, threads)
 						r := resultStruct{UserKey: uk}
 						for i := range result {
 							r.RoleAssignments = append(r.RoleAssignments, i)
 						}
-						e := <-err
+						e := <-er
 						if e != nil {
 							log.Println(e)
 						} else {

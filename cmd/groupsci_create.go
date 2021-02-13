@@ -43,7 +43,8 @@ Examples:
 			log.Fatalf("Error building group object: %v", err)
 		}
 		if g.Parent == "" {
-			customerID, err := gsmadmin.GetOwnCustomerID()
+			var customerID string
+			customerID, err = gsmadmin.GetOwnCustomerID()
 			if err != nil {
 				log.Fatalf("Error determining customer ID: %v", err)
 			}
