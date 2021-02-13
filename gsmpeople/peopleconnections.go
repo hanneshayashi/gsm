@@ -46,11 +46,17 @@ func listPeopleConnections(c *people.PeopleConnectionsListCall, ch chan *people.
 }
 
 // ListPeopleConnections provides a list of the authenticated user's contacts.
-func ListPeopleConnections(resourceName, personFields, sources, fields string, cap int) (<-chan *people.Person, <-chan error) {
+func ListPeopleConnections(resourceName, personFields, sources, sortOrder, fields string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getPeopleConnectionsService()
 	c := srv.List(resourceName)
 	if personFields != "" {
 		c.PersonFields(personFields)
+	}
+	if sortOrder != "" {
+		c.SortOrder(sortOrder)
+	}
+	if sources != "" {
+		c.Sources(sources)
 	}
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))

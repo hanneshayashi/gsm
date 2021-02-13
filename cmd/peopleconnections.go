@@ -78,6 +78,17 @@ Valid values are:
   - userDefined`,
 		Required: []string{"list"},
 	},
+	"sortOrder": {
+		AvailableFor: []string{"list"},
+		Type:         "string",
+		Description: `Optional. The order in which the connections should be sorted.
+Defaults to LAST_MODIFIED_ASCENDING.
+Valid values are:
+LAST_MODIFIED_ASCENDING   - Sort people by when they were changed; older entries first.
+LAST_MODIFIED_DESCENDING  - Sort people by when they were changed; newer entries first.
+FIRST_NAME_ASCENDING      - Sort people by first name.
+LAST_NAME_ASCENDING       - Sort people by last name.`,
+	},
 	"sources": {
 		AvailableFor: []string{"list"},
 		Type:         "string",

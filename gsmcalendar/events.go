@@ -131,6 +131,9 @@ func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, t
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
+	if originalStart != "" {
+		c = c.OriginalStart(originalStart)
+	}
 	ch := make(chan *calendar.Event, cap)
 	err := make(chan error, 1)
 	go func() {

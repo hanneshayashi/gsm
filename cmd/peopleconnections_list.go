@@ -35,7 +35,7 @@ var peopleConnectionsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmpeople.ListPeopleConnections(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		result, err := gsmpeople.ListPeopleConnections(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["sortOrder"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
