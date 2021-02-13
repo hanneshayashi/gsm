@@ -30,6 +30,7 @@ import (
 	ci "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/gmail/v1"
+	"google.golang.org/api/gmailpostmastertools/v1"
 	"google.golang.org/api/groupssettings/v1"
 	"google.golang.org/api/licensing/v1"
 	"google.golang.org/api/people/v1"
@@ -172,6 +173,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 			sheets.SpreadsheetsScope,
 			reports.AdminReportsAuditReadonlyScope,
 			reports.AdminReportsUsageReadonlyScope,
+			gmailpostmastertools.PostmasterReadonlyScope,
 		}
 	}
 	if flags["threads"].IsSet() {
