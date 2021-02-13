@@ -32,10 +32,10 @@ type GSMConfig struct {
 	CredentialsFile string   `yaml:"credentialsFile,omitempty"`
 	Mode            string   `yaml:"mode,omitempty"`
 	Subject         string   `yaml:"subject,omitempty"`
-	Threads         int      `yaml:"threads,omitempty"`
-	StandardDelay   int      `yaml:"standardDelay,omitempty"`
 	LogFile         string   `yaml:"logFile,omitempty"`
 	Scopes          []string `yaml:"scopes,omitempty"`
+	Threads         int      `yaml:"threads,omitempty"`
+	StandardDelay   int      `yaml:"standardDelay,omitempty"`
 	Default         bool     `yaml:"default,omitempty"`
 }
 
