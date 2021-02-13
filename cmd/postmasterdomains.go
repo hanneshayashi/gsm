@@ -25,9 +25,9 @@ import (
 
 // postmasterDomainsCmd represents the postmasterDomains command
 var postmasterDomainsCmd = &cobra.Command{
-	Use:               "postmasterDomains",
-	Short:             "Use Gmail Postmaster Tools to manage domain (Part of Gmail Postmaster API)",
-	Long:              `You need to set up your domain(s) at https://postmaster.google.com/u/1/managedomains first.
+	Use:   "postmasterDomains",
+	Short: "Use Gmail Postmaster Tools to manage domain (Part of Gmail Postmaster API)",
+	Long: `You need to set up your domain(s) at https://postmaster.google.com/u/1/managedomains first.
 https://developers.google.com/gmail/postmaster/reference/rest/v1/domains`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -43,7 +43,7 @@ var postmasterDomainFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.F
 		Required:     []string{"get"},
 	},
 	"fields": {
-		AvailableFor: []string{"create", "get", "list"},
+		AvailableFor: []string{"get", "list"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
