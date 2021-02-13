@@ -45,8 +45,8 @@ var userPhotosUpdateBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			UserKey   string           `json:"userKey,omitempty"`
 			UserPhoto *admin.UserPhoto `json:"userPhoto,omitempty"`
+			UserKey   string           `json:"userKey,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

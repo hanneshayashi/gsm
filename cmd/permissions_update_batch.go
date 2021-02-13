@@ -45,8 +45,8 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			FileID     string            `json:"fileId,omitempty"`
 			Permission *drive.Permission `json:"permission,omitempty"`
+			FileID     string            `json:"fileId,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

@@ -41,8 +41,8 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
-			UserKey   string           `json:"userKey,omitempty"`
 			UserPhoto *admin.UserPhoto `json:"userPhoto,omitempty"`
+			UserKey   string           `json:"userKey,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup

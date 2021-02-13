@@ -45,8 +45,8 @@ var chromeOsCommandsGetBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			DeviceID string                                 `json:"deviceId,omitempty"`
 			Command  *admin.DirectoryChromeosdevicesCommand `json:"command,omitempty"`
+			DeviceID string                                 `json:"deviceId,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

@@ -41,8 +41,8 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
-			UserKey        string                `json:"userKey,omitempty"`
 			RoleAssignment *admin.RoleAssignment `json:"roleAssignment,omitempty"`
+			UserKey        string                `json:"userKey,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		userIdsUnique := make(chan string, threads)

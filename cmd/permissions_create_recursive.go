@@ -51,8 +51,8 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
 		type resultStruct struct {
-			FileID      string            `json:"fileId,omitempty"`
 			Permissions *drive.Permission `json:"permissions,omitempty"`
+			FileID      string            `json:"fileId,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup

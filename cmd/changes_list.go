@@ -40,8 +40,8 @@ var changesListCmd = &cobra.Command{
 			log.Fatalf("Error listing changes: %v", err)
 		}
 		type resultStruct struct {
-			Changes            []*drive.Change `json:"changes,omitempty"`
 			NextStartPageToken string          `json:"nextStartPageToken"`
+			Changes            []*drive.Change `json:"changes,omitempty"`
 		}
 		result := resultStruct{
 			Changes:            r,
