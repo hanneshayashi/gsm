@@ -200,24 +200,24 @@ type Where struct {
 
 // Entry is a Feed Entry
 type Entry struct {
-	Text                    string                    `xml:",chardata"`
-	Xmlns                   string                    `xml:"xmlns,attr"`
+	Where                   Where                     `xml:"where"`
+	Name                    Name                      `xml:"name"`
+	Category                Category                  `xml:"category"`
+	Title                   Title                     `xml:"title"`
 	Gd                      string                    `xml:"gd,attr"`
 	ID                      string                    `xml:"id"`
 	Updated                 string                    `xml:"updated"`
-	Category                Category                  `xml:"category"`
-	Title                   Title                     `xml:"title"`
-	Name                    Name                      `xml:"name"`
-	Link                    []Link                    `xml:"link"`
-	PhoneNumber             []PhoneNumber             `xml:"phoneNumber"`
-	ExtendedProperty        []ExtendedProperty        `xml:"extendedProperty"`
+	Xmlns                   string                    `xml:"xmlns,attr"`
 	Content                 string                    `xml:"content"`
+	Text                    string                    `xml:",chardata"`
+	ExtendedProperty        []ExtendedProperty        `xml:"extendedProperty"`
+	Link                    []Link                    `xml:"link"`
 	Email                   []Email                   `xml:"email"`
 	Im                      []Im                      `xml:"im"`
 	PostalAddress           []PostalAddress           `xml:"postalAddress"`
 	Organization            []Organization            `xml:"organization"`
 	StructuredPostalAddress []StructuredPostalAddress `xml:"structuredPostalAddress"`
-	Where                   Where                     `xml:"where"`
+	PhoneNumber             []PhoneNumber             `xml:"phoneNumber"`
 }
 
 // Feed was generated 2020-10-11 05:44:12 by hannes_siefert_gmail_com on code-server.
