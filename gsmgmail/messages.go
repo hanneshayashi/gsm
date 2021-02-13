@@ -135,7 +135,7 @@ func listMessages(c *gmail.UsersMessagesListCall, ch chan *gmail.Message, errKey
 // ListMessages lists the messages in the user's mailbox.
 func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool, cap int) (<-chan *gmail.Message, <-chan error) {
 	srv := getUsersMessagesService()
-	c := srv.List(userID).MaxResults(10000)
+	c := srv.List(userID).MaxResults(10000).IncludeSpamTrash(includeSpamTrash)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
