@@ -83,7 +83,7 @@ func listBuildings(c *admin.ResourcesBuildingsListCall, ch chan *admin.Building,
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listBuildings(c, ch, errKey)
 	}
 	return err

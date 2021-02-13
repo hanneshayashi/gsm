@@ -80,7 +80,7 @@ func listCalendarResources(c *admin.ResourcesCalendarsListCall, ch chan *admin.C
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listCalendarResources(c, ch, errKey)
 	}
 	return err

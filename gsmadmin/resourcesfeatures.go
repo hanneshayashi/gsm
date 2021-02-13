@@ -80,7 +80,7 @@ func listFeatures(c *admin.ResourcesFeaturesListCall, ch chan *admin.Feature, er
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listFeatures(c, ch, errKey)
 	}
 	return err

@@ -80,7 +80,7 @@ func listCalendarListEntries(c *calendar.CalendarListListCall, ch chan *calendar
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listCalendarListEntries(c, ch, errKey)
 	}
 	return err

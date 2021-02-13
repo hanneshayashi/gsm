@@ -69,7 +69,7 @@ package gsmadmin
 // 		ch <- i
 // 	}
 // 	if r.NextPageToken != "" {
-// 		c := c.PageToken(r.NextPageToken)
+// 		c.PageToken(r.NextPageToken)
 // 		err = listContactDelegates(c, ch, errKey)
 // 	}
 // 	return err

@@ -126,7 +126,7 @@ func listGroups(c *ci.GroupsListCall, ch chan *ci.Group, errKey string) error {
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listGroups(c, ch, errKey)
 	}
 	return err
@@ -168,7 +168,7 @@ func searchGroups(c *ci.GroupsSearchCall, ch chan *ci.Group, errKey string) erro
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = searchGroups(c, ch, errKey)
 	}
 	return err

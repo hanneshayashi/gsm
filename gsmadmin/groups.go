@@ -80,7 +80,7 @@ func listGroups(c *admin.GroupsListCall, ch chan *admin.Group, errKey string) er
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listGroups(c, ch, errKey)
 	}
 	return err

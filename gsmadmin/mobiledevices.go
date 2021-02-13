@@ -76,7 +76,7 @@ func listMobileDevices(c *admin.MobiledevicesListCall, ch chan *admin.MobileDevi
 		ch <- i
 	}
 	if r.NextPageToken != "" {
-		c := c.PageToken(r.NextPageToken)
+		c.PageToken(r.NextPageToken)
 		err = listMobileDevices(c, ch, errKey)
 	}
 	return err
