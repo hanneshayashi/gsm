@@ -11,7 +11,7 @@ tar -czf tmp/gsm_win-amd64.tar.gz -C gsm/win-amd64 .
 tar -czf tmp/gsm_linux-amd64.tar.gz -C gsm/linux-amd64 .
 tar -czf tmp/gsm_linux-arm64.tar.gz -C gsm/linux-arm64 .
 tar -czf tmp/gsm_mac-amd64.tar.gz -C gsm/mac-amd64 .
-tar -czf tmp/gsm_mac-arm64.tar.gz -C gsm/mac-arm46 .
+tar -czf tmp/gsm_mac-arm64.tar.gz -C gsm/mac-arm64 .
 
 gsutil -m cp tmp/* gs://build-arts/gsm/
 
@@ -20,5 +20,3 @@ gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-amd64.tar.gz' gs://bui
 gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-arm64.tar.gz' gs://build-arts/gsm/gsm_linux-arm64.tar.gz
 gsutil setmeta -h 'Content-Disposition:filename=gsm_mac-amd64.tar.gz' gs://build-arts/gsm/gsm_mac-amd64.tar.gz
 gsutil setmeta -h 'Content-Disposition:filename=gsm_mac-arm64.tar.gz' gs://build-arts/gsm/gsm_mac-arm64.tar.gz
-
-# gsutil -m acl ch -r -g AllUsers:R gs://build-arts/gsm/*
