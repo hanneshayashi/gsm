@@ -33,8 +33,8 @@ var permissionsListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively lists permissions to a folder and all of its children.",
 	Long: `IMPORTANT:
-If you are not specifying a folder in a Shared Drive, you can simply use "files list recursive" with "permissions" in the fields parameter like so:
-"files list recursive --folder <folderId> --fields "files(id,name,permissions)"`,
+If you are not specifying a folder in a Shared Drive, you can simply use "gsm files list recursive" with "permissions" in the fields parameter like so:
+"gsm files list recursive --folderId <folderId> --fields "files(id,name,mimeType,permissions)"`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
