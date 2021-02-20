@@ -29,8 +29,8 @@ import (
 // groupMembershipsCiGetMembershipGraphCmd represents the getMembershipGraph command
 var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 	Use:               "getMembershipGraph",
-	Short:             "GetMembershipGraphs a Membership.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/getMembershipGraph`,
+	Short:             "Get a membership graph of just a member or both a member and a group.",
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/getMembershipGraph`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

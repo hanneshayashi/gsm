@@ -22,7 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -31,15 +31,11 @@ import (
 var groupMembershipsCiSearchTransitiveGroupsCmd = &cobra.Command{
 	Use:               "searchTransitiveGroups",
 	Short:             "Search transitive groups of a member.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/searchTransitiveGroups`,
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/searchTransitiveGroups`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		parent, er := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
-		if er != nil {
-			log.Fatalf("Error determining group name: %v", er)
-		}
-		result, err := gsmci.SearchTransitiveGroups(parent, flags["query"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		result, err := gsmci.SearchTransitiveGroups("groups/-", flags["query"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {

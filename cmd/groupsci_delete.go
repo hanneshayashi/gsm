@@ -30,7 +30,7 @@ import (
 var groupsCiDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a Group.",
-	Long:              "https://cloud.google.com/identity/docs/how-to/delete-dynamic-groups#python",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

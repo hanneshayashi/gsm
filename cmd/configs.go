@@ -27,7 +27,7 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/gmailpostmastertools/v1"

@@ -30,11 +30,11 @@ import (
 var groupsCiLookupCmd = &cobra.Command{
 	Use:               "lookup",
 	Short:             "Looks up a Group.",
-	Long:              "https://cloud.google.com/identity/docs/how-to/lookup-dynamic-groups#python",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/lookup",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmci.LookupGroup(flags["email"].GetString())
+		result, err := gsmci.LookupGroup(flags["id"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting group: %v", err)
 		}

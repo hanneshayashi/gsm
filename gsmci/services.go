@@ -1,5 +1,5 @@
 /*
-Package gsmci implements the Cloud Identity (Beta) API
+Package gsmci implements the Cloud Identity API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ import (
 	"log"
 	"net/http"
 
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 	"google.golang.org/api/option"
 )
 

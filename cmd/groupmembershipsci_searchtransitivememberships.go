@@ -22,7 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ import (
 var groupMembershipsCiSearchTransitiveMembershipsCmd = &cobra.Command{
 	Use:               "searchTransitiveMemberships",
 	Short:             "Search transitive memberships of a group.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/searchTransitiveMemberships`,
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/searchTransitiveMemberships`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

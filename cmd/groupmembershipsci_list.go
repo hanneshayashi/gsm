@@ -22,7 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -30,8 +30,8 @@ import (
 // groupMembershipsCiListCmd represents the list command
 var groupMembershipsCiListCmd = &cobra.Command{
 	Use:               "list",
-	Short:             "Lists members of a (dynamic) group",
-	Long:              "https://cloud.google.com/identity/docs/how-to/retrieve-list-dynamic-groups",
+	Short:             "Lists the Memberships within a Group.",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -40,9 +40,6 @@ var groupMembershipsCiListCmd = &cobra.Command{
 			log.Fatalf("Error determining group name: %v", er)
 		}
 		result, err := gsmci.ListMembers(parent, flags["fields"].GetString(), flags["view"].GetString(), gsmhelpers.MaxThreads(0))
-		if err != nil {
-			log.Fatalf("Error listing members: %v", err)
-		}
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {

@@ -22,7 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ import (
 var groupsCiSearchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Searches for Groups matching a specified query.",
-	Long: `https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/search
+	Long: `https://cloud.google.com/identity/docs/reference/rest/v1/groups/search
 Examples:
   - Search for security groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.security' in labels"
   - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,

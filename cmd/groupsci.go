@@ -24,14 +24,14 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 )
 
 // groupsCiCmd represents the groupsCi command
 var groupsCiCmd = &cobra.Command{
 	Use:               "groupsCi",
-	Short:             "Manage Google Groups with the Cloud Identity (Beta) API",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups",
+	Short:             "Manage Google Groups with the Cloud Identity API",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
@@ -74,7 +74,7 @@ Must be of the form groups/{group_id}.`,
 		ExcludeFromAll: true,
 	},
 	"email": {
-		AvailableFor: []string{"get", "delete", "lookup", "patch"},
+		AvailableFor: []string{"get", "delete", "patch"},
 		Type:         "string",
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
@@ -103,16 +103,16 @@ query         - Query that determines the memberships of the dynamic group.
                     user.locations.exists(loc, loc.area=='foo' && loc.building_id=='bar')`,
 	},
 	"id": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"create", "lookup"},
 		Type:         "string",
 		Description: `The ID of the entity.
 
-For Google-managed entities, the id must be the email address of an existing group or user.
+For Google-managed entities, the id must be the email address.
 
 For external-identity-mapped entities, the id must be a string conforming to the Identity Source's requirements.
 
 Must be unique within a namespace.`,
-		Required:       []string{"create"},
+		Required:       []string{"create", "lookup"},
 		ExcludeFromAll: true,
 	},
 	"namespace": {
@@ -125,12 +125,12 @@ If not specified, the EntityKey represents a Google-managed entity such as a Goo
 If specified, the EntityKey represents an external-identity-mapped group.
 The namespace must correspond to an identity source created in Admin Console and must be in the form of identitysources/{identity_source_id}.`,
 	},
-	"additionalGroupKeys": {
-		AvailableFor: []string{"create"},
-		Type:         "stringSlice",
-		Description: `Additional entity key aliases for a Group.
-Can be used multiple times in the form of "id=...;namespace=..."`,
-	},
+	// 	"additionalGroupKeys": {
+	// 		AvailableFor: []string{"create"},
+	// 		Type:         "stringSlice",
+	// 		Description: `Additional entity key aliases for a Group.
+	// Can be used multiple times in the form of "id=...;namespace=..."`,
+	// },
 	"displayName": {
 		AvailableFor: []string{"create"},
 		Type:         "string",
@@ -226,18 +226,18 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 			}
 		}
 	}
-	if flags["additionalGroupKeys"].IsSet() {
-		group.AdditionalGroupKeys = []*ci.EntityKey{}
-		additionalGroupKeys := flags["additionalGroupKeys"].GetStringSlice()
-		if len(additionalGroupKeys) > 0 {
-			for _, a := range additionalGroupKeys {
-				m := gsmhelpers.FlagToMap(a)
-				group.AdditionalGroupKeys = append(group.AdditionalGroupKeys, &ci.EntityKey{Id: m["id"], Namespace: m["namespace"]})
-			}
-		} else {
-			group.ForceSendFields = append(group.ForceSendFields, "AdditionalGroupKeys")
-		}
-	}
+	// if flags["additionalGroupKeys"].IsSet() {
+	// 	group.AdditionalGroupKeys = []*ci.EntityKey{}
+	// 	additionalGroupKeys := flags["additionalGroupKeys"].GetStringSlice()
+	// 	if len(additionalGroupKeys) > 0 {
+	// 		for _, a := range additionalGroupKeys {
+	// 			m := gsmhelpers.FlagToMap(a)
+	// 			group.AdditionalGroupKeys = append(group.AdditionalGroupKeys, &ci.EntityKey{Id: m["id"], Namespace: m["namespace"]})
+	// 		}
+	// 	} else {
+	// 		group.ForceSendFields = append(group.ForceSendFields, "AdditionalGroupKeys")
+	// 	}
+	// }
 	if flags["queries"].IsSet() {
 		group.DynamicGroupMetadata = &ci.DynamicGroupMetadata{}
 		queries := flags["queries"].GetStringSlice()

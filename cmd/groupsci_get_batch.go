@@ -25,14 +25,14 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 )
 
 // groupsCiGetBatchCmd represents the batch command
 var groupsCiGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/get",
+	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

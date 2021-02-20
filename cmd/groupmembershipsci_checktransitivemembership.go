@@ -28,12 +28,9 @@ import (
 
 // groupMembershipsCiCheckTransitiveMembershipCmd represents the checkTransitiveMembership command
 var groupMembershipsCiCheckTransitiveMembershipCmd = &cobra.Command{
-	Use:   "checkTransitiveMembership",
-	Short: "Check a potential member for membership in a group.",
-	Long: `A member has membership to a group as long as there is a single viewable transitive membership between the group and the member.
-The actor must have view permissions to at least one transitive membership between the member and group.
-
-https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships/checkTransitiveMembership`,
+	Use:               "checkTransitiveMembership",
+	Short:             "Check a potential member for membership in a group.",
+	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/checkTransitiveMembership`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

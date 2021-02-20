@@ -31,10 +31,10 @@ import (
 var groupsCiCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a Group.",
-	Long: `https://cloud.google.com/identity/docs/how-to/create-dynamic-groups#python
+	Long: `https://cloud.google.com/identity/docs/reference/rest/v1/groups/create
 Examples:
   - Create a dynamic group:
-    gsm groupsCi create --parent customers/{my_customer_id} --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,
+    gsm groupsCi create --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -49,6 +49,11 @@ Examples:
 				log.Fatalf("Error determining customer ID: %v", err)
 			}
 			g.Parent = "customers/" + customerID
+		}
+		if len(g.Labels) == 0 {
+			g.Labels = map[string]string{
+				"cloudidentity.googleapis.com/groups.discussion_forum": "",
+			}
 		}
 		result, err := gsmci.CreateGroup(g, flags["initialGroupConfig"].GetString(), flags["fields"].GetString())
 		if err != nil {

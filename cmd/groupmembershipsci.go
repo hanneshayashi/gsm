@@ -21,14 +21,14 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 )
 
 // groupMembershipsCiCmd represents the groupMembershipsCi command
 var groupMembershipsCiCmd = &cobra.Command{
 	Use:               "groupMembershipsCi",
-	Short:             "Manage group memberships (Part of Cloud Identity Beta API)",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups.memberships",
+	Short:             "Manage group memberships (Part of Cloud Identity API)",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
@@ -37,7 +37,7 @@ var groupMembershipsCiCmd = &cobra.Command{
 
 var groupMembershipCiFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
-		AvailableFor: []string{"checkTransitiveMembership", "create", "getMembershipGraph", "list", "lookup", "searchTransitiveGroups", "searchTransitiveMemberships"},
+		AvailableFor: []string{"checkTransitiveMembership", "create", "getMembershipGraph", "list", "lookup", "searchTransitiveMemberships"},
 		Type:         "string",
 		Description: `Resource name of the group.
 Format: groups/{group_id}, where group_id is the unique id assigned to the Group to which the Membership belongs to.`,
@@ -82,8 +82,6 @@ If specified, the EntityKey represents an external-identity-mapped group. The na
 		Type:         "stringSlice",
 		Description: `The MembershipRoles that apply to the Membership.
 
-If unspecified, defaults to a single MembershipRole with name MEMBER.
-
 Must not contain duplicate MembershipRoles with the same name.
 
 Can be used multiple times in the form of "--roles name=...;expiryDate...
@@ -104,7 +102,7 @@ Must be of the form groups/{group_id}/memberships/{membership_id}.`,
 		ExcludeFromAll: true,
 	},
 	"email": {
-		AvailableFor: []string{"checkTransitiveMembership", "create", "delete", "get", "getMembershipGraph", "list", "lookup", "searchTransitiveGroups", "searchTransitiveMemberships"},
+		AvailableFor: []string{"checkTransitiveMembership", "create", "delete", "get", "getMembershipGraph", "list", "lookup", "searchTransitiveMemberships"},
 		Type:         "string",
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
@@ -150,18 +148,18 @@ Must not contain MEMBER. Must not be set if updateRolesParams is set.`,
 		Type:         "stringSlice",
 		Description: `The MembershipRoles to be updated.
 
-Updating roles in the same request as adding or removing roles is not supported.
+	Updating roles in the same request as adding or removing roles is not supported.
 
-Must not be set if either addRoles or removeRoles is set.
+	Must not be set if either addRoles or removeRoles is set.
 
-Can be used multiple times in the form of "--updateRolesParams fieldMask=...;membershipRole=..."
-You can use the following properties:
-name        - The name of the MembershipRole.
-		      Must be one of OWNER, MANAGER, MEMBER.
-expireTime  - The time at which the MembershipRole will expire.
-			  A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
-              Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
-              Expiry details are only supported for MEMBER MembershipRoles.`,
+	Can be used multiple times in the form of "--updateRolesParams fieldMask=...;membershipRole=..."
+	You can use the following properties:
+	name        - The name of the MembershipRole.
+			      Must be one of OWNER, MANAGER, MEMBER.
+	expireTime  - The time at which the MembershipRole will expire.
+				  A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+	              Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
+	              Expiry details are only supported for MEMBER MembershipRoles.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "list", "get", "getMembershipGraph", "modifyMembershipRoles", "searchTransitiveGroups", "searchTransitiveMemberships"},
@@ -178,17 +176,17 @@ func init() {
 func mapToGroupMemberShipCi(flags map[string]*gsmhelpers.Value) (*ci.Membership, error) {
 	membership := &ci.Membership{}
 	if flags["memberKeyId"].IsSet() || flags["memberKeyNamespace"].IsSet() {
-		membership.MemberKey = &ci.EntityKey{}
+		membership.PreferredMemberKey = &ci.EntityKey{}
 		if flags["memberKeyId"].IsSet() {
-			membership.MemberKey.Id = flags["memberKeyId"].GetString()
-			if membership.MemberKey.Id == "" {
-				membership.MemberKey.ForceSendFields = append(membership.MemberKey.ForceSendFields, "Id")
+			membership.PreferredMemberKey.Id = flags["memberKeyId"].GetString()
+			if membership.PreferredMemberKey.Id == "" {
+				membership.PreferredMemberKey.ForceSendFields = append(membership.PreferredMemberKey.ForceSendFields, "Id")
 			}
 		}
 		if flags["memberKeyNamespace"].IsSet() {
-			membership.MemberKey.Namespace = flags["memberKeyNamespace"].GetString()
-			if membership.MemberKey.Namespace == "" {
-				membership.MemberKey.ForceSendFields = append(membership.MemberKey.ForceSendFields, "Namespace")
+			membership.PreferredMemberKey.Namespace = flags["memberKeyNamespace"].GetString()
+			if membership.PreferredMemberKey.Namespace == "" {
+				membership.PreferredMemberKey.ForceSendFields = append(membership.PreferredMemberKey.ForceSendFields, "Namespace")
 			}
 		}
 	}

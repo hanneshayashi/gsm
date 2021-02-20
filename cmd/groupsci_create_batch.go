@@ -32,7 +32,7 @@ import (
 var groupsCiCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/create",
+	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -62,6 +62,11 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 						if err != nil {
 							log.Printf("Error building group object: %v\n", err)
 							continue
+						}
+						if len(g.Labels) == 0 {
+							g.Labels = map[string]string{
+								"cloudidentity.googleapis.com/groups.discussion_forum": "",
+							}
 						}
 						result, err := gsmci.CreateGroup(g, m["initialGroupConfig"].GetString(), m["fields"].GetString())
 						if err != nil {

@@ -31,7 +31,7 @@ import (
 var groupsCiDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/delete",
+	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

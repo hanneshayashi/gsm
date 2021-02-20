@@ -31,7 +31,7 @@ import (
 var groupsCiLookupBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lookups groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/lookup",
+	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/lookup",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -53,7 +53,7 @@ var groupsCiLookupBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						email := m["email"].GetString()
+						email := m["id"].GetString()
 						result, err := gsmci.LookupGroup(email)
 						if err != nil {
 							log.Println(err)

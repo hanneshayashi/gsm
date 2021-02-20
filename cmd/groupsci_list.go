@@ -23,7 +23,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,7 @@ import (
 var groupsCiListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the Groups under a customer or namespace.",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/list",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

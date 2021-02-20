@@ -1,5 +1,5 @@
 /*
-Package gsmci implements the Cloud Identity (Beta) API
+Package gsmci implements the Cloud Identity API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
-	ci "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 	"google.golang.org/api/googleapi"
 )
 
@@ -89,7 +89,7 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (googlea
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, membership.MemberKey.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, membership.PreferredMemberKey.Id), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
