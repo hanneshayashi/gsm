@@ -24,6 +24,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
@@ -43,7 +44,8 @@ var filesUpdateCmd = &cobra.Command{
 		var removeParents string
 		if flags["parent"].IsSet() {
 			f.Parents = nil
-			fOld, err := gsmdrive.GetFile(flags["fileId"].GetString(), "parents", "")
+			var fOld *drive.File
+			fOld, err = gsmdrive.GetFile(flags["fileId"].GetString(), "parents", "")
 			if err != nil {
 				log.Fatalf("Error getting existing file: %v\n", err)
 			}
