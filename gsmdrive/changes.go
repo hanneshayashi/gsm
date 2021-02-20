@@ -68,11 +68,12 @@ func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView s
 	r, _ := result.(*drive.ChangeList)
 	changes = append(changes, r.Changes...)
 	if r.NextPageToken != "" {
+		var result *drive.ChangeList
 		result, err = listChanges(r.NextPageToken, driveID, spaces, fields, includePermissionsForView, includeCorpusRemovals, includeItemsFromAllDrives, includeRemoved, restrictToMyDrive, changes, errKey)
 		if err != nil {
 			return nil, err
 		}
-		changes = append(changes, r.Changes...)
+		changes = append(changes, result.Changes...)
 	}
 	return &drive.ChangeList{Changes: changes}, err
 }
