@@ -239,7 +239,7 @@ func listFiles(c *drive.FilesListCall, ch chan *drive.File, errKey string) error
 		c.PageToken(r.NextPageToken)
 		err = listFiles(c, ch, errKey)
 	}
-	return nil
+	return err
 }
 
 // ListFiles lists or searches files.

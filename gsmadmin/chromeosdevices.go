@@ -69,7 +69,7 @@ func listChromeOsDevices(c *admin.ChromeosdevicesListCall, ch chan *admin.Chrome
 		c.PageToken(r.NextPageToken)
 		err = listChromeOsDevices(c, ch, errKey)
 	}
-	return nil
+	return err
 }
 
 // ListChromeOsDevices retrieves a paginated list of Chrome OS devices within an account.
