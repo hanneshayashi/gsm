@@ -17,93 +17,81 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package gsmadmin
 
-// // TakeActionOnContactDelegate takes an action that affects a mobile device. For example, remotely wiping a device.
-// func TakeActionOnContactDelegate(customerID, resourceID string, action *admin.ContactDelegateAction) (bool, error) {
-// 	srv := getContactDelegatesService()
-// 	c := srv.Action(customerID, resourceID, action)
-// 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() error {
-// 		return c.Do()
-// 	})
-// 	return result, err
-// }
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
 
-// // DeleteContactDelegate removes a mobile device.
-// func DeleteContactDelegate(customerID, resourceID string) (bool, error) {
-// 	srv := getContactDelegatesService()
-// 	c := srv.Delete(customerID, resourceID)
-// 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() error {
-// 		return c.Do()
-// 	})
-// 	return result, err
-// }
+const contactDelegateURL = `https://www.googleapis.com/admin/contacts/v1/users/%s/delegates`
 
-// // GetContactDelegate retrieves a mobile device's properties.
-// func GetContactDelegate(customerID, resourceID, fields, projection string) (*admin.ContactDelegate, error) {
-// 	srv := getContactDelegatesService()
-// 	c := srv.Get(customerID, resourceID)
-// 	if fields != "" {
-// 		c.Fields(googleapi.Field(fields))
-// 	}
-// 	if projection != "" {
-// 		c.Projection(projection)
-// 	}
-// 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() (interface{}, error) {
-// 		return c.Do()
-// 	})
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	r, _ := result.(*admin.ContactDelegate)
-// 	return r, nil
-// }
+// ContactDelegate represents a delegation to manage a user's contacts
+type ContactDelegate struct {
+	Email string `json:"email,omitempty"`
+}
 
-// func listContactDelegates(c *admin.ContactDelegatesListCall, ch chan *admin.ContactDelegate, errKey string) error {
-// 	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-// 		return c.Do()
-// 	})
-// 	if err != nil {
-// 		return err
-// 	}
-// 	r, _ := result.(*admin.ContactDelegates)
-// 	for _, i := range r.ContactDelegates {
-// 		ch <- i
-// 	}
-// 	if r.NextPageToken != "" {
-// 		c.PageToken(r.NextPageToken)
-// 		err = listContactDelegates(c, ch, errKey)
-// 	}
-// 	return err
-// }
+// CreateContactDelegate creates one or more delegates for a given user.
+func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
+	delegation, err := json.Marshal(ContactDelegate{Email: email})
+	if err != nil {
+		return nil, err
+	}
+	body := bytes.NewReader(delegation)
+	req, err := http.NewRequest("POST", fmt.Sprintf(contactDelegateURL, parent), body)
+	if err != nil {
+		return nil, err
+	}
+	r, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Body.Close()
+	responseBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, err
+	}
+	delegationR := &ContactDelegate{}
+	json.Unmarshal(responseBody, delegationR)
+	return delegationR, nil
+}
 
-// // ListContactDelegates retrieves a paginated list of all mobile devices for an account.
-// func ListContactDelegates(customerID, query, fields, projection, orderBy, sortOrder string, cap int) (<-chan *admin.ContactDelegate, <-chan error) {
-// 	srv := getContactDelegatesService()
-// 	c := srv.List(customerID).MaxResults(100)
-// 	if fields != "" {
-// 		c.Fields(googleapi.Field(fields))
-// 	}
-// 	if query != "" {
-// 		c = c.Query(query)
-// 	}
-// 	if projection != "" {
-// 		c = c.Projection(projection)
-// 	}
-// 	if orderBy != "" {
-// 		c = c.OrderBy(orderBy)
-// 	}
-// 	if sortOrder != "" {
-// 		c = c.SortOrder(sortOrder)
-// 	}
-// 	ch := make(chan *admin.ContactDelegate, cap)
-// 	err := make(chan error, 1)
-// 	go func() {
-// 		e := listContactDelegates(c, ch, gsmhelpers.FormatErrorKey(customerID))
-// 		if e != nil {
-// 			err <- e
-// 		}
-// 		close(ch)
-// 		close(err)
-// 	}()
-// 	gsmhelpers.Sleep()
-// 	return ch, err
-// }
+// DeleteContactDelegate deletes a delegate from a given user.
+func DeleteContactDelegate(parent, email string) (bool, error) {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf(contactDelegateURL, parent)+fmt.Sprintf("/%s", email), nil)
+	if err != nil {
+		return false, err
+	}
+	r, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+	if r.StatusCode != 200 {
+		return false, nil
+	}
+	return true, nil
+}
+
+// ListContactDelegates lists the delegates of a given user.
+func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf(contactDelegateURL, parent), nil)
+	if err != nil {
+		return nil, err
+	}
+	r, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Body.Close()
+	responseBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, err
+	}
+	type listDelegateRespone struct {
+		Delegates []*ContactDelegate
+	}
+	delegations := &listDelegateRespone{}
+	json.Unmarshal(responseBody, delegations)
+	return delegations.Delegates, nil
+}

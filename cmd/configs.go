@@ -174,6 +174,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 			reports.AdminReportsAuditReadonlyScope,
 			reports.AdminReportsUsageReadonlyScope,
 			gmailpostmastertools.PostmasterReadonlyScope,
+			"https://www.googleapis.com/auth/admin.contact.delegation",
 		}
 	}
 	if flags["threads"].IsSet() {
