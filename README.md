@@ -2,6 +2,8 @@
 
 GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/hanneshayashi/gsm)](https://goreportcard.com/report/github.com/hanneshayashi/gsm)
+
 ### Documentation
 
 View complete documentation at https://gsm.hayashi-ke.online/.
@@ -17,6 +19,7 @@ GSM also supports many custom commands for common tasks to make your life easier
 - ["move"](https://gsm.hayashi-ke.online/gsm/files/move/recursive/) (or [copy](https://gsm.hayashi-ke.online/gsm/files/copy/recursive/)) a folder to a Shared Drive
 - ["sync"](https://gsm.hayashi-ke.online/gsm/members/set/recursive/) an organizational unit (OU) to a group
 - [send emails](https://gsm.hayashi-ke.online/gsm/messages/send/) (with attachments) via the Gmail API (without SMTP auth)
+- [get the size of a Shared Drive](https://gsm.hayashi-ke.online/gsm/drives/getsize/) or [Drive folder](https://gsm.hayashi-ke.online/gsm/files/count/recursive/)
 
 and many more.
 
@@ -54,9 +57,11 @@ GSM currently supports the following APIs:
 - [Admin SDK Directory API](https://developers.google.com/admin-sdk/directory)
 - [Admin SDK Groups Settings API](https://developers.google.com/admin-sdk/groups-settings/get_started)
 - [Admin SDK Enterprise License Manager API](https://developers.google.com/admin-sdk/licensing/reference/rest)
-- [Cloud Identity Beta API](https://cloud.google.com/identity/docs/reference/rest)
+- [Cloud Identity API](https://cloud.google.com/identity/docs/reference/rest) (groups and memberships)
 - [Gmail API](https://developers.google.com/gmail/api/reference/rest)
+- [Gmail Postmaster API](https://developers.google.com/gmail/postmaster/reference/rest)
 - [Google Calendar API](https://developers.google.com/calendar/v3/reference)
+- [Contact Delegation API](https://developers.google.com/admin-sdk/contact-delegation/guides)
 - [Domain Shared Contacts API](https://developers.google.com/admin-sdk/domain-shared-contacts)
 - [Google People API](https://developers.google.com/people/api/rest)
 - [Google Drive API](https://developers.google.com/drive/api/v3/reference)
