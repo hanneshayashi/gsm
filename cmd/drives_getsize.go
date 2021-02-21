@@ -32,9 +32,6 @@ var drivesGetSizeCmd = &cobra.Command{
 	Short: "Counts the files in a Shared Drive and returns their number and total size",
 	Long: `If you need to know the size of a folder, use
 "gsm files count recursive"!`,
-	Annotations: map[string]string{
-		"crescendoAttachToParent": "true",
-	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
