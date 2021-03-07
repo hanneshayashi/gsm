@@ -76,8 +76,8 @@ func listCalendarListEntries(c *calendar.CalendarListListCall, ch chan *calendar
 		return err
 	}
 	r, _ := result.(*calendar.CalendarList)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

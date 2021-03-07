@@ -85,8 +85,8 @@ func listUsers(c *admin.UsersListCall, ch chan *admin.User, errKey string) error
 		return err
 	}
 	r, _ := result.(*admin.Users)
-	for _, i := range r.Users {
-		ch <- i
+	for i := range r.Users {
+		ch <- r.Users[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

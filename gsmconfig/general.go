@@ -139,22 +139,22 @@ func ListConfigs() ([]*GSMConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".yaml") {
+	for i := range files {
+		if !strings.HasSuffix(files[i].Name(), ".yaml") {
 			continue
 		}
-		b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", CfgDir, file.Name()))
+		b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", CfgDir, files[i].Name()))
 		if err != nil {
-			fmt.Printf("Error reading %s: %v\n", file.Name(), err)
+			fmt.Printf("Error reading %s: %v\n", files[i].Name(), err)
 			continue
 		}
 		c := &GSMConfig{}
 		err = yaml.Unmarshal(b, c)
 		if err != nil {
-			fmt.Printf("Error reading %s: %v\n", file.Name(), err)
+			fmt.Printf("Error reading %s: %v\n", files[i].Name(), err)
 			continue
 		}
-		if file.Name() == ".gsm.yaml" {
+		if files[i].Name() == ".gsm.yaml" {
 			c.Default = true
 		}
 		configs = append(configs, c)

@@ -121,8 +121,8 @@ func errorIsRetryable(err error) bool {
 	}
 	if gerr.Code == 403 {
 		msg := strings.ToLower(gerr.Message)
-		for _, kw := range keyWords {
-			if strings.Contains(msg, kw) {
+		for i := range keyWords {
+			if strings.Contains(msg, keyWords[i]) {
 				return true
 			}
 		}
@@ -223,11 +223,11 @@ func CreateDocs(cmd *cobra.Command) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	for _, file := range files {
-		name := strings.TrimSuffix(file.Name(), ".md")
+	for i := range files {
+		name := strings.TrimSuffix(files[i].Name(), ".md")
 		split := strings.Split(name, "_")
 		url := "/" + strings.Join(split, "/")
-		oldPath := tmpDir + "/" + file.Name()
+		oldPath := tmpDir + "/" + files[i].Name()
 		newPath := dir + url
 		os.MkdirAll(newPath, os.ModePerm)
 		f, err := os.Open(oldPath)
@@ -259,8 +259,8 @@ func CreateDocs(cmd *cobra.Command) {
 		}
 		defer n.Close()
 		w := bufio.NewWriter(n)
-		for _, line := range lines {
-			fmt.Fprintln(w, line)
+		for i := range lines {
+			fmt.Fprintln(w, lines[i])
 		}
 		w.Flush()
 	}

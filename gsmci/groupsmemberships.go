@@ -34,8 +34,8 @@ func listMembers(c *ci.GroupsMembershipsListCall, ch chan *ci.Membership, errKey
 		return err
 	}
 	r, _ := result.(*ci.ListMembershipsResponse)
-	for _, i := range r.Memberships {
-		ch <- i
+	for i := range r.Memberships {
+		ch <- r.Memberships[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -192,8 +192,8 @@ func searchTransitiveGroups(c *ci.GroupsMembershipsSearchTransitiveGroupsCall, c
 		return err
 	}
 	r, _ := result.(*ci.SearchTransitiveGroupsResponse)
-	for _, i := range r.Memberships {
-		ch <- i
+	for i := range r.Memberships {
+		ch <- r.Memberships[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -231,8 +231,8 @@ func searchTransitiveMemberships(c *ci.GroupsMembershipsSearchTransitiveMembersh
 		return err
 	}
 	r, _ := result.(*ci.SearchTransitiveMembershipsResponse)
-	for _, i := range r.Memberships {
-		ch <- i
+	for i := range r.Memberships {
+		ch <- r.Memberships[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

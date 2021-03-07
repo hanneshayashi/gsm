@@ -79,8 +79,8 @@ func listBuildings(c *admin.ResourcesBuildingsListCall, ch chan *admin.Building,
 		return err
 	}
 	r, _ := result.(*admin.Buildings)
-	for _, i := range r.Buildings {
-		ch <- i
+	for i := range r.Buildings {
+		ch <- r.Buildings[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

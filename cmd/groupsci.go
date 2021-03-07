@@ -198,8 +198,8 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		group.Labels = make(map[string]string)
 		labels := flags["labels"].GetStringSlice()
 		if len(labels) > 0 {
-			for _, l := range labels {
-				group.Labels[l] = ""
+			for i := range labels {
+				group.Labels[labels[i]] = ""
 			}
 		} else {
 			group.ForceSendFields = append(group.ForceSendFields, "Labels")
@@ -230,7 +230,7 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 	// 	group.AdditionalGroupKeys = []*ci.EntityKey{}
 	// 	additionalGroupKeys := flags["additionalGroupKeys"].GetStringSlice()
 	// 	if len(additionalGroupKeys) > 0 {
-	// 		for _, a := range additionalGroupKeys {
+	// 		for i := range additionalGroupKeys {
 	// 			m := gsmhelpers.FlagToMap(a)
 	// 			group.AdditionalGroupKeys = append(group.AdditionalGroupKeys, &ci.EntityKey{Id: m["id"], Namespace: m["namespace"]})
 	// 		}
@@ -243,8 +243,8 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		queries := flags["queries"].GetStringSlice()
 		if len(queries) > 0 {
 			group.DynamicGroupMetadata.Queries = []*ci.DynamicGroupQuery{}
-			for _, q := range queries {
-				m := gsmhelpers.FlagToMap(q)
+			for i := range queries {
+				m := gsmhelpers.FlagToMap(queries[i])
 				group.DynamicGroupMetadata.Queries = append(group.DynamicGroupMetadata.Queries, &ci.DynamicGroupQuery{ResourceType: m["resourceType"], Query: m["query"]})
 			}
 

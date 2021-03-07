@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package gsmgmail
 
+import "github.com/hanneshayashi/gsm/gsmhelpers"
+
 // SecurityModeIsValid checks if the given SecurityMode is valid
 // see: https://developers.google.com/gmail/api/reference/rest/v1/PopSettings#securitymode
 func SecurityModeIsValid(SecurityMode string) bool {
@@ -225,10 +227,5 @@ func ColorIsValid(color string) bool {
 		"#42d692",
 		"#16a765",
 	}
-	for _, c := range validColors {
-		if color == c {
-			return true
-		}
-	}
-	return false
+	return gsmhelpers.Contains(color, validColors)
 }

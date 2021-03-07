@@ -96,8 +96,8 @@ func listDrives(c *drive.DrivesListCall, ch chan *drive.Drive, errKey string) er
 		return err
 	}
 	r, _ := result.(*drive.DriveList)
-	for _, i := range r.Drives {
-		ch <- i
+	for i := range r.Drives {
+		ch <- r.Drives[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

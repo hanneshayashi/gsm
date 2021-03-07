@@ -146,8 +146,8 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 		"emailAddress",
 		"domain",
 	}
-	for _, pf := range possibleFlags {
-		if flags[pf].IsSet() {
+	for i := range possibleFlags {
+		if flags[possibleFlags[i]].IsSet() {
 			set++
 		}
 	}

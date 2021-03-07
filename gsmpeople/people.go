@@ -132,8 +132,8 @@ func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *peopl
 		return err
 	}
 	r, _ := result.(*people.ListDirectoryPeopleResponse)
-	for _, i := range r.People {
-		ch <- i
+	for i := range r.People {
+		ch <- r.People[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -177,8 +177,8 @@ func searchDirectoryPeople(c *people.PeopleSearchDirectoryPeopleCall, ch chan *p
 		return err
 	}
 	r, _ := result.(*people.SearchDirectoryPeopleResponse)
-	for _, i := range r.People {
-		ch <- i
+	for i := range r.People {
+		ch <- r.People[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

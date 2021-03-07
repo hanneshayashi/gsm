@@ -32,8 +32,8 @@ func listPeopleConnections(c *people.PeopleConnectionsListCall, ch chan *people.
 		return err
 	}
 	r, _ := result.(*people.ListConnectionsResponse)
-	for _, i := range r.Connections {
-		ch <- i
+	for i := range r.Connections {
+		ch <- r.Connections[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

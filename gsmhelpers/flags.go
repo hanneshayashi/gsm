@@ -262,8 +262,8 @@ func FlagToMap(value string) (m map[string]string) {
 	if value != "" {
 		m = make(map[string]string)
 		split := strings.Split(value, ";")
-		for _, att := range split {
-			s2 := strings.SplitN(att, "=", 2)
+		for i := range split {
+			s2 := strings.SplitN(split[i], "=", 2)
 			if len(s2) > 1 {
 				m[s2[0]] = s2[1]
 			}
@@ -458,4 +458,14 @@ func InitRecursiveCommand(parentCmd, childCmd *cobra.Command, cmdFlags, recursiv
 	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
 	addFlags(recursiveFlags, flags, childCmd.Use, false)
 	markFlagsRequired(childCmd, recursiveFlags, childCmd.Use)
+}
+
+// StringSliceToMapSlice converts a slice of strings to a slice of maps
+func StringSliceToMapSlice(slice []string) []map[string]string {
+	mapS := make([]map[string]string, 0)
+	for i := range slice {
+		m := FlagToMap(slice[i])
+		mapS = append(mapS, m)
+	}
+	return mapS
 }

@@ -94,9 +94,9 @@ func mapToSpreadsheet(flags map[string]*gsmhelpers.Value) (*sheets.Spreadsheet, 
 		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
 		if len(csvFilesToUpload) > 0 {
 			spreadsheet.Sheets = []*sheets.Sheet{}
-			for _, c := range csvFilesToUpload {
+			for i := range csvFilesToUpload {
 				s := &sheets.Sheet{}
-				m := gsmhelpers.FlagToMap(c)
+				m := gsmhelpers.FlagToMap(csvFilesToUpload[i])
 				s.Properties = &sheets.SheetProperties{
 					Title: m["title"],
 				}
@@ -137,15 +137,15 @@ func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sh
 		return nil, err
 	}
 	sheetMap := make(map[string]int64)
-	for _, s := range spreadsheet.Sheets {
-		sheetMap[s.Properties.Title] = s.Properties.SheetId
+	for i := range spreadsheet.Sheets {
+		sheetMap[spreadsheet.Sheets[i].Properties.Title] = spreadsheet.Sheets[i].Properties.SheetId
 	}
 	if flags["csvFileToUpload"].IsSet() {
 		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
 		if len(csvFilesToUpload) > 0 {
 			batchUpdateSpreadsheetRequest.Requests = []*sheets.Request{}
-			for _, c := range csvFilesToUpload {
-				m := gsmhelpers.FlagToMap(c)
+			for i := range csvFilesToUpload {
+				m := gsmhelpers.FlagToMap(csvFilesToUpload[i])
 				data, err := gsmhelpers.GetFileContentAsString(m["path"])
 				if err != nil {
 					return nil, err

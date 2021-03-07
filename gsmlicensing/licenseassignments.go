@@ -79,8 +79,8 @@ func listLicenseAssignmentsForProduct(c *licensing.LicenseAssignmentsListForProd
 		return err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -118,8 +118,8 @@ func listLicenseAssignmentsForProductAndSku(c *licensing.LicenseAssignmentsListF
 		return err
 	}
 	r, _ := result.(*licensing.LicenseAssignmentList)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

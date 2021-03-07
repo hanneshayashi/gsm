@@ -31,8 +31,8 @@ func getUserUsageReport(c *reports.UserUsageReportGetCall, ch chan *reports.Usag
 		return err
 	}
 	r, _ := result.(*reports.UsageReports)
-	for _, i := range r.UsageReports {
-		ch <- i
+	for i := range r.UsageReports {
+		ch <- r.UsageReports[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

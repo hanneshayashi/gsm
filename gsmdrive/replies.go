@@ -76,8 +76,8 @@ func listReplies(c *drive.RepliesListCall, ch chan *drive.Reply, errKey string) 
 		return err
 	}
 	r, _ := result.(*drive.ReplyList)
-	for _, i := range r.Replies {
-		ch <- i
+	for i := range r.Replies {
+		ch <- r.Replies[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

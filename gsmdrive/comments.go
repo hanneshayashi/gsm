@@ -76,8 +76,8 @@ func listComments(c *drive.CommentsListCall, ch chan *drive.Comment, errKey stri
 		return err
 	}
 	r, _ := result.(*drive.CommentList)
-	for _, i := range r.Comments {
-		ch <- i
+	for i := range r.Comments {
+		ch <- r.Comments[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

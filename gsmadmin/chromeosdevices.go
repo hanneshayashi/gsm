@@ -62,8 +62,8 @@ func listChromeOsDevices(c *admin.ChromeosdevicesListCall, ch chan *admin.Chrome
 		return err
 	}
 	r, _ := result.(*admin.ChromeOsDevices)
-	for _, i := range r.Chromeosdevices {
-		ch <- i
+	for i := range r.Chromeosdevices {
+		ch <- r.Chromeosdevices[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

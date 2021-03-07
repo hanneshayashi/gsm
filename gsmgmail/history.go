@@ -32,8 +32,8 @@ func listHistory(c *gmail.UsersHistoryListCall, ch chan *gmail.History, errKey s
 		return err
 	}
 	r, _ := result.(*gmail.ListHistoryResponse)
-	for _, i := range r.History {
-		ch <- i
+	for i := range r.History {
+		ch <- r.History[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

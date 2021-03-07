@@ -129,9 +129,9 @@ func mapToSchema(flags map[string]*gsmhelpers.Value) (*admin.Schema, error) {
 		fields := flags["schemaFields"].GetStringSlice()
 		if len(fields) > 0 {
 			schema.Fields = []*admin.SchemaFieldSpec{}
-			for _, f := range fields {
+			for i := range fields {
 				field := &admin.SchemaFieldSpec{}
-				m := gsmhelpers.FlagToMap(f)
+				m := gsmhelpers.FlagToMap(fields[i])
 				field.FieldName, ok = m["fieldName"]
 				if field.FieldName == "" && ok {
 					field.ForceSendFields = append(field.ForceSendFields, "FieldName")

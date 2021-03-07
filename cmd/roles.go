@@ -84,8 +84,8 @@ func mapToRole(flags map[string]*gsmhelpers.Value) (*admin.Role, error) {
 		role.RolePrivileges = []*admin.RoleRolePrivileges{}
 		rolePrivileges := flags["rolePrivileges"].GetStringSlice()
 		if len(rolePrivileges) > 0 {
-			for _, p := range rolePrivileges {
-				role.RolePrivileges = append(role.RolePrivileges, &admin.RoleRolePrivileges{PrivilegeName: p})
+			for i := range rolePrivileges {
+				role.RolePrivileges = append(role.RolePrivileges, &admin.RoleRolePrivileges{PrivilegeName: rolePrivileges[i]})
 			}
 		} else {
 			role.ForceSendFields = append(role.ForceSendFields, "RolePrivileges")

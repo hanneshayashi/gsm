@@ -259,9 +259,9 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 	}
 	feed := Feed{}
 	xml.Unmarshal(responseBody, &feed)
-	for _, l := range feed.Link {
-		if l.Rel == "next" {
-			f, err := makeListSharedContactsCallAndAppend(l.Href)
+	for i := range feed.Link {
+		if feed.Link[i].Rel == "next" {
+			f, err := makeListSharedContactsCallAndAppend(feed.Link[i].Href)
 			if err != nil {
 				return nil, err
 			}

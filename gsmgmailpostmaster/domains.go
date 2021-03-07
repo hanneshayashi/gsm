@@ -50,8 +50,8 @@ func listDomains(c *gmailpostmastertools.DomainsListCall, ch chan *gmailpostmast
 		return err
 	}
 	r, _ := result.(*gmailpostmastertools.ListDomainsResponse)
-	for _, i := range r.Domains {
-		ch <- i
+	for i := range r.Domains {
+		ch <- r.Domains[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

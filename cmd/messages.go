@@ -204,8 +204,8 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 		header["Bcc"] = flags["bcc"].GetString()
 	}
 	header["Subject"] = flags["subject"].GetString()
-	for k, v := range header {
-		msg += fmt.Sprintf("%s: %s\n", k, v)
+	for i := range header {
+		msg += fmt.Sprintf("%s: %s\n", i, header[i])
 	}
 	msg += fmt.Sprintf("\n--%s\n", boundary)
 	msg += "Content-Type: text/plain; charset=\"utf-8\"\n"
@@ -215,8 +215,8 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 	msg += "\n" + body
 	if flags["attachment"].IsSet() {
 		attachments := flags["attachment"].GetStringSlice()
-		for _, a := range attachments {
-			file, err := os.Open(a)
+		for i := range attachments {
+			file, err := os.Open(attachments[i])
 			if err != nil {
 				return nil, err
 			}

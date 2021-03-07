@@ -76,8 +76,8 @@ func listFeatures(c *admin.ResourcesFeaturesListCall, ch chan *admin.Feature, er
 		return err
 	}
 	r, _ := result.(*admin.Features)
-	for _, i := range r.Features {
-		ch <- i
+	for i := range r.Features {
+		ch <- r.Features[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

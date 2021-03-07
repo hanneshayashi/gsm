@@ -50,8 +50,8 @@ func listTrafficStats(c *gmailpostmastertools.DomainsTrafficStatsListCall, ch ch
 		return err
 	}
 	r, _ := result.(*gmailpostmastertools.ListTrafficStatsResponse)
-	for _, i := range r.TrafficStats {
-		ch <- i
+	for i := range r.TrafficStats {
+		ch <- r.TrafficStats[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

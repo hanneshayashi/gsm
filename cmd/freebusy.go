@@ -113,8 +113,8 @@ func mapToFreeBusyRequest(flags map[string]*gsmhelpers.Value) (*calendar.FreeBus
 		freeBusyRequest.Items = []*calendar.FreeBusyRequestItem{}
 		ids := flags["id"].GetStringSlice()
 		if len(ids) > 0 {
-			for _, id := range ids {
-				freeBusyRequest.Items = append(freeBusyRequest.Items, &calendar.FreeBusyRequestItem{Id: id})
+			for i := range ids {
+				freeBusyRequest.Items = append(freeBusyRequest.Items, &calendar.FreeBusyRequestItem{Id: ids[i]})
 			}
 		} else {
 			freeBusyRequest.ForceSendFields = append(freeBusyRequest.ForceSendFields, "Items")

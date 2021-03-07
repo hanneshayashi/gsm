@@ -232,8 +232,8 @@ func listFiles(c *drive.FilesListCall, ch chan *drive.File, errKey string) error
 		return gsmhelpers.FormatError(err, errKey)
 	}
 	r, _ := result.(*drive.FileList)
-	for _, i := range r.Files {
-		ch <- i
+	for i := range r.Files {
+		ch <- r.Files[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

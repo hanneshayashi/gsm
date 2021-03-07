@@ -76,8 +76,8 @@ func listGroups(c *admin.GroupsListCall, ch chan *admin.Group, errKey string) er
 		return err
 	}
 	r, _ := result.(*admin.Groups)
-	for _, i := range r.Groups {
-		ch <- i
+	for i := range r.Groups {
+		ch <- r.Groups[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
