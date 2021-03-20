@@ -30,7 +30,7 @@ var orgUnitsCmd = &cobra.Command{
 	Short:             "Manage Organizational Unit (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

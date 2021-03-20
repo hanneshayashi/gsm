@@ -36,7 +36,7 @@ var messagesCmd = &cobra.Command{
 	Short:             "Manage users' messages (Part of Gmail API)",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -240,11 +240,11 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 func emlToMessage(eml string) (*gmail.Message, error) {
 	file, err := os.Open(eml)
 	if err != nil {
-		return nil, fmt.Errorf("Error opening %s: %v", eml, err)
+		return nil, fmt.Errorf("error opening %s: %v", eml, err)
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading %s: %v", eml, err)
+		return nil, fmt.Errorf("error reading %s: %v", eml, err)
 	}
 	message := &gmail.Message{
 		Raw: base64.URLEncoding.EncodeToString(bytes),

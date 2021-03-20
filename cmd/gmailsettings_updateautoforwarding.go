@@ -33,7 +33,7 @@ var gmailSettingsUpdateAutoForwardingCmd = &cobra.Command{
 A verified forwarding address must be specified when auto-forwarding is enabled.`,
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateAutoForwarding",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToAutoforwarding(flags)
 		if err != nil {

@@ -32,7 +32,7 @@ var chromeOsCommandsGetCmd = &cobra.Command{
 	Short:             "Gets command data a specific command issued to the device.",
 	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetCommand(flags["customerId"].GetString(), flags["deviceId"].GetString(), flags["fields"].GetString(), flags["commandId"].GetInt64())
 		if err != nil {

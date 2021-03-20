@@ -33,7 +33,7 @@ var changesListCmd = &cobra.Command{
 	Short:             "Lists the changes for a user or shared drive.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/changes/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, nextStartPageToken, err := gsmdrive.ListChanges(flags["pageToken"].GetString(), flags["driveId"].GetString(), flags["spaces"].GetString(), flags["fields"].GetString(), flags["includePermissionsForView"].GetString(), flags["includeCorpusRemovals"].GetBool(), flags["includeItemsFromAllDrives"].GetBool(), flags["includeRemoved"].GetBool(), flags["restrictToMyDrive"].GetBool())
 		if err != nil {

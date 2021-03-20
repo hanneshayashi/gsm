@@ -32,7 +32,7 @@ var aspsDeleteCmd = &cobra.Command{
 	Short:             "Delete an ASP issued by a user.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/asps/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteAsp(flags["userKey"].GetString(), flags["codeId"].GetInt64())
 		if err != nil {

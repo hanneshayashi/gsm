@@ -37,7 +37,7 @@ var peopleCmd = &cobra.Command{
 	Short:             "Manage people's contacts (Part of People API)",
 	Long:              "https://developers.google.com/people/api/rest/v1/people",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -750,7 +750,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		}
 	}
 	if flags["biographyValue"].IsSet() || flags["biographyContentType"].IsSet() {
-		person.Biographies = make([]*people.Biography, 1, 1)
+		person.Biographies = make([]*people.Biography, 1)
 		person.Biographies[0] = new(people.Biography)
 		if flags["biographyValue"].IsSet() {
 			person.Biographies[0].Value = flags["biographyValue"].GetString()
@@ -766,7 +766,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		}
 	}
 	if flags["birthdayYear"].IsSet() || flags["birthdayMonth"].IsSet() || flags["birthdayDay"].IsSet() || flags["birthdayText"].IsSet() {
-		person.Birthdays = make([]*people.Birthday, 1, 1)
+		person.Birthdays = make([]*people.Birthday, 1)
 		person.Birthdays[0] = new(people.Birthday)
 		if flags["birthdayYear"].IsSet() || flags["birthdayMonth"].IsSet() || flags["birthdayDay"].IsSet() {
 			person.Birthdays[0].Date = &people.Date{}
@@ -1023,7 +1023,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 	}
 	if flags["unstructuredName"].IsSet() || flags["familyName"].IsSet() || flags["givenName"].IsSet() || flags["middleName"].IsSet() || flags["honorificPrefix"].IsSet() || flags["honorificSuffix"].IsSet() || flags["phoneticFullName"].IsSet() || flags["phoneticFamilyName"].IsSet() || flags["phoneticGivenName"].IsSet() || flags["phoneticMiddleName"].IsSet() || flags["phoneticHonorificPrefix"].IsSet() || flags["phoneticHonorificSuffix"].IsSet() {
 		if person.Names == nil {
-			person.Names = make([]*people.Name, 1, 1)
+			person.Names = make([]*people.Name, 1)
 			person.Names[0] = new(people.Name)
 		}
 		if flags["unstructuredName"].IsSet() {

@@ -33,7 +33,7 @@ var commentsListCmd = &cobra.Command{
 	Short:             "Lists a file's comments.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/comments/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListComments(flags["fileId"].GetString(), flags["startModifiedTime"].GetString(), flags["fields"].GetString(), flags["includeDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

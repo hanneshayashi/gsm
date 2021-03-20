@@ -32,7 +32,7 @@ var messagesGetCmd = &cobra.Command{
 	Short:             "Gets the specified message.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		format := flags["format"].GetString()
 		if !gsmgmail.FormatIsValid(format) {

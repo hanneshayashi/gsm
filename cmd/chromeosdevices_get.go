@@ -32,7 +32,7 @@ var chromeOsDevicesGetCmd = &cobra.Command{
 	Short:             "Retrieves a Chrome OS device's properties.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetChromeOsDevice(flags["customerId"].GetString(), flags["deviceId"].GetString(), flags["fields"].GetString(), flags["projection"].GetString())
 		if err != nil {

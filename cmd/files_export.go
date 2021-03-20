@@ -33,7 +33,7 @@ var filesExportCmd = &cobra.Command{
 	Long: `Please note that the exported content is limited to 10MB.
 https://developers.google.com/drive/api/v3/reference/files/export`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ExportFile(flags["fileId"].GetString(), flags["mimeType"].GetString())
 		if err != nil {

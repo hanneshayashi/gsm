@@ -33,7 +33,7 @@ var draftsListCmd = &cobra.Command{
 	Short:             "Lists the drafts in the user's mailbox.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListDrafts(flags["userId"].GetString(), flags["q"].GetString(), flags["fields"].GetString(), flags["includeSpamTrash"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

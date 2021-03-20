@@ -32,7 +32,7 @@ var gmailSettingsUpdatePopCmd = &cobra.Command{
 	Short:             "Updates POP settings.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updatePop",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPopSettings(flags)
 		if err != nil {

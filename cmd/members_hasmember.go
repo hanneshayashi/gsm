@@ -32,7 +32,7 @@ var membersHasMemberCmd = &cobra.Command{
 	Short:             "Checks whether the given user is a member of the group. Membership can be direct or nested.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/hasMember",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.HasMember(flags["groupKey"].GetString(), flags["memberKey"].GetString())
 		if err != nil {

@@ -32,7 +32,7 @@ var groupsPatchCmd = &cobra.Command{
 	Short:             "Updates a group's properties. This method supports patch semantics",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		g, err := mapToGroup(flags)
 		if err != nil {

@@ -30,7 +30,7 @@ var aboutCmd = &cobra.Command{
 	Long: `This API only works with the currently authenticated user!
 https://developers.google.com/drive/api/v3/reference/about`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

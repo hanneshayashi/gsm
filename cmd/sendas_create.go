@@ -36,7 +36,7 @@ otherwise, the resource will be created with verification status set to accepted
 If a signature is provided, Gmail will sanitize the HTML before saving it with the alias.
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/create`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSendAs(flags)
 		if err != nil {

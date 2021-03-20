@@ -32,7 +32,7 @@ var userPhotosDeleteCmd = &cobra.Command{
 	Short:             "Removes the user's photo.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/userPhotos/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteUserPhoto(flags["userKey"].GetString())
 		if err != nil {

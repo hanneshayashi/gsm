@@ -33,7 +33,7 @@ var smimeInfoInsertCmd = &cobra.Command{
 Note that pkcs12 format is required for the key.`,
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSmimeInfo(flags)
 		if err != nil {

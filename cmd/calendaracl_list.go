@@ -33,7 +33,7 @@ var calendarACLListCmd = &cobra.Command{
 	Short:             "Returns the rules in the access control list for the calendar.",
 	Long:              `https://developers.google.com/calendar/v3/reference/acl/list`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListACLs(flags["calendarId"].GetString(), flags["fields"].GetString(), flags["showDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

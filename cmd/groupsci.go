@@ -33,7 +33,7 @@ var groupsCiCmd = &cobra.Command{
 	Short:             "Manage Google Groups with the Cloud Identity API",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -183,7 +183,7 @@ func getGroupCiName(name, email string) (string, error) {
 		return name, nil
 	}
 	if email == "" {
-		return "", errors.New("Either name or email must be supplied")
+		return "", errors.New("either name or email must be supplied")
 	}
 	name, err := gsmci.LookupGroup(email)
 	if err != nil {

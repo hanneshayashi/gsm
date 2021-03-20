@@ -39,7 +39,7 @@ var filesCreateBatchCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {
 			log.Fatalln(err)
@@ -65,12 +65,12 @@ var filesCreateBatchCmd = &cobra.Command{
 								log.Printf("Error opening file %s: %v", localFilePath, err)
 								continue
 							}
-							defer content.Close()
 							if f.Name == "" {
 								f.Name = filepath.Base(content.Name())
 							}
 						}
 						result, err := gsmdrive.CreateFile(f, content, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString())
+						content.Close()
 						if err != nil {
 							log.Println(err)
 						} else {

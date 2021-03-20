@@ -36,7 +36,7 @@ var revisionsDeleteBatchCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, revisionFlags)
 		if err != nil {
 			log.Fatalln(err)

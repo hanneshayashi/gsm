@@ -33,7 +33,7 @@ var calendarListsListCmd = &cobra.Command{
 	Short:             "Returns the calendars on the user's calendar list.",
 	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListCalendarListEntries(flags["minAccessRole"].GetString(), flags["fields"].GetString(), flags["showHidden"].GetBool(), flags["showDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

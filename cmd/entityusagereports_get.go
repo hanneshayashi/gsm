@@ -35,7 +35,7 @@ For more information, see the Entities Usage Report guide.
 For more information about the entities report's parameters, see the Entities Usage parameters reference guides.`,
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/entityUsageReports/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmreports.GetEntityUsageReport(flags["entityType"].GetString(), flags["entityKey"].GetString(), flags["date"].GetString(), flags["customerId"].GetString(), flags["filters"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

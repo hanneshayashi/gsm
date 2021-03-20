@@ -32,7 +32,7 @@ var tokensListCmd = &cobra.Command{
 	Short:             "Returns the set of tokens specified user has issued to 3rd party applications.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListTokens(flags["userKey"].GetString(), flags["fields"].GetString())
 		if err != nil {

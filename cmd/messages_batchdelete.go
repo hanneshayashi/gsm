@@ -32,7 +32,7 @@ var messagesBatchDeleteCmd = &cobra.Command{
 	Short:             "Deletes many messages by message ID. Provides no guarantees that messages were not already deleted or even existed at all.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/batchDelete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.BatchDeleteMessages(flags["userId"].GetString(), flags["ids"].GetStringSlice())
 		if err != nil {

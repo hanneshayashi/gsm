@@ -32,7 +32,7 @@ var calendarListsDeleteCmd = &cobra.Command{
 	Short:             "Removes a calendar from the user's calendar list.",
 	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.DeleteCalendarListEntry(flags["calendarId"].GetString())
 		if err != nil {

@@ -37,7 +37,7 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		folderID := flags["folderId"].GetString()
 		_, err := gsmdrive.GetFolder(folderID)

@@ -30,7 +30,7 @@ var postmasterDomainsCmd = &cobra.Command{
 	Long: `You need to set up your domain(s) at https://postmaster.google.com/u/1/managedomains first.
 https://developers.google.com/gmail/postmaster/reference/rest/v1/domains`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

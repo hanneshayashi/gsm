@@ -33,7 +33,7 @@ var eventsImportCmd = &cobra.Command{
 This operation is used to add a private copy of an existing event to a calendar.`,
 	Long:              "https://developers.google.com/calendar/v3/reference/events/import",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		e, err := gsmcalendar.GetEvent(flags["calendarI"].GetString(), flags["eventId"].GetString(), "", "*", 0)
 		if err != nil {

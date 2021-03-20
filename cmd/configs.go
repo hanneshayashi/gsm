@@ -47,7 +47,7 @@ The currently in-use config is always '~/.config/gsm/.gsm.yaml'.
 When you load a config with 'gsm configs load --name <config>, the current .gsm.yaml will be renamed to <name>.yaml and the loaded config will be renamed to .gsm.yaml.
 You can always explicitly specify a config file with the --config flag.`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -118,28 +118,28 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 	} else if configOld != nil {
 		config.Name = configOld.Name
 	} else {
-		return nil, fmt.Errorf("Name is required")
+		return nil, fmt.Errorf("name is required")
 	}
 	if flags["credentialsFile"].IsSet() {
 		config.CredentialsFile = flags["credentialsFile"].GetString()
 	} else if configOld != nil {
 		config.CredentialsFile = configOld.CredentialsFile
 	} else {
-		return nil, fmt.Errorf("CredentialsFile is required")
+		return nil, fmt.Errorf("credentialsFile is required")
 	}
 	if flags["mode"].IsSet() {
 		config.Mode = flags["mode"].GetString()
 	} else if configOld != nil {
 		config.Mode = configOld.Mode
 	} else {
-		return nil, fmt.Errorf("Mode is required")
+		return nil, fmt.Errorf("mode is required")
 	}
 	if flags["subject"].IsSet() {
 		config.Subject = flags["subject"].GetString()
 	} else if configOld != nil {
 		config.Subject = configOld.Subject
 	} else if config.Mode == "dwd" {
-		return nil, fmt.Errorf("Subject is required when mode is 'dwd'")
+		return nil, fmt.Errorf("subject is required when mode is 'dwd'")
 	}
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()

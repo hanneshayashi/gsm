@@ -32,7 +32,7 @@ var gmailSettingsGetAutoForwardingCmd = &cobra.Command{
 	Short:             "Gets the auto-forwarding setting for the specified account.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getAutoForwarding",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetAutoForwardingSettings(flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {

@@ -32,7 +32,7 @@ var calendarListsGetCmd = &cobra.Command{
 	Short:             "Returns a calendar from the user's calendar list.",
 	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.GetCalendarListEntry(flags["calendarId"].GetString(), flags["fields"].GetString())
 		if err != nil {

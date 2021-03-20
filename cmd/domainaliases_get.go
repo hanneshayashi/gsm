@@ -32,7 +32,7 @@ var domainAliasesGetCmd = &cobra.Command{
 	Short:             "Retrieves a domain alias of the customer.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetDomainAlias(flags["customer"].GetString(), flags["domainAliasName"].GetString(), flags["fields"].GetString())
 		if err != nil {

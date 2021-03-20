@@ -37,7 +37,7 @@ var eventsCmd = &cobra.Command{
 email address to use this API!
 https://developers.google.com/calendar/v3/reference/events`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -380,7 +380,7 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	event := &calendar.Event{}
 	if flags["anyoneCanAddSelf"].IsSet() {
 		event.AnyoneCanAddSelf = flags["anyoneCanAddSelf"].GetBool()
-		if event.AnyoneCanAddSelf == false {
+		if !event.AnyoneCanAddSelf {
 			event.ForceSendFields = append(event.ForceSendFields, "AnyoneCanAddSelf")
 		}
 	}
@@ -471,7 +471,7 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	}
 	if flags["guestsCanModify"].IsSet() {
 		event.GuestsCanModify = flags["guestsCanModify"].GetBool()
-		if event.GuestsCanModify == false {
+		if !event.GuestsCanModify {
 			event.ForceSendFields = append(event.ForceSendFields, "GuestsCanModify")
 		}
 	}

@@ -30,7 +30,7 @@ var contactGroupsMembersCmd = &cobra.Command{
 	Short:             "Modify members of contact groups (Part of People API)",
 	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups.members",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

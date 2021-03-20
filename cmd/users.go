@@ -571,7 +571,7 @@ var usersCmd = &cobra.Command{
 	Short:             "Manage Users (Park of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

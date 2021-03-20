@@ -32,7 +32,7 @@ var userAliasesInsertCmd = &cobra.Command{
 	Short:             "Adds an alias.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToUserAlias(flags)
 		if err != nil {

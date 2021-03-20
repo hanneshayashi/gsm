@@ -32,7 +32,7 @@ var filtersListCmd = &cobra.Command{
 	Short:             "Lists the message filters of a Gmail user.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListFilters(flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {

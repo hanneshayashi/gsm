@@ -30,7 +30,7 @@ var groupAliasesCmd = &cobra.Command{
 	Short:             "Manage group aliases, which are alternative email addresses (Part of Admin SDK - not Gmail API!)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

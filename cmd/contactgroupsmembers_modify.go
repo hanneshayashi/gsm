@@ -32,7 +32,7 @@ var contactGroupsMembersModifyCmd = &cobra.Command{
 	Short:             "Modify a new contact group owned by the authenticated user.",
 	Long:              "https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		m, err := mapToModifyContactGroupMembersRequest(flags)
 		if err != nil {

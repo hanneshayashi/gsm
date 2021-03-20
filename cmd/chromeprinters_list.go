@@ -33,7 +33,7 @@ var chromePrintersListCmd = &cobra.Command{
 	Short:             "List printers configs.",
 	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent := flags["parent"].GetString()
 		if parent == "" {

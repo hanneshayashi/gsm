@@ -32,7 +32,7 @@ var schemasPatchCmd = &cobra.Command{
 	Short:             "Patches a custom schema",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := mapToSchema(flags)
 		if err != nil {

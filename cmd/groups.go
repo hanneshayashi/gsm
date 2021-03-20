@@ -30,7 +30,7 @@ var groupsCmd = &cobra.Command{
 	Short:             "Implements the groups API (Part of Admin SDK).",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

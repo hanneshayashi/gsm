@@ -32,7 +32,7 @@ var orgUnitsListCmd = &cobra.Command{
 	Short:             "Retrieves a list of all organizational units for an account.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListOrgUnits(flags["customerId"].GetString(), flags["type"].GetString(), flags["orgUnitPath"].GetString(), flags["fields"].GetString())
 		if err != nil {

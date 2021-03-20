@@ -35,7 +35,7 @@ var filesUpdateCmd = &cobra.Command{
 	Short:             "Updates a file's metadata and/or content. This method supports patch semantics.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/update",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFile(flags)
 		if err != nil {

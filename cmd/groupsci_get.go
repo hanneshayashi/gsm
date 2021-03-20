@@ -32,7 +32,7 @@ var groupsCiGetCmd = &cobra.Command{
 	Short:             "Retrieves a group.",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())
 		if err != nil {

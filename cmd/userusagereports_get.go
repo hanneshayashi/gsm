@@ -35,7 +35,7 @@ For more information, see the User Usage Report guide.
 For more information about the user report's parameters, see the Users Usage parameters reference guides.`,
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/userUsageReports/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmreports.GetUserUsageReport(flags["userKey"].GetString(), flags["date"].GetString(), flags["customerId"].GetString(), flags["filters"].GetString(), flags["orgUnitId"].GetString(), flags["parameters"].GetString(), flags["groupIdFilter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

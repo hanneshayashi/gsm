@@ -33,7 +33,7 @@ var repliesListCmd = &cobra.Command{
 	Short:             "Lists a comment's replies.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/replies/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListReplies(flags["fileId"].GetString(), flags["commentId"].GetString(), flags["fields"].GetString(), flags["includeDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

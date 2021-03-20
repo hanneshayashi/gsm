@@ -33,7 +33,7 @@ var rolesListCmd = &cobra.Command{
 	Short:             "Retrieves a paginated list of all the roles in a domain.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roles/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListRoles(flags["customer"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

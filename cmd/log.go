@@ -29,7 +29,7 @@ var logCmd = &cobra.Command{
 	Short:             "Manage Shared Log (Part of Drive API)",
 	Long:              "https://developers.google.com/drive/api/v3/reference/log",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

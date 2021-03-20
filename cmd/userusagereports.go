@@ -31,7 +31,7 @@ var userUsageReportsCmd = &cobra.Command{
 	Short:             "Manage (get) User Usage Reports (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/userUsageReports",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -117,7 +117,8 @@ Format: "id:abc123,id:xyz456"`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var userUsageReportFlagsALL = gsmhelpers.GetAllFlags(userUsageReportFlags)
+
+// var userUsageReportFlagsALL = gsmhelpers.GetAllFlags(userUsageReportFlags)
 
 func init() {
 	rootCmd.AddCommand(userUsageReportsCmd)

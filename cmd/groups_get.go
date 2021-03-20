@@ -32,7 +32,7 @@ var groupsGetCmd = &cobra.Command{
 	Short:             "Retrieves a group's properties.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetGroup(flags["groupKey"].GetString(), flags["fields"].GetString())
 		if err != nil {

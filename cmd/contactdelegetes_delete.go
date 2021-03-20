@@ -32,7 +32,7 @@ var contactDelegatesDeleteCmd = &cobra.Command{
 	Short:             "Deletes a delegate from a given user.",
 	Long:              "https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteContactDelegate(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {

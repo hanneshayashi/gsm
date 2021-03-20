@@ -31,7 +31,7 @@ var entityUsageReportsCmd = &cobra.Command{
 	Short:             "Manage (get) Entity Usage Reports (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/entityUsageReports",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -114,7 +114,8 @@ An example of an invalid request parameter is one that does not belong to the ap
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var entityUsageReportFlagsALL = gsmhelpers.GetAllFlags(entityUsageReportFlags)
+
+// var entityUsageReportFlagsALL = gsmhelpers.GetAllFlags(entityUsageReportFlags)
 
 func init() {
 	rootCmd.AddCommand(entityUsageReportsCmd)

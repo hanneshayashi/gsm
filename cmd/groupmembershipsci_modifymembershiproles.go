@@ -32,7 +32,7 @@ var groupMembershipsCiModifyMembershipRolesCmd = &cobra.Command{
 	Short:             "Modifies the MembershipRoles of a Membership.",
 	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/modifyMembershipRoles`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		m, err := mapToModifyMembershipRolesRequestCi(flags)
 		if err != nil {

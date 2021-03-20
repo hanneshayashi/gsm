@@ -32,7 +32,7 @@ var verificationCodesInvalidateCmd = &cobra.Command{
 	Short:             "Invalidate the current backup verification codes for the user.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/verificationCodes/invalidate",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.InvalidateVerificationCodes(flags["userKey"].GetString())
 		if err != nil {

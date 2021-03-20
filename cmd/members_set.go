@@ -34,7 +34,7 @@ var membersSetCmd = &cobra.Command{
 	Short:             "Sets the members of a group to match the specified email addresses with the given role",
 	Long:              "",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		groupKey := flags["groupKey"].GetString()
 		membersToAdd, membersToRemove, err := gsmadmin.GetMembersToSet(groupKey, 4, flags["emails"].GetStringSlice()...)

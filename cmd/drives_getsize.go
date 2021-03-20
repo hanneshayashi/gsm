@@ -33,7 +33,7 @@ var drivesGetSizeCmd = &cobra.Command{
 	Long: `If you need to know the size of a folder, use
 "gsm files count recursive"!`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		var q string
 		if !flags["includeTrash"].GetBool() {

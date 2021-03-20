@@ -30,7 +30,7 @@ var chromeOsCmd = &cobra.Command{
 	Short:             "Issue Commands to Chrome OS Devices (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

@@ -32,7 +32,7 @@ var calendarsInsertCmd = &cobra.Command{
 	Short:             `Creates a secondary calendar.`,
 	Long:              "https://developers.google.com/calendar/v3/reference/calendars/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToCalendar(flags)
 		if err != nil {

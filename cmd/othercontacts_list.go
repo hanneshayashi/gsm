@@ -34,7 +34,7 @@ var otherContactsListCmd = &cobra.Command{
 "Other contacts" are typically auto created contacts from interactions.`,
 	Long:              "https://developers.google.com/people/api/rest/v1/otherContacts/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.ListOtherContacts(flags["readMask"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

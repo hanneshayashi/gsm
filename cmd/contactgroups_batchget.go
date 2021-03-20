@@ -32,7 +32,7 @@ var contactGroupsBatchGetCmd = &cobra.Command{
 	Short:             "Get a list of contact groups owned by the authenticated user by specifying a list of contact group resource names.",
 	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups/batchGet",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.BatchGetContactGroups(flags["resourceNames"].GetStringSlice(), flags["maxMembers"].GetInt64(), flags["fields"].GetString())
 		if err != nil {

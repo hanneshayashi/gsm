@@ -33,7 +33,7 @@ var threadsListCmd = &cobra.Command{
 	Short:             "Lists the threads in the user's mailbox.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListThreads(flags["userId"].GetString(), flags["q"].GetString(), flags["fields"].GetString(), flags["labelIds"].GetStringSlice(), flags["includeSpamTrash"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {

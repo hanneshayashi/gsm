@@ -32,7 +32,7 @@ var privilegesListCmd = &cobra.Command{
 	Short:             "Retrieves a paginated list of all privileges for a customer.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/privileges/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListPrivileges(flags["customer"].GetString(), flags["fields"].GetString())
 		if err != nil {

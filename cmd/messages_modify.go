@@ -32,7 +32,7 @@ var messagesModifyCmd = &cobra.Command{
 	Short:             "Modifies the labels on the specified message.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/modify",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ModifyMessage(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabels"].GetStringSlice(), flags["removeLabels"].GetStringSlice())
 		if err != nil {

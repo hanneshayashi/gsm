@@ -49,7 +49,6 @@ import (
 )
 
 var (
-	cfgDir         string
 	cfgFile        string
 	dwdSubject     string
 	logFile        string
@@ -126,7 +125,7 @@ Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 	Version: "0.2.4",

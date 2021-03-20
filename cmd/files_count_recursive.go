@@ -34,7 +34,7 @@ var filesCountRecursiveCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
 		result := gsmdrive.CountFilesAndFolders(files)

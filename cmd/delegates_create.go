@@ -40,7 +40,7 @@ Also note that when a new delegate is created, there may be up to a one minute d
 
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		d, err := mapToDelegate(flags)
 		if err != nil {

@@ -35,7 +35,7 @@ var sendAsCmd = &cobra.Command{
 Send-as aliases correspond to the "Send Mail As" feature in the web interface.
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

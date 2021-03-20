@@ -32,7 +32,7 @@ var rolesInsertCmd = &cobra.Command{
 	Short:             "Creates a role.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roles/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToRole(flags)
 		if err != nil {

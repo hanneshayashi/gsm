@@ -33,7 +33,7 @@ var drivesDeleteCmd = &cobra.Command{
 The shared drive cannot contain any untrashed items.`,
 	Long:              "https://developers.google.com/drive/api/v3/reference/drives/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteDrive(flags["driveId"].GetString())
 		if err != nil {

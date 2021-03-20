@@ -36,7 +36,7 @@ Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;l
 		"crescendoFlags": "--json",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		s, err := gsmadmin.GetSharedContact(flags["url"].GetString())
 		if err != nil {

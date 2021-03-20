@@ -32,7 +32,7 @@ var calendarResourcesGetCmd = &cobra.Command{
 	Short:             "Gets a calendar resource.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetCalendarResource(flags["customer"].GetString(), flags["calendarResourceId"].GetString(), flags["fields"].GetString())
 		if err != nil {

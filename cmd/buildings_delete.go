@@ -32,7 +32,7 @@ var buildingsDeleteCmd = &cobra.Command{
 	Short:             "Deletes a building.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteBuilding(flags["customer"].GetString(), flags["buildingId"].GetString())
 		if err != nil {

@@ -33,7 +33,7 @@ var filesCopyCmd = &cobra.Command{
 Use "files copy recursive" to copy folders.`,
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/copy",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFile(flags)
 		if err != nil {

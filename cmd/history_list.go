@@ -34,7 +34,7 @@ var historyListCmd = &cobra.Command{
 	Short:             "Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.history/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		historyTypes := flags["historyTypes"].GetStringSlice()
 		for i := range historyTypes {

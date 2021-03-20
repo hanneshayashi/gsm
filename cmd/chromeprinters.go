@@ -33,7 +33,7 @@ var chromePrintersCmd = &cobra.Command{
 	Short:             "Managed Chrome Printers (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }
@@ -134,7 +134,8 @@ A comma-separated list of fully qualified names of fields. Example: "user.displa
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var chromePrinterFlagsALL = gsmhelpers.GetAllFlags(chromePrinterFlags)
+
+// var chromePrinterFlagsALL = gsmhelpers.GetAllFlags(chromePrinterFlags)
 
 func init() {
 	rootCmd.AddCommand(chromePrintersCmd)

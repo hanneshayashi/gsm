@@ -32,7 +32,7 @@ var chromePrintersDeleteCmd = &cobra.Command{
 	Short:             "Deletes a Printer.",
 	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeletePrinter(flags["name"].GetString())
 		if err != nil {

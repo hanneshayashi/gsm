@@ -30,7 +30,7 @@ var permissionsCmd = &cobra.Command{
 	Short:             "Manage file and drive permissions (Part of Drive API)",
 	Long:              "https://developers.google.com/drive/api/v3/reference/permissions",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

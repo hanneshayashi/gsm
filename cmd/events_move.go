@@ -32,7 +32,7 @@ var eventsMoveCmd = &cobra.Command{
 	Short:             "Moves an event to another calendar, i.e. changes an event's organizer.",
 	Long:              "https://developers.google.com/calendar/v3/reference/events/move",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.MoveEvent(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["destination"].GetString(), flags["sendUpdates"].GetString(), flags["fields"].GetString())
 		if err != nil {

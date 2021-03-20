@@ -32,7 +32,7 @@ var mobileDevicesActionCmd = &cobra.Command{
 	Short:             "Takes an action that affects a mobile device. For example, remotely wiping a device.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/action",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToMobileDeviceAction(flags)
 		if err != nil {

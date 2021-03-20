@@ -29,7 +29,7 @@ var threadsCmd = &cobra.Command{
 	Short:             "Manage threads in users' mailboxes (Part of Gmail API)",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

@@ -37,7 +37,7 @@ Note that a delegate user must be referred to by their primary email address, an
 This method is only available to service account clients that have been delegated domain-wide authority.
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.DeleteDelegate(flags["userId"].GetString(), flags["delegateEmail"].GetString())
 		if err != nil {

@@ -32,7 +32,7 @@ var repliesDeleteCmd = &cobra.Command{
 	Short:             "Deletes a reply.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/replies/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteReply(flags["fileId"].GetString(), flags["commentId"].GetString(), flags["replyId"].GetString())
 		if err != nil {

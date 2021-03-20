@@ -32,7 +32,7 @@ var commentsGetCmd = &cobra.Command{
 	Short:             "Gets a comment by ID.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/comments/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetComment(flags["fileId"].GetString(), flags["commentId"].GetString(), flags["fields"].GetString(), flags["includeDeleted"].GetBool())
 		if err != nil {

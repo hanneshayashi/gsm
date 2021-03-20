@@ -34,7 +34,7 @@ var userPhotosCmd = &cobra.Command{
 	Short:             "Manage user photos (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.photos",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

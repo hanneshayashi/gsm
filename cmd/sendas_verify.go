@@ -32,7 +32,7 @@ var sendAsVerifyCmd = &cobra.Command{
 	Short:             "Sends a verification email to the specified send-as alias address. The verification status must be pending.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/verify",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.VerifySendAs(flags["userId"].GetString(), flags["sendAsEmail"].GetString())
 		if err != nil {

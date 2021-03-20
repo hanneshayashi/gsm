@@ -36,7 +36,7 @@ Examples:
   - Create a dynamic group:
     gsm groupsCi create --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		g, err := mapToGroupCi(flags)
 		if err != nil {

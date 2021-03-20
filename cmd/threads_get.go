@@ -32,7 +32,7 @@ var threadsGetCmd = &cobra.Command{
 	Short:             "Gets the specified thread.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetThread(flags["userId"].GetString(), flags["id"].GetString(), flags["format"].GetString(), flags["metadataHeaders"].GetString(), flags["fields"].GetString())
 		if err != nil {

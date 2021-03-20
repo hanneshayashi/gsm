@@ -36,7 +36,7 @@ https://http//support.google.com/a/bin/answer.py?amp;answer=1032419.
 
 https://developers.google.com/admin-sdk/directory/v1/reference/asps`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

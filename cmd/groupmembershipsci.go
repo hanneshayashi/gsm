@@ -30,7 +30,7 @@ var groupMembershipsCiCmd = &cobra.Command{
 	Short:             "Manage group memberships (Part of Cloud Identity API)",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

@@ -34,7 +34,7 @@ var gmailSettingsUpdateLanguageCmd = &cobra.Command{
 This is because the requested displayLanguage may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateLanguage`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		l, err := mapToLanguageSettings(flags)
 		if err != nil {

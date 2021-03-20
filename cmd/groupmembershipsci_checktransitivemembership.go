@@ -32,7 +32,7 @@ var groupMembershipsCiCheckTransitiveMembershipCmd = &cobra.Command{
 	Short:             "Check a potential member for membership in a group.",
 	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/checkTransitiveMembership`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {

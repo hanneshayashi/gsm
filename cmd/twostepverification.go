@@ -41,7 +41,7 @@ var twoStepVerificationCmd = &cobra.Command{
 	Short:             "Manage Two Step Verification for users (Park of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
 }

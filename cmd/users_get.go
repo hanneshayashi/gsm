@@ -32,7 +32,7 @@ var usersGetCmd = &cobra.Command{
 	Short:             "Retrieves a user.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetUser(flags["userKey"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["customFieldMask"].GetString(), flags["viewType"].GetString())
 		if err != nil {

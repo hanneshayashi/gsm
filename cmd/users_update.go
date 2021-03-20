@@ -32,7 +32,7 @@ var usersUpdateCmd = &cobra.Command{
 	Short:             "Updates a user using patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/update",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		u, err := mapToUser(flags)
 		if err != nil {

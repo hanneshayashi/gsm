@@ -34,7 +34,7 @@ var revisionsDeleteCmd = &cobra.Command{
 Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted.
 https://developers.google.com/drive/api/v3/reference/revisions/delete`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteRevision(flags["fileId"].GetString(), flags["revisionId"].GetString())
 		if err != nil {
