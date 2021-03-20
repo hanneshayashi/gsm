@@ -54,6 +54,7 @@ var (
 	customerDevicesChromeosCommandsService *admin.CustomerDevicesChromeosCommandsService
 	usersPhotosService                     *admin.UsersPhotosService
 	schemasService                         *admin.SchemasService
+	customersChromePrintersService         *admin.CustomersChromePrintersService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -138,7 +139,7 @@ func getVerificationCodesService() *admin.VerificationCodesService {
 	return verificationCodesService
 }
 
-func getUsersAliasesService() (usersAliasesService *admin.UsersAliasesService) {
+func getUsersAliasesService() *admin.UsersAliasesService {
 	if usersAliasesService == nil {
 		usersAliasesService = admin.NewUsersAliasesService(getAdminService())
 	}
@@ -248,4 +249,11 @@ func getSchemasService() *admin.SchemasService {
 		schemasService = admin.NewSchemasService(getAdminService())
 	}
 	return schemasService
+}
+
+func getCustomersChromePrintersService() *admin.CustomersChromePrintersService {
+	if customersChromePrintersService == nil {
+		customersChromePrintersService = admin.NewCustomersChromePrintersService(getAdminService())
+	}
+	return customersChromePrintersService
 }
