@@ -166,6 +166,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
 			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
+			"https://www.googleapis.com/auth/cloud-identity.devices",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
 			licensing.AppsLicensingScope,
