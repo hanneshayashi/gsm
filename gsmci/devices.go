@@ -37,7 +37,7 @@ func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleApp
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeDeviceRequest.Customer, name), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDev
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(device.SerialNumber), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, device.SerialNumber), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -85,7 +85,7 @@ func DeleteDevice(name, customer string) (map[string]interface{}, error) {
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -110,7 +110,7 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -175,7 +175,7 @@ func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidenti
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeDeviceRequest.Customer, name), func() (interface{}, error) {
 		return c.Do()
 	})
 	if err != nil {
