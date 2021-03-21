@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// chromePrintersBatchDeleteCmd represents the batchdelete command
+// chromePrintersBatchDeleteCmd represents the batchDelete command
 var chromePrintersBatchDeleteCmd = &cobra.Command{
 	Use:               "batchDelete",
 	Short:             "Deletes printers in batch.",

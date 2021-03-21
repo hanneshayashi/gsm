@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// chromePrintersListModelsCmd represents the listmodels command
+// chromePrintersListModelsCmd represents the listModels command
 var chromePrintersListModelsCmd = &cobra.Command{
 	Use:               "listModels",
 	Short:             "Lists the supported printer models.",

@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// userInvitationsIsInvitableUserCmd represents the isinvitableuser command
+// userInvitationsIsInvitableUserCmd represents the isInvitableUser command
 var userInvitationsIsInvitableUserCmd = &cobra.Command{
 	Use:   "isInvitableUser",
 	Short: "Retrieves a UserInvitation resource.",

@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// chromePrintersBatchCreateCmd represents the batchcreate command
+// chromePrintersBatchCreateCmd represents the batchCreate command
 var chromePrintersBatchCreateCmd = &cobra.Command{
 	Use:               "batchCreate",
 	Short:             "Creates printers under given Organization Unit.",
