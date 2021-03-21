@@ -28,6 +28,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmauth"
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmci"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmgmail"
@@ -238,6 +239,7 @@ func auth() {
 		gsmsheets.SetClient(client)
 		gsmreports.SetClient(client)
 		gsmgmailpostmaster.SetClient(client)
+		gsmcibeta.SetClient(client)
 	}
 }
 
