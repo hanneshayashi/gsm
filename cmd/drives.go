@@ -115,6 +115,5 @@ func init() {
 func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 	drive := &drive.Drive{}
 	drive.Name = flags["name"].GetString()
-
 	return drive, nil
 }
