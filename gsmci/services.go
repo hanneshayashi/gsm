@@ -27,12 +27,13 @@ import (
 )
 
 var (
-	client                    *http.Client
-	ciService                 *ci.Service
-	groupsService             *ci.GroupsService
-	groupsMembershipsService  *ci.GroupsMembershipsService
-	devicesService            *ci.DevicesService
-	devicesDeviceUsersService *ci.DevicesDeviceUsersService
+	client                                *http.Client
+	ciService                             *ci.Service
+	groupsService                         *ci.GroupsService
+	groupsMembershipsService              *ci.GroupsMembershipsService
+	devicesService                        *ci.DevicesService
+	devicesDeviceUsersService             *ci.DevicesDeviceUsersService
+	devicesDeviceUsersClientStatesService *ci.DevicesDeviceUsersClientStatesService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -80,4 +81,11 @@ func getDevicesDeviceUsersService() *ci.DevicesDeviceUsersService {
 		devicesDeviceUsersService = ci.NewDevicesDeviceUsersService(getCiService())
 	}
 	return devicesDeviceUsersService
+}
+
+func getDevicesDeviceUsersClientStatesService() *ci.DevicesDeviceUsersClientStatesService {
+	if devicesDeviceUsersClientStatesService == nil {
+		devicesDeviceUsersClientStatesService = ci.NewDevicesDeviceUsersClientStatesService(getCiService())
+	}
+	return devicesDeviceUsersClientStatesService
 }
