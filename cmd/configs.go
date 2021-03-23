@@ -167,6 +167,7 @@ func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMCon
 			ci.CloudIdentityGroupsScope,
 			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
 			"https://www.googleapis.com/auth/cloud-identity.devices",
+			"https://www.googleapis.com/auth/cloud-identity.devices.lookup",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
 			licensing.AppsLicensingScope,
