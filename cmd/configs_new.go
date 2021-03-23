@@ -39,7 +39,7 @@ var configsNewCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToConfig(flags, &gsmconfig.GSMConfig{})
+		c, err := mapToConfig(flags, nil)
 		if err != nil {
 			log.Fatalf("Error building config object: %v", err)
 		}
