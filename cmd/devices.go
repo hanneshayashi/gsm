@@ -73,6 +73,7 @@ WINDOWS      Device is a Windows device.
 MAC_OS       Device is a MacOS device.
 LINUX        Device is a Linux device.
 CHROME_OS    Device is a ChromeOS device.`,
+		Required: []string{"create"},
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
