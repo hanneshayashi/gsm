@@ -63,7 +63,7 @@ You can sort the results in descending order based on either email or last updat
 If not specified, results will be returned based on email asc order.`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list"},
+		AvailableFor: []string{"get", "list", "send"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
