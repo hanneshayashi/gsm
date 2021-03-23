@@ -116,22 +116,18 @@ func init() {
 
 func mapToWipeDeviceRequest(flags map[string]*gsmhelpers.Value) (*ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest, error) {
 	wipeDeviceRequest := &ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest{}
-	if flags["customer"].IsSet() {
-		wipeDeviceRequest.Customer = flags["customer"].GetString()
-		if wipeDeviceRequest.Customer == "" {
-			wipeDeviceRequest.ForceSendFields = append(wipeDeviceRequest.ForceSendFields, "Customer")
-		}
+	wipeDeviceRequest.Customer = flags["customer"].GetString()
+	if wipeDeviceRequest.Customer == "" {
+		wipeDeviceRequest.ForceSendFields = append(wipeDeviceRequest.ForceSendFields, "Customer")
 	}
 	return wipeDeviceRequest, nil
 }
 
 func mapToCancelWipeDeviceRequest(flags map[string]*gsmhelpers.Value) (*ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest, error) {
 	cancelWipeRequest := &ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest{}
-	if flags["customer"].IsSet() {
-		cancelWipeRequest.Customer = flags["customer"].GetString()
-		if cancelWipeRequest.Customer == "" {
-			cancelWipeRequest.ForceSendFields = append(cancelWipeRequest.ForceSendFields, "Customer")
-		}
+	cancelWipeRequest.Customer = flags["customer"].GetString()
+	if cancelWipeRequest.Customer == "" {
+		cancelWipeRequest.ForceSendFields = append(cancelWipeRequest.ForceSendFields, "Customer")
 	}
 	return cancelWipeRequest, nil
 }
