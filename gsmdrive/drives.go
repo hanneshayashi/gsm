@@ -111,7 +111,7 @@ func listDrives(c *drive.DrivesListCall, ch chan *drive.Drive, errKey string) er
 // For more information, see https://developers.google.com/drive/api/v3/search-shareddrives.
 func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Drive, <-chan error) {
 	srv := getDrivesService()
-	c := srv.List().UseDomainAdminAccess(useDomainAdminAccess)
+	c := srv.List().UseDomainAdminAccess(useDomainAdminAccess).PageSize(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
