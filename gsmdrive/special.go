@@ -39,10 +39,7 @@ type FolderSize struct {
 // isFolder returns true if the file object is a folder, otherwise false
 // Make sure that the MimeType property is actually set.
 func isFolder(f *drive.File) bool {
-	if f.MimeType == folderMimetype {
-		return true
-	}
-	return false
+	return f.MimeType == folderMimetype
 }
 
 func createFolder(parent, name string) (*drive.File, error) {
@@ -63,7 +60,7 @@ func createFolder(parent, name string) (*drive.File, error) {
 func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, results chan *drive.File, excludeFolders []string, threads int) (<-chan *drive.File, error) {
 	root, err := GetFolder(folderID)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting folder: %v", err)
+		return nil, fmt.Errorf("error getting folder: %v", err)
 	}
 	folderMap := make(map[string]string)
 	newRoot, err := createFolder(destination, root.Name)
@@ -152,7 +149,7 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 		}
 	}
 	if set != 1 {
-		return "", fmt.Errorf("Exactly one of %s must be set", strings.Join(possibleFlags, ", "))
+		return "", fmt.Errorf("exactly one of %s must be set", strings.Join(possibleFlags, ", "))
 	}
 	if flags["permissionId"].IsSet() {
 		return flags["permissionId"].GetString(), nil
@@ -180,7 +177,7 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 			return "", e
 		}
 		if !pFound {
-			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")
+			return "", fmt.Errorf("can't find a matching rule for the specified trustee")
 		}
 	} else {
 		domain := strings.ToLower(flags["domain"].GetString())
@@ -198,7 +195,7 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 			return "", e
 		}
 		if !pFound {
-			return "", fmt.Errorf("Can't find a matching rule for the specified trustee")
+			return "", fmt.Errorf("can't find a matching rule for the specified trustee")
 		}
 	}
 	return permissionID, nil
