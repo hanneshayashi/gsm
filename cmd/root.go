@@ -129,7 +129,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()
 	},
-	Version: "0.2.4",
+	Version: "0.2.5",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
