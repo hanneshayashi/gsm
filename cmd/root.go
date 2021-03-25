@@ -121,7 +121,7 @@ Note that due to the way permissions are automatically inherited in Drive, this 
 var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
-	Long: `GSM is free software licenced under the GPLv3 (https://gsm.hayashi-ke.online/license).
+	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
 Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	// Uncomment the following line if your bare application
