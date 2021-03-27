@@ -105,8 +105,8 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 	}
 	configPath := GetConfigPath(name)
 	err = ioutil.WriteFile(configPath, b, os.ModeAppend)
-	if name != ".gsm" && config.Name != name {
-		err = os.Rename(configPath, GetConfigPath(config.Name))
+	if name != ".gsm" && configOld.Name != name {
+		err = os.Rename(configPath, GetConfigPath(configOld.Name))
 	}
 	if err != nil {
 		return nil, err
