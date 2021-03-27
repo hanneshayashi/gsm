@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -39,13 +38,15 @@ var configsNewCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToConfig(flags, nil)
+		c, err := mapToConfig(flags)
 		if err != nil {
-			log.Fatalf("Error building config object: %v", err)
+			fmt.Printf("Error building config object: %v\n", err)
+			return
 		}
 		result, err := gsmconfig.CreateConfig(c)
 		if err != nil {
-			log.Fatalf("Error creating config: %v", err)
+			fmt.Printf("Error creating config: %v\n", err)
+			return
 		}
 		fmt.Println(result)
 	},

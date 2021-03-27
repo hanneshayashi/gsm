@@ -211,36 +211,44 @@ func setHomeDir() {
 }
 
 func auth() {
-	credentials, err := ioutil.ReadFile(viper.GetString("credentialsFile"))
-	if err != nil {
-		log.Printf("Error reading service account credentials file: %v", err)
-	} else {
-		var client *http.Client
-		switch viper.GetString("mode") {
-		case "dwd":
-			var subject string
-			if dwdSubject == "" {
-				subject = viper.GetString("subject")
-			} else {
-				subject = dwdSubject
-			}
-			client = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
-		case "user":
-			client = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), viper.GetStringSlice("scopes")...)
+	mode := viper.GetString("mode")
+	var subject string
+	var credentials []byte
+	var err error
+	var client *http.Client
+	if mode == "dwd" || mode == "adc" {
+		if dwdSubject == "" {
+			subject = viper.GetString("subject")
+		} else {
+			subject = dwdSubject
 		}
-		gsmadmin.SetClient(client)
-		gsmgmail.SetClient(client)
-		gsmci.SetClient(client)
-		gsmdrive.SetClient(client)
-		gsmgroupssettings.SetClient(client)
-		gsmcalendar.SetClient(client)
-		gsmlicensing.SetClient(client)
-		gsmpeople.SetClient(client)
-		gsmsheets.SetClient(client)
-		gsmreports.SetClient(client)
-		gsmgmailpostmaster.SetClient(client)
-		gsmcibeta.SetClient(client)
 	}
+	if mode == "dwd" || mode == "user" {
+		credentials, err = ioutil.ReadFile(viper.GetString("credentialsFile"))
+		if err != nil {
+			fmt.Printf("Error reading service account credentials file: %v", err)
+		}
+	}
+	switch mode {
+	case "dwd":
+		client = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
+	case "user":
+		client = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), viper.GetStringSlice("scopes")...)
+	case "adc":
+		client = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
+	}
+	gsmadmin.SetClient(client)
+	gsmgmail.SetClient(client)
+	gsmci.SetClient(client)
+	gsmdrive.SetClient(client)
+	gsmgroupssettings.SetClient(client)
+	gsmcalendar.SetClient(client)
+	gsmlicensing.SetClient(client)
+	gsmpeople.SetClient(client)
+	gsmsheets.SetClient(client)
+	gsmreports.SetClient(client)
+	gsmgmailpostmaster.SetClient(client)
+	gsmcibeta.SetClient(client)
 }
 
 func initLog() {

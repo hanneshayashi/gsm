@@ -18,23 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	admin "google.golang.org/api/admin/directory/v1"
-	reports "google.golang.org/api/admin/reports/v1"
-	"google.golang.org/api/calendar/v3"
-	ci "google.golang.org/api/cloudidentity/v1"
-	"google.golang.org/api/drive/v3"
-	"google.golang.org/api/gmail/v1"
-	"google.golang.org/api/gmailpostmastertools/v1"
-	"google.golang.org/api/groupssettings/v1"
-	"google.golang.org/api/licensing/v1"
-	"google.golang.org/api/people/v1"
-	"google.golang.org/api/sheets/v4"
 )
 
 // configsCmd represents the config command
@@ -66,13 +53,12 @@ This (plus ".yaml") will be used as the file name.`,
 		Type:         "string",
 		Description: `Path to the credential file.
 Can be relative to the binary or fully qualified.`,
-		Required: []string{"new"},
 	},
 	"mode": {
-		AvailableFor: []string{"new", "update"},
+		AvailableFor: []string{"new"},
 		Type:         "string",
 		Description: `The mode to operate in. Can be:
-[dwd|user]`,
+[dwd|user|adc]`,
 		Required: []string{"new"},
 	},
 	"subject": {
@@ -111,96 +97,31 @@ func init() {
 	rootCmd.AddCommand(configsCmd)
 }
 
-func mapToConfig(flags map[string]*gsmhelpers.Value, configOld *gsmconfig.GSMConfig) (*gsmconfig.GSMConfig, error) {
+func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, error) {
 	config := &gsmconfig.GSMConfig{}
 	if flags["name"].IsSet() {
 		config.Name = flags["name"].GetString()
-	} else if configOld != nil {
-		config.Name = configOld.Name
-	} else {
-		return nil, fmt.Errorf("name is required")
-	}
-	if flags["credentialsFile"].IsSet() {
-		config.CredentialsFile = flags["credentialsFile"].GetString()
-	} else if configOld != nil {
-		config.CredentialsFile = configOld.CredentialsFile
-	} else {
-		return nil, fmt.Errorf("credentialsFile is required")
 	}
 	if flags["mode"].IsSet() {
 		config.Mode = flags["mode"].GetString()
-	} else if configOld != nil {
-		config.Mode = configOld.Mode
-	} else {
-		return nil, fmt.Errorf("mode is required")
+	}
+	if flags["credentialsFile"].IsSet() {
+		config.CredentialsFile = flags["credentialsFile"].GetString()
 	}
 	if flags["subject"].IsSet() {
 		config.Subject = flags["subject"].GetString()
-	} else if configOld != nil {
-		config.Subject = configOld.Subject
-	} else if config.Mode == "dwd" {
-		return nil, fmt.Errorf("subject is required when mode is 'dwd'")
 	}
 	if flags["scopes"].IsSet() {
 		config.Scopes = flags["scopes"].GetStringSlice()
-	} else if configOld != nil {
-		config.Scopes = configOld.Scopes
-	} else {
-		config.Scopes = []string{admin.AdminDirectoryUserScope,
-			admin.AdminDirectoryCustomerScope,
-			admin.AdminDirectoryGroupScope,
-			admin.AdminDirectoryGroupMemberScope,
-			admin.AdminDirectoryOrgunitScope,
-			admin.AdminDirectoryRolemanagementScope,
-			admin.AdminDirectoryUserSecurityScope,
-			admin.AdminDirectoryDomainScope,
-			admin.AdminDirectoryDeviceMobileScope,
-			admin.AdminDirectoryDeviceChromeosScope,
-			admin.AdminDirectoryResourceCalendarScope,
-			admin.AdminDirectoryUserschemaScope,
-			"https://www.google.com/m8/feeds/contacts/",
-			drive.DriveScope,
-			gmail.MailGoogleComScope,
-			gmail.GmailSettingsSharingScope,
-			gmail.GmailSettingsBasicScope,
-			gmail.GmailModifyScope,
-			ci.CloudIdentityGroupsScope,
-			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-			"https://www.googleapis.com/auth/cloud-identity.devices",
-			"https://www.googleapis.com/auth/cloud-identity.devices.lookup",
-			groupssettings.AppsGroupsSettingsScope,
-			calendar.CalendarScope,
-			licensing.AppsLicensingScope,
-			people.DirectoryReadonlyScope,
-			people.ContactsOtherReadonlyScope,
-			sheets.SpreadsheetsScope,
-			reports.AdminReportsAuditReadonlyScope,
-			reports.AdminReportsUsageReadonlyScope,
-			gmailpostmastertools.PostmasterReadonlyScope,
-			"https://www.googleapis.com/auth/admin.contact.delegation",
-			"https://www.googleapis.com/auth/admin.chrome.printers",
-		}
 	}
 	if flags["threads"].IsSet() {
 		config.Threads = flags["threads"].GetInt()
-	} else if configOld != nil {
-		config.Threads = configOld.Threads
-	} else {
-		config.Threads = gsmhelpers.MaxThreads(0)
 	}
 	if flags["logFile"].IsSet() {
 		config.LogFile = flags["logFile"].GetString()
-	} else if configOld != nil {
-		config.LogFile = configOld.LogFile
-	} else {
-		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
 	}
 	if flags["standardDelay"].IsSet() {
 		config.StandardDelay = flags["standardDelay"].GetInt()
-	} else if configOld != nil {
-		config.StandardDelay = configOld.StandardDelay
-	} else {
-		config.StandardDelay = 500
 	}
 	return config, nil
 }
