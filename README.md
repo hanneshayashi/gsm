@@ -70,13 +70,16 @@ GSM currently supports the following APIs:
 Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\
 Overall, GSM supports over **65 [main commands](https://gsm.hayashi-ke/gsm)**, with each one representing an API with multiple methods and each method implemented as a sub command. This amounts to over **500 commands in total**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
 
-You can use GSM in one of two modes
+You can use GSM in one of three modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
         Note that you will only have access to the resources and APIs your account can access!
 - dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
  You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
+- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize the implicit credentials of a Google Compute Engine instance in GCP to avoid having to manage Service Account keys.
 
-You can set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
+See [Setup](https://gsm.hayashi-ke.online/setup) on how to set up GSM in these modes.
+
+You can also set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
 
 ### Output
 
