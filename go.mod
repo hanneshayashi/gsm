@@ -3,7 +3,7 @@ module github.com/hanneshayashi/gsm
 go 1.16
 
 require (
-	cloud.google.com/go v0.80.0 // indirect
+	cloud.google.com/go v0.80.0
 	github.com/eapache/go-resiliency v1.2.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/google/uuid v1.2.0
@@ -23,7 +23,8 @@ require (
 	github.com/spf13/viper v1.7.1
 	golang.org/x/net v0.0.0-20210324205630-d1beb07c2056
 	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558
-	google.golang.org/api v0.43.0
+	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
+	google.golang.org/api v0.44.0-impersonate-preview
 	google.golang.org/genproto v0.0.0-20210324141432-3032e8ff099e // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
