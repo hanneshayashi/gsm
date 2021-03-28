@@ -43,7 +43,10 @@ var configsListCmd = &cobra.Command{
 			log.Fatalf("Error listing configs: %v", err)
 		}
 		if flags["details"].GetBool() {
-			gsmhelpers.Output(result, "yaml", false)
+			err = gsmhelpers.Output(result, "yaml", false)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		} else {
 			if len(result) > 0 {
 				fmt.Println(result[0].Name, "(Default)")

@@ -45,13 +45,22 @@ var sharedContactsListCmd = &cobra.Command{
 			if streamOutput {
 				enc := gsmhelpers.GetJSONEncoder(false)
 				for i := range result {
-					enc.Encode(result[i])
+					err = enc.Encode(result[i])
+					if err != nil {
+						log.Println(err)
+					}
 				}
 			} else {
-				gsmhelpers.Output(result, "json", compressOutput)
+				err = gsmhelpers.Output(result, "json", compressOutput)
+				if err != nil {
+					log.Fatalln(err)
+				}
 			}
 		} else {
-			gsmhelpers.Output(result, "xml", compressOutput)
+			err = gsmhelpers.Output(result, "xml", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

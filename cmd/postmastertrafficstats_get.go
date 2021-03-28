@@ -39,7 +39,10 @@ Returns PERMISSION_DENIED if user does not have permission to access TrafficStat
 		if err != nil {
 			log.Fatalf("Error getting traffic stat: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

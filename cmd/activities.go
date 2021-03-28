@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,7 +32,10 @@ var activitiesCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities?hl=en",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

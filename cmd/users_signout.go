@@ -39,7 +39,10 @@ User will have to sign in by authenticating again.`,
 		if err != nil {
 			log.Fatalf("Error signing out user: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

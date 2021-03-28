@@ -42,7 +42,10 @@ var revisionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating revision: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

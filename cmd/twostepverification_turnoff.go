@@ -38,7 +38,10 @@ var twoStepVerificationTurnOffCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error turning off two-step verification: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

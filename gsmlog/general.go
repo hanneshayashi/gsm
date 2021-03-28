@@ -46,9 +46,9 @@ func PrintLastLines(path string, n int) error {
 // Clear clears the specified file (truncate its content)
 func Clear(path string) error {
 	f, err := os.OpenFile(path, os.O_TRUNC, os.ModeTemporary)
-	defer f.Close()
 	if err != nil {
 		return err
 	}
+	f.Close()
 	return nil
 }

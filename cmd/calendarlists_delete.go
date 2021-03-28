@@ -38,7 +38,10 @@ var calendarListsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting calendar list entry: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

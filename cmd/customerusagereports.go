@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -32,7 +33,10 @@ var customerUsageReportsCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -36,7 +37,10 @@ Send-as aliases correspond to the "Send Mail As" feature in the web interface.
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

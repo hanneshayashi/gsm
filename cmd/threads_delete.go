@@ -39,7 +39,10 @@ This operation cannot be undone. Prefer threads trash instead.`,
 		if err != nil {
 			log.Fatalf("Error deleting thread %s: %v", flags["id"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

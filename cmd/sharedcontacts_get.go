@@ -42,9 +42,15 @@ var sharedContactsGetCmd = &cobra.Command{
 			log.Fatalf("Error getting shared contact: %v", err)
 		}
 		if flags["json"].GetBool() {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		} else {
-			gsmhelpers.Output(result, "xml", compressOutput)
+			err = gsmhelpers.Output(result, "xml", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

@@ -42,7 +42,10 @@ https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvi
 		if err != nil {
 			log.Fatalf("Error checking if user is invitable: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

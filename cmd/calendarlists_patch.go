@@ -42,7 +42,10 @@ var calendarListsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendarListEntry: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

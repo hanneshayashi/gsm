@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -47,7 +48,10 @@ var configsUpdateCmd = &cobra.Command{
 			fmt.Printf("Error creating config: %v\n", err)
 			return
 		}
-		gsmhelpers.Output(result, "yaml", false)
+		err = gsmhelpers.Output(result, "yaml", false)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

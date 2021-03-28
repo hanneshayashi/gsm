@@ -38,7 +38,10 @@ var filtersDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting filter %s for user %s: %v", flags["id"].GetString(), flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

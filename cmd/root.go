@@ -127,7 +127,10 @@ For documentation see https://gsm.hayashi-ke.online.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 	Version: "0.2.5",
 }
@@ -260,7 +263,7 @@ func initLog() {
 	}
 	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 	log.SetOutput(file)
 }

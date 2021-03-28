@@ -38,7 +38,10 @@ var verificationCodesInvalidateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error invalidating backup verification codes: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

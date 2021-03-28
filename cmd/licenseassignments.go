@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -31,7 +33,10 @@ var licenseAssignmentsCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 var licenseAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
@@ -48,7 +53,7 @@ For more information about products in this version of the API, see https://deve
 		Type:         "string",
 		Description: `A product SKU's unique identifier.
 For more information about available SKUs in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
-		Required:  []string{"delete", "get", "insert", "listForProduct", "listForProductAndSku", "patch"},
+		Required:  []string{"delete", "get", "insert", "listForProductAndSku", "patch"},
 		Recursive: []string{"delete", "get", "insert", "patch"},
 	},
 	"skuIdNew": {

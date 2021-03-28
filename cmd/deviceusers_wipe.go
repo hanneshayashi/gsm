@@ -44,7 +44,10 @@ https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/wip
 		if err != nil {
 			log.Fatalf("Error wiping device user: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

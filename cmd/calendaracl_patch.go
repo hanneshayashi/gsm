@@ -42,7 +42,10 @@ var calendarACLPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendar acl rule: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

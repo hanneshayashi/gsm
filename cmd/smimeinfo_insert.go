@@ -43,7 +43,10 @@ Note that pkcs12 format is required for the key.`,
 		if err != nil {
 			log.Fatalf("Error inserting S/MIME info: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

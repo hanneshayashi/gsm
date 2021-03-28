@@ -39,7 +39,10 @@ The shared drive cannot contain any untrashed items.`,
 		if err != nil {
 			log.Fatalf("Error deleting drive: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

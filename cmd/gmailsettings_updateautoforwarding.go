@@ -43,7 +43,10 @@ A verified forwarding address must be specified when auto-forwarding is enabled.
 		if err != nil {
 			log.Fatalf("Error updating auto-forwarding settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

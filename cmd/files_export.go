@@ -39,7 +39,10 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 		if err != nil {
 			log.Fatalf("Error downloading file: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

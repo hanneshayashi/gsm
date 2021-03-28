@@ -43,7 +43,10 @@ https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/can
 		if err != nil {
 			log.Fatalf("Error cancelling device user wipe: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

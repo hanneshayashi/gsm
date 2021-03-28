@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -34,7 +35,10 @@ var groupsCiCmd = &cobra.Command{
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

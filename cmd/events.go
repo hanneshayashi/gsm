@@ -38,7 +38,10 @@ email address to use this API!
 https://developers.google.com/calendar/v3/reference/events`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

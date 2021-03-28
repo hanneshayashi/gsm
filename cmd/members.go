@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -31,7 +33,10 @@ var membersCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -50,7 +55,7 @@ The value can be the group's email address, group alias, or the unique group ID.
 		Description: `Identifies the group member in the API request.
 A group member can be a user or another group.
 The value can be the member's (group or user) primary email address, alias, or unique ID.`,
-		Required: []string{"delete", "get", "hasMember", "insert"},
+		Required: []string{"delete", "get", "hasMember"},
 	},
 	"delivery_settings": {
 		AvailableFor: []string{"insert", "patch", "set"},

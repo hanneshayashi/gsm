@@ -45,7 +45,10 @@ var drivesGetSizeCmd = &cobra.Command{
 		if e != nil {
 			log.Fatalf("Error counting files: %v", e)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		er := gsmhelpers.Output(result, "json", compressOutput)
+		if er != nil {
+			log.Fatalln(er)
+		}
 	},
 }
 

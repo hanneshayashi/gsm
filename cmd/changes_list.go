@@ -47,7 +47,10 @@ var changesListCmd = &cobra.Command{
 			Changes:            r,
 			NextStartPageToken: nextStartPageToken,
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	ci "google.golang.org/api/cloudidentity/v1"
 
@@ -31,7 +33,10 @@ var deviceUsersCmd = &cobra.Command{
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

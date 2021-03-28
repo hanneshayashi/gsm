@@ -43,7 +43,10 @@ Use "files move recursive" instead!`,
 		if err != nil {
 			log.Fatalf("Error during move: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

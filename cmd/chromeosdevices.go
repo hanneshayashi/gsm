@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -33,7 +34,10 @@ var chromeOsDevicesCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

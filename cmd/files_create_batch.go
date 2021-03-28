@@ -70,11 +70,16 @@ var filesCreateBatchCmd = &cobra.Command{
 							}
 						}
 						result, err := gsmdrive.CreateFile(f, content, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString())
-						content.Close()
 						if err != nil {
 							log.Println(err)
 						} else {
 							results <- result
+						}
+						if content != nil {
+							err = content.Close()
+							if err != nil {
+								log.Println(err)
+							}
 						}
 					}
 					wg.Done()
@@ -86,14 +91,20 @@ var filesCreateBatchCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*drive.File{}
 			for res := range results {
 				final = append(final, res)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

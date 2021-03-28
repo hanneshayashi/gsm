@@ -81,7 +81,10 @@ func saveToken(path string, token *oauth2.Token) {
 		log.Fatalf("Unable to cache OAuth token: %v", err)
 	}
 	defer f.Close()
-	json.NewEncoder(f).Encode(token)
+	err = json.NewEncoder(f).Encode(token)
+	if err != nil {
+		log.Fatalf("Unable to save OAuth token: %v", err)
+	}
 }
 
 //GetClientUser does user-based authentication via OAuth and returns an *http.Client

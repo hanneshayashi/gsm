@@ -200,28 +200,31 @@ func Output(i interface{}, format string, compress bool) error {
 }
 
 // CreateDocs creates GSM documentation
-func CreateDocs(cmd *cobra.Command) {
+func CreateDocs(cmd *cobra.Command) error {
 	dir := "../gsm-hosting/gsm.hayashi-ke.online/content"
 	tmpDir := dir + "/tmp"
-	os.MkdirAll(tmpDir, os.ModePerm)
+	err := os.MkdirAll(tmpDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	filePrepender := func(filename string) string {
 		return filename
 	}
 	linkHandler := func(name string) string {
 		return "/" + strings.ReplaceAll(strings.TrimSuffix(strings.ToLower(name), ".md"), "_", "/")
 	}
-	err := doc.GenMarkdownTreeCustom(cmd, tmpDir, filePrepender, linkHandler)
+	err = doc.GenMarkdownTreeCustom(cmd, tmpDir, filePrepender, linkHandler)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	d, err := os.Open(tmpDir)
-	defer d.Close()
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
+	defer d.Close()
 	files, err := d.Readdir(-1)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	for i := range files {
 		name := strings.TrimSuffix(files[i].Name(), ".md")
@@ -229,10 +232,13 @@ func CreateDocs(cmd *cobra.Command) {
 		url := "/" + strings.Join(split, "/")
 		oldPath := tmpDir + "/" + files[i].Name()
 		newPath := dir + url
-		os.MkdirAll(newPath, os.ModePerm)
+		err = os.MkdirAll(newPath, os.ModePerm)
+		if err != nil {
+			return err
+		}
 		f, err := os.Open(oldPath)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		defer f.Close()
 		scanner := bufio.NewScanner(f)
@@ -251,20 +257,23 @@ func CreateDocs(cmd *cobra.Command) {
 			lines = append(lines, scanner.Text())
 		}
 		if err = scanner.Err(); err != nil {
-			log.Fatal(err)
+			return err
 		}
 		n, err := os.Create(newPath + "/_index.md")
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		defer n.Close()
 		w := bufio.NewWriter(n)
 		for i := range lines {
 			fmt.Fprintln(w, lines[i])
 		}
-		w.Flush()
+		err = w.Flush()
+		if err != nil {
+			return err
+		}
 	}
-	os.Remove(tmpDir)
+	return os.Remove(tmpDir)
 }
 
 // getCSVReader uses a FlagSet to read a CSV file and parse it accordingly
@@ -289,11 +298,11 @@ func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
 func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[string]*Value, error) {
 	flags, err := consolidateFlags(cmd, cmdFlags)
 	if err != nil {
-		return nil, fmt.Errorf("Error consolidating flags: %v", err)
+		return nil, fmt.Errorf("error consolidating flags: %v", err)
 	}
 	csvReader, err := getCSVReader(flags)
 	if err != nil {
-		return nil, fmt.Errorf("Error with CSV file: %v", err)
+		return nil, fmt.Errorf("error with CSV file: %v", err)
 	}
 	threads := MaxThreads(flags["batchThreads"].GetInt())
 	maps := make(chan map[string]*Value, threads)
@@ -303,7 +312,7 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 	}
 	err = checkBatchFlags(flags, cmdFlags, int64(len(line)))
 	if err != nil {
-		return nil, fmt.Errorf("Error with batch flag index: %v", err)
+		return nil, fmt.Errorf("error with batch flag index: %v", err)
 	}
 	cmdName := cmd.Parent().Use
 	if !flags["skipHeader"].GetBool() {

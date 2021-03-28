@@ -53,7 +53,10 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 		return nil, err
 	}
 	delegationR := &ContactDelegate{}
-	json.Unmarshal(responseBody, delegationR)
+	err = json.Unmarshal(responseBody, delegationR)
+	if err != nil {
+		return nil, err
+	}
 	return delegationR, nil
 }
 
@@ -92,6 +95,9 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 		Delegates []*ContactDelegate
 	}
 	delegations := &listDelegateRespone{}
-	json.Unmarshal(responseBody, delegations)
+	err = json.Unmarshal(responseBody, delegations)
+	if err != nil {
+		return nil, err
+	}
 	return delegations.Delegates, nil
 }

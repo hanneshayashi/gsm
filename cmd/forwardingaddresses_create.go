@@ -44,7 +44,10 @@ otherwise, the resource will be created with verification status set to accepted
 		if err != nil {
 			log.Fatalf("Error creating forwarding address for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

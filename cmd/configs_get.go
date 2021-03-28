@@ -41,7 +41,10 @@ var configsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting config: %v", err)
 		}
-		gsmhelpers.Output(result, "yaml", false)
+		err = gsmhelpers.Output(result, "yaml", false)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

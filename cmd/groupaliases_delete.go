@@ -38,7 +38,10 @@ var groupAliasesDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting group alias: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

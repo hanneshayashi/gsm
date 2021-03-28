@@ -38,7 +38,10 @@ var drivesHideCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error hiding drive: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

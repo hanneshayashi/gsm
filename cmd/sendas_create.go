@@ -46,7 +46,10 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/
 		if err != nil {
 			log.Fatalf("Error creating send-as: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

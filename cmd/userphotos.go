@@ -20,6 +20,7 @@ package cmd
 import (
 	"encoding/base64"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -35,7 +36,10 @@ var userPhotosCmd = &cobra.Command{
 	Long:              "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.photos",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

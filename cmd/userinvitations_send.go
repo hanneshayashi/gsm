@@ -42,7 +42,10 @@ var userInvitationsSendCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error sending user invitation: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

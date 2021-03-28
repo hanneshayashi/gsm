@@ -38,7 +38,10 @@ var smimeInfoSetDefaultCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting S/MIME info as default: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

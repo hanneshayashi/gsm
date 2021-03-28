@@ -38,7 +38,10 @@ var gmailSettingsGetAutoForwardingCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting auto-forwarding settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
