@@ -54,6 +54,11 @@ This (plus ".yaml") will be used as the file name.`,
 		Description: `Path to the credential file.
 Can be relative to the binary or fully qualified.`,
 	},
+	"serviceAccount": {
+		AvailableFor: []string{"new", "update"},
+		Type:         "string",
+		Description:  `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.`,
+	},
 	"mode": {
 		AvailableFor: []string{"new"},
 		Type:         "string",
