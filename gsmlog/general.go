@@ -49,6 +49,9 @@ func Clear(path string) error {
 	if err != nil {
 		return err
 	}
-	f.Close()
+	err = f.Close()
+	if err != nil {
+		return err
+	}
 	return nil
 }
