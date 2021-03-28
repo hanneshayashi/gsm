@@ -75,7 +75,7 @@ You can use GSM in one of three modes
         Note that you will only have access to the resources and APIs your account can access!
 - dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
  You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
-- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize the implicit credentials of a Google Compute Engine instance in GCP to avoid having to manage Service Account keys.
+- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize Application Default Credentials, such as the implicit credentials of a Compute Engine instance's Service Account or the "application-default" credentials of the Google Cloud SDK (gcloud), to impersonate a Service Account. This means you don't have to manage Service Account key files.
 
 See [Setup](https://gsm.hayashi-ke.online/setup) on how to set up GSM in these modes.
 
