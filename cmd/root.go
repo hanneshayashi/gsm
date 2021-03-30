@@ -143,7 +143,7 @@ func Execute() {
 		os.Exit(1)
 	}
 	// gsmhelpers.CreateDocs(rootCmd)
-	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm_crescendo/json/", "--compressOutput", "--streamOutput")
+	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm-powershell/json/", "--compressOutput", "--streamOutput")
 }
 
 func init() {

@@ -96,7 +96,7 @@ GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there a
 
 You can take a look at some examples under [scripting](https://gsm.hayashi-ke.online/scripting).
 
-You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo).\
+You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm-powershell).\
 Note that this module is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module, it seems to work reasonably well. The module also automatically utilizes streaming.
 
 #### Logging
@@ -113,4 +113,4 @@ You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to vie
 * [Recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
 * [Examples](https://gsm.hayashi-ke.online/examples) - See some examples
 * [Scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
-* [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo) - Auto-generated PowerShell module
+* [PowerShell module](https://github.com/hanneshayashi/gsm-powershell) - Auto-generated PowerShell module
