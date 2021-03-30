@@ -43,7 +43,7 @@ var contactDelegateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 	"parent": {
 		AvailableFor: []string{"create", "delete", "list"},
 		Type:         "string",
-		Description:  `The parent resource that will own the created delegate.`,
+		Description:  `The email address of the user whose contacts should be delegated.`,
 		Required:     []string{"create", "delete", "list"},
 	},
 	"email": {
