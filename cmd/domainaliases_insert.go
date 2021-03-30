@@ -32,7 +32,7 @@ var domainAliasesInsertCmd = &cobra.Command{
 	Short:             "Inserts a Domain alias of the customer.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		d, err := mapToDomainAliases(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var domainAliasesInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting domain alias: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

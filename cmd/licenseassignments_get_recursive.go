@@ -38,7 +38,7 @@ var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		results := make(chan *licensing.LicenseAssignment, threads)
@@ -68,14 +68,20 @@ var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*licensing.LicenseAssignment{}
 			for r := range results {
 				final = append(final, r)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

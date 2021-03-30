@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var rolesCmd = &cobra.Command{
 	Short:             "Manage roles (Part of Admin SDK)",
 	Long:              "http://developers.google.com/admin-sdk/directory/v1/reference/roles",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -84,8 +89,8 @@ func mapToRole(flags map[string]*gsmhelpers.Value) (*admin.Role, error) {
 		role.RolePrivileges = []*admin.RoleRolePrivileges{}
 		rolePrivileges := flags["rolePrivileges"].GetStringSlice()
 		if len(rolePrivileges) > 0 {
-			for _, p := range rolePrivileges {
-				role.RolePrivileges = append(role.RolePrivileges, &admin.RoleRolePrivileges{PrivilegeName: p})
+			for i := range rolePrivileges {
+				role.RolePrivileges = append(role.RolePrivileges, &admin.RoleRolePrivileges{PrivilegeName: rolePrivileges[i]})
 			}
 		} else {
 			role.ForceSendFields = append(role.ForceSendFields, "RolePrivileges")

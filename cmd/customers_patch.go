@@ -32,7 +32,7 @@ var customersPatchCmd = &cobra.Command{
 	Short:             "Updates a customer. This method supports patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/customers/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToCustomer(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var customersPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching customer: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

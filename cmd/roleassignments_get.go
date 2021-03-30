@@ -32,13 +32,16 @@ var roleAssignmentsGetCmd = &cobra.Command{
 	Short:             "Retrieve a role assignment.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetRoleAssignment(flags["customer"].GetString(), flags["roleAssignmentId"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting role assignment: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

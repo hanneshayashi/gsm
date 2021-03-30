@@ -33,20 +33,26 @@ var calendarSettingsListCmd = &cobra.Command{
 	Short:             "Returns an setting.",
 	Long:              "https://developers.google.com/calendar/v3/reference/settings/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListSettings(flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*calendar.Setting{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

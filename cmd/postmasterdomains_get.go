@@ -32,14 +32,17 @@ var postmasterDomainsGetCmd = &cobra.Command{
 	Short:             "Gets a specific domain registered by the client. Returns NOT_FOUND if the domain does not exist.",
 	Long:              "https://developers.google.com/gmail/postmaster/reference/rest/v1/domains/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		name := gsmgmailpostmaster.GetPostmasterDomainName(flags["name"].GetString())
 		result, err := gsmgmailpostmaster.GetDomain(name, flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting domain: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

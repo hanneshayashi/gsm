@@ -23,6 +23,19 @@ import (
 	"os"
 	"strings"
 
+	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"github.com/mitchellh/go-homedir"
+	admin "google.golang.org/api/admin/directory/v1"
+	reports "google.golang.org/api/admin/reports/v1"
+	"google.golang.org/api/calendar/v3"
+	ci "google.golang.org/api/cloudidentity/v1"
+	"google.golang.org/api/drive/v3"
+	"google.golang.org/api/gmail/v1"
+	"google.golang.org/api/gmailpostmastertools/v1"
+	"google.golang.org/api/groupssettings/v1"
+	"google.golang.org/api/licensing/v1"
+	"google.golang.org/api/people/v1"
+	"google.golang.org/api/sheets/v4"
 	"gopkg.in/yaml.v3"
 )
 
@@ -30,6 +43,7 @@ import (
 type GSMConfig struct {
 	Name            string   `yaml:"name,omitempty"`
 	CredentialsFile string   `yaml:"credentialsFile,omitempty"`
+	ServiceAccount  string   `yaml:"serviceAccount,omitempty"`
 	Mode            string   `yaml:"mode,omitempty"`
 	Subject         string   `yaml:"subject,omitempty"`
 	LogFile         string   `yaml:"logFile,omitempty"`
@@ -44,23 +58,133 @@ var CfgDir string
 
 // UpdateConfig updates a new config
 func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
-	b, err := yaml.Marshal(config)
+	configOld, err := GetConfig(name)
+	if err != nil {
+		return nil, err
+	}
+	if config.CredentialsFile != "" {
+		if configOld.Mode == "adc" {
+			return nil, fmt.Errorf("credentialsFile is not used with %s mode", configOld.Mode)
+		}
+		configOld.CredentialsFile = config.CredentialsFile
+	}
+	if config.Subject != "" {
+		if configOld.Mode == "user" {
+			return nil, fmt.Errorf("subject is not used with %s mode", configOld.Mode)
+		}
+		configOld.Subject = config.Subject
+	}
+	if config.ServiceAccount != "" {
+		if configOld.Mode != "adc" {
+			return nil, fmt.Errorf("serviceAccount is not used with %s mode", configOld.Mode)
+		}
+		configOld.ServiceAccount = config.ServiceAccount
+	}
+	if config.LogFile != "" {
+		configOld.LogFile = config.LogFile
+	}
+	if config.Name != "" {
+		_, err = GetConfig(config.Name)
+		if err == nil {
+			return nil, fmt.Errorf("%s already exists", config.Name)
+		}
+		configOld.Name = config.Name
+	}
+	if config.Scopes != nil {
+		configOld.Scopes = config.Scopes
+	}
+	if config.StandardDelay != 0 {
+		configOld.StandardDelay = config.StandardDelay
+	}
+	if config.Threads != 0 {
+		configOld.Threads = gsmhelpers.MaxThreads(config.Threads)
+	}
+	b, err := yaml.Marshal(configOld)
 	if err != nil {
 		return nil, err
 	}
 	configPath := GetConfigPath(name)
 	err = ioutil.WriteFile(configPath, b, os.ModeAppend)
-	if name != ".gsm" && config.Name != name {
-		err = os.Rename(configPath, GetConfigPath(config.Name))
+	if name != ".gsm" && configOld.Name != name {
+		err = os.Rename(configPath, GetConfigPath(configOld.Name))
 	}
 	if err != nil {
 		return nil, err
 	}
-	return config, err
+	return configOld, err
 }
 
 // CreateConfig creates a new config
 func CreateConfig(config *GSMConfig) (string, error) {
+	if !gsmhelpers.Contains(config.Mode, []string{"dwd", "user", "adc"}) {
+		return "", fmt.Errorf("%s is not a valid mode", config.Mode)
+	}
+	if config.Mode == "adc" && config.CredentialsFile != "" {
+		return "", fmt.Errorf("credentialsFile is not used with %s mode", config.Mode)
+	}
+	if config.Mode == "dwd" || config.Mode == "user" {
+		if config.CredentialsFile == "" {
+			return "", fmt.Errorf("credentialsFile is required with %s mode", config.Mode)
+		}
+		if config.ServiceAccount != "" {
+			return "", fmt.Errorf("serviceAccount is not used with %s mode", config.Mode)
+		}
+	}
+	if (config.Mode == "dwd" || config.Mode == "adc") && config.Subject == "" {
+		return "", fmt.Errorf("subject is required with %s mode", config.Mode)
+	}
+	if config.Mode == "user" && config.Subject != "" {
+		return "", fmt.Errorf("subject is not used with %s", config.Mode)
+	}
+	if config.Threads == 0 {
+		config.Threads = gsmhelpers.MaxThreads(0)
+	}
+	if config.StandardDelay == 0 {
+		config.StandardDelay = 500
+	}
+	if config.LogFile == "" {
+		home, err := homedir.Dir()
+		if err != nil {
+			return "", err
+		}
+		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
+	}
+	if config.Scopes == nil {
+		config.Scopes = []string{admin.AdminDirectoryUserScope,
+			admin.AdminDirectoryCustomerScope,
+			admin.AdminDirectoryGroupScope,
+			admin.AdminDirectoryGroupMemberScope,
+			admin.AdminDirectoryOrgunitScope,
+			admin.AdminDirectoryRolemanagementScope,
+			admin.AdminDirectoryUserSecurityScope,
+			admin.AdminDirectoryDomainScope,
+			admin.AdminDirectoryDeviceMobileScope,
+			admin.AdminDirectoryDeviceChromeosScope,
+			admin.AdminDirectoryResourceCalendarScope,
+			admin.AdminDirectoryUserschemaScope,
+			"https://www.google.com/m8/feeds/contacts/",
+			drive.DriveScope,
+			gmail.MailGoogleComScope,
+			gmail.GmailSettingsSharingScope,
+			gmail.GmailSettingsBasicScope,
+			gmail.GmailModifyScope,
+			ci.CloudIdentityGroupsScope,
+			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
+			"https://www.googleapis.com/auth/cloud-identity.devices",
+			"https://www.googleapis.com/auth/cloud-identity.devices.lookup",
+			groupssettings.AppsGroupsSettingsScope,
+			calendar.CalendarScope,
+			licensing.AppsLicensingScope,
+			people.DirectoryReadonlyScope,
+			people.ContactsOtherReadonlyScope,
+			sheets.SpreadsheetsScope,
+			reports.AdminReportsAuditReadonlyScope,
+			reports.AdminReportsUsageReadonlyScope,
+			gmailpostmastertools.PostmasterReadonlyScope,
+			"https://www.googleapis.com/auth/admin.contact.delegation",
+			"https://www.googleapis.com/auth/admin.chrome.printers",
+		}
+	}
 	b, err := yaml.Marshal(config)
 	if err != nil {
 		return "", err
@@ -131,30 +255,30 @@ func sortConfigs(configs []*GSMConfig) []*GSMConfig {
 func ListConfigs() ([]*GSMConfig, error) {
 	configs := make([]*GSMConfig, 0)
 	f, err := os.Open(CfgDir)
-	defer f.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	files, err := f.Readdir(-1)
 	if err != nil {
 		return nil, err
 	}
-	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".yaml") {
+	for i := range files {
+		if !strings.HasSuffix(files[i].Name(), ".yaml") {
 			continue
 		}
-		b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", CfgDir, file.Name()))
+		b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", CfgDir, files[i].Name()))
 		if err != nil {
-			fmt.Printf("Error reading %s: %v\n", file.Name(), err)
+			fmt.Printf("Error reading %s: %v\n", files[i].Name(), err)
 			continue
 		}
 		c := &GSMConfig{}
 		err = yaml.Unmarshal(b, c)
 		if err != nil {
-			fmt.Printf("Error reading %s: %v\n", file.Name(), err)
+			fmt.Printf("Error reading %s: %v\n", files[i].Name(), err)
 			continue
 		}
-		if file.Name() == ".gsm.yaml" {
+		if files[i].Name() == ".gsm.yaml" {
 			c.Default = true
 		}
 		configs = append(configs, c)

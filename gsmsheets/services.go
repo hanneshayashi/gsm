@@ -38,7 +38,7 @@ func SetClient(c *http.Client) {
 	client = c
 }
 
-func getSheetsService() (sheetsService *sheets.Service) {
+func getSheetsService() *sheets.Service {
 	if client == nil {
 		log.Fatalf("gsmsheets.client is not set. Set with gsmsheets.SetClient(client)")
 	}
@@ -52,11 +52,11 @@ func getSheetsService() (sheetsService *sheets.Service) {
 	return sheetsService
 }
 
-func getSpreadsheetsService() (spreadsheetsService *sheets.SpreadsheetsService) {
+func getSpreadsheetsService() *sheets.SpreadsheetsService {
 	if spreadsheetsService == nil {
 		spreadsheetsService = sheets.NewSpreadsheetsService(getSheetsService())
 	}
-	return
+	return spreadsheetsService
 }
 
 // func getSpreadsheetsSheetsService() (spreadsheetssheetsService *sheets.SpreadsheetsSheetsService) {

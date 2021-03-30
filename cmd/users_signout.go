@@ -33,13 +33,16 @@ var usersSignOutCmd = &cobra.Command{
 User will have to sign in by authenticating again.`,
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/signOut",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.SignOutUser(flags["userKey"].GetString())
 		if err != nil {
 			log.Fatalf("Error signing out user: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

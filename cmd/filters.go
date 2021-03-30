@@ -33,8 +33,11 @@ var filtersCmd = &cobra.Command{
 	Short:             "Manage users' Gmail message filters (Part of Gmail API)",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

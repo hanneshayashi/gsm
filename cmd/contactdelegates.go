@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -29,8 +31,11 @@ var contactDelegatesCmd = &cobra.Command{
 	Short:             "Manage users' contact contact delegations (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/contact-delegation/guides",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -38,7 +43,7 @@ var contactDelegateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 	"parent": {
 		AvailableFor: []string{"create", "delete", "list"},
 		Type:         "string",
-		Description:  `The parent resource that will own the created delegate.`,
+		Description:  `The email address of the user whose contacts should be delegated.`,
 		Required:     []string{"create", "delete", "list"},
 	},
 	"email": {

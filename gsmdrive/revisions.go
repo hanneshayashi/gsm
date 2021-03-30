@@ -90,8 +90,8 @@ func listRevisions(c *drive.RevisionsListCall, ch chan *drive.Revision, errKey s
 		return err
 	}
 	r, _ := result.(*drive.RevisionList)
-	for _, i := range r.Revisions {
-		ch <- i
+	for i := range r.Revisions {
+		ch <- r.Revisions[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

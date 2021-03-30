@@ -32,7 +32,7 @@ var chromeOsDevicesPatchCmd = &cobra.Command{
 	Short:             "Updates a device's updatable properties, such as annotatedUser, annotatedLocation, notes, orgUnitPath, or annotatedAssetId. This method supports patch semantics",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToChromeOsDevice(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var chromeOsDevicesPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching Chrome OS device: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

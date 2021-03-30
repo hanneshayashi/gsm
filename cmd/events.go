@@ -37,8 +37,11 @@ var eventsCmd = &cobra.Command{
 email address to use this API!
 https://developers.google.com/calendar/v3/reference/events`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -380,7 +383,7 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	event := &calendar.Event{}
 	if flags["anyoneCanAddSelf"].IsSet() {
 		event.AnyoneCanAddSelf = flags["anyoneCanAddSelf"].GetBool()
-		if event.AnyoneCanAddSelf == false {
+		if !event.AnyoneCanAddSelf {
 			event.ForceSendFields = append(event.ForceSendFields, "AnyoneCanAddSelf")
 		}
 	}
@@ -388,8 +391,8 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 		fileURLs := flags["fileUrl"].GetStringSlice()
 		if len(fileURLs) > 0 {
 			event.Attachments = []*calendar.EventAttachment{}
-			for _, f := range fileURLs {
-				event.Attachments = append(event.Attachments, &calendar.EventAttachment{FileUrl: f})
+			for i := range fileURLs {
+				event.Attachments = append(event.Attachments, &calendar.EventAttachment{FileUrl: fileURLs[i]})
 			}
 		} else {
 			event.ForceSendFields = append(event.ForceSendFields, "Attachments")
@@ -399,8 +402,8 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 		attendees := flags["attendees"].GetStringSlice()
 		if len(attendees) > 0 {
 			event.Attendees = []*calendar.EventAttendee{}
-			for _, a := range attendees {
-				m := gsmhelpers.FlagToMap(a)
+			for i := range attendees {
+				m := gsmhelpers.FlagToMap(attendees[i])
 				optional, err := strconv.ParseBool(m["optional"])
 				if err != nil {
 					log.Printf("Error parsing %v to bool: %v. Setting to false.", m["optional"], err)
@@ -447,8 +450,8 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 		privateExtendedProperties := flags["privateExtendedProperty"].GetStringSlice()
 		if len(privateExtendedProperties) > 0 {
 			event.ExtendedProperties.Private = make(map[string]string)
-			for _, pep := range privateExtendedProperties {
-				split := strings.Split(pep, "=")
+			for i := range privateExtendedProperties {
+				split := strings.Split(privateExtendedProperties[i], "=")
 				event.ExtendedProperties.Private[split[0]] = split[1]
 			}
 		} else {
@@ -457,8 +460,8 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 		sharedExtendedProperties := flags["sharedExtendedProperty"].GetStringSlice()
 		if len(sharedExtendedProperties) > 0 {
 			event.ExtendedProperties.Shared = make(map[string]string)
-			for _, sep := range sharedExtendedProperties {
-				split := strings.Split(sep, "=")
+			for i := range sharedExtendedProperties {
+				split := strings.Split(sharedExtendedProperties[i], "=")
 				event.ExtendedProperties.Shared[split[0]] = split[1]
 			}
 		} else {
@@ -471,7 +474,7 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	}
 	if flags["guestsCanModify"].IsSet() {
 		event.GuestsCanModify = flags["guestsCanModify"].GetBool()
-		if event.GuestsCanModify == false {
+		if !event.GuestsCanModify {
 			event.ForceSendFields = append(event.ForceSendFields, "GuestsCanModify")
 		}
 	}
@@ -504,8 +507,8 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 		if flags["reminderOverride"].IsSet() {
 			reminderOverrides := flags["reminderOverride"].GetStringSlice()
 			if len(reminderOverrides) > 0 {
-				for _, ro := range reminderOverrides {
-					m := gsmhelpers.FlagToMap(ro)
+				for i := range reminderOverrides {
+					m := gsmhelpers.FlagToMap(reminderOverrides[i])
 					if m["minutes"] == "" {
 						continue
 					}

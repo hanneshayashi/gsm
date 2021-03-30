@@ -32,7 +32,7 @@ var rolesPatchCmd = &cobra.Command{
 	Short:             "Updates a role. This method supports patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roles/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToRole(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var rolesPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching role: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var revisionsCmd = &cobra.Command{
 	Short:             "Manage revisions of non-Google files (Part of Drive API)",
 	Long:              "https://developers.google.com/drive/api/v3/reference/revisions",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

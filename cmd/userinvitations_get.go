@@ -20,28 +20,31 @@ package cmd
 import (
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
-// contactDelegatesDeleteCmd represents the delete command
-var contactDelegatesDeleteCmd = &cobra.Command{
-	Use:               "delete",
-	Short:             "Deletes a delegate from a given user.",
-	Long:              "https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/delete",
+// userInvitationsGetCmd represents the get command
+var userInvitationsGetCmd = &cobra.Command{
+	Use:               "get",
+	Short:             "Retrieves a UserInvitation resource.",
+	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.DeleteContactDelegate(flags["parent"].GetString(), flags["email"].GetString())
+		result, err := gsmcibeta.GetInvitation(flags["name"].GetString(), flags["fields"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting contact delegate: %v", err)
+			log.Fatalf("Error getting user invitation: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
 func init() {
-	gsmhelpers.InitCommand(contactDelegatesCmd, contactDelegatesDeleteCmd, contactDelegateFlags)
+	gsmhelpers.InitCommand(userInvitationsCmd, userInvitationsGetCmd, userInvitationFlags)
 }

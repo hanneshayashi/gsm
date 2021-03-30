@@ -32,7 +32,7 @@ var schemasListCmd = &cobra.Command{
 	Short:             "List custom schemas",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListSchema(flags["customerId"].GetString(), flags["fields"].GetString())
 		if err != nil {
@@ -41,10 +41,16 @@ var schemasListCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				err = enc.Encode(result[i])
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var commentsCmd = &cobra.Command{
 	Short:             "Manage comments in Google files (Part of Drive API)",
 	Long:              "https://developers.google.com/drive/api/v3/reference/comments",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -98,13 +103,13 @@ func mapToComment(flags map[string]*gsmhelpers.Value) (*drive.Comment, error) {
 	if flags["content"].IsSet() {
 		comment.Content = flags["content"].GetString()
 		if comment.Content == "" {
-			comment.ForceSendFields = append(comment.ForceSendFields, "content")
+			comment.ForceSendFields = append(comment.ForceSendFields, "Content")
 		}
 	}
 	if flags["anchor"].IsSet() {
 		comment.Anchor = flags["anchor"].GetString()
 		if comment.Anchor == "" {
-			comment.ForceSendFields = append(comment.ForceSendFields, "anchor")
+			comment.ForceSendFields = append(comment.ForceSendFields, "Anchor")
 		}
 	}
 	if flags["quotedFileContentValue"].IsSet() {

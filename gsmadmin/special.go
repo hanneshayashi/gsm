@@ -36,8 +36,8 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	errChan := make(chan error, 2)
 	wgOrgUnits.Add(1)
 	go func() {
-		for _, o := range orgUnits {
-			us, err := ListUsers(false, fmt.Sprintf("orgUnitPath=%s", o), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "", threads)
+		for i := range orgUnits {
+			us, err := ListUsers(false, fmt.Sprintf("orgUnitPath=%s", orgUnits[i]), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "", threads)
 			for u := range us {
 				userKeys <- u.PrimaryEmail
 			}
@@ -51,8 +51,8 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	}()
 	wgGroups.Add(1)
 	go func() {
-		for _, g := range groupEmails {
-			mems, err := ListMembers(g, "", "members(email,type),nextPageToken", true, threads)
+		for i := range groupEmails {
+			mems, err := ListMembers(groupEmails[i], "", "members(email,type),nextPageToken", true, threads)
 			for m := range mems {
 				if m.Type == "USER" {
 					userKeys <- m.Email
@@ -102,21 +102,21 @@ func GetMembersToSet(groupKey string, threads int, emailAddresses ...string) (<-
 	membersToAdd := make(chan string, threads)
 	membersToRemove := make(chan string, threads)
 	var nLower []string
-	for _, e := range emailAddresses {
-		nLower = append(nLower, strings.ToLower(e))
+	for i := range emailAddresses {
+		nLower = append(nLower, strings.ToLower(emailAddresses[i]))
 	}
 	go func() {
-		for _, n := range nLower {
-			if !gsmhelpers.Contains(n, cLower) {
-				membersToAdd <- n
+		for i := range nLower {
+			if !gsmhelpers.Contains(nLower[i], cLower) {
+				membersToAdd <- nLower[i]
 			}
 		}
 		close(membersToAdd)
 	}()
 	go func() {
-		for _, c := range cLower {
-			if !gsmhelpers.Contains(c, nLower) {
-				membersToRemove <- c
+		for i := range cLower {
+			if !gsmhelpers.Contains(cLower[i], nLower) {
+				membersToRemove <- cLower[i]
 			}
 		}
 		close(membersToRemove)

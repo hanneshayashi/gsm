@@ -76,8 +76,8 @@ func listCalendarResources(c *admin.ResourcesCalendarsListCall, ch chan *admin.C
 		return err
 	}
 	r, _ := result.(*admin.CalendarResources)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

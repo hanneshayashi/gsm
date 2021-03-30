@@ -33,7 +33,7 @@ var groupMembershipsCiListCmd = &cobra.Command{
 	Short:             "Lists the Memberships within a Group.",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, er := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if er != nil {
@@ -43,14 +43,20 @@ var groupMembershipsCiListCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*ci.Membership{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

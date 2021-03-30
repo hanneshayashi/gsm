@@ -35,7 +35,7 @@ var logClearCmd = &cobra.Command{
 		"crescendoOutput": "$args[0]",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		err := gsmlog.Clear(logFile)
 		if err != nil {
 			log.Fatalf("Error clearing log: %v", err)

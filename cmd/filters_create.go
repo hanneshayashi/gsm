@@ -32,7 +32,7 @@ var filtersCreateCmd = &cobra.Command{
 	Short:             "Creates a filter.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/create",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFilter(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var filtersCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating filter for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

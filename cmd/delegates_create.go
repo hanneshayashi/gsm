@@ -40,7 +40,7 @@ Also note that when a new delegate is created, there may be up to a one minute d
 
 https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		d, err := mapToDelegate(flags)
 		if err != nil {
@@ -50,7 +50,10 @@ https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegat
 		if err != nil {
 			log.Fatalf("Error creating delegate: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

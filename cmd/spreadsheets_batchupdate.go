@@ -32,7 +32,7 @@ var spreadsheetsBatchUpdateCmd = &cobra.Command{
 	Short:             "Applies one or more updates to the spreadsheet.",
 	Long:              "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/batchupdate",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBatchUpdateSpreadsheetRequest(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var spreadsheetsBatchUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating spreadsheet: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

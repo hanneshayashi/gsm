@@ -32,13 +32,16 @@ var colorsGetCmd = &cobra.Command{
 	Short:             "Returns the color definitions for calendars and events.",
 	Long:              "https://developers.google.com/calendar/v3/reference/colors/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.GetColors(flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting colors: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

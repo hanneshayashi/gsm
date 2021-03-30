@@ -32,13 +32,16 @@ var licenseAssignmentsGetCmd = &cobra.Command{
 	Short:             "Get a specific user's license by product SKU.",
 	Long:              "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmlicensing.GetLicenseAssignment(flags["productId"].GetString(), flags["skuId"].GetString(), flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting licenseAssignment: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -102,8 +102,8 @@ func listContactGroups(c *people.ContactGroupsListCall, ch chan *people.ContactG
 		return err
 	}
 	r, _ := result.(*people.ListContactGroupsResponse)
-	for _, i := range r.ContactGroups {
-		ch <- i
+	for i := range r.ContactGroups {
+		ch <- r.ContactGroups[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

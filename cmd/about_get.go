@@ -32,13 +32,16 @@ var aboutGetCmd = &cobra.Command{
 	Short:             "Gets information about the user, the user's Drive, and system capabilities.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/about/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetAbout(flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting about information: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

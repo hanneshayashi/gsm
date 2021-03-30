@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -29,8 +31,11 @@ var activitiesCmd = &cobra.Command{
 	Short:             "Manage (list) activities (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities?hl=en",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -168,7 +173,8 @@ Format: "id:abc123,id:xyz456"`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var activityFlagsALL = gsmhelpers.GetAllFlags(activityFlags)
+
+// var activityFlagsALL = gsmhelpers.GetAllFlags(activityFlags)
 
 func init() {
 	rootCmd.AddCommand(activitiesCmd)

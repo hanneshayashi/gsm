@@ -36,14 +36,17 @@ var configsListCmd = &cobra.Command{
 		"crescendoOutput": "$args[0]",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.ListConfigs()
 		if err != nil {
 			log.Fatalf("Error listing configs: %v", err)
 		}
 		if flags["details"].GetBool() {
-			gsmhelpers.Output(result, "yaml", false)
+			err = gsmhelpers.Output(result, "yaml", false)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		} else {
 			if len(result) > 0 {
 				fmt.Println(result[0].Name, "(Default)")

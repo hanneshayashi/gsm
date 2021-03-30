@@ -102,8 +102,8 @@ func listEventInstances(c *calendar.EventsInstancesCall, ch chan *calendar.Event
 		return err
 	}
 	r, _ := result.(*calendar.Events)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -156,8 +156,8 @@ func listEvents(c *calendar.EventsListCall, ch chan *calendar.Event, errKey stri
 		return err
 	}
 	r, _ := result.(*calendar.Events)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -194,11 +194,11 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 	if q != "" {
 		c = c.Q(q)
 	}
-	for _, pep := range privateExtendedProperties {
-		c = c.PrivateExtendedProperty(pep)
+	for i := range privateExtendedProperties {
+		c = c.PrivateExtendedProperty(privateExtendedProperties[i])
 	}
-	for _, sep := range sharedExtendedProperties {
-		c = c.SharedExtendedProperty(sep)
+	for i := range sharedExtendedProperties {
+		c = c.SharedExtendedProperty(sharedExtendedProperties[i])
 	}
 	if updatedMin != "" {
 		c = c.UpdatedMin(updatedMin)

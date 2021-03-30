@@ -32,13 +32,16 @@ var sendAsDeleteCmd = &cobra.Command{
 	Short:             "Deletes the specified send-as alias. Revokes any verification that may have been required for using it.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.DeleteSendAs(flags["userId"].GetString(), flags["sendAsEmail"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting send-as: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

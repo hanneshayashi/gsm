@@ -32,13 +32,16 @@ var orgUnitsDeleteCmd = &cobra.Command{
 	Short:             "Removes an organizational unit.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteOrgUnit(flags["customerId"].GetString(), flags["orgUnitPath"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting org unit: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

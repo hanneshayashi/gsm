@@ -32,7 +32,7 @@ var peopleUpdateContactCmd = &cobra.Command{
 	Short:             "Update contact data for an existing contact person.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/updateContact",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := gsmpeople.GetContact(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), "*")
 		if err != nil {
@@ -46,7 +46,10 @@ var peopleUpdateContactCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating contact: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

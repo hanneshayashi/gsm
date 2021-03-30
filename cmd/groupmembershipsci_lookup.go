@@ -32,7 +32,7 @@ var groupMembershipsCiLookupCmd = &cobra.Command{
 	Short:             "Looks up the resource name of a Membership by its EntityKey.",
 	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/lookup`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
@@ -42,7 +42,10 @@ var groupMembershipsCiLookupCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error looking up membership: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

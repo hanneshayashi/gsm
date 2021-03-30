@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -571,8 +573,11 @@ var usersCmd = &cobra.Command{
 	Short:             "Manage Users (Park of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -581,12 +586,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["addresses"].IsSet() {
 		addresses := flags["addresses"].GetStringSlice()
 		if len(addresses) > 0 {
-			addressesMap := make([]map[string]string, 0)
-			for _, a := range addresses {
-				m := gsmhelpers.FlagToMap(a)
-				addressesMap = append(addressesMap, m)
-			}
-			user.Addresses = addressesMap
+			user.Addresses = gsmhelpers.StringSliceToMapSlice(addresses)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Addresses")
 			user.NullFields = append(user.NullFields, "Addresses")
@@ -601,18 +601,13 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["changePasswordAtNextLogin"].IsSet() {
 		user.ChangePasswordAtNextLogin = flags["changePasswordAtNextLogin"].GetBool()
 		if !user.ChangePasswordAtNextLogin {
-			user.ForceSendFields = append(user.ForceSendFields, "changePasswordAtNextLogin")
+			user.ForceSendFields = append(user.ForceSendFields, "ChangePasswordAtNextLogin")
 		}
 	}
 	if flags["emails"].IsSet() {
 		emails := flags["emails"].GetStringSlice()
 		if len(emails) > 0 {
-			emailsMap := make([]map[string]string, 0)
-			for _, a := range emails {
-				m := gsmhelpers.FlagToMap(a)
-				emailsMap = append(emailsMap, m)
-			}
-			user.Emails = emailsMap
+			user.Emails = gsmhelpers.StringSliceToMapSlice(emails)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Emails")
 			user.NullFields = append(user.NullFields, "Emails")
@@ -621,12 +616,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["externalIds"].IsSet() {
 		externalIds := flags["externalIds"].GetStringSlice()
 		if len(externalIds) > 0 {
-			externalIdsMap := make([]map[string]string, 0)
-			for _, a := range externalIds {
-				m := gsmhelpers.FlagToMap(a)
-				externalIdsMap = append(externalIdsMap, m)
-			}
-			user.ExternalIds = externalIdsMap
+			user.ExternalIds = gsmhelpers.StringSliceToMapSlice(externalIds)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "ExternalIds")
 			user.NullFields = append(user.NullFields, "ExternalIds")
@@ -646,18 +636,13 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["hashFunction"].IsSet() {
 		user.HashFunction = flags["hashFunction"].GetString()
 		if user.HashFunction == "" {
-			user.ForceSendFields = append(user.ForceSendFields, "hashFunction")
+			user.ForceSendFields = append(user.ForceSendFields, "HashFunction")
 		}
 	}
 	if flags["ims"].IsSet() {
 		ims := flags["ims"].GetStringSlice()
 		if len(ims) > 0 {
-			imsMap := make([]map[string]string, 0)
-			for _, a := range ims {
-				m := gsmhelpers.FlagToMap(a)
-				imsMap = append(imsMap, m)
-			}
-			user.Ims = imsMap
+			user.Ims = gsmhelpers.StringSliceToMapSlice(ims)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Ims")
 			user.NullFields = append(user.NullFields, "Ims")
@@ -666,24 +651,19 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["includeInGlobalAddressList"].IsSet() {
 		user.IncludeInGlobalAddressList = flags["includeInGlobalAddressList"].GetBool()
 		if !user.IncludeInGlobalAddressList {
-			user.ForceSendFields = append(user.ForceSendFields, "includeInGlobalAddressList")
+			user.ForceSendFields = append(user.ForceSendFields, "IncludeInGlobalAddressList")
 		}
 	}
 	if flags["ipWhitelisted"].IsSet() {
 		user.IpWhitelisted = flags["ipWhitelisted"].GetBool()
 		if !user.IpWhitelisted {
-			user.ForceSendFields = append(user.ForceSendFields, "ipWhitelisted")
+			user.ForceSendFields = append(user.ForceSendFields, "IpWhitelisted")
 		}
 	}
 	if flags["keywords"].IsSet() {
 		keywords := flags["keywords"].GetStringSlice()
 		if len(keywords) > 0 {
-			keywordsMap := make([]map[string]string, 0)
-			for _, a := range keywords {
-				m := gsmhelpers.FlagToMap(a)
-				keywordsMap = append(keywordsMap, m)
-			}
-			user.Keywords = keywordsMap
+			user.Keywords = gsmhelpers.StringSliceToMapSlice(keywords)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Keywords")
 			user.NullFields = append(user.NullFields, "Keywords")
@@ -692,12 +672,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["languages"].IsSet() {
 		languages := flags["languages"].GetStringSlice()
 		if len(languages) > 0 {
-			languagesMap := make([]map[string]string, 0)
-			for _, a := range languages {
-				m := gsmhelpers.FlagToMap(a)
-				languagesMap = append(languagesMap, m)
-			}
-			user.Languages = languagesMap
+			user.Languages = gsmhelpers.StringSliceToMapSlice(languages)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Languages")
 			user.NullFields = append(user.NullFields, "Languages")
@@ -706,12 +681,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["locations"].IsSet() {
 		locations := flags["locations"].GetStringSlice()
 		if len(locations) > 0 {
-			locationsMap := make([]map[string]string, 0)
-			for _, a := range locations {
-				m := gsmhelpers.FlagToMap(a)
-				locationsMap = append(locationsMap, m)
-			}
-			user.Locations = locationsMap
+			user.Locations = gsmhelpers.StringSliceToMapSlice(locations)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Locations")
 			user.NullFields = append(user.NullFields, "Locations")
@@ -752,12 +722,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["organizations"].IsSet() {
 		organizations := flags["organizations"].GetStringSlice()
 		if len(organizations) > 0 {
-			organizationsMap := make([]map[string]string, 0)
-			for _, a := range organizations {
-				m := gsmhelpers.FlagToMap(a)
-				organizationsMap = append(organizationsMap, m)
-			}
-			user.Organizations = organizationsMap
+			user.Organizations = gsmhelpers.StringSliceToMapSlice(organizations)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Organizations")
 			user.NullFields = append(user.NullFields, "Organizations")
@@ -772,26 +737,16 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["phones"].IsSet() {
 		phones := flags["phones"].GetStringSlice()
 		if len(phones) > 0 {
-			phonesMap := make([]map[string]string, 0)
-			for _, a := range phones {
-				m := gsmhelpers.FlagToMap(a)
-				phonesMap = append(phonesMap, m)
-			}
-			user.Phones = phonesMap
+			user.Phones = gsmhelpers.StringSliceToMapSlice(phones)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Phones")
 			user.NullFields = append(user.NullFields, "Phones")
 		}
 	}
 	if flags["posixAccounts"].IsSet() {
-		posixaccounts := flags["posixAccounts"].GetStringSlice()
-		if len(posixaccounts) > 0 {
-			posixaccountsMap := make([]map[string]string, 0)
-			for _, a := range posixaccounts {
-				m := gsmhelpers.FlagToMap(a)
-				posixaccountsMap = append(posixaccountsMap, m)
-			}
-			user.PosixAccounts = posixaccountsMap
+		posixAccounts := flags["posixAccounts"].GetStringSlice()
+		if len(posixAccounts) > 0 {
+			user.PosixAccounts = gsmhelpers.StringSliceToMapSlice(posixAccounts)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "PosixAccounts")
 			user.NullFields = append(user.NullFields, "PosixAccounts")
@@ -818,12 +773,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["relations"].IsSet() {
 		relations := flags["relations"].GetStringSlice()
 		if len(relations) > 0 {
-			relationsMap := make([]map[string]string, 0)
-			for _, a := range relations {
-				m := gsmhelpers.FlagToMap(a)
-				relationsMap = append(relationsMap, m)
-			}
-			user.Relations = relationsMap
+			user.Relations = gsmhelpers.StringSliceToMapSlice(relations)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Relations")
 			user.NullFields = append(user.NullFields, "Relations")
@@ -832,12 +782,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["sshPublicKeys"].IsSet() {
 		sshPublicKeys := flags["sshPublicKeys"].GetStringSlice()
 		if len(sshPublicKeys) > 0 {
-			sshPublicKeysMap := make([]map[string]string, 0)
-			for _, a := range sshPublicKeys {
-				m := gsmhelpers.FlagToMap(a)
-				sshPublicKeysMap = append(sshPublicKeysMap, m)
-			}
-			user.SshPublicKeys = sshPublicKeysMap
+			user.SshPublicKeys = gsmhelpers.StringSliceToMapSlice(sshPublicKeys)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "SshPublicKeys")
 			user.NullFields = append(user.NullFields, "SshPublicKeys")
@@ -846,18 +791,13 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["suspended"].IsSet() {
 		user.Suspended = flags["suspended"].GetBool()
 		if !user.Suspended {
-			user.ForceSendFields = append(user.ForceSendFields, "suspended")
+			user.ForceSendFields = append(user.ForceSendFields, "Suspended")
 		}
 	}
 	if flags["websites"].IsSet() {
 		websites := flags["websites"].GetStringSlice()
 		if len(websites) > 0 {
-			websitesMap := make([]map[string]string, 0)
-			for _, a := range websites {
-				m := gsmhelpers.FlagToMap(a)
-				websitesMap = append(websitesMap, m)
-			}
-			user.Websites = websitesMap
+			user.Websites = gsmhelpers.StringSliceToMapSlice(websites)
 		} else {
 			user.ForceSendFields = append(user.ForceSendFields, "Websites")
 			user.NullFields = append(user.NullFields, "Websites")

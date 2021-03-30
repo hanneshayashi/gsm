@@ -49,8 +49,8 @@ func listSettings(c *calendar.SettingsListCall, ch chan *calendar.Setting, errKe
 		return err
 	}
 	r, _ := result.(*calendar.Settings)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

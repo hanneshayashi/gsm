@@ -32,13 +32,16 @@ var filesGenerateIdsCmd = &cobra.Command{
 	Short:             "Generates a set of file IDs which can be provided in create or copy requests.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/generateIds",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GenerateFileIDs(flags["count"].GetInt64(), flags["space"].GetString())
 		if err != nil {
 			log.Fatalf("Error generating file IDs: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

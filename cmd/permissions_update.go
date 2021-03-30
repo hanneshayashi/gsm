@@ -32,7 +32,7 @@ var permissionsUpdateCmd = &cobra.Command{
 	Short:             "Updates a permission with patch semantics.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/permissions/update",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPermission(flags)
 		if err != nil {
@@ -46,7 +46,10 @@ var permissionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating permission: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

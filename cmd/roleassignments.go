@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var roleAssignmentsCmd = &cobra.Command{
 	Short:             "Manage Role Assignments (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -111,19 +116,19 @@ func mapToRoleAssignment(flags map[string]*gsmhelpers.Value) (*admin.RoleAssignm
 	if flags["orgUnitId"].IsSet() {
 		roleAssignment.OrgUnitId = flags["orgUnitId"].GetString()
 		if roleAssignment.OrgUnitId == "" {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "orgUnitId")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "OrgUnitId")
 		}
 	}
 	if flags["scopeType"].IsSet() {
 		roleAssignment.ScopeType = flags["scopeType"].GetString()
 		if roleAssignment.ScopeType == "" {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "scopeType")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "ScopeType")
 		}
 	}
 	if flags["roleId"].IsSet() {
 		roleAssignment.RoleId = flags["roleId"].GetInt64()
 		if roleAssignment.RoleId == 0 {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "roleId")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "RoleId")
 		}
 	}
 	return roleAssignment, nil

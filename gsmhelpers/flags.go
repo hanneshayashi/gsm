@@ -248,10 +248,10 @@ func checkBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, len
 		}
 		flags[k].Index = flags[k].GetInt64()
 		if flags[k].Index == 0 {
-			return fmt.Errorf("Columns must be 1-indexed (don't use 0 to reference columns)")
+			return fmt.Errorf("columns must be 1-indexed (don't use 0 to reference columns)")
 		}
 		if flags[k].Index > length {
-			return fmt.Errorf("Index used for %s is out of range. %d > %d. Did you set the delimiter correctly?", k, flags[k].Index, length)
+			return fmt.Errorf("index used for %s is out of range. %d > %d. Did you set the delimiter correctly?", k, flags[k].Index, length)
 		}
 	}
 	return nil
@@ -262,8 +262,8 @@ func FlagToMap(value string) (m map[string]string) {
 	if value != "" {
 		m = make(map[string]string)
 		split := strings.Split(value, ";")
-		for _, att := range split {
-			s2 := strings.SplitN(att, "=", 2)
+		for i := range split {
+			s2 := strings.SplitN(split[i], "=", 2)
 			if len(s2) > 1 {
 				m[s2[0]] = s2[1]
 			}
@@ -383,7 +383,13 @@ func batchFlagsToMap(flags map[string]*Value, defaultFlags map[string]*Flag, lin
 func markFlagsRequired(cmd *cobra.Command, flags map[string]*Flag, command string) {
 	for k := range flags {
 		if Contains(command, flags[k].Required) {
-			cmd.MarkFlagRequired(k)
+			if cmd.Use == "recursive" && !Contains(command, flags[k].Recursive) {
+				continue
+			}
+			err := cmd.MarkFlagRequired(k)
+			if err != nil {
+				log.Fatalln(cmd.Parent().Parent().Use, cmd.Parent().Use, cmd.Use, command, k, err)
+			}
 		}
 	}
 }
@@ -419,10 +425,10 @@ func consolidateFlags(cmd *cobra.Command, cmdFlags map[string]*Flag) (map[string
 	for k := range flagsNew {
 		ak := k + "_ALL"
 		if flags[k].IsSet() && flags[ak].IsSet() {
-			return nil, fmt.Errorf("You can't set a normal flag and its _ALL equivalent at the same time. %s", k)
+			return nil, fmt.Errorf("you can't set a normal flag and its _ALL equivalent at the same time. %s", k)
 		}
 		if cmdFlags[k] != nil && Contains(cmd.Parent().Use, cmdFlags[k].Required) && !flags[k].IsSet() && !flags[ak].IsSet() {
-			return nil, fmt.Errorf("Required flag %s is not set", k)
+			return nil, fmt.Errorf("required flag %s is not set", k)
 		}
 		if !flags[k].IsSet() && flags[ak].IsSet() {
 			flagsNew[k] = flags[ak]
@@ -458,4 +464,14 @@ func InitRecursiveCommand(parentCmd, childCmd *cobra.Command, cmdFlags, recursiv
 	markFlagsRequired(childCmd, cmdFlags, parentCmd.Use)
 	addFlags(recursiveFlags, flags, childCmd.Use, false)
 	markFlagsRequired(childCmd, recursiveFlags, childCmd.Use)
+}
+
+// StringSliceToMapSlice converts a slice of strings to a slice of maps
+func StringSliceToMapSlice(slice []string) []map[string]string {
+	mapS := make([]map[string]string, 0)
+	for i := range slice {
+		m := FlagToMap(slice[i])
+		mapS = append(mapS, m)
+	}
+	return mapS
 }

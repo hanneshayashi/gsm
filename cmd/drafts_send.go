@@ -32,7 +32,7 @@ var draftsSendCmd = &cobra.Command{
 	Short:             "Sends the specified, existing draft to the recipients in the To, Cc, and Bcc headers.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		draft, err := gsmgmail.GetDraft(flags["userId"].GetString(), flags["id"].GetString(), "FULL", "*")
 		if err != nil {
@@ -42,7 +42,10 @@ var draftsSendCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error sending draft: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

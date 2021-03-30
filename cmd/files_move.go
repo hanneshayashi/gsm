@@ -33,7 +33,7 @@ var filesMoveCmd = &cobra.Command{
 	Long: `You can't move folders to Shared Drives with this command!
 Use "files move recursive" instead!`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := gsmdrive.GetFile(flags["fileId"].GetString(), "id,parents", "")
 		if err != nil {
@@ -43,7 +43,10 @@ Use "files move recursive" instead!`,
 		if err != nil {
 			log.Fatalf("Error during move: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

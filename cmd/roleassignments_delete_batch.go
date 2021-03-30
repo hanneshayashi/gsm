@@ -30,13 +30,13 @@ import (
 // roleAssignmentsDeleteBatchCmd represents the batch command
 var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch retrieve role assignments using a CSV file as input.",
+	Short: "Batch delete role assignments using a CSV file as input.",
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, roleAssignmentFlags)
 		if err != nil {
 			log.Fatalln(err)
@@ -71,14 +71,20 @@ var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []resultStruct{}
 			for res := range results {
 				final = append(final, res)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

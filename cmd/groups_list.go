@@ -33,20 +33,26 @@ var groupsListCmd = &cobra.Command{
 	Short:             "Retrieve all groups of a domain or of a user given a userKey (paginated).",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListGroups(flags["query"].GetString(), flags["userKey"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*admin.Group{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

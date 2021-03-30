@@ -32,13 +32,16 @@ var filtersGetCmd = &cobra.Command{
 	Short:             "Gets a filter.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetFilter(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting filter %s for user %s: %v", flags["id"].GetString(), flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

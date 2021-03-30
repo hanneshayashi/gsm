@@ -32,7 +32,7 @@ var chromeOsDevicesMoveToOUCmd = &cobra.Command{
 	Short:             "Move or insert multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/moveDevicesToOu",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		d, err := mapToChromeOsMoveDevicesToOu(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var chromeOsDevicesMoveToOUCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error moving Chrome OS device: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

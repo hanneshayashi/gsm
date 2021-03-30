@@ -21,6 +21,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
@@ -36,8 +37,11 @@ var messagesCmd = &cobra.Command{
 	Short:             "Manage users' messages (Part of Gmail API)",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -204,8 +208,8 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 		header["Bcc"] = flags["bcc"].GetString()
 	}
 	header["Subject"] = flags["subject"].GetString()
-	for k, v := range header {
-		msg += fmt.Sprintf("%s: %s\n", k, v)
+	for i := range header {
+		msg += fmt.Sprintf("%s: %s\n", i, header[i])
 	}
 	msg += fmt.Sprintf("\n--%s\n", boundary)
 	msg += "Content-Type: text/plain; charset=\"utf-8\"\n"
@@ -215,8 +219,8 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 	msg += "\n" + body
 	if flags["attachment"].IsSet() {
 		attachments := flags["attachment"].GetStringSlice()
-		for _, a := range attachments {
-			file, err := os.Open(a)
+		for i := range attachments {
+			file, err := os.Open(attachments[i])
 			if err != nil {
 				return nil, err
 			}
@@ -240,11 +244,11 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 func emlToMessage(eml string) (*gmail.Message, error) {
 	file, err := os.Open(eml)
 	if err != nil {
-		return nil, fmt.Errorf("Error opening %s: %v", eml, err)
+		return nil, fmt.Errorf("error opening %s: %v", eml, err)
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading %s: %v", eml, err)
+		return nil, fmt.Errorf("error reading %s: %v", eml, err)
 	}
 	message := &gmail.Message{
 		Raw: base64.URLEncoding.EncodeToString(bytes),

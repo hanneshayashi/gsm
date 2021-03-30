@@ -33,7 +33,7 @@ var sendAsListCmd = &cobra.Command{
 The result includes the primary send-as address associated with the account as well as any custom "from" aliases.`,
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListSendAs(flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {
@@ -42,10 +42,16 @@ The result includes the primary send-as address associated with the account as w
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				err = enc.Encode(result[i])
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

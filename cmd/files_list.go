@@ -33,20 +33,26 @@ var filesListCmd = &cobra.Command{
 	Short:             "Lists or searches files.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListFiles(flags["q"].GetString(), flags["driveId"].GetString(), flags["corpora"].GetString(), flags["includePermissionsForView"].GetString(), flags["orderBy"].GetString(), flags["spaces"].GetString(), flags["fields"].GetString(), flags["includeItemsFromAllDrives"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*drive.File{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

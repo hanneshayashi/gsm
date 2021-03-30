@@ -32,13 +32,16 @@ var buildingsGetCmd = &cobra.Command{
 	Short:             "Retrieves a building.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetBuilding(flags["customer"].GetString(), flags["buildingId"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting building: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -76,8 +76,8 @@ func listACLs(c *calendar.AclListCall, ch chan *calendar.AclRule, errKey string)
 		return err
 	}
 	r, _ := result.(*calendar.Acl)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

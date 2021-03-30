@@ -32,7 +32,7 @@ var featuresPatchCmd = &cobra.Command{
 	Short:             "Patches a feature resource.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFeature(flags)
 		if err != nil {
@@ -43,7 +43,10 @@ var featuresPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching feature resource: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

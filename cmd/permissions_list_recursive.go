@@ -39,7 +39,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
@@ -77,14 +77,20 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []resultStruct{}
 			for r := range results {
 				final = append(final, r)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

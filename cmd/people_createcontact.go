@@ -32,7 +32,7 @@ var peopleCreateContactCmd = &cobra.Command{
 	Short:             "Create a new contact and return the person resource for that contact.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/createContact",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPerson(flags, nil)
 		if err != nil {
@@ -42,7 +42,10 @@ var peopleCreateContactCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating contact: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

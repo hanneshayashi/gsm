@@ -32,13 +32,16 @@ var peopleDeleteContactCmd = &cobra.Command{
 	Short:             "Delete a contact person. Any non-contact data will not be deleted.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/deleteContact",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.DeleteContact(flags["resourceName"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting contact: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

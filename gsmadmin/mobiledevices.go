@@ -72,8 +72,8 @@ func listMobileDevices(c *admin.MobiledevicesListCall, ch chan *admin.MobileDevi
 		return err
 	}
 	r, _ := result.(*admin.MobileDevices)
-	for _, i := range r.Mobiledevices {
-		ch <- i
+	for i := range r.Mobiledevices {
+		ch <- r.Mobiledevices[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

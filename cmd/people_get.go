@@ -32,13 +32,16 @@ var peopleGetCmd = &cobra.Command{
 	Short:             "Provides information about a person by specifying a resource name.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.GetContact(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting contact: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

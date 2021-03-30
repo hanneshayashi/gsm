@@ -32,13 +32,16 @@ var peopleDeleteContactPhotoCmd = &cobra.Command{
 	Short:             "Delete a contact's photo.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/deleteContactPhoto",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.DeleteContactPhoto(flags["resourceName"].GetString(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting contact photo: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

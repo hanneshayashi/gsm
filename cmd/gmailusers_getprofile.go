@@ -32,13 +32,16 @@ var gmailUsersGetProfileCmd = &cobra.Command{
 	Short:             "Gets the specified user's Gmail profile.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users/getProfile",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetUserProfile(flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting profile: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

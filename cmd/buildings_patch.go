@@ -32,7 +32,7 @@ var buildingsPatchCmd = &cobra.Command{
 	Short:             "Updates a building. This method supports patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBuilding(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var buildingsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching building: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

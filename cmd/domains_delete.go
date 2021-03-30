@@ -32,13 +32,16 @@ var domainsDeleteCmd = &cobra.Command{
 	Short:             "Deletes a Domain of the customer.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/domains/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteDomain(flags["customer"].GetString(), flags["domainName"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting domain: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -31,8 +32,11 @@ var customerUsageReportsCmd = &cobra.Command{
 	Short:             "Manage (get) Customer Usage Reports (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -71,7 +75,8 @@ If no parameters are requested, all parameters are returned.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var customerUsageReportFlagsALL = gsmhelpers.GetAllFlags(customerUsageReportFlags)
+
+// var customerUsageReportFlagsALL = gsmhelpers.GetAllFlags(customerUsageReportFlags)
 
 func init() {
 	rootCmd.AddCommand(customerUsageReportsCmd)

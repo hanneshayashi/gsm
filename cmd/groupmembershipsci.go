@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var groupMembershipsCiCmd = &cobra.Command{
 	Short:             "Manage group memberships (Part of Cloud Identity API)",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -194,8 +199,8 @@ func mapToGroupMemberShipCi(flags map[string]*gsmhelpers.Value) (*ci.Membership,
 		membership.Roles = []*ci.MembershipRole{}
 		roles := flags["roles"].GetStringSlice()
 		if len(roles) > 0 {
-			for _, r := range roles {
-				m := gsmhelpers.FlagToMap(r)
+			for i := range roles {
+				m := gsmhelpers.FlagToMap(roles[i])
 				role := &ci.MembershipRole{
 					Name: m["name"],
 				}
@@ -219,8 +224,8 @@ func mapToModifyMembershipRolesRequestCi(flags map[string]*gsmhelpers.Value) (*c
 		modifyMembershipRolesRequest.AddRoles = []*ci.MembershipRole{}
 		addRoles := flags["addRoles"].GetStringSlice()
 		if len(addRoles) > 0 {
-			for _, r := range addRoles {
-				m := gsmhelpers.FlagToMap(r)
+			for i := range addRoles {
+				m := gsmhelpers.FlagToMap(addRoles[i])
 				addRole := &ci.MembershipRole{
 					Name: m["name"],
 				}
@@ -245,8 +250,8 @@ func mapToModifyMembershipRolesRequestCi(flags map[string]*gsmhelpers.Value) (*c
 		modifyMembershipRolesRequest.UpdateRolesParams = []*ci.UpdateMembershipRolesParams{}
 		updateRolesParams := flags["updateRolesParams"].GetStringSlice()
 		if len(updateRolesParams) > 0 {
-			for _, u := range updateRolesParams {
-				m := gsmhelpers.FlagToMap(u)
+			for i := range updateRolesParams {
+				m := gsmhelpers.FlagToMap(updateRolesParams[i])
 				updateRolesParam := &ci.UpdateMembershipRolesParams{
 					FieldMask: m["fieldMask"],
 					MembershipRole: &ci.MembershipRole{

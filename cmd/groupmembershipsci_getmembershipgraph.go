@@ -32,7 +32,7 @@ var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 	Short:             "Get a membership graph of just a member or both a member and a group.",
 	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/getMembershipGraph`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent, err := getGroupCiName(flags["parent"].GetString(), flags["email"].GetString())
 		if err != nil {
@@ -42,7 +42,10 @@ var groupMembershipsCiGetMembershipGraphCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting membership graph: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

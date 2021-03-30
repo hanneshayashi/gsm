@@ -33,20 +33,26 @@ var permissionsListCmd = &cobra.Command{
 	Short:             "Lists a file's or shared drive's permissions.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/permissions/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.ListPermissions(flags["fileId"].GetString(), flags["includePermissionsForView"].GetString(), flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*drive.Permission{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

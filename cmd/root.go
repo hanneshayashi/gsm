@@ -28,6 +28,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmauth"
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmci"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmgmail"
@@ -49,7 +50,6 @@ import (
 )
 
 var (
-	cfgDir         string
 	cfgFile        string
 	dwdSubject     string
 	logFile        string
@@ -121,15 +121,18 @@ Note that due to the way permissions are automatically inherited in Drive, this 
 var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
-	Long: `GSM is free software licenced under the GPLv3 (https://gsm.hayashi-ke.online/license).
+	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
 Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
-	Version: "0.2.4",
+	Version: "0.2.5",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -140,7 +143,7 @@ func Execute() {
 		os.Exit(1)
 	}
 	// gsmhelpers.CreateDocs(rootCmd)
-	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm_crescendo/json/", "--compressOutput", "--streamOutput")
+	// crescengo.CreateCrescendoModuleDefs(rootCmd, "../gsm-powershell/json/", "--compressOutput", "--streamOutput")
 }
 
 func init() {
@@ -211,35 +214,44 @@ func setHomeDir() {
 }
 
 func auth() {
-	credentials, err := ioutil.ReadFile(viper.GetString("credentialsFile"))
-	if err != nil {
-		log.Printf("Error reading service account credentials file: %v", err)
-	} else {
-		var client *http.Client
-		switch viper.GetString("mode") {
-		case "dwd":
-			var subject string
-			if dwdSubject == "" {
-				subject = viper.GetString("subject")
-			} else {
-				subject = dwdSubject
-			}
-			client = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
-		case "user":
-			client = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), viper.GetStringSlice("scopes")...)
+	mode := viper.GetString("mode")
+	var subject string
+	var credentials []byte
+	var err error
+	var client *http.Client
+	if mode == "dwd" || mode == "adc" {
+		if dwdSubject == "" {
+			subject = viper.GetString("subject")
+		} else {
+			subject = dwdSubject
 		}
-		gsmadmin.SetClient(client)
-		gsmgmail.SetClient(client)
-		gsmci.SetClient(client)
-		gsmdrive.SetClient(client)
-		gsmgroupssettings.SetClient(client)
-		gsmcalendar.SetClient(client)
-		gsmlicensing.SetClient(client)
-		gsmpeople.SetClient(client)
-		gsmsheets.SetClient(client)
-		gsmreports.SetClient(client)
-		gsmgmailpostmaster.SetClient(client)
 	}
+	if mode == "dwd" || mode == "user" {
+		credentials, err = ioutil.ReadFile(viper.GetString("credentialsFile"))
+		if err != nil {
+			fmt.Printf("Error reading service account credentials file: %v", err)
+		}
+	}
+	switch mode {
+	case "dwd":
+		client = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
+	case "user":
+		client = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), viper.GetStringSlice("scopes")...)
+	case "adc":
+		client = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
+	}
+	gsmadmin.SetClient(client)
+	gsmgmail.SetClient(client)
+	gsmci.SetClient(client)
+	gsmdrive.SetClient(client)
+	gsmgroupssettings.SetClient(client)
+	gsmcalendar.SetClient(client)
+	gsmlicensing.SetClient(client)
+	gsmpeople.SetClient(client)
+	gsmsheets.SetClient(client)
+	gsmreports.SetClient(client)
+	gsmgmailpostmaster.SetClient(client)
+	gsmcibeta.SetClient(client)
 }
 
 func initLog() {
@@ -251,7 +263,7 @@ func initLog() {
 	}
 	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 	log.SetOutput(file)
 }

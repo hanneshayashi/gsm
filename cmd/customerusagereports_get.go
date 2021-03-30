@@ -35,20 +35,26 @@ For more information, see the Customers Usage Report guide.
 For more information about the customer report's parameters, see the Customers Usage parameters reference guides.`,
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmreports.GetCustomerUsageReport(flags["date"].GetString(), flags["customerId"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*reports.UsageReport{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

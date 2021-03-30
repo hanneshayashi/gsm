@@ -33,12 +33,12 @@ var delegatesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified delegates using a CSV file as input.",
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
-	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, delegateFlags)
 		if err != nil {
 			log.Fatalln(err)
@@ -67,14 +67,20 @@ var delegatesGetBatchCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*gmail.Delegate{}
 			for res := range results {
 				final = append(final, res)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

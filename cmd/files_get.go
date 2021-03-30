@@ -32,13 +32,16 @@ var filesGetCmd = &cobra.Command{
 	Short:             "Gets a file or folder's metadata or content by ID.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.GetFile(flags["fileId"].GetString(), flags["fields"].GetString(), flags["includePermissionsForView"].GetString())
 		if err != nil {
 			log.Println(err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

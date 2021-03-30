@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -34,11 +36,14 @@ var filesCountRecursiveCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
 		result := gsmdrive.CountFilesAndFolders(files)
-		gsmhelpers.Output(result, "json", compressOutput)
+		err := gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

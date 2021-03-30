@@ -32,7 +32,7 @@ var buildingsInsertCmd = &cobra.Command{
 	Short:             "Inserts a building.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		b, err := mapToBuilding(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var buildingsInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting building: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

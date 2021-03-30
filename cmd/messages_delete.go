@@ -32,13 +32,16 @@ var messagesDeleteCmd = &cobra.Command{
 	Short:             "Immediately and permanently deletes the specified message. This operation cannot be undone. Prefer messages.trash instead.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.DeleteMessage(flags["userId"].GetString(), flags["id"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting message: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

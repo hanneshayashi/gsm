@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -75,13 +76,25 @@ $ ./gsm completions fish > ~/.config/fish/completions/gsm.fish
 	Run: func(cmd *cobra.Command, args []string) {
 		switch args[0] {
 		case "bash":
-			cmd.Root().GenBashCompletion(os.Stdout)
+			err := cmd.Root().GenBashCompletion(os.Stdout)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		case "zsh":
-			cmd.Root().GenZshCompletion(os.Stdout)
+			err := cmd.Root().GenZshCompletion(os.Stdout)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		case "fish":
-			cmd.Root().GenFishCompletion(os.Stdout, true)
+			err := cmd.Root().GenFishCompletion(os.Stdout, true)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		case "powershell":
-			cmd.Root().GenPowerShellCompletion(os.Stdout)
+			err := cmd.Root().GenPowerShellCompletion(os.Stdout)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

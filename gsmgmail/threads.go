@@ -66,8 +66,8 @@ func listThreads(c *gmail.UsersThreadsListCall, ch chan *gmail.Thread, errKey st
 		return err
 	}
 	r, _ := result.(*gmail.ListThreadsResponse)
-	for _, i := range r.Threads {
-		ch <- i
+	for i := range r.Threads {
+		ch <- r.Threads[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

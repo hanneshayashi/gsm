@@ -33,20 +33,26 @@ var eventsInstancesCmd = &cobra.Command{
 	Short:             "Returns instances of the specified recurring event.",
 	Long:              "https://developers.google.com/calendar/v3/reference/events/instances",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.ListEventInstances(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["originalStart"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["fields"].GetString(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*calendar.Event{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

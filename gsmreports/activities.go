@@ -31,8 +31,8 @@ func listActivities(c *reports.ActivitiesListCall, ch chan *reports.Activity, er
 		return err
 	}
 	r, _ := result.(*reports.Activities)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

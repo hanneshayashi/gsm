@@ -32,7 +32,7 @@ var freeBusyQueryCmd = &cobra.Command{
 	Short:             "Returns free/busy information for a set of calendars.",
 	Long:              "https://developers.google.com/calendar/v3/reference/freebusy/query",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFreeBusyRequest(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var freeBusyQueryCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting IMAP settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

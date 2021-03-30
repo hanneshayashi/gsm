@@ -32,13 +32,16 @@ var usersMakeAdminCmd = &cobra.Command{
 	Short:             "(un)Makes a user a super administrator.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/makeAdmin",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.MakeAdmin(flags["userKey"].GetString(), !flags["unmake"].GetBool())
 		if err != nil {
 			log.Fatalf("Error changing user's admin status: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

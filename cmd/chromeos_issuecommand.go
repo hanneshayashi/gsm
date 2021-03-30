@@ -32,7 +32,7 @@ var chromeOsIssueCommandCmd = &cobra.Command{
 	Short:             "Takes an issueCommand that affects a Chrome OS Device. This includes deprovisioning, disabling, and re-enabling devices.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/issueCommand",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		i, err := mapToDirectoryChromeosdevicesIssueCommandRequest(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var chromeOsIssueCommandCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error issuing command to Chrome OS device: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

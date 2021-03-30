@@ -32,13 +32,16 @@ var membersGetCmd = &cobra.Command{
 	Short:             "Retrieves a group member's properties.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetMember(flags["groupKey"].GetString(), flags["memberKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting member: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

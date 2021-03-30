@@ -32,13 +32,16 @@ var peopleGetBatchGetCmd = &cobra.Command{
 	Short:             "Provides information about a list of specific people by specifying a list of requested resource names.",
 	Long:              "https://developers.google.com/people/api/rest/v1/people/getBatchGet",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmpeople.GetContactsBatch(flags["resourceNames"].GetStringSlice(), flags["personFields"].GetString(), flags["sources"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting contacts: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

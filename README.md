@@ -70,13 +70,16 @@ GSM currently supports the following APIs:
 Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\
 Overall, GSM supports over **65 [main commands](https://gsm.hayashi-ke/gsm)**, with each one representing an API with multiple methods and each method implemented as a sub command. This amounts to over **500 commands in total**, including over **200 ["batch" commands](https://gsm.hayashi-ke.online/batch_commands)** that allow you to utilize CSV files to apply updates to multiple objects in a multi-threaded manner and over **30 ["recursive" commands](https://gsm.hayashi-ke.online/recursive_commands)** that allow you to apply updates to multiple users in one command, by specifying one or more organizational unit(s) (OUs) and/or group(s).
 
-You can use GSM in one of two modes
+You can use GSM in one of three modes
 - user: User mode allows you to use any Google account (even private ones) to access the APIs.\
         Note that you will only have access to the resources and APIs your account can access!
 - dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
  You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
+- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize Application Default Credentials, such as the implicit credentials of a Compute Engine instance's Service Account or the "application-default" credentials of the Google Cloud SDK (gcloud), to impersonate a Service Account. This means you don't have to manage Service Account key files.
 
-You can set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
+See [Setup](https://gsm.hayashi-ke.online/setup) on how to set up GSM in these modes.
+
+You can also set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
 
 ### Output
 
@@ -93,7 +96,7 @@ GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there a
 
 You can take a look at some examples under [scripting](https://gsm.hayashi-ke.online/scripting).
 
-You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo).\
+You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm-powershell).\
 Note that this module is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module, it seems to work reasonably well. The module also automatically utilizes streaming.
 
 #### Logging
@@ -110,4 +113,4 @@ You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to vie
 * [Recursive commands](https://gsm.hayashi-ke.online/recursive_commands)     - How to use recursive commands
 * [Examples](https://gsm.hayashi-ke.online/examples) - See some examples
 * [Scripting examples](https://gsm.hayashi-ke.online/scripting) - Some examples on how to use GSM in scripts
-* [PowerShell module](https://github.com/hanneshayashi/gsm_crescendo) - Auto-generated PowerShell module
+* [PowerShell module](https://github.com/hanneshayashi/gsm-powershell) - Auto-generated PowerShell module

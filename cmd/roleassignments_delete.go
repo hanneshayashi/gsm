@@ -32,13 +32,16 @@ var roleAssignmentsDeleteCmd = &cobra.Command{
 	Short:             "Deletes a role assignment.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteRoleAssignment(flags["customer"].GetString(), flags["roleAssignmentId"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting role assignment: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

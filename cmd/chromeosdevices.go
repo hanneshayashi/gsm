@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -32,8 +33,11 @@ var chromeOsDevicesCmd = &cobra.Command{
 	Short:             "Managed Chrome OS Devices (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -184,7 +188,7 @@ func mapToChromeOsDeviceAction(flags map[string]*gsmhelpers.Value) (*admin.Chrom
 	deprovisionReason := flags["deprovisionReason"].GetString()
 	flags["action"].GetString()
 	if action == "deprovision" && deprovisionReason == "" {
-		return nil, errors.New("A reason must be specified with --deprovisionReason when deprovisioning a Chrome OS device")
+		return nil, errors.New("reason must be specified with --deprovisionReason when deprovisioning a Chrome OS device")
 	}
 	if action != "deprovision" && deprovisionReason != "" {
 		return nil, errors.New("--deprovisionReason may only be used when action is \"deprovision\"")

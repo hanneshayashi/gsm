@@ -32,7 +32,7 @@ var permissionsGetCmd = &cobra.Command{
 	Short:             "Gets a permission by ID.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/permissions/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		permissionID, err := gsmdrive.GetPermissionID(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var permissionsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting permission: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

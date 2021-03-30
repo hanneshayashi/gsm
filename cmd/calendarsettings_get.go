@@ -32,13 +32,16 @@ var calendarSettingsGetCmd = &cobra.Command{
 	Short:             "Returns a single user setting.",
 	Long:              "https://developers.google.com/calendar/v3/reference/settings/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.GetSetting(flags["setting"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting setting: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

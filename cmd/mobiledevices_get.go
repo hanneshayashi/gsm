@@ -32,13 +32,16 @@ var mobileDevicesGetCmd = &cobra.Command{
 	Short:             "Retrieves a mobile device's properties.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetMobileDevice(flags["customerId"].GetString(), flags["resourceId"].GetString(), flags["projection"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting mobile device: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

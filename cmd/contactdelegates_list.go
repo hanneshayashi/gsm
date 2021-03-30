@@ -32,7 +32,7 @@ var contactDelegatesListCmd = &cobra.Command{
 	Short:             "Lists the delegates of a given user.",
 	Long:              "https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.ListContactDelegates(flags["parent"].GetString())
 		if err != nil {
@@ -41,10 +41,16 @@ var contactDelegatesListCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				err = enc.Encode(result[i])
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

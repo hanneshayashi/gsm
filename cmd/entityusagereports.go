@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -31,8 +32,11 @@ var entityUsageReportsCmd = &cobra.Command{
 	Short:             "Manage (get) Entity Usage Reports (Part of Admin SDK)",
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/entityUsageReports",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -114,7 +118,8 @@ An example of an invalid request parameter is one that does not belong to the ap
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var entityUsageReportFlagsALL = gsmhelpers.GetAllFlags(entityUsageReportFlags)
+
+// var entityUsageReportFlagsALL = gsmhelpers.GetAllFlags(entityUsageReportFlags)
 
 func init() {
 	rootCmd.AddCommand(entityUsageReportsCmd)

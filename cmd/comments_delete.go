@@ -32,13 +32,16 @@ var commentsDeleteCmd = &cobra.Command{
 	Short:             "Deletes a comment.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/comments/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrive.DeleteComment(flags["fileId"].GetString(), flags["commentId"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting comment: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

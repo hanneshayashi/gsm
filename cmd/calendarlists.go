@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -32,8 +33,11 @@ var calendarListsCmd = &cobra.Command{
 	Short:             "Manage entries in users' calendar list (Part of Calendar API)",
 	Long:              "https://developers.google.com/calendar/v3/reference/calendarList",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -199,8 +203,8 @@ func mapToCalendarListEntry(flags map[string]*gsmhelpers.Value) (*calendar.Calen
 		calendarListEntry.DefaultReminders = []*calendar.EventReminder{}
 		defaultReminders := flags["defaultReminders"].GetStringSlice()
 		if len(defaultReminders) > 0 {
-			for _, dr := range defaultReminders {
-				m := gsmhelpers.FlagToMap(dr)
+			for i := range defaultReminders {
+				m := gsmhelpers.FlagToMap(defaultReminders[i])
 				if m["minutes"] == "" {
 					continue
 				}
@@ -218,8 +222,8 @@ func mapToCalendarListEntry(flags map[string]*gsmhelpers.Value) (*calendar.Calen
 		calendarListEntry.NotificationSettings = &calendar.CalendarListEntryNotificationSettings{}
 		notifications := flags["notificationsType"].GetStringSlice()
 		if len(notifications) > 0 {
-			for _, n := range notifications {
-				calendarListEntry.NotificationSettings.Notifications = append(calendarListEntry.NotificationSettings.Notifications, &calendar.CalendarNotification{Method: "email", Type: n})
+			for i := range notifications {
+				calendarListEntry.NotificationSettings.Notifications = append(calendarListEntry.NotificationSettings.Notifications, &calendar.CalendarNotification{Method: "email", Type: notifications[i]})
 			}
 		} else {
 			calendarListEntry.NotificationSettings.ForceSendFields = append(calendarListEntry.NotificationSettings.ForceSendFields, "Notifications")

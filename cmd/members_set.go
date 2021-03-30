@@ -34,7 +34,7 @@ var membersSetCmd = &cobra.Command{
 	Short:             "Sets the members of a group to match the specified email addresses with the given role",
 	Long:              "",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		groupKey := flags["groupKey"].GetString()
 		membersToAdd, membersToRemove, err := gsmadmin.GetMembersToSet(groupKey, 4, flags["emails"].GetStringSlice()...)
@@ -56,15 +56,15 @@ var membersSetCmd = &cobra.Command{
 		wg.Add(2)
 		go func() {
 			for uk := range membersToAdd {
-				m, err := mapToMember(flags)
-				if err != nil {
-					log.Printf("Error building member object: %v\n", err)
+				m, er := mapToMember(flags)
+				if er != nil {
+					log.Printf("Error building member object: %v\n", er)
 					continue
 				}
 				m.Email = uk
-				result, err := gsmadmin.InsertMember(groupKey, fields, m)
+				result, er := gsmadmin.InsertMember(groupKey, fields, m)
 				if err != nil {
-					log.Println(err)
+					log.Println(er)
 				} else {
 					addedMembers = append(addedMembers, result)
 				}
@@ -73,9 +73,9 @@ var membersSetCmd = &cobra.Command{
 		}()
 		go func() {
 			for uk := range membersToRemove {
-				result, err := gsmadmin.DeleteMember(groupKey, uk)
-				if err != nil {
-					log.Println(err)
+				result, er := gsmadmin.DeleteMember(groupKey, uk)
+				if er != nil {
+					log.Println(er)
 				}
 				removedMembers = append(removedMembers, removed{Email: uk, Result: result})
 			}
@@ -86,7 +86,10 @@ var membersSetCmd = &cobra.Command{
 			Added:   addedMembers,
 			Removed: removedMembers,
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -32,13 +32,16 @@ var messagesTrashCmd = &cobra.Command{
 	Short:             "Moves the specified message to the trash.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.TrashMessage(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error trashing message: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

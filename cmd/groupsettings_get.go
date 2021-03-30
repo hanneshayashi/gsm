@@ -32,7 +32,7 @@ var groupSettingsGetCmd = &cobra.Command{
 	Short:             "Retrieves a group's settings identified by the group email address.",
 	Long:              "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgroupssettings.GetGroupSettings(flags["groupUniqueId"].GetString(), flags["fields"].GetString())
 		if err != nil {
@@ -41,7 +41,10 @@ var groupSettingsGetCmd = &cobra.Command{
 		if flags["ignoreDeprecated"].GetBool() {
 			result = ignoreDeprecatedGroupSettings(result)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

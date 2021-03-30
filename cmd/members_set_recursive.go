@@ -37,7 +37,7 @@ var membersSetRecursiveCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		addedMembers := make(chan *admin.Member, threads)
@@ -68,15 +68,15 @@ var membersSetRecursiveCmd = &cobra.Command{
 				wgResults.Add(1)
 				go func() {
 					for uk := range membersToAdd {
-						m, err := mapToMember(flags)
-						if err != nil {
-							log.Printf("Error building member object: %v\n", err)
+						m, er := mapToMember(flags)
+						if er != nil {
+							log.Printf("Error building member object: %v\n", er)
 							continue
 						}
 						m.Email = uk
-						result, err := gsmadmin.InsertMember(groupKey, fields, m)
+						result, er := gsmadmin.InsertMember(groupKey, fields, m)
 						if err != nil {
-							log.Println(err)
+							log.Println(er)
 						} else {
 							addedMembers <- result
 						}
@@ -92,9 +92,9 @@ var membersSetRecursiveCmd = &cobra.Command{
 				wgResults.Add(1)
 				go func() {
 					for uk := range membersToRemove {
-						result, err := gsmadmin.DeleteMember(groupKey, uk)
+						result, er := gsmadmin.DeleteMember(groupKey, uk)
 						if err != nil {
-							log.Println(err)
+							log.Println(er)
 						}
 						removedMembers <- removed{Email: uk, Result: result}
 					}
@@ -119,7 +119,10 @@ var membersSetRecursiveCmd = &cobra.Command{
 			wgFinal.Done()
 		}()
 		wgFinal.Wait()
-		gsmhelpers.Output(final, "json", compressOutput)
+		err = gsmhelpers.Output(final, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

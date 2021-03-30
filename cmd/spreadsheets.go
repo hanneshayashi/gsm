@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
 	"math/rand"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -33,8 +34,11 @@ var spreadsheetsCmd = &cobra.Command{
 	Short:             "Manage Google Sheets spreadsheets (Part of Sheets API)",
 	Long:              `https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -94,9 +98,9 @@ func mapToSpreadsheet(flags map[string]*gsmhelpers.Value) (*sheets.Spreadsheet, 
 		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
 		if len(csvFilesToUpload) > 0 {
 			spreadsheet.Sheets = []*sheets.Sheet{}
-			for _, c := range csvFilesToUpload {
+			for i := range csvFilesToUpload {
 				s := &sheets.Sheet{}
-				m := gsmhelpers.FlagToMap(c)
+				m := gsmhelpers.FlagToMap(csvFilesToUpload[i])
 				s.Properties = &sheets.SheetProperties{
 					Title: m["title"],
 				}
@@ -137,15 +141,15 @@ func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sh
 		return nil, err
 	}
 	sheetMap := make(map[string]int64)
-	for _, s := range spreadsheet.Sheets {
-		sheetMap[s.Properties.Title] = s.Properties.SheetId
+	for i := range spreadsheet.Sheets {
+		sheetMap[spreadsheet.Sheets[i].Properties.Title] = spreadsheet.Sheets[i].Properties.SheetId
 	}
 	if flags["csvFileToUpload"].IsSet() {
 		csvFilesToUpload := flags["csvFileToUpload"].GetStringSlice()
 		if len(csvFilesToUpload) > 0 {
 			batchUpdateSpreadsheetRequest.Requests = []*sheets.Request{}
-			for _, c := range csvFilesToUpload {
-				m := gsmhelpers.FlagToMap(c)
+			for i := range csvFilesToUpload {
+				m := gsmhelpers.FlagToMap(csvFilesToUpload[i])
 				data, err := gsmhelpers.GetFileContentAsString(m["path"])
 				if err != nil {
 					return nil, err

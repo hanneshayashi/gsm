@@ -32,13 +32,16 @@ var customersGetCmd = &cobra.Command{
 	Short:             "Retrieves a customer using a an ID or retrieve your own customer without knowing your ID.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/customers/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetCustomer(flags["customerKey"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting customer: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

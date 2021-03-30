@@ -33,8 +33,8 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	for _, m := range media {
-		c = c.Media(m)
+	for i := range media {
+		c = c.Media(media[i])
 	}
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
 		return c.Do()
@@ -84,8 +84,8 @@ func listDrafts(c *gmail.UsersDraftsListCall, ch chan *gmail.Draft, errKey strin
 		return err
 	}
 	r, _ := result.(*gmail.ListDraftsResponse)
-	for _, i := range r.Drafts {
-		ch <- i
+	for i := range r.Drafts {
+		ch <- r.Drafts[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)
@@ -125,8 +125,8 @@ func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-cha
 func SendDraft(userID string, draft *gmail.Draft, media ...io.Reader) (*gmail.Message, error) {
 	srv := getUsersDraftsService()
 	c := srv.Send(userID, draft)
-	for _, m := range media {
-		c = c.Media(m)
+	for i := range media {
+		c = c.Media(media[i])
 	}
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
 		return c.Do()
@@ -145,8 +145,8 @@ func UpdateDraft(userID, id, fields string, draft *gmail.Draft, media ...io.Read
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	for _, m := range media {
-		c = c.Media(m)
+	for i := range media {
+		c = c.Media(media[i])
 	}
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
 		return c.Do()

@@ -32,7 +32,7 @@ var eventsPatchCmd = &cobra.Command{
 	Short:             "Updates an event. This method supports patch semantics.",
 	Long:              "https://developers.google.com/calendar/v3/reference/events/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		event, err := mapToEvent(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var eventsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendar event: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

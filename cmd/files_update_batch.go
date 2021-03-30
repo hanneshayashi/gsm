@@ -39,7 +39,7 @@ var filesUpdateBatchCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
 		if err != nil {
 			log.Fatalln(err)
@@ -78,13 +78,18 @@ var filesUpdateBatchCmd = &cobra.Command{
 								log.Printf("Error opening file %s: %v", localFilePath, err)
 								continue
 							}
-							defer content.Close()
 						}
 						result, err := gsmdrive.UpdateFile(fileID, m["parent"].GetString(), removeParents, m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), fields, f, content, m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {
 							results <- result
+						}
+						if content != nil {
+							err = content.Close()
+							if err != nil {
+								log.Println(err)
+							}
 						}
 					}
 					wg.Done()
@@ -96,14 +101,20 @@ var filesUpdateBatchCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*drive.File{}
 			for res := range results {
 				final = append(final, res)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

@@ -49,8 +49,8 @@ func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, 
 		return err
 	}
 	r, _ := result.(*people.ListOtherContactsResponse)
-	for _, i := range r.OtherContacts {
-		ch <- i
+	for i := range r.OtherContacts {
+		ch <- r.OtherContacts[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

@@ -32,7 +32,7 @@ var calendarListsPatchCmd = &cobra.Command{
 	Short:             "Updates an existing calendar on the user's calendar list. This method supports patch semantics.",
 	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		calendarListEntry, err := mapToCalendarListEntry(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var calendarListsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendarListEntry: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

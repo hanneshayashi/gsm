@@ -32,7 +32,7 @@ var orgUnitsInsertCmd = &cobra.Command{
 	Short:             "Adds an organizational unit.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		o, err := mapToOrgUnit(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var orgUnitsInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting org unit: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

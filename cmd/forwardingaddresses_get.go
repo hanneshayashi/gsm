@@ -32,13 +32,16 @@ var forwardingAddressesGetCmd = &cobra.Command{
 	Short:             "Gets the specified forwarding address.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetForwardingAddress(flags["userId"].GetString(), flags["forwardingEmail"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting forwarding address for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

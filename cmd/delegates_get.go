@@ -31,15 +31,18 @@ var delegatesGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets the specified delegate.",
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
-	https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
+https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetDelegate(flags["userId"].GetString(), flags["delegateEmail"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting delegate: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

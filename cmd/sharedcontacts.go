@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -30,8 +32,11 @@ var sharedContactsCmd = &cobra.Command{
 	Short:             "Manage Domain Shared Contacts (Part of Shared Contacts API - not Admin SDK!)",
 	Long:              "https://developers.google.com/admin-sdk/domain-shared-contacts",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -159,48 +164,48 @@ func mapToSharedContact(flags map[string]*gsmhelpers.Value, sharedContact *gsmad
 	if flags["email"].IsSet() {
 		emails := flags["email"].GetStringSlice()
 		sharedContact.Email = []gsmadmin.Email{}
-		for _, e := range emails {
-			m := gsmhelpers.FlagToMap(e)
+		for i := range emails {
+			m := gsmhelpers.FlagToMap(emails[i])
 			sharedContact.Email = append(sharedContact.Email, gsmadmin.Email{Address: m["address"], DisplayName: m["displayName"], Primary: m["primary"], Label: m["label"]})
 		}
 	}
 	if flags["phoneNumber"].IsSet() {
 		phoneNumbers := flags["phoneNumber"].GetStringSlice()
 		sharedContact.PhoneNumber = []gsmadmin.PhoneNumber{}
-		for _, p := range phoneNumbers {
-			m := gsmhelpers.FlagToMap(p)
+		for i := range phoneNumbers {
+			m := gsmhelpers.FlagToMap(phoneNumbers[i])
 			sharedContact.PhoneNumber = append(sharedContact.PhoneNumber, gsmadmin.PhoneNumber{PhoneNumber: m["phoneNumber"], Primary: m["primary"], Label: m["label"]})
 		}
 	}
 	if flags["structuredPostalAddress"].IsSet() {
 		structuredPostalAddresss := flags["structuredPostalAddress"].GetStringSlice()
 		sharedContact.StructuredPostalAddress = []gsmadmin.StructuredPostalAddress{}
-		for _, p := range structuredPostalAddresss {
-			m := gsmhelpers.FlagToMap(p)
+		for i := range structuredPostalAddresss {
+			m := gsmhelpers.FlagToMap(structuredPostalAddresss[i])
 			sharedContact.StructuredPostalAddress = append(sharedContact.StructuredPostalAddress, gsmadmin.StructuredPostalAddress{MailClass: m["mailClass"], Agent: m["agent"], City: m["city"], Country: m["country"], FormattedAddress: m["formattedAddress"], Housename: m["housename"], Label: m["label"], Neighborhood: m["neighborhood"], Pobox: m["pobox"], Postcode: m["postcode"], Primary: m["primary"], Region: m["region"], Street: m["street"], Subregion: m["subregion"], Usage: m["usage"]})
 		}
 	}
 	if flags["organization"].IsSet() {
 		organizations := flags["organization"].GetStringSlice()
 		sharedContact.Organization = []gsmadmin.Organization{}
-		for _, o := range organizations {
-			m := gsmhelpers.FlagToMap(o)
+		for i := range organizations {
+			m := gsmhelpers.FlagToMap(organizations[i])
 			sharedContact.Organization = append(sharedContact.Organization, gsmadmin.Organization{Label: m["label"], OrgDepartment: m["orgDepartment"], OrgJobDescription: m["orgJobDescription"], OrgName: m["orgName"], OrgSymbol: m["orgSymbol"], OrgTitle: m["orgTitle"], Primary: m["primary"]})
 		}
 	}
 	if flags["im"].IsSet() {
 		ims := flags["im"].GetStringSlice()
 		sharedContact.Im = []gsmadmin.Im{}
-		for _, o := range ims {
-			m := gsmhelpers.FlagToMap(o)
+		for i := range ims {
+			m := gsmhelpers.FlagToMap(ims[i])
 			sharedContact.Im = append(sharedContact.Im, gsmadmin.Im{Label: m["label"], Address: m["address"], Primary: m["primary"], Protocol: m["protocol"]})
 		}
 	}
 	if flags["extendedProperty"].IsSet() {
 		extendedpropertys := flags["extendedProperty"].GetStringSlice()
 		sharedContact.ExtendedProperty = []gsmadmin.ExtendedProperty{}
-		for _, o := range extendedpropertys {
-			m := gsmhelpers.FlagToMap(o)
+		for i := range extendedpropertys {
+			m := gsmhelpers.FlagToMap(extendedpropertys[i])
 			sharedContact.ExtendedProperty = append(sharedContact.ExtendedProperty, gsmadmin.ExtendedProperty{Name: m["name"], Value: m["value"], Realm: m["realm"]})
 		}
 	}

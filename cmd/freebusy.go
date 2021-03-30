@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var freeBusyCmd = &cobra.Command{
 	Short:             "Query free/busy information (Part of Calendar API)",
 	Long:              "https://developers.google.com/calendar/v3/reference/freebusy",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -113,8 +118,8 @@ func mapToFreeBusyRequest(flags map[string]*gsmhelpers.Value) (*calendar.FreeBus
 		freeBusyRequest.Items = []*calendar.FreeBusyRequestItem{}
 		ids := flags["id"].GetStringSlice()
 		if len(ids) > 0 {
-			for _, id := range ids {
-				freeBusyRequest.Items = append(freeBusyRequest.Items, &calendar.FreeBusyRequestItem{Id: id})
+			for i := range ids {
+				freeBusyRequest.Items = append(freeBusyRequest.Items, &calendar.FreeBusyRequestItem{Id: ids[i]})
 			}
 		} else {
 			freeBusyRequest.ForceSendFields = append(freeBusyRequest.ForceSendFields, "Items")

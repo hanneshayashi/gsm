@@ -32,7 +32,7 @@ var groupSettingsPatchCmd = &cobra.Command{
 	Short:             "Updates an existing resource. This method supports patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		g, err := mapToGroupSettings(flags)
 		if err != nil {
@@ -45,7 +45,10 @@ var groupSettingsPatchCmd = &cobra.Command{
 		if flags["ignoreDeprecated"].GetBool() {
 			result = ignoreDeprecatedGroupSettings(result)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

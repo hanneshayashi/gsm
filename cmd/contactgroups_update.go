@@ -32,7 +32,7 @@ var contactGroupsUpdateCmd = &cobra.Command{
 	Short:             "Update the name of an existing contact group owned by the authenticated user.",
 	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups/update",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := gsmpeople.GetContactGroup(flags["resourceName"].GetString(), "*", 0)
 		if err != nil {
@@ -46,7 +46,10 @@ var contactGroupsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating contact group: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

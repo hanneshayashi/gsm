@@ -32,7 +32,7 @@ var membersPatchCmd = &cobra.Command{
 	Short:             "Updates the membership properties of a user in the specified group. This method supports patch semantics.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		m, err := mapToMember(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var membersPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching member: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

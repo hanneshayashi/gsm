@@ -34,7 +34,7 @@ If ownership verification is required, a message will be sent to the recipient a
 otherwise, the resource will be created with verification status set to accepted.`,
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToForwardingAddress(flags)
 		if err != nil {
@@ -44,7 +44,10 @@ otherwise, the resource will be created with verification status set to accepted
 		if err != nil {
 			log.Fatalf("Error creating forwarding address for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

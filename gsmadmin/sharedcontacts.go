@@ -258,10 +258,13 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 		return nil, err
 	}
 	feed := Feed{}
-	xml.Unmarshal(responseBody, &feed)
-	for _, l := range feed.Link {
-		if l.Rel == "next" {
-			f, err := makeListSharedContactsCallAndAppend(l.Href)
+	err = xml.Unmarshal(responseBody, &feed)
+	if err != nil {
+		return nil, err
+	}
+	for i := range feed.Link {
+		if feed.Link[i].Rel == "next" {
+			f, err := makeListSharedContactsCallAndAppend(feed.Link[i].Href)
 			if err != nil {
 				return nil, err
 			}
@@ -300,7 +303,10 @@ func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 		return nil, err
 	}
 	personC := &Entry{}
-	xml.Unmarshal(responseBody, personC)
+	err = xml.Unmarshal(responseBody, personC)
+	if err != nil {
+		return nil, err
+	}
 	return personC, nil
 }
 
@@ -341,7 +347,10 @@ func GetSharedContact(url string) (*Entry, error) {
 		return nil, err
 	}
 	person := &Entry{}
-	xml.Unmarshal(responseBody, person)
+	err = xml.Unmarshal(responseBody, person)
+	if err != nil {
+		return nil, err
+	}
 	return person, nil
 }
 
@@ -367,6 +376,9 @@ func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 		return nil, err
 	}
 	personU := &Entry{}
-	xml.Unmarshal(responseBody, personU)
+	err = xml.Unmarshal(responseBody, personU)
+	if err != nil {
+		return nil, err
+	}
 	return personU, nil
 }

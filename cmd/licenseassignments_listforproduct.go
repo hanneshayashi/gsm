@@ -34,21 +34,27 @@ var licenseAssignmentsListForProductCmd = &cobra.Command{
 	Short:             "List all users assigned licenses for a specific product SKU.",
 	Long:              "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/listForproduct",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		customerID := gsmadmin.GetCustomerID(flags["customerId"].GetString())
 		result, err := gsmlicensing.ListLicenseAssignmentsForProduct(flags["productId"].GetString(), customerID, flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*licensing.LicenseAssignment{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

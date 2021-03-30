@@ -32,7 +32,7 @@ var calendarResourcesPatchCmd = &cobra.Command{
 	Short:             "Patches a calendar resource.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToCalendarResource(flags)
 		if err != nil {
@@ -43,7 +43,10 @@ var calendarResourcesPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendar resource: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

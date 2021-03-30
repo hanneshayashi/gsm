@@ -32,7 +32,7 @@ var calendarResourcesInsertCmd = &cobra.Command{
 	Short:             "Inserts a calendar resource.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToCalendarResource(flags)
 		if err != nil {
@@ -43,7 +43,10 @@ var calendarResourcesInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting calendar resource: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
@@ -35,21 +36,22 @@ var configsUpdateCmd = &cobra.Command{
 		"crescendoOutput": "$args[0]",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		cOld, err := gsmconfig.GetConfig(cfgFile)
+		c, err := mapToConfig(flags)
 		if err != nil {
-			log.Fatalf("Error getting config: %v", err)
+			fmt.Printf("Error building config object: %v\n", err)
+			return
 		}
-		cNew, err := mapToConfig(flags, cOld)
+		result, err := gsmconfig.UpdateConfig(c, cfgFile)
 		if err != nil {
-			log.Fatalf("Error building config object: %v", err)
+			fmt.Printf("Error creating config: %v\n", err)
+			return
 		}
-		result, err := gsmconfig.UpdateConfig(cNew, cfgFile)
+		err = gsmhelpers.Output(result, "yaml", false)
 		if err != nil {
-			log.Fatalf("Error creating config: %v", err)
+			log.Fatalln(err)
 		}
-		gsmhelpers.Output(result, "yaml", false)
 	},
 }
 

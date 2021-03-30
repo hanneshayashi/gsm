@@ -37,7 +37,7 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		maps, err := gsmhelpers.GetBatchMaps(cmd, groupSettingFlags)
 		if err != nil {
 			log.Fatalln(err)
@@ -69,14 +69,20 @@ var groupSettingsGetBatchCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for r := range results {
-				enc.Encode(r)
+				err := enc.Encode(r)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*groupssettings.Groups{}
 			for res := range results {
 				final = append(final, res)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

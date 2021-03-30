@@ -36,20 +36,26 @@ Examples:
   - Search for security groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.security' in labels"
   - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmci.SearchGroups(flags["query"].GetString(), flags["view"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*ci.Group{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

@@ -76,8 +76,8 @@ func listRoles(c *admin.RolesListCall, ch chan *admin.Role, errKey string) error
 		return err
 	}
 	r, _ := result.(*admin.Roles)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

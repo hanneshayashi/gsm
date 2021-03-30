@@ -79,8 +79,8 @@ func listPermissions(c *drive.PermissionsListCall, ch chan *drive.Permission, er
 		return err
 	}
 	r, _ := result.(*drive.PermissionList)
-	for _, i := range r.Permissions {
-		ch <- i
+	for i := range r.Permissions {
+		ch <- r.Permissions[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

@@ -122,8 +122,8 @@ func listMessages(c *gmail.UsersMessagesListCall, ch chan *gmail.Message, errKey
 		return err
 	}
 	r, _ := result.(*gmail.ListMessagesResponse)
-	for _, i := range r.Messages {
-		ch <- i
+	for i := range r.Messages {
+		ch <- r.Messages[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

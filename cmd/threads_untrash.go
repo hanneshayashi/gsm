@@ -32,13 +32,16 @@ var threadsUntrashCmd = &cobra.Command{
 	Short:             "Removes the specified thread from the trash.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/untrash",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.UntrashThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error untrashing thread %s: %v", flags["id"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

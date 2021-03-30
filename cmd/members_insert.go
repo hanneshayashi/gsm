@@ -32,7 +32,7 @@ var membersInsertCmd = &cobra.Command{
 	Short:             "Adds a user or group to the specified group.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		m, err := mapToMember(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var membersInsertCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error inserting member: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

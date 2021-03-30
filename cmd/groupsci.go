@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -33,8 +34,11 @@ var groupsCiCmd = &cobra.Command{
 	Short:             "Manage Google Groups with the Cloud Identity API",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -183,7 +187,7 @@ func getGroupCiName(name, email string) (string, error) {
 		return name, nil
 	}
 	if email == "" {
-		return "", errors.New("Either name or email must be supplied")
+		return "", errors.New("either name or email must be supplied")
 	}
 	name, err := gsmci.LookupGroup(email)
 	if err != nil {
@@ -198,8 +202,8 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		group.Labels = make(map[string]string)
 		labels := flags["labels"].GetStringSlice()
 		if len(labels) > 0 {
-			for _, l := range labels {
-				group.Labels[l] = ""
+			for i := range labels {
+				group.Labels[labels[i]] = ""
 			}
 		} else {
 			group.ForceSendFields = append(group.ForceSendFields, "Labels")
@@ -230,7 +234,7 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 	// 	group.AdditionalGroupKeys = []*ci.EntityKey{}
 	// 	additionalGroupKeys := flags["additionalGroupKeys"].GetStringSlice()
 	// 	if len(additionalGroupKeys) > 0 {
-	// 		for _, a := range additionalGroupKeys {
+	// 		for i := range additionalGroupKeys {
 	// 			m := gsmhelpers.FlagToMap(a)
 	// 			group.AdditionalGroupKeys = append(group.AdditionalGroupKeys, &ci.EntityKey{Id: m["id"], Namespace: m["namespace"]})
 	// 		}
@@ -243,8 +247,8 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		queries := flags["queries"].GetStringSlice()
 		if len(queries) > 0 {
 			group.DynamicGroupMetadata.Queries = []*ci.DynamicGroupQuery{}
-			for _, q := range queries {
-				m := gsmhelpers.FlagToMap(q)
+			for i := range queries {
+				m := gsmhelpers.FlagToMap(queries[i])
 				group.DynamicGroupMetadata.Queries = append(group.DynamicGroupMetadata.Queries, &ci.DynamicGroupQuery{ResourceType: m["resourceType"], Query: m["query"]})
 			}
 

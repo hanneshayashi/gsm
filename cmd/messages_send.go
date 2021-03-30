@@ -32,7 +32,7 @@ var messagesSendCmd = &cobra.Command{
 	Short:             "Sends the specified message to the recipients in the To, Cc, and Bcc headers.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		message, err := mapToMessage(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var messagesSendCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error sending message: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

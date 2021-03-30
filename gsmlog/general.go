@@ -36,8 +36,9 @@ func PrintLastLines(path string, n int) error {
 	if n > max || n == 0 {
 		n = max
 	}
-	for _, l := range lines[max-n : max] {
-		fmt.Println(l)
+	lastLines := lines[max-n : max]
+	for i := range lastLines {
+		fmt.Println(lastLines[i])
 	}
 	return nil
 }
@@ -45,7 +46,10 @@ func PrintLastLines(path string, n int) error {
 // Clear clears the specified file (truncate its content)
 func Clear(path string) error {
 	f, err := os.OpenFile(path, os.O_TRUNC, os.ModeTemporary)
-	defer f.Close()
+	if err != nil {
+		return err
+	}
+	err = f.Close()
 	if err != nil {
 		return err
 	}

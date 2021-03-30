@@ -32,7 +32,7 @@ var draftsGetCmd = &cobra.Command{
 	Short:             "Gets the specified draft.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		if !gsmgmail.FormatIsValid(flags["format"].GetString()) {
 			log.Fatalf("%s is not a format", flags["format"].GetString())
@@ -41,7 +41,10 @@ var draftsGetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting draft: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

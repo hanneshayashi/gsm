@@ -24,11 +24,13 @@ import (
 	"net/http"
 	"os"
 
+	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"google.golang.org/api/impersonate"
 )
 
 // Retrieve a token, saves the token, then returns the generated client.
@@ -79,7 +81,10 @@ func saveToken(path string, token *oauth2.Token) {
 		log.Fatalf("Unable to cache OAuth token: %v", err)
 	}
 	defer f.Close()
-	json.NewEncoder(f).Encode(token)
+	err = json.NewEncoder(f).Encode(token)
+	if err != nil {
+		log.Fatalf("Unable to save OAuth token: %v", err)
+	}
 }
 
 //GetClientUser does user-based authentication via OAuth and returns an *http.Client
@@ -93,11 +98,33 @@ func GetClientUser(credentials []byte, tokenName string, scope ...string) (clien
 	return
 }
 
+//GetClientADC returns a client to be used for API services
+func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client) {
+	ctx := context.Background()
+	if serviceAccountEmail == "" {
+		var err error
+		serviceAccountEmail, err = metadata.Email("")
+		if err != nil {
+			log.Fatalf("Error getting Service Account email: %v", err)
+		}
+	}
+	ts, err := impersonate.CredentialsTokenSource(ctx, impersonate.CredentialsConfig{
+		TargetPrincipal: serviceAccountEmail,
+		Scopes:          scope,
+		Subject:         subject,
+	})
+	if err != nil {
+		log.Fatalf("Error getting token source: %v", err)
+	}
+	client = oauth2.NewClient(ctx, ts)
+	return
+}
+
 //GetClient returns a client to be used for API services
 func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {
-		log.Fatalf("Error parsing parse service account credential file to config: %v", err)
+		log.Fatalf("Error parsing Service Account credential file to config: %v", err)
 	}
 	config.Subject = subject
 	return config.Client(context.Background())

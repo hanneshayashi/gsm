@@ -32,7 +32,7 @@ var gmailSettingsUpdateVacationCmd = &cobra.Command{
 	Short:             "Updates vacation responder settings.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateVacation",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		v, err := mapToVacationSettings(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var gmailSettingsUpdateVacationCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error updating vacation responder settings for user %s: %v", flags["userId"].GetString(), err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

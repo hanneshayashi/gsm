@@ -32,7 +32,7 @@ var calendarACLPatchCmd = &cobra.Command{
 	Short:             "Updates an access control rule. This method supports patch semantics.",
 	Long:              `https://developers.google.com/calendar/v3/reference/acl/patch`,
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		a, err := mapToCalendarACLRule(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var calendarACLPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendar acl rule: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

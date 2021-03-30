@@ -44,7 +44,7 @@ func SetClient(c *http.Client) {
 	client = c
 }
 
-func getDriveService() (driveService *drive.Service) {
+func getDriveService() *drive.Service {
 	if client == nil {
 		log.Fatalf("gsmdrive.client is not set. Set with gsmdrive.SetClient(client)")
 	}
@@ -58,11 +58,11 @@ func getDriveService() (driveService *drive.Service) {
 	return driveService
 }
 
-func getFilesService() (filesService *drive.FilesService) {
+func getFilesService() *drive.FilesService {
 	if filesService == nil {
 		filesService = drive.NewFilesService(getDriveService())
 	}
-	return
+	return filesService
 }
 
 func getPermissionsService() *drive.PermissionsService {

@@ -32,13 +32,16 @@ var schemasDeleteCmd = &cobra.Command{
 	Short:             "Delete a custom schema.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteSchema(flags["customerId"].GetString(), flags["schemaKey"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting schemas: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

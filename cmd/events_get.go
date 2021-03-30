@@ -32,13 +32,16 @@ var eventsGetCmd = &cobra.Command{
 	Short:             "Returns an event.",
 	Long:              "https://developers.google.com/calendar/v3/reference/events/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmcalendar.GetEvent(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["timeZone"].GetString(), flags["fields"].GetString(), flags["maxAttendees"].GetInt64())
 		if err != nil {
 			log.Fatalf("Error getting event: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

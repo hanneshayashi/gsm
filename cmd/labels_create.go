@@ -32,7 +32,7 @@ var labelsCreateCmd = &cobra.Command{
 	Short:             "Creates a new label.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/create",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		l, err := mapToLabel(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var labelsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating label: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

@@ -32,13 +32,16 @@ var usersDeleteCmd = &cobra.Command{
 	Short:             "Deletes a user.",
 	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/users/delete",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.DeleteUser(flags["userKey"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting user: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

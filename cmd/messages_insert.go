@@ -34,7 +34,7 @@ var messagesInsertCmd = &cobra.Command{
 Does not send a message.`,
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		internalDateSource := flags["internalDateSource"].GetString()
 		internalDateSource = strings.ToUpper(internalDateSource)
@@ -49,7 +49,10 @@ Does not send a message.`,
 		if err != nil {
 			log.Fatalf("Error inserting message: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

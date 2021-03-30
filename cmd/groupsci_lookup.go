@@ -32,13 +32,16 @@ var groupsCiLookupCmd = &cobra.Command{
 	Short:             "Looks up a Group.",
 	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/lookup",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmci.LookupGroup(flags["id"].GetString())
 		if err != nil {
 			log.Fatalf("Error deleting group: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

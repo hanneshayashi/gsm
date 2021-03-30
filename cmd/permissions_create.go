@@ -32,7 +32,7 @@ var permissionsCreateCmd = &cobra.Command{
 	Short:             "Creates a permission for a file or shared drive.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/permissions/create",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToPermission(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var permissionsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating permission: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

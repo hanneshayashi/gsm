@@ -34,7 +34,7 @@ var filesCreateCmd = &cobra.Command{
 	Short:             "Creates a new file or folder. Can also be used to upload files.",
 	Long:              "https://developers.google.com/drive/api/v3/reference/files/create",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		f, err := mapToFile(flags)
 		if err != nil {
@@ -55,7 +55,10 @@ var filesCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error creating file: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

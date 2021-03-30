@@ -32,7 +32,7 @@ var calendarsPatchCmd = &cobra.Command{
 	Short:             `Creates a secondary calendar.`,
 	Long:              "https://developers.google.com/calendar/v3/reference/calendars/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		c, err := mapToCalendar(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var calendarsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching calendar: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

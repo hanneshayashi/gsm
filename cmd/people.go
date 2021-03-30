@@ -37,8 +37,11 @@ var peopleCmd = &cobra.Command{
 	Short:             "Manage people's contacts (Part of People API)",
 	Long:              "https://developers.google.com/people/api/rest/v1/people",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -728,8 +731,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Addresses = []*people.Address{}
 		addresses := flags["addresses"].GetStringSlice()
 		if len(addresses) > 0 {
-			for _, a := range addresses {
-				m := gsmhelpers.FlagToMap(a)
+			for i := range addresses {
+				m := gsmhelpers.FlagToMap(addresses[i])
 				address := &people.Address{
 					City:            m["city"],
 					Country:         m["country"],
@@ -750,7 +753,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		}
 	}
 	if flags["biographyValue"].IsSet() || flags["biographyContentType"].IsSet() {
-		person.Biographies = make([]*people.Biography, 1, 1)
+		person.Biographies = make([]*people.Biography, 1)
 		person.Biographies[0] = new(people.Biography)
 		if flags["biographyValue"].IsSet() {
 			person.Biographies[0].Value = flags["biographyValue"].GetString()
@@ -766,7 +769,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		}
 	}
 	if flags["birthdayYear"].IsSet() || flags["birthdayMonth"].IsSet() || flags["birthdayDay"].IsSet() || flags["birthdayText"].IsSet() {
-		person.Birthdays = make([]*people.Birthday, 1, 1)
+		person.Birthdays = make([]*people.Birthday, 1)
 		person.Birthdays[0] = new(people.Birthday)
 		if flags["birthdayYear"].IsSet() || flags["birthdayMonth"].IsSet() || flags["birthdayDay"].IsSet() {
 			person.Birthdays[0].Date = &people.Date{}
@@ -800,8 +803,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.CalendarUrls = []*people.CalendarUrl{}
 		calendarURL := flags["calendarUrls"].GetStringSlice()
 		if len(calendarURL) > 0 {
-			for _, c := range calendarURL {
-				m := gsmhelpers.FlagToMap(c)
+			for i := range calendarURL {
+				m := gsmhelpers.FlagToMap(calendarURL[i])
 				calendarURL := &people.CalendarUrl{
 					Type: m["type"],
 					Url:  m["url"],
@@ -817,8 +820,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.ClientData = []*people.ClientData{}
 		clientData := flags["clientData"].GetStringSlice()
 		if len(clientData) > 0 {
-			for _, c := range clientData {
-				m := gsmhelpers.FlagToMap(c)
+			for i := range clientData {
+				m := gsmhelpers.FlagToMap(clientData[i])
 				cData := &people.ClientData{
 					Key:   m["key"],
 					Value: m["value"],
@@ -834,8 +837,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.EmailAddresses = []*people.EmailAddress{}
 		emailAddresses := flags["emailAddresses"].GetStringSlice()
 		if len(emailAddresses) > 0 {
-			for _, e := range emailAddresses {
-				m := gsmhelpers.FlagToMap(e)
+			for i := range emailAddresses {
+				m := gsmhelpers.FlagToMap(emailAddresses[i])
 				emailAddress := &people.EmailAddress{
 					Value:       m["value"],
 					DisplayName: m["displayName"],
@@ -852,8 +855,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Events = []*people.Event{}
 		events := flags["events"].GetStringSlice()
 		if len(events) > 0 {
-			for _, e := range events {
-				m := gsmhelpers.FlagToMap(e)
+			for i := range events {
+				m := gsmhelpers.FlagToMap(events[i])
 				event := &people.Event{
 					Date: stringsToDate(m["year"], m["month"], m["day"]),
 					Type: m["type"],
@@ -869,8 +872,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.ExternalIds = []*people.ExternalId{}
 		externalIDs := flags["externalIds"].GetStringSlice()
 		if len(externalIDs) > 0 {
-			for _, e := range externalIDs {
-				m := gsmhelpers.FlagToMap(e)
+			for i := range externalIDs {
+				m := gsmhelpers.FlagToMap(externalIDs[i])
 				externalID := &people.ExternalId{
 					Value: m["value"],
 					Type:  m["type"],
@@ -886,8 +889,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.FileAses = []*people.FileAs{}
 		fileAses := flags["fileAses"].GetStringSlice()
 		if len(fileAses) > 0 {
-			for _, f := range fileAses {
-				m := gsmhelpers.FlagToMap(f)
+			for i := range fileAses {
+				m := gsmhelpers.FlagToMap(fileAses[i])
 				FileAs := &people.FileAs{
 					Value: m["value"],
 				}
@@ -910,7 +913,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		if flags["addressMeAs"].IsSet() {
 			person.Genders[0].Value = flags["addressMeAs"].GetString()
 			if person.Genders[0].AddressMeAs == "" {
-				person.Genders[0].ForceSendFields = append(person.Genders[0].ForceSendFields, "addressMeAs")
+				person.Genders[0].ForceSendFields = append(person.Genders[0].ForceSendFields, "AddressMeAs")
 			}
 		}
 	}
@@ -918,8 +921,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.ImClients = []*people.ImClient{}
 		imClients := flags["imClients"].GetStringSlice()
 		if len(imClients) > 0 {
-			for _, i := range imClients {
-				m := gsmhelpers.FlagToMap(i)
+			for i := range imClients {
+				m := gsmhelpers.FlagToMap(imClients[i])
 				imClient := &people.ImClient{
 					Type:     m["type"],
 					Username: m["username"],
@@ -936,8 +939,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Interests = []*people.Interest{}
 		interests := flags["interests"].GetStringSlice()
 		if len(interests) > 0 {
-			for _, i := range interests {
-				m := gsmhelpers.FlagToMap(i)
+			for i := range interests {
+				m := gsmhelpers.FlagToMap(interests[i])
 				interest := &people.Interest{
 					Value: m["value"],
 				}
@@ -952,8 +955,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Locales = []*people.Locale{}
 		locales := flags["locales"].GetStringSlice()
 		if len(locales) > 0 {
-			for _, l := range locales {
-				m := gsmhelpers.FlagToMap(l)
+			for i := range locales {
+				m := gsmhelpers.FlagToMap(locales[i])
 				locale := &people.Locale{
 					Value: m["value"],
 				}
@@ -968,8 +971,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Locations = []*people.Location{}
 		locations := flags["locations"].GetStringSlice()
 		if len(locations) > 0 {
-			for _, l := range locations {
-				m := gsmhelpers.FlagToMap(l)
+			for i := range locations {
+				m := gsmhelpers.FlagToMap(locations[i])
 				location := &people.Location{
 					Value:        m["value"],
 					BuildingId:   m["buildingId"],
@@ -990,8 +993,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Memberships = []*people.Membership{}
 		memberships := flags["memberships"].GetStringSlice()
 		if len(memberships) > 0 {
-			for _, me := range memberships {
-				m := gsmhelpers.FlagToMap(me)
+			for i := range memberships {
+				m := gsmhelpers.FlagToMap(memberships[i])
 				membership := &people.Membership{
 					ContactGroupMembership: &people.ContactGroupMembership{
 						ContactGroupResourceName: m["contactGroupResourceName"],
@@ -1008,8 +1011,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.MiscKeywords = []*people.MiscKeyword{}
 		miscKeywords := flags["miscKeywords"].GetStringSlice()
 		if len(miscKeywords) > 0 {
-			for _, mkw := range miscKeywords {
-				m := gsmhelpers.FlagToMap(mkw)
+			for i := range miscKeywords {
+				m := gsmhelpers.FlagToMap(miscKeywords[i])
 				miscKeyword := &people.MiscKeyword{
 					Type:  m["type"],
 					Value: m["value"],
@@ -1023,7 +1026,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 	}
 	if flags["unstructuredName"].IsSet() || flags["familyName"].IsSet() || flags["givenName"].IsSet() || flags["middleName"].IsSet() || flags["honorificPrefix"].IsSet() || flags["honorificSuffix"].IsSet() || flags["phoneticFullName"].IsSet() || flags["phoneticFamilyName"].IsSet() || flags["phoneticGivenName"].IsSet() || flags["phoneticMiddleName"].IsSet() || flags["phoneticHonorificPrefix"].IsSet() || flags["phoneticHonorificSuffix"].IsSet() {
 		if person.Names == nil {
-			person.Names = make([]*people.Name, 1, 1)
+			person.Names = make([]*people.Name, 1)
 			person.Names[0] = new(people.Name)
 		}
 		if flags["unstructuredName"].IsSet() {
@@ -1103,8 +1106,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Nicknames = []*people.Nickname{}
 		nicknames := flags["nicknames"].GetStringSlice()
 		if len(nicknames) > 0 {
-			for _, n := range nicknames {
-				m := gsmhelpers.FlagToMap(n)
+			for i := range nicknames {
+				m := gsmhelpers.FlagToMap(nicknames[i])
 				nickname := &people.Nickname{
 					Type:  m["type"],
 					Value: m["value"],
@@ -1120,8 +1123,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Occupations = []*people.Occupation{}
 		occupations := flags["occupations"].GetStringSlice()
 		if len(occupations) > 0 {
-			for _, o := range occupations {
-				m := gsmhelpers.FlagToMap(o)
+			for i := range occupations {
+				m := gsmhelpers.FlagToMap(occupations[i])
 				occupation := &people.Occupation{
 					Value: m["value"],
 				}
@@ -1136,8 +1139,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Organizations = []*people.Organization{}
 		organizations := flags["organizations"].GetStringSlice()
 		if len(organizations) > 0 {
-			for _, o := range organizations {
-				m := gsmhelpers.FlagToMap(o)
+			for i := range organizations {
+				m := gsmhelpers.FlagToMap(organizations[i])
 				organization := &people.Organization{
 					Type:           m["type"],
 					Department:     m["department"],
@@ -1163,8 +1166,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.PhoneNumbers = []*people.PhoneNumber{}
 		phoneNumbers := flags["phoneNumbers"].GetStringSlice()
 		if len(phoneNumbers) > 0 {
-			for _, p := range phoneNumbers {
-				m := gsmhelpers.FlagToMap(p)
+			for i := range phoneNumbers {
+				m := gsmhelpers.FlagToMap(phoneNumbers[i])
 				phoneNumber := &people.PhoneNumber{
 					Type:  m["type"],
 					Value: m["value"],
@@ -1180,8 +1183,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Relations = []*people.Relation{}
 		relations := flags["relations"].GetStringSlice()
 		if len(relations) > 0 {
-			for _, p := range relations {
-				m := gsmhelpers.FlagToMap(p)
+			for i := range relations {
+				m := gsmhelpers.FlagToMap(relations[i])
 				relation := &people.Relation{
 					Type:   m["type"],
 					Person: m["person"],
@@ -1197,8 +1200,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.SipAddresses = []*people.SipAddress{}
 		sipAddresses := flags["sipAddresses"].GetStringSlice()
 		if len(sipAddresses) > 0 {
-			for _, p := range sipAddresses {
-				m := gsmhelpers.FlagToMap(p)
+			for i := range sipAddresses {
+				m := gsmhelpers.FlagToMap(sipAddresses[i])
 				sipaddress := &people.SipAddress{
 					Type:  m["type"],
 					Value: m["value"],
@@ -1214,8 +1217,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Skills = []*people.Skill{}
 		skills := flags["skills"].GetStringSlice()
 		if len(skills) > 0 {
-			for _, p := range skills {
-				m := gsmhelpers.FlagToMap(p)
+			for i := range skills {
+				m := gsmhelpers.FlagToMap(skills[i])
 				skill := &people.Skill{
 					Value: m["value"],
 				}
@@ -1230,8 +1233,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.Urls = []*people.Url{}
 		urls := flags["urls"].GetStringSlice()
 		if len(urls) > 0 {
-			for _, u := range urls {
-				m := gsmhelpers.FlagToMap(u)
+			for i := range urls {
+				m := gsmhelpers.FlagToMap(urls[i])
 				url := &people.Url{
 					Value: m["value"],
 				}
@@ -1246,8 +1249,8 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		person.UserDefined = []*people.UserDefined{}
 		userDefined := flags["userDefined"].GetStringSlice()
 		if len(userDefined) > 0 {
-			for _, u := range userDefined {
-				m := gsmhelpers.FlagToMap(u)
+			for i := range userDefined {
+				m := gsmhelpers.FlagToMap(userDefined[i])
 				uDef := &people.UserDefined{
 					Value: m["value"],
 					Key:   m["key"],

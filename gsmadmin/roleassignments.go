@@ -78,8 +78,8 @@ func listRoleAssignments(c *admin.RoleAssignmentsListCall, ch chan *admin.RoleAs
 		return err
 	}
 	r, _ := result.(*admin.RoleAssignments)
-	for _, i := range r.Items {
-		ch <- i
+	for i := range r.Items {
+		ch <- r.Items[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

@@ -32,7 +32,7 @@ var licenseAssignmentsPatchCmd = &cobra.Command{
 	Short:             "Patch a specific user's license by product SKU.",
 	Long:              "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		l, err := mapToLicenseAssignment(flags)
 		if err != nil {
@@ -42,7 +42,10 @@ var licenseAssignmentsPatchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error patching licenseAssignment: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

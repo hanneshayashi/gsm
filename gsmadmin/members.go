@@ -90,8 +90,8 @@ func listMembers(c *admin.MembersListCall, ch chan *admin.Member, errKey string)
 		return err
 	}
 	r, _ := result.(*admin.Members)
-	for _, i := range r.Members {
-		ch <- i
+	for i := range r.Members {
+		ch <- r.Members[i]
 	}
 	if r.NextPageToken != "" {
 		c.PageToken(r.NextPageToken)

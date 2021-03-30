@@ -32,7 +32,7 @@ var labelsListCmd = &cobra.Command{
 	Short:             "Lists all labels in the user's mailbox.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ListLabels(flags["userId"].GetString(), flags["fields"].GetString())
 		if err != nil {
@@ -41,10 +41,16 @@ var labelsListCmd = &cobra.Command{
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(result[i])
+				err = enc.Encode(result[i])
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

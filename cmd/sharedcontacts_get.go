@@ -35,16 +35,22 @@ var sharedContactsGetCmd = &cobra.Command{
 		"crescendoFlags": "--json",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmadmin.GetSharedContact(flags["url"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting shared contact: %v", err)
 		}
 		if flags["json"].GetBool() {
-			gsmhelpers.Output(result, "json", compressOutput)
+			err = gsmhelpers.Output(result, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		} else {
-			gsmhelpers.Output(result, "xml", compressOutput)
+			err = gsmhelpers.Output(result, "xml", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	},
 }

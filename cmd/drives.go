@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"log"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,8 +32,11 @@ var drivesCmd = &cobra.Command{
 	Short:             "Manage Shared Drives (Part of Drive API)",
 	Long:              "https://developers.google.com/drive/api/v3/reference/drives",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
@@ -115,6 +120,5 @@ func init() {
 func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 	drive := &drive.Drive{}
 	drive.Name = flags["name"].GetString()
-
 	return drive, nil
 }

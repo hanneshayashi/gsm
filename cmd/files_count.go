@@ -33,7 +33,7 @@ var filesCountCmd = &cobra.Command{
 	Short:             "Count files in a folder and returns their number and size.",
 	Long:              "Use the recursive subcommand to also scan subfolders",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		filesCh, err := gsmdrive.ListFiles(fmt.Sprintf("'%s' in parents", flags["folderId"].GetString()), "", "allDrives", "", "", "", "files(mimeType,size),nextPageToken", true, gsmhelpers.MaxThreads(0))
 		result := gsmdrive.CountFilesAndFolders(filesCh)
@@ -41,7 +41,10 @@ var filesCountCmd = &cobra.Command{
 		if e != nil {
 			log.Fatalf("Error listing files: %v", e)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		er := gsmhelpers.Output(result, "json", compressOutput)
+		if er != nil {
+			log.Fatalln(er)
+		}
 	},
 }
 

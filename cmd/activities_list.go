@@ -35,20 +35,26 @@ For more information, see the guides for administrator and Google Drive activity
 For more information about the activity report's parameters, see the activity parameters reference guides.`,
 	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities/list",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmreports.ListActivities(flags["userKey"].GetString(), flags["applicationName"].GetString(), flags["actorIpAddress"].GetString(), flags["customerId"].GetString(), flags["endTime"].GetString(), flags["eventName"].GetString(), flags["filters"].GetString(), flags["groupIdFilter"].GetString(), flags["orgUnitId"].GetString(), flags["startTime"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
-				enc.Encode(i)
+				err := enc.Encode(i)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		} else {
 			final := []*reports.Activity{}
 			for i := range result {
 				final = append(final, i)
 			}
-			gsmhelpers.Output(final, "json", compressOutput)
+			err := gsmhelpers.Output(final, "json", compressOutput)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 		e := <-err
 		if e != nil {

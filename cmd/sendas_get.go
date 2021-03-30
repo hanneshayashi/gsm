@@ -32,13 +32,16 @@ var sendAsGetCmd = &cobra.Command{
 	Short:             "Gets the specified send-as alias.",
 	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.GetSendAs(flags["userId"].GetString(), flags["sendAsEmail"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting send-as: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 

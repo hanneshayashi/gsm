@@ -33,13 +33,16 @@ var postmasterTrafficStatsGetCmd = &cobra.Command{
 Returns PERMISSION_DENIED if user does not have permission to access TrafficStats for the domain.`,
 	Long:              "https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmailpostmaster.GetTrafficStats(flags["name"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting traffic stat: %v", err)
 		}
-		gsmhelpers.Output(result, "json", compressOutput)
+		err = gsmhelpers.Output(result, "json", compressOutput)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
