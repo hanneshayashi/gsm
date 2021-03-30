@@ -791,7 +791,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["suspended"].IsSet() {
 		user.Suspended = flags["suspended"].GetBool()
 		if !user.Suspended {
-			user.ForceSendFields = append(user.ForceSendFields, "suspended")
+			user.ForceSendFields = append(user.ForceSendFields, "Suspended")
 		}
 	}
 	if flags["websites"].IsSet() {
