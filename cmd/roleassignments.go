@@ -116,19 +116,19 @@ func mapToRoleAssignment(flags map[string]*gsmhelpers.Value) (*admin.RoleAssignm
 	if flags["orgUnitId"].IsSet() {
 		roleAssignment.OrgUnitId = flags["orgUnitId"].GetString()
 		if roleAssignment.OrgUnitId == "" {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "orgUnitId")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "OrgUnitId")
 		}
 	}
 	if flags["scopeType"].IsSet() {
 		roleAssignment.ScopeType = flags["scopeType"].GetString()
 		if roleAssignment.ScopeType == "" {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "scopeType")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "ScopeType")
 		}
 	}
 	if flags["roleId"].IsSet() {
 		roleAssignment.RoleId = flags["roleId"].GetInt64()
 		if roleAssignment.RoleId == 0 {
-			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "roleId")
+			roleAssignment.ForceSendFields = append(roleAssignment.ForceSendFields, "RoleId")
 		}
 	}
 	return roleAssignment, nil

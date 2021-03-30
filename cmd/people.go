@@ -913,7 +913,7 @@ func mapToPerson(flags map[string]*gsmhelpers.Value, person *people.Person) (*pe
 		if flags["addressMeAs"].IsSet() {
 			person.Genders[0].Value = flags["addressMeAs"].GetString()
 			if person.Genders[0].AddressMeAs == "" {
-				person.Genders[0].ForceSendFields = append(person.Genders[0].ForceSendFields, "addressMeAs")
+				person.Genders[0].ForceSendFields = append(person.Genders[0].ForceSendFields, "AddressMeAs")
 			}
 		}
 	}

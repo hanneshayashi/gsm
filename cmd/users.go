@@ -601,7 +601,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["changePasswordAtNextLogin"].IsSet() {
 		user.ChangePasswordAtNextLogin = flags["changePasswordAtNextLogin"].GetBool()
 		if !user.ChangePasswordAtNextLogin {
-			user.ForceSendFields = append(user.ForceSendFields, "changePasswordAtNextLogin")
+			user.ForceSendFields = append(user.ForceSendFields, "ChangePasswordAtNextLogin")
 		}
 	}
 	if flags["emails"].IsSet() {
@@ -636,7 +636,7 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["hashFunction"].IsSet() {
 		user.HashFunction = flags["hashFunction"].GetString()
 		if user.HashFunction == "" {
-			user.ForceSendFields = append(user.ForceSendFields, "hashFunction")
+			user.ForceSendFields = append(user.ForceSendFields, "HashFunction")
 		}
 	}
 	if flags["ims"].IsSet() {
@@ -651,13 +651,13 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 	if flags["includeInGlobalAddressList"].IsSet() {
 		user.IncludeInGlobalAddressList = flags["includeInGlobalAddressList"].GetBool()
 		if !user.IncludeInGlobalAddressList {
-			user.ForceSendFields = append(user.ForceSendFields, "includeInGlobalAddressList")
+			user.ForceSendFields = append(user.ForceSendFields, "IncludeInGlobalAddressList")
 		}
 	}
 	if flags["ipWhitelisted"].IsSet() {
 		user.IpWhitelisted = flags["ipWhitelisted"].GetBool()
 		if !user.IpWhitelisted {
-			user.ForceSendFields = append(user.ForceSendFields, "ipWhitelisted")
+			user.ForceSendFields = append(user.ForceSendFields, "IpWhitelisted")
 		}
 	}
 	if flags["keywords"].IsSet() {

@@ -103,13 +103,13 @@ func mapToComment(flags map[string]*gsmhelpers.Value) (*drive.Comment, error) {
 	if flags["content"].IsSet() {
 		comment.Content = flags["content"].GetString()
 		if comment.Content == "" {
-			comment.ForceSendFields = append(comment.ForceSendFields, "content")
+			comment.ForceSendFields = append(comment.ForceSendFields, "Content")
 		}
 	}
 	if flags["anchor"].IsSet() {
 		comment.Anchor = flags["anchor"].GetString()
 		if comment.Anchor == "" {
-			comment.ForceSendFields = append(comment.ForceSendFields, "anchor")
+			comment.ForceSendFields = append(comment.ForceSendFields, "Anchor")
 		}
 	}
 	if flags["quotedFileContentValue"].IsSet() {
