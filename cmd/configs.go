@@ -133,5 +133,8 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	if flags["standardDelay"].IsSet() {
 		config.StandardDelay = flags["standardDelay"].GetInt()
 	}
+	if flags["serviceAccount"].IsSet() {
+		config.ServiceAccount = flags["serviceAccount"].GetString()
+	}
 	return config, nil
 }
