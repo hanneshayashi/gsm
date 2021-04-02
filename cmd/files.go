@@ -270,13 +270,10 @@ However, all users with access to the file can see the trashed item metadata in 
 All users with access can copy, download, export, and share the file.`,
 	},
 	"localFilePath": {
-		AvailableFor: []string{"create", "update"},
+		AvailableFor: []string{"create", "update", "download", "export"},
 		Type:         "string",
-		Description: `Whether the file has been trashed, either explicitly or from a trashed parent folder.
-Only the owner may trash a file.
-The trashed item is excluded from all files.list responses returned for any user who does not own the file.
-However, all users with access to the file can see the trashed item metadata in an API response.
-All users with access can copy, download, export, and share the file.`,
+		Description:  `Path to a file or folder on the local disk.`,
+		Required:     []string{"download", "export"},
 	},
 	"acknowledgeAbuse": {
 		AvailableFor: []string{"download"},

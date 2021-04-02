@@ -34,7 +34,7 @@ var filesDownloadCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.DownloadFile(flags["fileId"].GetString(), flags["acknowledgeAbuse"].GetBool())
+		result, err := gsmdrive.DownloadFile(flags["fileId"].GetString(), flags["localFilePath"].GetString(), flags["acknowledgeAbuse"].GetBool())
 		if err != nil {
 			log.Fatalf("Error downloading file: %v", err)
 		}

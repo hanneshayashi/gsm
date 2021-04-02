@@ -35,7 +35,7 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ExportFile(flags["fileId"].GetString(), flags["mimeType"].GetString())
+		result, err := gsmdrive.ExportFile(flags["fileId"].GetString(), flags["mimeType"].GetString(), flags["localFilePath"].GetString())
 		if err != nil {
 			log.Fatalf("Error downloading file: %v", err)
 		}

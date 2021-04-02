@@ -49,7 +49,7 @@ var filesDownloadBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.DownloadFile(m["fileId"].GetString(), m["acknowledgeAbuse"].GetBool())
+						result, err := gsmdrive.DownloadFile(m["fileId"].GetString(), m["localFilePath"].GetString(), m["acknowledgeAbuse"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {
