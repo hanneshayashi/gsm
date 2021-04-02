@@ -57,7 +57,7 @@ GSM currently supports the following APIs:
 - [Admin SDK Directory API](https://developers.google.com/admin-sdk/directory)
 - [Admin SDK Groups Settings API](https://developers.google.com/admin-sdk/groups-settings/get_started)
 - [Admin SDK Enterprise License Manager API](https://developers.google.com/admin-sdk/licensing/reference/rest)
-- [Cloud Identity API](https://cloud.google.com/identity/docs/reference/rest) (groups and memberships)
+- [Cloud Identity API](https://cloud.google.com/identity/docs/reference/rest)
 - [Gmail API](https://developers.google.com/gmail/api/reference/rest)
 - [Gmail Postmaster API](https://developers.google.com/gmail/postmaster/reference/rest)
 - [Google Calendar API](https://developers.google.com/calendar/v3/reference)
