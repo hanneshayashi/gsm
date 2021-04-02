@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -65,31 +66,53 @@ This is a write-only field; it can only be set on requests that don't set colorR
 		AvailableFor: []string{"update"},
 		Type:         "string",
 		Description: `The color of this shared drive as an RGB hex string.
-It can only be set on a drive.drives.update request that does not set themeId.	`,
+It can only be set on a drive.drives.update request that does not set themeId.`,
+	},
+	"backgroundImageFile": {
+		AvailableFor: []string{"update"},
+		Type:         "string",
+		Description: `An image file and cropping parameters from which a background image for this shared drive is set.
+This is a write only field; it can only be set on drive.drives.update requests that don't set themeId.
+When specified, all fields of the backgroundImageFile must be set.
+Specify in the following format:
+'--backgroundImageFile "id=...;width=...;xCoordinate=...;yCoordinate=..."'
+Use ALL of the following parameters:
+id:           The ID of an image file in Google Drive to use for the background image.
+width:        The width of the cropped image in the closed range of 0 to 1.
+              This value represents the width of the cropped image divided by the width of the entire image.
+              The height is computed by applying a width to height aspect ratio of 80 to 9.
+              The resulting image must be at least 1280 pixels wide and 144 pixels high.
+xCoordinate:  The X coordinate of the upper left corner of the cropping area in the background image.
+              This is a value in the closed range of 0 to 1.
+              This value represents the horizontal distance from the left side of the entire image to the left side of the cropping area divided by the width of the entire image.
+yCoordinate:  The Y coordinate of the upper left corner of the cropping area in the background image.
+              This is a value in the closed range of 0 to 1.
+              This value represents the vertical distance from the top side of the entire image to the top side of the cropping area divided by the height of the entire image.`,
 	},
 	"useDomainAdminAccess": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},
 		Type:         "bool",
 		Description:  "Issue the request as a domain administrator",
-		Defaults:     map[string]interface{}{"create": true, "get": true, "hide": true, "unhide": true, "update": true},
 	},
 	"adminManagedRestrictions": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"update"},
 		Type:         "bool",
 		Description:  "Whether administrative privileges on this shared drive are required to modify restrictions",
 	},
 	"copyRequiresWriterPermission": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"update"},
 		Type:         "bool",
-		Description:  "Whether the options to copy, print, or download files inside this shared drive, should be disabled for readers and commenters. When this restriction is set to true, it will override the similarly named field to true for any file inside this shared drive",
+		Description: `Whether the options to copy, print, or download files inside this shared drive, should be disabled for readers and commenters.
+When this restriction is set to true, it will override the similarly named field to true for any file inside this shared drive`,
 	},
 	"domainUsersOnly": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"update"},
 		Type:         "bool",
-		Description:  "Whether access to this shared drive and items inside this shared drive is restricted to users of the domain to which this shared drive belongs. This restriction may be overridden by other sharing policies controlled outside of this shared drive",
+		Description: `Whether access to this shared drive and items inside this shared drive is restricted to users of the domain to which this shared drive belongs.
+This restriction may be overridden by other sharing policies controlled outside of this shared drive`,
 	},
 	"driveMembersOnly": {
-		AvailableFor: []string{"create"},
+		AvailableFor: []string{"update"},
 		Type:         "bool",
 		Description:  "Whether access to items inside this shared drive is restricted to its members",
 	},
@@ -118,7 +141,79 @@ func init() {
 }
 
 func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
-	drive := &drive.Drive{}
-	drive.Name = flags["name"].GetString()
-	return drive, nil
+	var err error
+	d := &drive.Drive{}
+	if flags["backgroundImageFile"].IsSet() {
+		backgroundImageFile := flags["backgroundImageFile"].GetString()
+		if backgroundImageFile != "" {
+			m := gsmhelpers.FlagToMap(backgroundImageFile)
+			d.BackgroundImageFile = &drive.DriveBackgroundImageFile{
+				Id: m["id"],
+			}
+			d.BackgroundImageFile.Width, err = strconv.ParseFloat(m["width"], 64)
+			if err != nil {
+				return nil, err
+			}
+			d.BackgroundImageFile.XCoordinate, err = strconv.ParseFloat(m["xCoordinate"], 64)
+			if err != nil {
+				return nil, err
+			}
+			d.BackgroundImageFile.YCoordinate, err = strconv.ParseFloat(m["yCoordinate"], 64)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			d.ForceSendFields = append(d.ForceSendFields, "BackgroundImageFile")
+		}
+	}
+	if flags["themeId"].IsSet() {
+		d.ThemeId = flags["themeId"].GetString()
+		if d.ThemeId == "" {
+			d.ForceSendFields = append(d.ForceSendFields, "ThemeId")
+		}
+	}
+	if flags["colorRgb"].IsSet() {
+		d.ColorRgb = flags["colorRgb"].GetString()
+		if d.ColorRgb == "" {
+			d.ForceSendFields = append(d.ForceSendFields, "ColorRgb")
+		}
+	}
+	if flags["name"].IsSet() {
+		d.Name = flags["name"].GetString()
+		if d.Name == "" {
+			d.ForceSendFields = append(d.ForceSendFields, "Name")
+		}
+	}
+	adminManagedRestrictionsSet := flags["adminManagedRestrictions"].IsSet()
+	copyRequiresWriterPermissionSet := flags["copyRequiresWriterPermission"].IsSet()
+	domainUsersOnlySet := flags["domainUsersOnly"].IsSet()
+	driveMembersOnlySet := flags["driveMembersOnly"].IsSet()
+	if adminManagedRestrictionsSet || copyRequiresWriterPermissionSet || domainUsersOnlySet || driveMembersOnlySet {
+		d.Restrictions = &drive.DriveRestrictions{}
+		if adminManagedRestrictionsSet {
+			d.Restrictions.AdminManagedRestrictions = flags["adminManagedRestrictions"].GetBool()
+			if !d.Restrictions.AdminManagedRestrictions {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "AdminManagedRestrictions")
+			}
+		}
+		if copyRequiresWriterPermissionSet {
+			d.Restrictions.CopyRequiresWriterPermission = flags["copyRequiresWriterPermission"].GetBool()
+			if !d.Restrictions.CopyRequiresWriterPermission {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "CopyRequiresWriterPermission")
+			}
+		}
+		if domainUsersOnlySet {
+			d.Restrictions.DomainUsersOnly = flags["domainUsersOnly"].GetBool()
+			if !d.Restrictions.DomainUsersOnly {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "DomainUsersOnly")
+			}
+		}
+		if driveMembersOnlySet {
+			d.Restrictions.DriveMembersOnly = flags["driveMembersOnly"].GetBool()
+			if !d.Restrictions.DriveMembersOnly {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "DriveMembersOnly")
+			}
+		}
+	}
+	return d, nil
 }
