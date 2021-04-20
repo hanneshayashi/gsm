@@ -1,22 +1,16 @@
 #!/bin/bash
-cp ./LICENSE gsm/win-amd64/
-cp ./LICENSE gsm/linux-amd64/
-cp ./LICENSE gsm/linux-arm64/
-cp ./LICENSE gsm/mac-amd64/
-cp ./LICENSE gsm/mac-arm64/
+APP_VERSION="0.2.6"
+ARCHIVE_NAME=${APP_NAME}-${APP_VERSION}
+VERSIONS=("win-amd64" "linux-amd64" "linux-arm64" "mac-amd64" "mac-arm64")
 
 mkdir tmp
+for i in ${!VERSIONS[@]}; do
+    cp ./LICENSE ${APP_NAME}/${VERSIONS[$i]}/
+    tar -czf tmp/${ARCHIVE_NAME}_${VERSIONS[$i]}.tar.gz -C ${APP_NAME}/${VERSIONS[$i]} .
+done
 
-tar -czf tmp/gsm_win-amd64.tar.gz -C gsm/win-amd64 .
-tar -czf tmp/gsm_linux-amd64.tar.gz -C gsm/linux-amd64 .
-tar -czf tmp/gsm_linux-arm64.tar.gz -C gsm/linux-arm64 .
-tar -czf tmp/gsm_mac-amd64.tar.gz -C gsm/mac-amd64 .
-tar -czf tmp/gsm_mac-arm64.tar.gz -C gsm/mac-arm64 .
+gsutil -m cp tmp/* gs://${BUCKET}/${APP_NAME}/
 
-gsutil -m cp tmp/* gs://build-arts/gsm/
-
-gsutil setmeta -h 'Content-Disposition:filename=gsm_win-amd64.tar.gz' gs://build-arts/gsm/gsm_win-amd64.tar.gz
-gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-amd64.tar.gz' gs://build-arts/gsm/gsm_linux-amd64.tar.gz
-gsutil setmeta -h 'Content-Disposition:filename=gsm_linux-arm64.tar.gz' gs://build-arts/gsm/gsm_linux-arm64.tar.gz
-gsutil setmeta -h 'Content-Disposition:filename=gsm_mac-amd64.tar.gz' gs://build-arts/gsm/gsm_mac-amd64.tar.gz
-gsutil setmeta -h 'Content-Disposition:filename=gsm_mac-arm64.tar.gz' gs://build-arts/gsm/gsm_mac-arm64.tar.gz
+for i in ${!VERSIONS[@]}; do
+    gsutil setmeta -h "Content-Disposition:filename=${ARCHIVE_NAME}_${VERSIONS[$i]}.tar.gz" gs://${BUCKET}/${APP_NAME}/${ARCHIVE_NAME}_${VERSIONS[$i]}.tar.gz
+done

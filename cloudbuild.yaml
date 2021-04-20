@@ -2,7 +2,8 @@ steps:
   - name: golang
     entrypoint: "bash"
     args: ["./build.sh"]
-    env: ["CGO_ENABLED=0"]
+    env: [CGO_ENABLED=0]
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args: ["./gsutil.sh"]
+    env: [BUCKET=$_BUCKET, APP_NAME=$_APP_NAME]
