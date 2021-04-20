@@ -23,33 +23,9 @@ GSM also supports many custom commands for common tasks to make your life easier
 
 and many more.
 
-I initially created GSM first and foremost for myself for the following reasons:
-- I wanted to get better at Go
-- The existing tools like [GAM](https://github.com/jay0lee/GAM) and [PSGSuite](https://github.com/SCRT-HQ/PSGSuite), while excellent, did not fit my use cases sometimes and I wanted to have the flexibility to quickly make changes myself
-- Programming is fun!
-
-If you need a mature and battle-tested tool with an active community, feel free to try one of the linked alternatives.\
-GSM does exactly what I need, but that does not necessarily mean that it will be useful to everyone.\
-However, by making it open source, I hope that I can help someone looking for a solution that other tools don't offer.
-
-### General Information
-
 GSM was intentionally designed to be as close to the actual APIs as possible.\
 Because of that, it may not be as user-friendly as some of the alternatives out there.\
-On the plus-side, you can usually look at the Google API documentation that is linked to in every command's description to figure out how something works. Most flag descriptions are also taken from the official API docs, so I take no credit there!
-
-### License and Copyright
-
-GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
-Copyright © 2020-2021 Hannes Hayashi.
-
-### Third Party Libraries
-
-GSM is based on open source technology and would not exist without the incredible work of some people:
-- The engineers at Google who created the APIs and Go libraries GSM is based on
-  - https://github.com/googleapis/google-api-go-client
-- GSM uses Cobra and Viper for command and configuration management
-  - https://github.com/spf13/cobra
+On the plus-side, you can usually look at the Google API documentation that is linked to in every command's description to figure out how something works. Most flag descriptions are also taken from the official API docs, so I take no credit there.
 
 ### Features
 
@@ -104,6 +80,19 @@ Note that this module is created with [Crescendo](https://github.com/PowerShell/
 As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
 You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--log` flag when running a command.
 You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
+
+### License and Copyright
+
+GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
+Copyright © 2020-2021 Hannes Hayashi.
+
+### Third Party Libraries
+
+GSM is based on open source technology and would not exist without the incredible work of some people:
+- The engineers at Google who created the APIs and Go libraries GSM is based on
+  - https://github.com/googleapis/google-api-go-client
+- GSM uses Cobra and Viper for command and configuration management
+  - https://github.com/spf13/cobra
 
 ### See Also
 
