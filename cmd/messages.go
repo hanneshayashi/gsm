@@ -149,6 +149,11 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 Must be a valid sendAs address.
 If this is not set, your primary sendAs address will be used automatically.`,
 	},
+	"html": {
+		AvailableFor: []string{"send"},
+		Type:         "bool",
+		Description:  "Send the body as HTML",
+	},
 	"to": {
 		AvailableFor: []string{"send"},
 		Type:         "string",
@@ -212,7 +217,13 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 		msg += fmt.Sprintf("%s: %s\n", i, header[i])
 	}
 	msg += fmt.Sprintf("\n--%s\n", boundary)
-	msg += "Content-Type: text/plain; charset=\"utf-8\"\n"
+	var format string
+	if flags["html"].GetBool() {
+		format = "html"
+	} else {
+		format = "plain"
+	}
+	msg += "Content-Type: text/" + format + "; charset=\"utf-8\"\n"
 	msg += "MIME-Version: 1.0\n"
 	msg += "Content-Transfer-Encoding: 7bit\n\n"
 	body := flags["body"].GetString()
