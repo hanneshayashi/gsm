@@ -1,5 +1,5 @@
 #!/bin/bash
-APP_VERSION="0.2.6"
+APP_VERSION="0.2.6-pre"
 BINARY_NAME=${APP_NAME}_v${APP_VERSION}
 VERSIONS=("win-amd64" "linux-amd64" "linux-arm64" "mac-amd64" "mac-arm64")
 
