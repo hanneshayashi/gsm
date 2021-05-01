@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -45,11 +44,12 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 	}
 	r, _ := result.(*drive.Drive)
 	if returnWhenReady {
-		_, err := GetDrive(r.Id, "id", false)
-		for err != nil {
-			fmt.Println(err)
+		_, err := ListPermissions(r.Id, "", "", false, gsmhelpers.MaxThreads(0))
+		e := <-err
+		for e != nil {
 			time.Sleep(5 * time.Second)
-			_, err = GetDrive(r.Id, "id", false)
+			_, err := ListPermissions(r.Id, "", "", false, gsmhelpers.MaxThreads(0))
+			e = <-err
 		}
 		return r, nil
 	}
