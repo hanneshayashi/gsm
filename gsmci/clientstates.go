@@ -64,7 +64,7 @@ func listClientStates(c *ci.DevicesDeviceUsersClientStatesListCall, ch chan *ci.
 	return err
 }
 
-// ListDevices lists the client states for the given search query.
+// ListClientStates lists the client states for the given search query.
 func ListClientStates(parent, customer, filter, orderBy, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, <-chan error) {
 	srv := getDevicesDeviceUsersClientStatesService()
 	c := srv.List(parent)
