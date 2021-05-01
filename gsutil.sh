@@ -1,5 +1,4 @@
 #!/bin/bash
-APP_VERSION="0.2.6-pre"
 ARCHIVE_NAME=${APP_NAME}-${APP_VERSION}
 VERSIONS=("win-amd64" "linux-amd64" "linux-arm64" "mac-amd64" "mac-arm64")
 
