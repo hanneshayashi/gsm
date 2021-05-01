@@ -55,7 +55,7 @@ var drivesCreateBatchCmd = &cobra.Command{
 							log.Printf("Error building drive object: %v\n", err)
 							continue
 						}
-						result, err := gsmdrive.CreateDrive(d, m["fields"].GetString())
+						result, err := gsmdrive.CreateDrive(d, m["fields"].GetString(), m["returnWhenReady"].GetBool())
 						if err != nil {
 							log.Println(err)
 						} else {

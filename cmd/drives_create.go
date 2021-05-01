@@ -38,7 +38,7 @@ var drivesCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building drive object: %v\n", err)
 		}
-		result, err := gsmdrive.CreateDrive(d, flags["fields"].GetString())
+		result, err := gsmdrive.CreateDrive(d, flags["fields"].GetString(), flags["returnWhenReady"].GetBool())
 		if err != nil {
 			log.Fatalf("Error creating drive: %v", err)
 		}
