@@ -44,14 +44,7 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 	}
 	r, _ := result.(*drive.Drive)
 	if returnWhenReady {
-		_, err := ListPermissions(r.Id, "", "", false, gsmhelpers.MaxThreads(0))
-		e := <-err
-		for e != nil {
-			time.Sleep(5 * time.Second)
-			_, err := ListPermissions(r.Id, "", "", false, gsmhelpers.MaxThreads(0))
-			e = <-err
-		}
-		return r, nil
+		time.Sleep(10 * time.Second)
 	}
 	return r, nil
 }
