@@ -6,4 +6,4 @@ steps:
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args: ["./gsutil.sh"]
-    env: [BUCKET=$_BUCKET, APP_NAME=$_APP_NAME]
+    env: [BUCKET=$_BUCKET, APP_NAME=$_APP_NAME, APP_VERSION=$_APP_VERSION]
