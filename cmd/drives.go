@@ -131,7 +131,7 @@ See the https://developers.google.com/drive/api/v3/search-shareddrives for suppo
 		AvailableFor: []string{"create"},
 		Type:         "bool",
 		Description: `The Google Drive API returns the drive after creation immediately, but usually before it can be used in subsequent requests.
-Setting this flag will make sure that the drive is ready to be used before returning it by waiting 10 seconds.`,
+Setting this flag will cause GSM to try to to read the permission on the newly created drive to make sure that it is available before returning it.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},
