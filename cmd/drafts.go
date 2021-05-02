@@ -38,6 +38,11 @@ var draftFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description:  "Subject of the (draft) message",
 	},
+	"html": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "bool",
+		Description:  "Send the body as HTML",
+	},
 	"to": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "string",

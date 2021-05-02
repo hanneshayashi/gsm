@@ -19,8 +19,11 @@ package gsmdrive
 
 import (
 	"io"
+	"mime"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -102,9 +105,41 @@ func EmptyTrash() (bool, error) {
 	return result, err
 }
 
+func getLocalFilePaths(localFilePath string) (folder string, fileName string, err error) {
+	if localFilePath != "" {
+		stats, err := os.Stat(localFilePath)
+		if os.IsNotExist(err) {
+			if strings.HasSuffix(localFilePath, string(filepath.Separator)) {
+				err = os.MkdirAll(localFilePath, 0777)
+				if err != nil {
+					return "", "", err
+				}
+				return localFilePath, "", nil
+			}
+			dir := filepath.Dir(localFilePath)
+			err = os.MkdirAll(dir, 0777)
+			if err != nil {
+				return "", "", err
+			}
+			return dir + string(filepath.Separator), filepath.Base(localFilePath), nil
+		} else if err != nil {
+			return "", "", err
+		} else {
+			if stats.IsDir() {
+				if !strings.HasSuffix(localFilePath, string(filepath.Separator)) {
+					localFilePath = localFilePath + string(filepath.Separator)
+				}
+				return localFilePath, "", nil
+			}
+			return filepath.Dir(localFilePath) + string(filepath.Separator), filepath.Base(localFilePath), nil
+		}
+	}
+	return "", "", nil
+}
+
 // ExportFile exports a Google Doc to the requested MIME type and returns the exported content.
 // Please note that the exported content is limited to 10MB.
-func ExportFile(fileID, mimeType string) (string, error) {
+func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	srv := getFilesService()
 	file, err := GetFile(fileID, "name", "")
 	if err != nil {
@@ -119,13 +154,25 @@ func ExportFile(fileID, mimeType string) (string, error) {
 	}
 	r, _ := result.(*http.Response)
 	defer r.Body.Close()
-	fileLocal, err := os.Create(file.Name)
+	folder, fileName, err := getLocalFilePaths(localFilePath)
+	if err != nil {
+		return "", err
+	}
+	if fileName == "" {
+		fileName = file.Name
+		extensions, er := mime.ExtensionsByType(mimeType)
+		if er == nil && len(extensions) > 0 {
+			fileName = fileName + extensions[0]
+		}
+	}
+	fileName = folder + fileName
+	fileLocal, err := os.Create(fileName)
 	if err != nil {
 		return "", err
 	}
 	defer fileLocal.Close()
 	_, err = io.Copy(fileLocal, r.Body)
-	return file.Name, err // TODO: Extension based on mimeType
+	return fileName, err
 }
 
 // GenerateFileIDs generates a set of file IDs which can be provided in create or copy requests.
@@ -146,7 +193,7 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 }
 
 // DownloadFile downloads a file from drive
-func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
+func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, error) {
 	srv := getFilesService()
 	file, err := GetFile(fileID, "name", "")
 	if err != nil {
@@ -161,13 +208,21 @@ func DownloadFile(fileID string, acknowledgeAbuse bool) (string, error) {
 	}
 	r, _ := result.(*http.Response)
 	defer r.Body.Close()
-	fileLocal, err := os.Create(file.Name)
+	folder, fileName, err := getLocalFilePaths(localFilePath)
+	if err != nil {
+		return "", err
+	}
+	if fileName == "" {
+		fileName = file.Name
+	}
+	fileName = folder + fileName
+	fileLocal, err := os.Create(fileName)
 	if err != nil {
 		return "", err
 	}
 	defer fileLocal.Close()
 	_, err = io.Copy(fileLocal, r.Body)
-	return file.Name, err
+	return fileName, err
 }
 
 // RandomFile gets a file's metadata or content by ID.

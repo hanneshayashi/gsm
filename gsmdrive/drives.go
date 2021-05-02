@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"time"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/google/uuid"
@@ -26,7 +28,7 @@ import (
 )
 
 // CreateDrive creates a new shared drive.
-func CreateDrive(d *drive.Drive, fields string) (*drive.Drive, error) {
+func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Drive, error) {
 	srv := getDrivesService()
 	u, _ := uuid.NewRandom()
 	requestID := u.String()
@@ -41,6 +43,17 @@ func CreateDrive(d *drive.Drive, fields string) (*drive.Drive, error) {
 		return nil, err
 	}
 	r, _ := result.(*drive.Drive)
+	if returnWhenReady {
+		about, err := GetAbout("user(permissionId)")
+		if err != nil {
+			return nil, err
+		}
+		_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+		for err != nil {
+			_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+			time.Sleep(1 * time.Second)
+		}
+	}
 	return r, nil
 }
 

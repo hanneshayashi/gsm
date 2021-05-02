@@ -216,8 +216,12 @@ func GetConfig(name string) (*GSMConfig, error) {
 
 // LoadConfig sets the default config (.gsm.yaml) and renames the old one to <name>.yaml
 func LoadConfig(name string) error {
+	_, err := GetConfig(name)
+	if err != nil {
+		return err
+	}
 	var oldConfig *GSMConfig
-	_, err := os.Stat(GetConfigPath(".gsm"))
+	_, err = os.Stat(GetConfigPath(".gsm"))
 	if !os.IsNotExist(err) {
 		oldConfig, err = GetConfig(".gsm")
 		if err != nil {

@@ -50,7 +50,7 @@ https://developers.google.com/drive/api/v3/reference/files/export`,
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmdrive.ExportFile(m["fileId"].GetString(), m["mimeType"].GetString())
+						result, err := gsmdrive.ExportFile(m["fileId"].GetString(), m["mimeType"].GetString(), m["localFilePath"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
