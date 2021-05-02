@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -42,7 +41,8 @@ The current default config will be renamed to '<name>.yaml' and the loaded confi
 		name := flags["name"].GetString()
 		err := gsmconfig.LoadConfig(name)
 		if err != nil {
-			log.Fatalf("Error loading config: %v", err)
+			fmt.Printf("Error loading config: %v\n", err)
+			return
 		}
 		fmt.Printf("'%s' successfully loaded\n", name)
 	},
