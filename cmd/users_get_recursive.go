@@ -31,7 +31,7 @@ import (
 // usersGetRecursiveCmd represents the recursive command
 var usersGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: `Grants or removes the Super Admin role to/from users by referencing one or more organizational units and/or groups.`,
+	Short: `Gets users by referencing one or more organizational units and/or groups.`,
 	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
