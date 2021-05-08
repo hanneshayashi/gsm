@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Moveright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify

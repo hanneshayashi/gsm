@@ -1,5 +1,4 @@
 /*
-Package gsmgmailpostmaster implements the Gmail Postmaster APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
