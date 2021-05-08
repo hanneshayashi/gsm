@@ -130,6 +130,9 @@ func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-cha
 	if customer != "" {
 		c.Customer(customer)
 	}
+	if filter != "" {
+		c.Filter(filter)
+	}
 	if orderBy != "" {
 		c.OrderBy(orderBy)
 	}

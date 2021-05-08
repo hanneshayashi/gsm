@@ -146,6 +146,9 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 	if customer != "" {
 		c.Customer(customer)
 	}
+	if filter != "" {
+		c.Filter(filter)
+	}
 	if orderBy != "" {
 		c.OrderBy(orderBy)
 	}

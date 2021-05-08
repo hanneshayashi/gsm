@@ -59,6 +59,9 @@ func ListClientStates(parent, customer, filter, orderBy, fields string, cap int)
 	if orderBy != "" {
 		c.OrderBy(orderBy)
 	}
+	if filter != "" {
+		c.Filter(filter)
+	}
 	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, cap)
 	err := make(chan error, 1)
 	go func() {
