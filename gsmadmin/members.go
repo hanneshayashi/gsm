@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -81,24 +83,6 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 	return r, nil
 }
 
-func listMembers(c *admin.MembersListCall, ch chan *admin.Member, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Members)
-	for i := range r.Members {
-		ch <- r.Members[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listMembers(c, ch, errKey)
-	}
-	return err
-}
-
 // ListMembers retrieves a paginated list of all members in a group.
 func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, cap int) (<-chan *admin.Member, <-chan error) {
 	srv := getMembersService()
@@ -112,7 +96,12 @@ func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, 
 	ch := make(chan *admin.Member, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listMembers(c, ch, gsmhelpers.FormatErrorKey(groupKey))
+		e := c.Pages(context.Background(), func(response *admin.Members) error {
+			for i := range response.Members {
+				ch <- response.Members[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmlicensing
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -70,24 +72,6 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	return r, nil
 }
 
-func listLicenseAssignmentsForProduct(c *licensing.LicenseAssignmentsListForProductCall, ch chan *licensing.LicenseAssignment, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*licensing.LicenseAssignmentList)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listLicenseAssignmentsForProduct(c, ch, errKey)
-	}
-	return err
-}
-
 // ListLicenseAssignmentsForProduct list all users assigned licenses for a specific product SKU.
 func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap int) (<-chan *licensing.LicenseAssignment, <-chan error) {
 	srv := getLicenseAssignmentsService()
@@ -98,7 +82,12 @@ func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap 
 	ch := make(chan *licensing.LicenseAssignment, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listLicenseAssignmentsForProduct(c, ch, gsmhelpers.FormatErrorKey(productID, customerID))
+		e := c.Pages(context.Background(), func(response *licensing.LicenseAssignmentList) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
@@ -107,24 +96,6 @@ func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap 
 	}()
 	gsmhelpers.Sleep()
 	return ch, err
-}
-
-func listLicenseAssignmentsForProductAndSku(c *licensing.LicenseAssignmentsListForProductAndSkuCall, ch chan *licensing.LicenseAssignment, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*licensing.LicenseAssignmentList)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listLicenseAssignmentsForProductAndSku(c, ch, errKey)
-	}
-	return err
 }
 
 // ListLicenseAssignmentsForProductAndSku list all users assigned licenses for a specific product SKU.
@@ -137,7 +108,12 @@ func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields
 	ch := make(chan *licensing.LicenseAssignment, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listLicenseAssignmentsForProductAndSku(c, ch, gsmhelpers.FormatErrorKey(productID, skuID, customerID))
+		e := c.Pages(context.Background(), func(response *licensing.LicenseAssignmentList) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

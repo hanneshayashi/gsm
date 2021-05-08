@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -135,24 +136,6 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 	return r, nil
 }
 
-func listDeviceUsers(c *ci.DevicesDeviceUsersListCall, ch chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ListDeviceUsersResponse)
-	for i := range r.DeviceUsers {
-		ch <- r.DeviceUsers[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDeviceUsers(c, ch, errKey)
-	}
-	return err
-}
-
 // ListDeviceUsers lists/searches DeviceUsers.
 func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, <-chan error) {
 	srv := getDevicesDeviceUsersService()
@@ -169,7 +152,12 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDeviceUsers(c, ch, gsmhelpers.FormatErrorKey(customer, filter))
+		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListDeviceUsersResponse) error {
+			for i := range response.DeviceUsers {
+				ch <- response.DeviceUsers[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

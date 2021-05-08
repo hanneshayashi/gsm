@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -70,24 +72,6 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	return r, nil
 }
 
-func listBuildings(c *admin.ResourcesBuildingsListCall, ch chan *admin.Building, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Buildings)
-	for i := range r.Buildings {
-		ch <- r.Buildings[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listBuildings(c, ch, errKey)
-	}
-	return err
-}
-
 // ListBuildings retrieves a list of buildings for an account.
 func ListBuildings(customer, fields string, cap int) (<-chan *admin.Building, <-chan error) {
 	srv := getResourcesBuildingsService()
@@ -98,11 +82,17 @@ func ListBuildings(customer, fields string, cap int) (<-chan *admin.Building, <-
 	ch := make(chan *admin.Building, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listBuildings(c, ch, gsmhelpers.FormatErrorKey(customer))
-		if err != nil {
+		e := c.Pages(context.Background(), func(response *admin.Buildings) error {
+			for i := range response.Buildings {
+				ch <- response.Buildings[i]
+			}
+			return nil
+		})
+		if e != nil {
 			err <- e
 		}
 		close(ch)
+		close(err)
 	}()
 	return ch, err
 }

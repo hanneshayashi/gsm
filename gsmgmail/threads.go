@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -57,27 +59,6 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 	return r, nil
 }
 
-func listThreads(c *gmail.UsersThreadsListCall, ch chan *gmail.Thread, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmail.ListThreadsResponse)
-	for i := range r.Threads {
-		ch <- r.Threads[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listThreads(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // ListThreads lists the threads in the user's mailbox.
 func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash bool, cap int) (<-chan *gmail.Thread, <-chan error) {
 	srv := getUsersThreadsService()
@@ -94,7 +75,12 @@ func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash b
 	ch := make(chan *gmail.Thread, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listThreads(c, ch, gsmhelpers.FormatErrorKey(userID))
+		e := c.Pages(context.Background(), func(response *gmail.ListThreadsResponse) error {
+			for i := range response.Threads {
+				ch <- response.Threads[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

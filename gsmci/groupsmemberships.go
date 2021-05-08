@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -24,24 +25,6 @@ import (
 	ci "google.golang.org/api/cloudidentity/v1"
 	"google.golang.org/api/googleapi"
 )
-
-func listMembers(c *ci.GroupsMembershipsListCall, ch chan *ci.Membership, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.ListMembershipsResponse)
-	for i := range r.Memberships {
-		ch <- r.Memberships[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listMembers(c, ch, errKey)
-	}
-	return err
-}
 
 // ListMembers lists the members of a group
 func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <-chan error) {
@@ -56,7 +39,12 @@ func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <
 	ch := make(chan *ci.Membership, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listMembers(c, ch, gsmhelpers.FormatErrorKey(parent))
+		e := c.Pages(context.Background(), func(response *ci.ListMembershipsResponse) error {
+			for i := range response.Memberships {
+				ch <- response.Memberships[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

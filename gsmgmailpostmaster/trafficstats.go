@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmailpostmaster
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmailpostmastertools/v1"
@@ -39,24 +41,6 @@ func GetTrafficStats(name, fields string) (*gmailpostmastertools.TrafficStats, e
 	}
 	r, _ := result.(*gmailpostmastertools.TrafficStats)
 	return r, nil
-}
-
-func listTrafficStats(c *gmailpostmastertools.DomainsTrafficStatsListCall, ch chan *gmailpostmastertools.TrafficStats, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmailpostmastertools.ListTrafficStatsResponse)
-	for i := range r.TrafficStats {
-		ch <- r.TrafficStats[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listTrafficStats(c, ch, errKey)
-	}
-	return err
 }
 
 // ListTrafficStats List traffic statistics for all available days.
@@ -88,7 +72,12 @@ func ListTrafficStats(parent, fields string, startDateDay, startDateMonth, start
 	ch := make(chan *gmailpostmastertools.TrafficStats, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listTrafficStats(c, ch, gsmhelpers.FormatErrorKey(parent))
+		e := c.Pages(context.Background(), func(response *gmailpostmastertools.ListTrafficStatsResponse) error {
+			for i := range response.TrafficStats {
+				ch <- response.TrafficStats[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

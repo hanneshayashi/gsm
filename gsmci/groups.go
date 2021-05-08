@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -113,24 +114,6 @@ func LookupGroup(email string) (string, error) {
 	return r.Name, nil
 }
 
-func listGroups(c *ci.GroupsListCall, ch chan *ci.Group, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.ListGroupsResponse)
-	for i := range r.Groups {
-		ch <- r.Groups[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listGroups(c, ch, errKey)
-	}
-	return err
-}
-
 // ListGroups retrieves a list of groups
 func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
 	srv := getGroupsService()
@@ -144,7 +127,12 @@ func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan 
 	ch := make(chan *ci.Group, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listGroups(c, ch, gsmhelpers.FormatErrorKey(parent))
+		e := c.Pages(context.Background(), func(response *ci.ListGroupsResponse) error {
+			for i := range response.Groups {
+				ch <- response.Groups[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

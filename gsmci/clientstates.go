@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -45,24 +46,6 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	return r, nil
 }
 
-func listClientStates(c *ci.DevicesDeviceUsersClientStatesListCall, ch chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ListClientStatesResponse)
-	for i := range r.ClientStates {
-		ch <- r.ClientStates[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listClientStates(c, ch, errKey)
-	}
-	return err
-}
-
 // ListClientStates lists the client states for the given search query.
 func ListClientStates(parent, customer, filter, orderBy, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, <-chan error) {
 	srv := getDevicesDeviceUsersClientStatesService()
@@ -79,7 +62,12 @@ func ListClientStates(parent, customer, filter, orderBy, fields string, cap int)
 	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listClientStates(c, ch, gsmhelpers.FormatErrorKey(customer, parent, filter))
+		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListClientStatesResponse) error {
+			for i := range response.ClientStates {
+				ch <- response.ClientStates[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -123,27 +125,6 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	return r, nil
 }
 
-func listDirectoryPeople(c *people.PeopleListDirectoryPeopleCall, ch chan *people.Person, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*people.ListDirectoryPeopleResponse)
-	for i := range r.People {
-		ch <- r.People[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDirectoryPeople(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // ListDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory.
 func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getpService()
@@ -157,7 +138,12 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 	ch := make(chan *people.Person, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDirectoryPeople(c, ch, gsmhelpers.FormatErrorKey("List people"))
+		e := c.Pages(context.Background(), func(response *people.ListDirectoryPeopleResponse) error {
+			for i := range response.People {
+				ch <- response.People[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -67,24 +69,6 @@ func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
 	return r, nil
 }
 
-func listGroups(c *admin.GroupsListCall, ch chan *admin.Group, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Groups)
-	for i := range r.Groups {
-		ch <- r.Groups[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listGroups(c, ch, errKey)
-	}
-	return err
-}
-
 // ListGroups retrieve all groups of a domain or of a user given a userKey (paginated)
 func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-chan *admin.Group, <-chan error) {
 	srv := getGroupsService()
@@ -106,7 +90,12 @@ func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-ch
 	ch := make(chan *admin.Group, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listGroups(c, ch, gsmhelpers.FormatErrorKey(customer))
+		e := c.Pages(context.Background(), func(response *admin.Groups) error {
+			for i := range response.Groups {
+				ch <- response.Groups[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

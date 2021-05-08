@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -67,24 +69,6 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	return r, nil
 }
 
-func listCalendarResources(c *admin.ResourcesCalendarsListCall, ch chan *admin.CalendarResource, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.CalendarResources)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listCalendarResources(c, ch, errKey)
-	}
-	return err
-}
-
 // ListCalendarResources retrieves a list of calendar resources for an account.
 func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-chan *admin.CalendarResource, <-chan error) {
 	srv := getResourcesCalendarsService()
@@ -101,7 +85,12 @@ func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-
 	ch := make(chan *admin.CalendarResource, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listCalendarResources(c, ch, gsmhelpers.FormatErrorKey(customer))
+		e := c.Pages(context.Background(), func(response *admin.CalendarResources) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

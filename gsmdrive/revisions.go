@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"os"
@@ -81,24 +82,6 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	return file.OriginalFilename, err
 }
 
-func listRevisions(c *drive.RevisionsListCall, ch chan *drive.Revision, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*drive.RevisionList)
-	for i := range r.Revisions {
-		ch <- r.Revisions[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listRevisions(c, ch, errKey)
-	}
-	return err
-}
-
 // ListRevisions lists a file's revisions.
 func ListRevisions(fileID, fields string, cap int) (<-chan *drive.Revision, <-chan error) {
 	srv := getRevisionsService()
@@ -109,7 +92,12 @@ func ListRevisions(fileID, fields string, cap int) (<-chan *drive.Revision, <-ch
 	ch := make(chan *drive.Revision, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listRevisions(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		e := c.Pages(context.Background(), func(response *drive.RevisionList) error {
+			for i := range response.Revisions {
+				ch <- response.Revisions[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

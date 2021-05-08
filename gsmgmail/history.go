@@ -17,29 +17,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
-
-func listHistory(c *gmail.UsersHistoryListCall, ch chan *gmail.History, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmail.ListHistoryResponse)
-	for i := range r.History {
-		ch <- r.History[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listHistory(c, ch, errKey)
-	}
-	return err
-}
 
 // ListHistory lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).
 func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyTypes []string, cap int) (<-chan *gmail.History, <-chan error) {
@@ -57,7 +41,12 @@ func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyT
 	ch := make(chan *gmail.History, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listHistory(c, ch, gsmhelpers.FormatErrorKey(userID))
+		e := c.Pages(context.Background(), func(response *gmail.ListHistoryResponse) error {
+			for i := range response.History {
+				ch <- response.History[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

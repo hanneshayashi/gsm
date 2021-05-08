@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -63,24 +65,6 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	return r, nil
 }
 
-func listMobileDevices(c *admin.MobiledevicesListCall, ch chan *admin.MobileDevice, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.MobileDevices)
-	for i := range r.Mobiledevices {
-		ch <- r.Mobiledevices[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listMobileDevices(c, ch, errKey)
-	}
-	return err
-}
-
 // ListMobileDevices retrieves a paginated list of all mobile devices for an account.
 func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder string, cap int) (<-chan *admin.MobileDevice, <-chan error) {
 	srv := getMobiledevicesService()
@@ -103,7 +87,12 @@ func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder
 	ch := make(chan *admin.MobileDevice, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listMobileDevices(c, ch, gsmhelpers.FormatErrorKey(customerID))
+		e := c.Pages(context.Background(), func(response *admin.MobileDevices) error {
+			for i := range response.Mobiledevices {
+				ch <- response.Mobiledevices[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

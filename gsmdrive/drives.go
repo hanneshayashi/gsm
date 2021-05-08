@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -100,24 +101,6 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	return r, nil
 }
 
-func listDrives(c *drive.DrivesListCall, ch chan *drive.Drive, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*drive.DriveList)
-	for i := range r.Drives {
-		ch <- r.Drives[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDrives(c, ch, errKey)
-	}
-	return err
-}
-
 // ListDrives lists the user's shared drives.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-shareddrives.
@@ -133,7 +116,12 @@ func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-ch
 	ch := make(chan *drive.Drive, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDrives(c, ch, gsmhelpers.FormatErrorKey("List drives"))
+		e := c.Pages(context.Background(), func(response *drive.DriveList) error {
+			for i := range response.Drives {
+				ch <- response.Drives[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -119,24 +120,6 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	return r, nil
 }
 
-func listDevices(c *ci.DevicesListCall, ch chan *ci.GoogleAppsCloudidentityDevicesV1Device, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ListDevicesResponse)
-	for i := range r.Devices {
-		ch <- r.Devices[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDevices(c, ch, errKey)
-	}
-	return err
-}
-
 // ListDevices lists/searches devices.
 func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1Device, <-chan error) {
 	srv := getDevicesService()
@@ -156,7 +139,12 @@ func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-cha
 	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1Device, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDevices(c, ch, gsmhelpers.FormatErrorKey(customer, filter))
+		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListDevicesResponse) error {
+			for i := range response.Devices {
+				ch <- response.Devices[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

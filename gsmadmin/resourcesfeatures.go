@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -67,24 +69,6 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	return r, nil
 }
 
-func listFeatures(c *admin.ResourcesFeaturesListCall, ch chan *admin.Feature, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Features)
-	for i := range r.Features {
-		ch <- r.Features[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listFeatures(c, ch, errKey)
-	}
-	return err
-}
-
 // ListFeatures retrieves a list of features for an account.
 func ListFeatures(customer, fields string, cap int) (<-chan *admin.Feature, <-chan error) {
 	srv := getResourcesFeaturesService()
@@ -95,7 +79,12 @@ func ListFeatures(customer, fields string, cap int) (<-chan *admin.Feature, <-ch
 	ch := make(chan *admin.Feature, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listFeatures(c, ch, gsmhelpers.FormatErrorKey(customer))
+		e := c.Pages(context.Background(), func(response *admin.Features) error {
+			for i := range response.Features {
+				ch <- response.Features[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

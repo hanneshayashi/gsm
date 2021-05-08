@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -93,27 +95,6 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	return r, nil
 }
 
-func listContactGroups(c *people.ContactGroupsListCall, ch chan *people.ContactGroup, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*people.ListContactGroupsResponse)
-	for i := range r.ContactGroups {
-		ch <- r.ContactGroups[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listContactGroups(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // ListContactGroups lists all contact groups owned by the authenticated user.
 // Members of the contact groups are not populated.
 func ListContactGroups(fields string, cap int) (<-chan *people.ContactGroup, <-chan error) {
@@ -125,7 +106,12 @@ func ListContactGroups(fields string, cap int) (<-chan *people.ContactGroup, <-c
 	ch := make(chan *people.ContactGroup, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listContactGroups(c, ch, gsmhelpers.FormatErrorKey("List contact groups"))
+		e := c.Pages(context.Background(), func(response *people.ListContactGroupsResponse) error {
+			for i := range response.ContactGroups {
+				ch <- response.ContactGroups[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -116,24 +118,6 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 	return r, nil
 }
 
-func listPrinters(c *admin.CustomersChromePrintersListCall, ch chan *admin.Printer, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.ListPrintersResponse)
-	for i := range r.Printers {
-		ch <- r.Printers[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listPrinters(c, ch, errKey)
-	}
-	return err
-}
-
 // ListPrinters lists printers configs.
 func ListPrinters(parent, filter, fields string, cap int) (<-chan *admin.Printer, <-chan error) {
 	srv := getCustomersChromePrintersService()
@@ -147,33 +131,19 @@ func ListPrinters(parent, filter, fields string, cap int) (<-chan *admin.Printer
 	ch := make(chan *admin.Printer, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listPrinters(c, ch, gsmhelpers.FormatErrorKey(parent, filter))
+		e := c.Pages(context.Background(), func(response *admin.ListPrintersResponse) error {
+			for i := range response.Printers {
+				ch <- response.Printers[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
 		close(ch)
 		close(err)
 	}()
-	gsmhelpers.Sleep()
 	return ch, err
-}
-
-func listPrinterModels(c *admin.CustomersChromePrintersListPrinterModelsCall, ch chan *admin.PrinterModel, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.ListPrinterModelsResponse)
-	for i := range r.PrinterModels {
-		ch <- r.PrinterModels[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listPrinterModels(c, ch, errKey)
-	}
-	return err
 }
 
 // ListPrinterModels lists the supported printer models.
@@ -189,7 +159,12 @@ func ListPrinterModels(parent, filter, fields string, cap int) (<-chan *admin.Pr
 	ch := make(chan *admin.PrinterModel, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listPrinterModels(c, ch, gsmhelpers.FormatErrorKey(parent, filter))
+		e := c.Pages(context.Background(), func(response *admin.ListPrinterModelsResponse) error {
+			for i := range response.PrinterModels {
+				ch <- response.PrinterModels[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

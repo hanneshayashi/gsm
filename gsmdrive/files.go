@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
 	"io"
 	"mime"
 	"net/http"
@@ -278,24 +279,6 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	return r, nil
 }
 
-func listFiles(c *drive.FilesListCall, ch chan *drive.File, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return gsmhelpers.FormatError(err, errKey)
-	}
-	r, _ := result.(*drive.FileList)
-	for i := range r.Files {
-		ch <- r.Files[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listFiles(c, ch, errKey)
-	}
-	return err
-}
-
 // ListFiles lists or searches files.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-files.
@@ -326,7 +309,12 @@ func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, 
 	ch := make(chan *drive.File, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listFiles(c, ch, gsmhelpers.FormatErrorKey("List files"))
+		e := c.Pages(context.Background(), func(response *drive.FileList) error {
+			for i := range response.Files {
+				ch <- response.Files[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

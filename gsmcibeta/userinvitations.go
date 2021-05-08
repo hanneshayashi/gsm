@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcibeta
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -79,24 +80,6 @@ func IsInvitableUser(name string) (bool, error) {
 	return r.IsInvitableUser, nil
 }
 
-func listUserInvitations(c *cibeta.CustomersUserinvitationsListCall, ch chan *cibeta.UserInvitation, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*cibeta.ListUserInvitationsResponse)
-	for i := range r.UserInvitations {
-		ch <- r.UserInvitations[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listUserInvitations(c, ch, errKey)
-	}
-	return err
-}
-
 // ListUserInvitations retrieves a list of UserInvitation resources.
 func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-chan *cibeta.UserInvitation, <-chan error) {
 	srv := getCustomersUserinvitationsServiceService()
@@ -113,7 +96,12 @@ func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-cha
 	ch := make(chan *cibeta.UserInvitation, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listUserInvitations(c, ch, gsmhelpers.FormatErrorKey(parent))
+		e := c.Pages(context.Background(), func(response *cibeta.ListUserInvitationsResponse) error {
+			for i := range response.UserInvitations {
+				ch <- response.UserInvitations[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

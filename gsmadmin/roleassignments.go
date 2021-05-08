@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -69,24 +70,6 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	return r, nil
 }
 
-func listRoleAssignments(c *admin.RoleAssignmentsListCall, ch chan *admin.RoleAssignment, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.RoleAssignments)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listRoleAssignments(c, ch, errKey)
-	}
-	return err
-}
-
 // ListRoleAssignments retrieves a paginated list of all roleAssignments.
 func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-chan *admin.RoleAssignment, <-chan error) {
 	srv := getRoleAssignmentsService()
@@ -103,7 +86,12 @@ func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-c
 	ch := make(chan *admin.RoleAssignment, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listRoleAssignments(c, ch, gsmhelpers.FormatErrorKey(customer, roleID, userKey))
+		e := c.Pages(context.Background(), func(response *admin.RoleAssignments) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
