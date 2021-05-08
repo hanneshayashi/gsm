@@ -30,7 +30,7 @@ import (
 // usersUpdateBatchCmd represents the usersUpdateBatch command
 var usersUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch updatees users using a CSV file as input",
+	Short: "Batch updates users using a CSV file as input",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

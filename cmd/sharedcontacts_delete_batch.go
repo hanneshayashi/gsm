@@ -29,7 +29,7 @@ import (
 // sharedContactsDeleteBatchCmd represents the batch command
 var sharedContactsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch deletes Domain Shared Contact via URL / ID using a CSV file as input",
+	Short: "Batch deletes Domain Shared Contacts via URL / ID using a CSV file as input",
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

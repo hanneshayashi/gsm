@@ -29,7 +29,7 @@ import (
 // peopleSearchDirectoryPeopleCmd represents the searchDirectoryPeople command
 var peopleSearchDirectoryPeopleCmd = &cobra.Command{
 	Use:               "searchDirectoryPeople",
-	Short:             "Delete a contact person. Any non-contact data will not be deleted.",
+	Short:             "Provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.",
 	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/people/searchDirectoryPeople",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

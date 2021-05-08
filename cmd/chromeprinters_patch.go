@@ -28,7 +28,7 @@ import (
 // chromePrintersPatchCmd represents the patch command
 var chromePrintersPatchCmd = &cobra.Command{
 	Use:               "patch",
-	Short:             "Patchs a printer under given Organization Unit.",
+	Short:             "Updates a Printer resource.",
 	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

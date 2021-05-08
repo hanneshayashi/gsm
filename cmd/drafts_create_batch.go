@@ -30,7 +30,7 @@ import (
 // draftsCreateBatchCmd represents the batch command
 var draftsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a new draft with the DRAFT label using a CSV file as input.",
+	Short: "Batch creates new drafts with the DRAFT label using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

@@ -27,9 +27,11 @@ import (
 
 // contactGroupsMembersModifyCmd represents the modify command
 var contactGroupsMembersModifyCmd = &cobra.Command{
-	Use:               "modify",
-	Short:             "Modify a new contact group owned by the authenticated user.",
-	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
+	Use: "modify",
+	Short: `Modify the members of a contact group owned by the authenticated user.
+The only system contact groups that can have members added are contactGroups/myContacts and contactGroups/starred.
+Other system contact groups are deprecated and can only have contacts removed.`,
+	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups.members/modify",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

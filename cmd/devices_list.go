@@ -30,7 +30,7 @@ import (
 var devicesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists/Searches devices.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/devices/list`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices/list`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

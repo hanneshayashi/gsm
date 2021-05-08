@@ -31,7 +31,7 @@ import (
 var calendarACLListBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lists ACL rules using a CSV file as input.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/list`,
+	Long:  `Implements the API documented at https://developers.google.com/calendar/v3/reference/acl/list`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -28,7 +28,7 @@ import (
 // domainListCmd represents the list command
 var domainListCmd = &cobra.Command{
 	Use:               "list",
-	Short:             "Lists the domain  of the customer.",
+	Short:             "Lists the domains of the customer.",
 	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domain/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

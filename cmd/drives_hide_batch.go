@@ -30,7 +30,7 @@ import (
 // drivesHideBatchCmd represents the batch command
 var drivesHideBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch hides drives using a CSV file as input.",
+	Short: "Batch hides shared drives using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/hide",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

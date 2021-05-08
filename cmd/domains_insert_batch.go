@@ -30,7 +30,7 @@ import (
 // domainsInsertBatchCmd represents the batch command
 var domainsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch inserts Domain es of a customer using a CSV file as input.",
+	Short: "Batch inserts Domains of the customer using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

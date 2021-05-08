@@ -29,7 +29,7 @@ import (
 // drivesDeleteBatchCmd represents the batch command
 var drivesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch deletes shared drives' metadata by ID using a CSV file as input.",
+	Short: "Batch deletes shared drives by ID using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

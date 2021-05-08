@@ -29,7 +29,7 @@ import (
 // membersHasMemberBatchCmd represents the batch command
 var membersHasMemberBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Checks whether the given user is a member of the group. Membership can be direct or nested.",
+	Short: "Batch checks whether users are members of groups using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/hasMember",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

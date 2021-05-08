@@ -30,7 +30,7 @@ import (
 // groupAliasesInsertBatchCmd represents the batch command
 var groupAliasesInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch insert group aliases using a CSV file as input.",
+	Short: "Batch inserts group aliases using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups/aliases/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

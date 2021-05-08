@@ -29,7 +29,7 @@ import (
 var licenseAssignmentsCmd = &cobra.Command{
 	Use:               "licenseAssignments",
 	Short:             "Manage user license assignments (Part of Enterprise License Manager API)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

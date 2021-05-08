@@ -29,7 +29,7 @@ import (
 // rolesDeleteBatchCmd represents the batch command
 var rolesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch retrieves roles using a CSV file as input.",
+	Short: "Batch deletes roles using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roles/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

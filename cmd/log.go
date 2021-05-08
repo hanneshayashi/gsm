@@ -27,8 +27,8 @@ import (
 // logCmd represents the log command
 var logCmd = &cobra.Command{
 	Use:               "log",
-	Short:             "Manage Shared Log (Part of Drive API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/log",
+	Short:             "Manage GSM Logs",
+	Long:              "",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

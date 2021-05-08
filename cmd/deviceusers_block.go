@@ -29,7 +29,7 @@ import (
 var deviceUsersBlockCmd = &cobra.Command{
 	Use:               "block",
 	Short:             "Blocks device from accessing user data",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/block`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/block`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -30,7 +30,7 @@ var deviceUsersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes the specified DeviceUser.",
 	Long: `This also revokes the user's access to device data.
-https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/delete`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

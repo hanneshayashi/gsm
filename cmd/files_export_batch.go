@@ -31,7 +31,7 @@ var filesExportBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch export Google documents to the specified MIME type using a CSV file as input.",
 	Long: `Please note that the exported content is limited to 10MB.
-https://developers.google.com/drive/api/v3/reference/files/export`,
+Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/export`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -28,12 +28,12 @@ import (
 // userInvitationsIsInvitableUserCmd represents the isInvitableUser command
 var userInvitationsIsInvitableUserCmd = &cobra.Command{
 	Use:   "isInvitableUser",
-	Short: "Retrieves a UserInvitation resource.",
+	Short: "Verifies whether a user account is eligible to receive a UserInvitation (is an unmanaged account).",
 	Long: `Eligibility is based on the following criteria:
  - the email address is a consumer account and it's the primary email address of the account, and
  - the domain of the email address matches an existing verified Google Workspace or Cloud Identity domain
 If both conditions are met, the user is eligible.
-https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

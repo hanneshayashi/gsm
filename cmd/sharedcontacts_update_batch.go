@@ -30,7 +30,7 @@ import (
 var sharedContactsUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates Domain Shared Contacts using a CSV file as input",
-	Long:  `https://developers.google.com/admin-sdk/domain-shared-contacts`,
+	Long:  `Implements the API documented at https://developers.google.com/admin-sdk/domain-shared-contacts`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

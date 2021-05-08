@@ -29,7 +29,7 @@ import (
 var licenseAssignmentsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Delete a specific user's license by product SKU.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/delete",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

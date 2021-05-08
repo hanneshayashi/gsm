@@ -30,7 +30,7 @@ import (
 // labelsCreateBatchCmd represents the batch command
 var labelsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a new label using a CSV file as input.",
+	Short: "Batch creates new labels using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

@@ -30,7 +30,7 @@ import (
 // membersGetBatchCmd represents the batch command
 var membersGetBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch retrieves group members' properties using a CSV file as input.",
+	Short: "Batch retrieves group members using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

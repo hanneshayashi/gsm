@@ -30,7 +30,7 @@ import (
 var clientStatesPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches client states using a CSV file as input.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/patch`,
+	Long:  `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/patch`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

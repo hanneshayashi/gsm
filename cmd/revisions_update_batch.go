@@ -30,7 +30,7 @@ import (
 // revisionsUpdateBatchCmd represents the batch command
 var revisionsUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch updates revisions' metadata or content by ID using a CSV file as input.",
+	Short: "Batch updates revisions using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/revisions/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

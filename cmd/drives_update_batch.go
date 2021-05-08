@@ -30,7 +30,7 @@ import (
 // drivesUpdateBatchCmd represents the batch command
 var drivesUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch updates drives using a CSV file as input",
+	Short: "Batch updates shared drives using a CSV file as input",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

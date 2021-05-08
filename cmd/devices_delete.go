@@ -29,7 +29,7 @@ import (
 var devicesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes the specified device.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/devices/delete`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

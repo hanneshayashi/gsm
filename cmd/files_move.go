@@ -29,7 +29,7 @@ import (
 var filesMoveCmd = &cobra.Command{
 	Use:   "move",
 	Short: "Move a file.",
-	Long: `You can't move folders to Shared Drives with this command!
+	Long: `You can't move folders to Shared Drives ourside your organization with this command!
 Use "files move recursive" instead!`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

@@ -30,7 +30,7 @@ import (
 var devicesCancelWipeBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch cancels pending device wipes using a CSV file as input.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1/devices/cancelWipe`,
+	Long:  `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices/cancelWipe`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

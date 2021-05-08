@@ -30,7 +30,7 @@ import (
 var devicesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified devices using a CSV file as input.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1/devices/delete`,
+	Long:  `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices/delete`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

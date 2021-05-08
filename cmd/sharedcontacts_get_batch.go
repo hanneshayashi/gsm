@@ -29,7 +29,7 @@ import (
 // sharedContactsGetBatchCmd represents the batch command
 var sharedContactsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch gets Domain Shared Contact via URL / ID using a CSV file as input",
+	Short: "Batch gets Domain Shared Contacts via URL / ID using a CSV file as input",
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

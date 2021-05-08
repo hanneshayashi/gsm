@@ -29,7 +29,7 @@ import (
 // domainAliasesDeleteBatchCmd represents the batch command
 var domainAliasesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch retrieves domain aliases of the customer using a CSV file as input.",
+	Short: "Batch deletes domain aliases of the customer using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domainAliases/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

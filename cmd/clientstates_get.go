@@ -29,7 +29,7 @@ import (
 var clientStatesGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets the client state for the device user",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/get`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/get`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

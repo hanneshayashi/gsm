@@ -30,7 +30,7 @@ import (
 var groupsCiCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Creates a Group.",
-	Long: `https://cloud.google.com/identity/docs/reference/rest/v1/groups/create
+	Long: `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/create
 Examples:
   - Create a dynamic group:
     gsm groupsCi create --id group@example.org --labels "cloudidentity.googleapis.com/groups.discussion_forum" --queries "resourceType=USER;query=user.organizations.exists(org, org.department=='engineering')"`,

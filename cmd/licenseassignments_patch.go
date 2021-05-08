@@ -28,8 +28,8 @@ import (
 // licenseAssignmentsPatchCmd represents the patch command
 var licenseAssignmentsPatchCmd = &cobra.Command{
 	Use:               "patch",
-	Short:             "Patch a specific user's license by product SKU.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/patch",
+	Short:             "Reassign a user's product SKU with a different SKU in the same product. This method supports patch semantics.",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

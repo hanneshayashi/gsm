@@ -27,9 +27,12 @@ import (
 
 // userInvitationsSendCmd represents the send command
 var userInvitationsSendCmd = &cobra.Command{
-	Use:               "send",
-	Short:             "Retrieves a UserInvitation resource.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send",
+	Use:   "send",
+	Short: "Sends a UserInvitation to email.",
+	Long: `If the UserInvitation does not exist for this request and it is a valid request, the request creates a UserInvitation.
+Note: The get and list methods have a 48-hour delay where newly-created consumer accounts will not appear in the results.
+You can still send a UserInvitation to those accounts if you know the unmanaged email address and userinvitations.isInvitableUser==True.
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

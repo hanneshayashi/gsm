@@ -31,7 +31,7 @@ import (
 var filesMoveRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Moves a folder to a Shared Drive",
-	Long: `WARNING: This command can "move" a folder to a Shared Drive, by creating a COPY(!) of its folder structure and MOVING(!)
+	Long: `WARNING: This command can "move" a folder to a Shared Drive outside your organization, by creating a COPY(!) of its folder structure and MOVING(!)
 all files to the new folders. For each source folder, a new folder will be created at the destination.
 Files will be moved (not copied!!) to the new folders.
 The original folders will be preserved at the source!`,

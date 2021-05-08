@@ -31,7 +31,7 @@ import (
 var clientStatesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets client states using a CSV file as input.",
-	Long:  `https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/get`,
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

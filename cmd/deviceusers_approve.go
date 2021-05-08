@@ -29,7 +29,7 @@ import (
 var deviceUsersApproveCmd = &cobra.Command{
 	Use:               "approve",
 	Short:             "Approves device to access user data.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/approve`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/approve`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

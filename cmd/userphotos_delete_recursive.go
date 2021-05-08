@@ -29,8 +29,8 @@ import (
 // userPhotosDeleteRecursiveCmd represents the recursive command
 var userPhotosDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: `Deletes user photos by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/userphotos/delete",
+	Short: `Removes user photos by referencing one or more organizational units and/or groups.`,
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.photos/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

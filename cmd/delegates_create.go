@@ -37,7 +37,7 @@ Note that a delegate user must be referred to by their primary email address, an
 
 Also note that when a new delegate is created, there may be up to a one minute delay before the new delegate is available for use.
 
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
+Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

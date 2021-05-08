@@ -32,7 +32,7 @@ import (
 // filesCreateBatchCmd represents the batch command
 var filesCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a new file or folder. Can also be used to upload files using a CSV file as input.",
+	Short: "Batch creates new files or folders. Can also be used to upload files using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

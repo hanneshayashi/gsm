@@ -36,7 +36,8 @@ If multiple properties are provided, only DeviceUsers having all of these proper
 Different platforms require different amounts of information from the caller to ensure that the DeviceUser is uniquely identified.
  - iOS: No properties need to be passed, the caller's credentials are sufficient to identify the corresponding DeviceUser.
  - Android: Specifying the 'androidId' field is required.
- - Desktop: Specifying the 'rawResourceId' field is required.`,
+ - Desktop: Specifying the 'rawResourceId' field is required.
+ Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/lookup`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

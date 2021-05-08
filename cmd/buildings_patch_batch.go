@@ -30,7 +30,7 @@ import (
 // buildingsPatchBatchCmd represents the batch command
 var buildingsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch retrieves buildings using a CSV file as input.",
+	Short: "Batch updates buildings using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.buildings/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
