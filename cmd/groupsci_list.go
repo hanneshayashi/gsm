@@ -31,7 +31,7 @@ import (
 var groupsCiListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the Groups under a customer or namespace.",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups/list",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

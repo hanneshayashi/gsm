@@ -30,7 +30,7 @@ import (
 var clientStatesCmd = &cobra.Command{
 	Use:               "clientStates",
 	Short:             "Manage client states (Part of Cloud Identity API)",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers.clientStates",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

@@ -30,7 +30,7 @@ import (
 var domainsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves domains of the customer using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/domains/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

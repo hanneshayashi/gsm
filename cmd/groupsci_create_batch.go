@@ -31,7 +31,7 @@ import (
 var groupsCiCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/create",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

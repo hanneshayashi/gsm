@@ -30,7 +30,7 @@ import (
 var permissionsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists a file's or shared drive's permissions.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/permissions/list",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

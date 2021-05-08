@@ -29,7 +29,7 @@ import (
 var revisionsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets a revision's metadata or content by ID.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/revisions/get",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/revisions/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

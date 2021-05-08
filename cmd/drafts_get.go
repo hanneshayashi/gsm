@@ -29,7 +29,7 @@ import (
 var draftsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets the specified draft.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/get",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

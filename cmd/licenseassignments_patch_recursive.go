@@ -32,7 +32,7 @@ import (
 var licenseAssignmentsPatchRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Patch users' license assignments by referencing one or more organizational units and/or groups.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/patch",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -34,7 +34,7 @@ import (
 var messagesCmd = &cobra.Command{
 	Use:               "messages",
 	Short:             "Manage users' messages (Part of Gmail API)",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

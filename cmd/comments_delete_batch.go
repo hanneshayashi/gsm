@@ -30,7 +30,7 @@ import (
 var commentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes comments by ID using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/comments/delete",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/comments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

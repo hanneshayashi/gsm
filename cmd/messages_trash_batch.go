@@ -31,7 +31,7 @@ import (
 var messagesTrashBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch trashes messages using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

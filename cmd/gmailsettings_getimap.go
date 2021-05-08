@@ -29,7 +29,7 @@ import (
 var gmailSettingsGetImapCmd = &cobra.Command{
 	Use:               "getImap",
 	Short:             "Gets IMAP settings.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getImap",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings/getImap",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

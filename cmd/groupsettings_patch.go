@@ -29,7 +29,7 @@ import (
 var groupSettingsPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Updates an existing resource. This method supports patch semantics.",
-	Long:              "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/patch",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var chromeOsDevicesPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patch Chrome OS devices using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/patch",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

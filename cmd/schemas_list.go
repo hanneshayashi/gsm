@@ -29,7 +29,7 @@ import (
 var schemasListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "List custom schemas",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/list",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/schemas/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

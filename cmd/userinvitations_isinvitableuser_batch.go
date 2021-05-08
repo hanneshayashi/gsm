@@ -30,7 +30,7 @@ import (
 var userInvitationsIsInvitableUserBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch checks if users are invitable using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

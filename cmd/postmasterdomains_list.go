@@ -32,7 +32,7 @@ var postmasterDomainsListCmd = &cobra.Command{
 	Short: `Lists the domains that have been registered by the client.
 The order of domains in the response is unspecified and non-deterministic.
 Newly created domains will not necessarily be added to the end of this list.`,
-	Long:              "https://developers.google.com/gmail/postmaster/reference/rest/v1/domains/list",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

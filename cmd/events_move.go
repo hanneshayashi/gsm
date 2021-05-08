@@ -29,7 +29,7 @@ import (
 var eventsMoveCmd = &cobra.Command{
 	Use:               "move",
 	Short:             "Moves an event to another calendar, i.e. changes an event's organizer.",
-	Long:              "https://developers.google.com/calendar/v3/reference/events/move",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/move",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

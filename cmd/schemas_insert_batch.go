@@ -31,7 +31,7 @@ import (
 var schemasInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts schemas using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/schemas/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

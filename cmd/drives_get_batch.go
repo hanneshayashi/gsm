@@ -31,7 +31,7 @@ import (
 var drivesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets shared drives' metadata by ID using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives/get",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

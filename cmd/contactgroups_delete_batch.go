@@ -30,7 +30,7 @@ import (
 var contactGroupsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes contact groups using a CSV file as input.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroups/delete",
+	Long:  "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -29,7 +29,7 @@ import (
 var contactDelegatesCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates one or more delegates for a given user.",
-	Long:              "https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/create",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

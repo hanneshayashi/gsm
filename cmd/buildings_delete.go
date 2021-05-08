@@ -29,7 +29,7 @@ import (
 var buildingsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a building.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

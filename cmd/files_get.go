@@ -29,7 +29,7 @@ import (
 var filesGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets a file or folder's metadata or content by ID.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/files/get",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

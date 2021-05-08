@@ -30,7 +30,7 @@ import (
 var contactGroupsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "List all contact groups owned by the authenticated user.",
-	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups/list",
+	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -30,7 +30,7 @@ import (
 var calendarsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes secondary calendars using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendar/delete",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendar/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

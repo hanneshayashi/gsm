@@ -29,7 +29,7 @@ import (
 var membersPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Updates the membership properties of a user in the specified group. This method supports patch semantics.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

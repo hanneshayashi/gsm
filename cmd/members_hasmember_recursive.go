@@ -30,7 +30,7 @@ import (
 var membersHasMemberRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Checks whether users are members of a group by referencing one or more organizational units and/or groups. Membership can be direct or nested.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -29,7 +29,7 @@ import (
 var filesGenerateIdsCmd = &cobra.Command{
 	Use:               "generateIds",
 	Short:             "Generates a set of file IDs which can be provided in create or copy requests.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/files/generateIds",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/generateIds",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

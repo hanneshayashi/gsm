@@ -31,7 +31,7 @@ import (
 var messagesSendBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch sends messages using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

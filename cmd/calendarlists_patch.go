@@ -29,7 +29,7 @@ import (
 var calendarListsPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Updates an existing calendar on the user's calendar list. This method supports patch semantics.",
-	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/patch",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

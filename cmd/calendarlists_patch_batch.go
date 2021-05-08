@@ -31,7 +31,7 @@ import (
 var calendarListsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches existing calendar entries using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/patch",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

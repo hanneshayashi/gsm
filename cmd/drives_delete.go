@@ -30,7 +30,7 @@ var drivesDeleteCmd = &cobra.Command{
 	Use: "delete",
 	Short: `Permanently deletes a shared drive for which the user is an organizer.
 The shared drive cannot contain any untrashed items.`,
-	Long:              "https://developers.google.com/drive/api/v3/reference/drives/delete",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -30,7 +30,7 @@ import (
 var permissionsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes permissions by ID using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

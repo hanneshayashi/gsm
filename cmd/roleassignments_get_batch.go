@@ -31,7 +31,7 @@ import (
 var roleAssignmentsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieve role assignments using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

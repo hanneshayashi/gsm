@@ -29,7 +29,7 @@ import (
 var draftsUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Replaces a draft's content.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

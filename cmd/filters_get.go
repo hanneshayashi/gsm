@@ -29,7 +29,7 @@ import (
 var filtersGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets a filter.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/get",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

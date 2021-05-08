@@ -31,7 +31,7 @@ import (
 var groupSettingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups' settings identified by the group email address using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

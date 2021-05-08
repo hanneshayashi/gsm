@@ -33,7 +33,7 @@ import (
 var filesUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch update files using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/update",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

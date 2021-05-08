@@ -29,7 +29,7 @@ import (
 var groupAliasesCmd = &cobra.Command{
 	Use:               "groupAliases",
 	Short:             "Manage group aliases, which are alternative email addresses (Part of Admin SDK - not Gmail API!)",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

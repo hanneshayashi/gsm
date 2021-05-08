@@ -30,7 +30,7 @@ import (
 var chromePrintersListModelsCmd = &cobra.Command{
 	Use:               "listModels",
 	Short:             "Lists the supported printer models.",
-	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/listPrinterModels",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/listPrinterModels",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

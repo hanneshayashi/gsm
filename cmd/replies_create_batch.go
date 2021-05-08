@@ -31,7 +31,7 @@ import (
 var repliesCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch Creates a new reply to a comment using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/replies/create",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

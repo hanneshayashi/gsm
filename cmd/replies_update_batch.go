@@ -31,7 +31,7 @@ import (
 var repliesUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates replies to comments using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/replies/update",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

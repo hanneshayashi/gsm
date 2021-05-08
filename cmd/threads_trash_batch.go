@@ -31,7 +31,7 @@ import (
 var threadsTrashBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch trashes threads using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/trash",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/trash",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

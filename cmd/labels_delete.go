@@ -29,7 +29,7 @@ import (
 var labelsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

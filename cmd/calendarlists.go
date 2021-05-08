@@ -30,7 +30,7 @@ import (
 var calendarListsCmd = &cobra.Command{
 	Use:               "calendarLists",
 	Short:             "Manage entries in users' calendar list (Part of Calendar API)",
-	Long:              "https://developers.google.com/calendar/v3/reference/calendarList",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

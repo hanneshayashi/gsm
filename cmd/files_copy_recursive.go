@@ -31,7 +31,7 @@ import (
 var filesCopyRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively copies a folder to a new destination.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/copy",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

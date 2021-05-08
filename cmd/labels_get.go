@@ -29,7 +29,7 @@ import (
 var labelsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets the specified label.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/get",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

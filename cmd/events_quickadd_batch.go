@@ -31,7 +31,7 @@ import (
 var eventsQuickAddBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates events based on simple text strings using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/quickAdd",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/quickAdd",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

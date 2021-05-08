@@ -29,7 +29,7 @@ import (
 var devicesCmd = &cobra.Command{
 	Use:               "devices",
 	Short:             "Manage Devices (Part of Cloud Identity API)",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/devices",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

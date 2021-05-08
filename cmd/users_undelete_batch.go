@@ -30,7 +30,7 @@ import (
 var usersUndeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch undeletes users using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/undelete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var permissionsDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively deletes a permission from a folder and all of its children.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

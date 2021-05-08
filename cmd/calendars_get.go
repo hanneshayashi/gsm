@@ -29,7 +29,7 @@ import (
 var calendarsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             `Returns metadata for a calendar.`,
-	Long:              "https://developers.google.com/calendar/v3/reference/calendars/get",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendars/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

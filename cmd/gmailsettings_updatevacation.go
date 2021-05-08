@@ -29,7 +29,7 @@ import (
 var gmailSettingsUpdateVacationCmd = &cobra.Command{
 	Use:               "updateVacation",
 	Short:             "Updates vacation responder settings.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateVacation",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateVacation",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

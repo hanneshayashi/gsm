@@ -30,7 +30,7 @@ import (
 var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch delete role assignments using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

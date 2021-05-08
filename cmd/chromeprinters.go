@@ -30,7 +30,7 @@ import (
 var chromePrintersCmd = &cobra.Command{
 	Use:               "chromePrinters",
 	Short:             "Managed Chrome Printers (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

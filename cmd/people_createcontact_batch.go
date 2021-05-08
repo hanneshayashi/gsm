@@ -31,7 +31,7 @@ import (
 var peopleCreateContactBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch create contacts using a CSV file as input.",
-	Long:  "https://developers.google.com/people/api/rest/v1/people/createContact",
+	Long:  "Implements the API documented at https://developers.google.com/people/api/rest/v1/people/createContact",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -29,7 +29,7 @@ import (
 var calendarResourcesCmd = &cobra.Command{
 	Use:               "calendarResources",
 	Short:             "Manage resource calendars (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

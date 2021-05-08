@@ -30,7 +30,7 @@ import (
 var threadsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified threads using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var filtersCmd = &cobra.Command{
 	Use:               "filters",
 	Short:             "Manage users' Gmail message filters (Part of Gmail API)",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

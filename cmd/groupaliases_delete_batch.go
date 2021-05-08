@@ -30,7 +30,7 @@ import (
 var groupAliasesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes group aliases using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/groups/aliases/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

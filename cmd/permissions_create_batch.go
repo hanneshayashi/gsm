@@ -31,7 +31,7 @@ import (
 var permissionsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch Creates a permission for a file or shared drive using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

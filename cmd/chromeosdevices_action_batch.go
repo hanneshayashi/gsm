@@ -30,7 +30,7 @@ import (
 var chromeOsDevicesActionBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch takes actions that affect Chrome OS devices using a CSV file as input",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/action",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/action",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ import (
 var groupsCiGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/get",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

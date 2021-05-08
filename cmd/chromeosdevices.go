@@ -30,7 +30,7 @@ import (
 var chromeOsDevicesCmd = &cobra.Command{
 	Use:               "chromeOsDevices",
 	Short:             "Managed Chrome OS Devices (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

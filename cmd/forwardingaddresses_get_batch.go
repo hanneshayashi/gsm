@@ -31,7 +31,7 @@ import (
 var forwardingAddressesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified forwarding addresses using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

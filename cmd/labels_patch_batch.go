@@ -31,7 +31,7 @@ import (
 var labelsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches labels using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/patch",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

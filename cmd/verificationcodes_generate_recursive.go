@@ -30,7 +30,7 @@ import (
 var verificationcodesGenerateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Generate new backup verification codes for users by referencing one or more organizational units and/or groups.`,
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/generate",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/generate",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

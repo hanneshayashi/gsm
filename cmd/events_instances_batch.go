@@ -31,7 +31,7 @@ import (
 var eventsInstancesBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch instancess events using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/instances",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/instances",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

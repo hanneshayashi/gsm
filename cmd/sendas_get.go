@@ -29,7 +29,7 @@ import (
 var sendAsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets the specified send-as alias.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/get",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

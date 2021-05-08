@@ -30,7 +30,7 @@ import (
 var buildingsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieves a list of buildings for an account.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/list",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

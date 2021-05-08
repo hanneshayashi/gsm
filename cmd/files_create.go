@@ -31,7 +31,7 @@ import (
 var filesCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates a new file or folder. Can also be used to upload files.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/files/create",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

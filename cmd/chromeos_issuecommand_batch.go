@@ -30,7 +30,7 @@ import (
 var chromeOsIssueCommandBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch issues commands to Chrome OS devices using a CSV file as input",
-	Long:  "https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos/issueCommand",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos/issueCommand",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

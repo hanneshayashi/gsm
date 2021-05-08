@@ -30,7 +30,7 @@ import (
 var userInvitationsSendBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch sends user invitations using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

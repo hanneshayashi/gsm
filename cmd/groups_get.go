@@ -29,7 +29,7 @@ import (
 var groupsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a group's properties.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/groups/get",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/groups/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

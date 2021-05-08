@@ -31,7 +31,7 @@ import (
 var draftsUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates drafts using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -29,7 +29,7 @@ import (
 var customerUsageReportsCmd = &cobra.Command{
 	Use:               "customerUsageReports",
 	Short:             "Manage (get) Customer Usage Reports (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

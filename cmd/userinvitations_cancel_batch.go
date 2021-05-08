@@ -30,7 +30,7 @@ import (
 var userInvitationsCancelBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch cancels user invitations using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/cancel",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/cancel",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

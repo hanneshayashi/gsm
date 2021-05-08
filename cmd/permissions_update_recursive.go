@@ -31,7 +31,7 @@ import (
 var permissionsUpdateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively updates a permission on a folder and all of its children.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/update",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ var calendarsDeleteCmd = &cobra.Command{
 	Use: "delete",
 	Short: `Deletes a secondary calendar.
 Use calendars.clear for clearing all events on primary calendars.`,
-	Long:              "https://developers.google.com/calendar/v3/reference/calendars/delete",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendars/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

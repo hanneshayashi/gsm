@@ -29,7 +29,7 @@ import (
 var contactGroupsCmd = &cobra.Command{
 	Use:               "contactGroups",
 	Short:             "Manage users' contact groups (Part of People API)",
-	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups",
+	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

@@ -30,7 +30,7 @@ import (
 var membersListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieves a paginated list of all members in a group.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/list",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Creates role assignments for users by referencing one or more organizational units and/or groups.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleassignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/roleassignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

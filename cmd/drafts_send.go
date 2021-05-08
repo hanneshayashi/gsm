@@ -29,7 +29,7 @@ import (
 var draftsSendCmd = &cobra.Command{
 	Use:               "send",
 	Short:             "Sends the specified, existing draft to the recipients in the To, Cc, and Bcc headers.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

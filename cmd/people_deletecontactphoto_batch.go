@@ -30,7 +30,7 @@ import (
 var peopleDeleteContactPhotoBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes contacts using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/people/deleteContactPhoto",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/people/deleteContactPhoto",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

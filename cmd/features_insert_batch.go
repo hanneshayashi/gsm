@@ -31,7 +31,7 @@ import (
 var featuresInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts feature resources using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

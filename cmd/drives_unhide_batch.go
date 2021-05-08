@@ -31,7 +31,7 @@ import (
 var drivesUnhideBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch unhides drives using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/drives/unhide",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/unhide",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

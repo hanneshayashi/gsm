@@ -111,7 +111,7 @@ var draftFlagsALL = gsmhelpers.GetAllFlags(draftFlags)
 var draftsCmd = &cobra.Command{
 	Use:               "drafts",
 	Short:             "Manage Drafts (Part of Gmail API)",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.drafts",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

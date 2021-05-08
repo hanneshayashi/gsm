@@ -31,7 +31,7 @@ import (
 var sendAsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: `Batch patches custom "from" send-as aliases using a CSV file as input.`,
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

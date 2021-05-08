@@ -29,7 +29,7 @@ import (
 var freeBusyQueryCmd = &cobra.Command{
 	Use:               "query",
 	Short:             "Returns free/busy information for a set of calendars.",
-	Long:              "https://developers.google.com/calendar/v3/reference/freebusy/query",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/freebusy/query",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

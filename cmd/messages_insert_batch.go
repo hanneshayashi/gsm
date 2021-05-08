@@ -31,7 +31,7 @@ import (
 var messagesInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts messages using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

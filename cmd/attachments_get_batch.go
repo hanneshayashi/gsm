@@ -31,7 +31,7 @@ import (
 var attachmentsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified message attachments using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments/get",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages.attachments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

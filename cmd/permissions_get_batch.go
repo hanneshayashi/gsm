@@ -31,7 +31,7 @@ import (
 var permissionsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets permissions by ID using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/get",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

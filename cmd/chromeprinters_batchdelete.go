@@ -29,7 +29,7 @@ import (
 var chromePrintersBatchDeleteCmd = &cobra.Command{
 	Use:               "batchDelete",
 	Short:             "Deletes printers in batch.",
-	Long:              "https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/batchDeletePrinters",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/chrome-printer/reference/rest/v1/admin.directory.v1.customers.chrome.printers/batchDeletePrinters",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

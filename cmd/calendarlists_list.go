@@ -30,7 +30,7 @@ import (
 var calendarListsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns the calendars on the user's calendar list.",
-	Long:              "https://developers.google.com/calendar/v3/reference/calendarList/list",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

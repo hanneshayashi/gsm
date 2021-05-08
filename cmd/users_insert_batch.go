@@ -31,7 +31,7 @@ import (
 var usersInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates users using a CSV file as input",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/users/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

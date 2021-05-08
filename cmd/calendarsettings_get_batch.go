@@ -31,7 +31,7 @@ import (
 var calendarSettingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets calendar settings using a CSV file as input",
-	Long:  "https://developers.google.com/calendar/v3/reference/settings/get",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/settings/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

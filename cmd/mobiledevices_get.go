@@ -29,7 +29,7 @@ import (
 var mobileDevicesGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a mobile device's properties.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/get",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/mobiledevices/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

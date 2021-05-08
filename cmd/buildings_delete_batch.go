@@ -30,7 +30,7 @@ import (
 var buildingsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

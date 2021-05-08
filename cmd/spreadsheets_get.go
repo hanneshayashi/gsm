@@ -29,7 +29,7 @@ import (
 var spreadsheetsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets a spreadsheet, returning the newly getd spreadsheet.",
-	Long:              "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
+	Long:              "Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

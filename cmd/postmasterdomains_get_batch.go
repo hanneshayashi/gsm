@@ -31,7 +31,7 @@ import (
 var postmasterDomainsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets domains by fully qualified name using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/postmaster/reference/rest/v1/domains/get",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

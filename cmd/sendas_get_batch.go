@@ -31,7 +31,7 @@ import (
 var sendAsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified send-as aliases using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/get",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

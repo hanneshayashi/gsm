@@ -31,7 +31,7 @@ import (
 var licenseAssignmentsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Get gets users' license asignments using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
