@@ -29,7 +29,7 @@ import (
 var domainsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a domain of the customer.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/domains/get",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

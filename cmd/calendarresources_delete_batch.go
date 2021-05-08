@@ -30,7 +30,7 @@ import (
 var calendarResourcesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes calendar resources using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/calendars/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.calendars/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

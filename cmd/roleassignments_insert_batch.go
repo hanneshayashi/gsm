@@ -31,7 +31,7 @@ import (
 var roleAssignmentsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts role assignments using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/roleAssignments/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roleAssignments/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -29,7 +29,7 @@ import (
 var buildingsCmd = &cobra.Command{
 	Use:               "buildings",
 	Short:             "Manage Buildings (Resources) (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.buildings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

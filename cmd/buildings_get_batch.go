@@ -31,7 +31,7 @@ import (
 var buildingsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves buildings using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/buildings/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.buildings/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

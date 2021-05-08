@@ -29,7 +29,7 @@ import (
 var groupsCmd = &cobra.Command{
 	Use:               "groups",
 	Short:             "Implements the groups API (Part of Admin SDK).",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/groups",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

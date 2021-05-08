@@ -29,7 +29,7 @@ import (
 var usersMakeAdminCmd = &cobra.Command{
 	Use:               "makeAdmin",
 	Short:             "(un)Makes a user a super administrator.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/makeAdmin",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/makeAdmin",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

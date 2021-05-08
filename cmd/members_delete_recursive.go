@@ -30,7 +30,7 @@ import (
 var membersDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Removes users from a group by referencing one or more organizational units and/or groups.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

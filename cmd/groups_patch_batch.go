@@ -31,7 +31,7 @@ import (
 var groupsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches groups using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/groups/patch",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

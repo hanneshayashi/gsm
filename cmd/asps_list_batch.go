@@ -31,7 +31,7 @@ import (
 var aspsListBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lists ASPs issued by a user using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/asps/list",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/asps/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

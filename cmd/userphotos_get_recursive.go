@@ -31,7 +31,7 @@ import (
 var userPhotosGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Gets user photos by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/userphotos/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/userphotos/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var membersDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes group members using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

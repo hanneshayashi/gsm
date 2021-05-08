@@ -29,7 +29,7 @@ import (
 var orgUnitsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves an organizational unit.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/get",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/orgunits/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

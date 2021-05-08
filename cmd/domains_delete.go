@@ -29,7 +29,7 @@ import (
 var domainsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a Domain of the customer.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/domains/delete",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

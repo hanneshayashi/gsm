@@ -30,7 +30,7 @@ import (
 var featuresRenameBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch renames feature resources using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/rename",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.features/rename",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ import (
 var domainAliasesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves domain aliases of the customer using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/domainAliases/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domainAliases/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

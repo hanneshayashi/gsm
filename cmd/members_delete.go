@@ -29,7 +29,7 @@ import (
 var membersDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Removes a member from a group.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

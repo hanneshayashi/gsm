@@ -30,7 +30,7 @@ import (
 var usersSignOutRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Signs out users from all devices by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/signout",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/signout",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var schemasDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes schemas using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/schemas/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

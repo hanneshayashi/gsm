@@ -30,7 +30,7 @@ import (
 var orgUnitsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves organizational units using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/orgunits/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/orgunits/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

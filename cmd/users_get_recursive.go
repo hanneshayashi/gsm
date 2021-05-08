@@ -31,7 +31,7 @@ import (
 var usersGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Gets users by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

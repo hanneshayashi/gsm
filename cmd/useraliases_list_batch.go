@@ -30,7 +30,7 @@ import (
 var userAliasesListBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lists user aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/v1/reference/users/aliases/list",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/aliases/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
