@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ import (
 var forwardingAddressesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified forwarding addresses using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/delete",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

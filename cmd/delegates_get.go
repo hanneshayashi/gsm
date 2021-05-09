@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var delegatesGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Gets the specified delegate.",
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
+Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/get`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

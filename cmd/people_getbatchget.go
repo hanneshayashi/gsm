@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var peopleGetBatchGetCmd = &cobra.Command{
 	Use:               "getBatchGet",
 	Short:             "Provides information about a list of specific people by specifying a list of requested resource names.",
-	Long:              "https://developers.google.com/people/api/rest/v1/people/getBatchGet",
+	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/people/getBatchGet",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

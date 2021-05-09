@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var messagesImportBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch imports messages using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/import",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/import",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // permissionsCreateBatchCmd represents the batch command
 var permissionsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a permission for a file or shared drive using a CSV file as input.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/permissions/create",
+	Short: "Batch creates permissions for files or shared drives using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

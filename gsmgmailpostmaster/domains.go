@@ -1,5 +1,4 @@
 /*
-Package gsmgmailpostmaster implements the Gmail Postmaster APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmailpostmaster
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmailpostmastertools/v1"
@@ -42,24 +43,6 @@ func GetDomain(name, fields string) (*gmailpostmastertools.Domain, error) {
 	return r, nil
 }
 
-func listDomains(c *gmailpostmastertools.DomainsListCall, ch chan *gmailpostmastertools.Domain, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmailpostmastertools.ListDomainsResponse)
-	for i := range r.Domains {
-		ch <- r.Domains[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDomains(c, ch, errKey)
-	}
-	return err
-}
-
 // ListDomains lists the domains that have been registered by the client.
 // The order of domains in the response is unspecified and non-deterministic.
 // Newly created domains will not necessarily be added to the end of this list.
@@ -72,7 +55,12 @@ func ListDomains(fields string, cap int) (<-chan *gmailpostmastertools.Domain, <
 	ch := make(chan *gmailpostmastertools.Domain, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDomains(c, ch, gsmhelpers.FormatErrorKey("List domains"))
+		e := c.Pages(context.Background(), func(response *gmailpostmastertools.ListDomainsResponse) error {
+			for i := range response.Domains {
+				ch <- response.Domains[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

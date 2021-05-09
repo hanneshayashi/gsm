@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // eventsInstancesBatchCmd represents the batch command
 var eventsInstancesBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch instancess events using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/events/instances",
+	Short: "Batch returns instances of events using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/instances",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

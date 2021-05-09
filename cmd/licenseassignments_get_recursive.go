@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -33,7 +32,7 @@ import (
 var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Get users' licenses by product SKU by referencing one or more organizational units and/or groups.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/licenseassignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/licenseassignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

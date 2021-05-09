@@ -1,5 +1,4 @@
 /*
-Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -77,24 +78,6 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	return r, nil
 }
 
-func listUsers(c *admin.UsersListCall, ch chan *admin.User, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Users)
-	for i := range r.Users {
-		ch <- r.Users[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listUsers(c, ch, errKey)
-	}
-	return err
-}
-
 // ListUsers retrieves a paginated list of either deleted users or all users in a domain.
 func ListUsers(showDeleted bool, query, domain, customer, fields, projection, orderBy, sortOrder, viewType, customFieldMask string, cap int) (<-chan *admin.User, <-chan error) {
 	srv := getUsersService()
@@ -129,7 +112,12 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 	ch := make(chan *admin.User, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listUsers(c, ch, gsmhelpers.FormatErrorKey(customer))
+		e := c.Pages(context.Background(), func(response *admin.Users) error {
+			for i := range response.Users {
+				ch <- response.Users[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

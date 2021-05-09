@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -28,8 +27,8 @@ import (
 // logCmd represents the log command
 var logCmd = &cobra.Command{
 	Use:               "log",
-	Short:             "Manage Shared Log (Part of Drive API)",
-	Long:              "https://developers.google.com/drive/api/v3/reference/log",
+	Short:             "Manage GSM Logs",
+	Long:              "",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

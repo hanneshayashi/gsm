@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var groupMembershipsCiCmd = &cobra.Command{
 	Use:               "groupMembershipsCi",
 	Short:             "Manage group memberships (Part of Cloud Identity API)",
-	Long:              "https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

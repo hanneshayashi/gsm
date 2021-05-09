@@ -1,5 +1,4 @@
 /*
-Package gsmreports implements the Reports API of Admin SDK
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,28 +17,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
-
-func listActivities(c *reports.ActivitiesListCall, ch chan *reports.Activity, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*reports.Activities)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listActivities(c, ch, errKey)
-	}
-	return err
-}
 
 // ListActivities retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 // For more information, see the guides for administrator and Google Drive activity reports.
@@ -77,7 +60,12 @@ func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTim
 	ch := make(chan *reports.Activity, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listActivities(c, ch, gsmhelpers.FormatErrorKey(userKey, applicationName))
+		e := c.Pages(context.Background(), func(response *reports.Activities) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

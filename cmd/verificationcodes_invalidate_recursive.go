@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ import (
 var verificationcodesInvalidateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Invalidate the current backup verification codes for users by referencing one or more organizational units and/or groups.`,
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/invalidate",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/verificationcodes/invalidate",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

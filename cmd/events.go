@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -35,7 +34,7 @@ var eventsCmd = &cobra.Command{
 	Short: "Manage events in users' calendars (Part of Calendar API)",
 	Long: `This API only works in the user's context. Set the subject to the user's
 email address to use this API!
-https://developers.google.com/calendar/v3/reference/events`,
+Implements the API documented at https://developers.google.com/calendar/v3/reference/events`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

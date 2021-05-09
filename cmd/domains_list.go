@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,8 +28,8 @@ import (
 // domainListCmd represents the list command
 var domainListCmd = &cobra.Command{
 	Use:               "list",
-	Short:             "Lists the domain  of the customer.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/domain/list",
+	Short:             "Lists the domains of the customer.",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domain/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

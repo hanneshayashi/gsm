@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var threadsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified threads using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.threads/get",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

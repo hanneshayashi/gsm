@@ -1,5 +1,4 @@
 /*
-Package gsmdrive implements the Drive API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	drive "google.golang.org/api/drive/v3"
@@ -68,24 +69,6 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	return r, nil
 }
 
-func listComments(c *drive.CommentsListCall, ch chan *drive.Comment, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*drive.CommentList)
-	for i := range r.Comments {
-		ch <- r.Comments[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listComments(c, ch, errKey)
-	}
-	return err
-}
-
 // ListComments lists a file's comments.
 func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool, cap int) (<-chan *drive.Comment, <-chan error) {
 	srv := getCommentsService()
@@ -99,7 +82,12 @@ func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool,
 	ch := make(chan *drive.Comment, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listComments(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		e := c.Pages(context.Background(), func(response *drive.CommentList) error {
+			for i := range response.Comments {
+				ch <- response.Comments[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

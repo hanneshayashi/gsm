@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var contactGroupsMembersCmd = &cobra.Command{
 	Use:               "contactGroupsMembers",
 	Short:             "Modify members of contact groups (Part of People API)",
-	Long:              "https://developers.google.com/people/api/rest/v1/contactGroups.members",
+	Long:              "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups.members",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

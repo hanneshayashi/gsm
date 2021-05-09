@@ -1,5 +1,4 @@
 /*
-Package gsmpeople implements the People API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -41,27 +42,6 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, copyOtherCon
 	return r, nil
 }
 
-func listOtherContacts(c *people.OtherContactsListCall, ch chan *people.Person, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*people.ListOtherContactsResponse)
-	for i := range r.OtherContacts {
-		ch <- r.OtherContacts[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listOtherContacts(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // ListOtherContacts lists all "Other contacts", that is contacts that are not in a contact group.
 // "Other contacts" are typically auto created contacts from interactions.
 func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person, <-chan error) {
@@ -73,7 +53,12 @@ func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person,
 	ch := make(chan *people.Person, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listOtherContacts(c, ch, gsmhelpers.FormatErrorKey("List other contacts"))
+		e := c.Pages(context.Background(), func(response *people.ListOtherContactsResponse) error {
+			for i := range response.OtherContacts {
+				ch <- response.OtherContacts[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

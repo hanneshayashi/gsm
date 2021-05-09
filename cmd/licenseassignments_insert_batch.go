@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // licenseAssignmentsInsertBatchCmd represents the batch command
 var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Insert inserts users' license asignments using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/licensing/v1/reference/licenseAssignments/insert",
+	Short: "Batch inserts user license asignments using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

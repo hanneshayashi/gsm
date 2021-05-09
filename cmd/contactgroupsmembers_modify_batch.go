@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // contactGroupsMembersModifyBatchCmd represents the batch command
 var contactGroupsMembersModifyBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch modifys contact groups using a CSV file as input.",
-	Long:  "https://developers.google.com/people/api/rest/v1/contactGroupsMembers/modify",
+	Short: "Batch modifies contact groups using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/people/api/rest/v1/contactGroups.members/modify",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

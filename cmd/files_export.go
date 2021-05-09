@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var filesExportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "Exports a Google Doc to the requested MIME type and returns the exported content.",
 	Long: `Please note that the exported content is limited to 10MB.
-https://developers.google.com/drive/api/v3/reference/files/export`,
+Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/export`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

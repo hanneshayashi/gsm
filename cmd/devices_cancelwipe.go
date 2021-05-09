@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -34,7 +33,7 @@ var devicesCancelWipeCmd = &cobra.Command{
 This operation is possible when the device is in a "pending wipe" state.
 The device enters the "pending wipe" state when a wipe device command is issued, but has not yet been sent to the device.
 The cancel wipe will fail if the wipe command has already been issued to the device.
-https://cloud.google.com/identity/docs/reference/rest/v1/devices/cancelWipe`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices/cancelWipe`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

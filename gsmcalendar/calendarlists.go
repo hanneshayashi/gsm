@@ -1,5 +1,4 @@
 /*
-Package gsmcalendar implements the Calendar API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -68,24 +69,6 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	return r, nil
 }
 
-func listCalendarListEntries(c *calendar.CalendarListListCall, ch chan *calendar.CalendarListEntry, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*calendar.CalendarList)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listCalendarListEntries(c, ch, errKey)
-	}
-	return err
-}
-
 // ListCalendarListEntries returns the calendars on the user's calendar list.
 func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDeleted bool, cap int) (<-chan *calendar.CalendarListEntry, <-chan error) {
 	srv := getCalendarListService()
@@ -99,7 +82,12 @@ func ListCalendarListEntries(minAccessRole, fields string, showHidden, showDelet
 	ch := make(chan *calendar.CalendarListEntry, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listCalendarListEntries(c, ch, gsmhelpers.FormatErrorKey("List calendar list entries"))
+		e := c.Pages(context.Background(), func(response *calendar.CalendarList) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

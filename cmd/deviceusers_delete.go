@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var deviceUsersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Deletes the specified DeviceUser.",
 	Long: `This also revokes the user's access to device data.
-https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/delete`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

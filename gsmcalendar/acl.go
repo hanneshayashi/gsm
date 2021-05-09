@@ -1,5 +1,4 @@
 /*
-Package gsmcalendar implements the Calendar API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -68,24 +69,6 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	return r, nil
 }
 
-func listACLs(c *calendar.AclListCall, ch chan *calendar.AclRule, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*calendar.Acl)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listACLs(c, ch, errKey)
-	}
-	return err
-}
-
 // ListACLs returns the rules in the access control list for the calendar.
 func ListACLs(calendarID, fields string, showDeleted bool, cap int) (<-chan *calendar.AclRule, <-chan error) {
 	srv := getACLService()
@@ -96,7 +79,12 @@ func ListACLs(calendarID, fields string, showDeleted bool, cap int) (<-chan *cal
 	ch := make(chan *calendar.AclRule, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listACLs(c, ch, gsmhelpers.FormatErrorKey(calendarID))
+		e := c.Pages(context.Background(), func(response *calendar.Acl) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

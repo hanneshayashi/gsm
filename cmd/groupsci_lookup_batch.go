@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,8 +29,8 @@ import (
 // groupsCiLookupBatchCmd represents the batch command
 var groupsCiLookupBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch lookups groups using a CSV file as input.",
-	Long:  "https://cloud.google.com/identity/docs/reference/rest/v1/groups/lookup",
+	Short: "Batch looks up groups using a CSV file as input.",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/lookup",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

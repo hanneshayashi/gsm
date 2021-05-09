@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var groupSettingsCmd = &cobra.Command{
 	Use:               "groupSettings",
 	Short:             "Manage Group Settings (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

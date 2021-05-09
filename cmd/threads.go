@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,7 +28,7 @@ import (
 var threadsCmd = &cobra.Command{
 	Use:               "threads",
 	Short:             "Manage threads in users' mailboxes (Part of Gmail API)",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.threads",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

@@ -1,5 +1,4 @@
 /*
-Package gsmcalendar implements the Calendar API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -94,24 +95,6 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	return r, nil
 }
 
-func listEventInstances(c *calendar.EventsInstancesCall, ch chan *calendar.Event, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*calendar.Events)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listEventInstances(c, ch, errKey)
-	}
-	return err
-}
-
 // ListEventInstances returns instances of the specified recurring event.
 func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMin, fields string, maxAttendees int64, showDeleted bool, cap int) (<-chan *calendar.Event, <-chan error) {
 	srv := getEventsService()
@@ -137,7 +120,12 @@ func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, t
 	ch := make(chan *calendar.Event, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listEventInstances(c, ch, gsmhelpers.FormatErrorKey(calendarID, eventID))
+		e := c.Pages(context.Background(), func(response *calendar.Events) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
@@ -146,24 +134,6 @@ func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, t
 	}()
 	gsmhelpers.Sleep()
 	return ch, err
-}
-
-func listEvents(c *calendar.EventsListCall, ch chan *calendar.Event, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*calendar.Events)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listEvents(c, ch, errKey)
-	}
-	return err
 }
 
 // ListEvents returns events on the specified calendar.
@@ -206,7 +176,12 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 	ch := make(chan *calendar.Event, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listEvents(c, ch, gsmhelpers.FormatErrorKey(calendarID))
+		e := c.Pages(context.Background(), func(events *calendar.Events) error {
+			for i := range events.Items {
+				ch <- events.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

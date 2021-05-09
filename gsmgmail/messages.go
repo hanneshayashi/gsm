@@ -1,5 +1,4 @@
 /*
-Package gsmgmail implements the Gmail APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -114,24 +115,6 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	return r, nil
 }
 
-func listMessages(c *gmail.UsersMessagesListCall, ch chan *gmail.Message, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmail.ListMessagesResponse)
-	for i := range r.Messages {
-		ch <- r.Messages[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listMessages(c, ch, errKey)
-	}
-	return err
-}
-
 // ListMessages lists the messages in the user's mailbox.
 func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool, cap int) (<-chan *gmail.Message, <-chan error) {
 	srv := getUsersMessagesService()
@@ -148,7 +131,12 @@ func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash 
 	ch := make(chan *gmail.Message, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listMessages(c, ch, gsmhelpers.FormatErrorKey(userID))
+		e := c.Pages(context.Background(), func(response *gmail.ListMessagesResponse) error {
+			for i := range response.Messages {
+				ch <- response.Messages[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var sendAsListCmd = &cobra.Command{
 	Use: "list",
 	Short: `Lists the send-as aliases for the specified account.
 The result includes the primary send-as address associated with the account as well as any custom "from" aliases.`,
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/list",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

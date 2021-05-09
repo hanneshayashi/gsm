@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ import (
 var verificationcodesGenerateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Generate new backup verification codes for users by referencing one or more organizational units and/or groups.`,
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/verificationcodes/generate",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/verificationcodes/generate",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

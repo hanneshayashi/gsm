@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,8 +29,8 @@ import (
 // calendarListsDeleteBatchCmd represents the batch command
 var calendarListsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch returns calendars from the user's calendar list using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/delete",
+	Short: "Batch deletes calendars from the user's calendar list using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

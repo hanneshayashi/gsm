@@ -1,5 +1,4 @@
 /*
-Package gsmcalendar implements the Calendar API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -41,24 +42,6 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 	return r, nil
 }
 
-func listSettings(c *calendar.SettingsListCall, ch chan *calendar.Setting, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*calendar.Settings)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listSettings(c, ch, errKey)
-	}
-	return err
-}
-
 // ListSettings returns all user settings for the authenticated user.
 func ListSettings(fields string, cap int) (<-chan *calendar.Setting, <-chan error) {
 	srv := getSettingsService()
@@ -69,7 +52,12 @@ func ListSettings(fields string, cap int) (<-chan *calendar.Setting, <-chan erro
 	ch := make(chan *calendar.Setting, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listSettings(c, ch, gsmhelpers.FormatErrorKey("List settings"))
+		e := c.Pages(context.Background(), func(response *calendar.Settings) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

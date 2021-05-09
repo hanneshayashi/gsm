@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,10 +30,10 @@ import (
 // permissionsListRecursiveCmd represents the recursive command
 var permissionsListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
-	Short: "Recursively lists permissions to a folder and all of its children.",
+	Short: "Recursively lists permissions on a folder and all of its children.",
 	Long: `IMPORTANT:
 If you are not specifying a folder in a Shared Drive, you can simply use "gsm files list recursive" with "permissions" in the fields parameter like so:
-"gsm files list recursive --folderId <folderId> --fields "files(id,name,mimeType,permissions)"`,
+"gsm files list recursive --folderId <folderId> --fields "files(id,name,mimeType,permissions),nextPageToken"`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

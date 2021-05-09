@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var filesCopyRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively copies a folder to a new destination.",
-	Long:  "https://developers.google.com/drive/api/v3/reference/files/copy",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/copy",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

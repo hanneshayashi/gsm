@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var messagesSendCmd = &cobra.Command{
 	Use:               "send",
 	Short:             "Sends the specified message to the recipients in the To, Cc, and Bcc headers.",
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,8 +29,8 @@ import (
 // calendarSettingsListCmd represents the list command
 var calendarSettingsListCmd = &cobra.Command{
 	Use:               "list",
-	Short:             "Returns an setting.",
-	Long:              "https://developers.google.com/calendar/v3/reference/settings/list",
+	Short:             "Returns all user settings for the authenticated user.",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/settings/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // domainsInsertBatchCmd represents the batch command
 var domainsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch inserts Domain es of a customer using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/domains/insert",
+	Short: "Batch inserts Domains of the customer using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

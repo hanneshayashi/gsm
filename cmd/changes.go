@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,7 +28,7 @@ import (
 var changesCmd = &cobra.Command{
 	Use:               "changes",
 	Short:             "View changes to user's or Shared Drive (Part of Drive API)",
-	Long:              "https://developers.google.com/drive/api/v3/reference/changes",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/changes",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var calendarsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             `Returns metadata for a calendar.`,
-	Long:              "https://developers.google.com/calendar/v3/reference/calendars/get",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendars/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

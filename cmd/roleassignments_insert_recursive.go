@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Creates role assignments for users by referencing one or more organizational units and/or groups.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/roleassignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roleassignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

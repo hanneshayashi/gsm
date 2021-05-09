@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,8 +28,8 @@ import (
 // spreadsheetsGetCmd represents the get command
 var spreadsheetsGetCmd = &cobra.Command{
 	Use:               "get",
-	Short:             "Gets a spreadsheet, returning the newly getd spreadsheet.",
-	Long:              "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
+	Short:             "Returns the spreadsheet at the given ID.",
+	Long:              "Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

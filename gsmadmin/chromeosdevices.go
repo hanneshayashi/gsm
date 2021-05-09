@@ -1,5 +1,4 @@
 /*
-Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -54,24 +55,6 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	return r, nil
 }
 
-func listChromeOsDevices(c *admin.ChromeosdevicesListCall, ch chan *admin.ChromeOsDevice, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.ChromeOsDevices)
-	for i := range r.Chromeosdevices {
-		ch <- r.Chromeosdevices[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listChromeOsDevices(c, ch, errKey)
-	}
-	return err
-}
-
 // ListChromeOsDevices retrieves a paginated list of Chrome OS devices within an account.
 func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection string, cap int) (<-chan *admin.ChromeOsDevice, <-chan error) {
 	srv := getChromeosdevicesService()
@@ -91,7 +74,12 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 	ch := make(chan *admin.ChromeOsDevice, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listChromeOsDevices(c, ch, gsmhelpers.FormatErrorKey(customerID))
+		e := c.Pages(context.Background(), func(response *admin.ChromeOsDevices) error {
+			for i := range response.Chromeosdevices {
+				ch <- response.Chromeosdevices[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

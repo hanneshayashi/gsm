@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var chromeOsDevicesMoveToOUCmd = &cobra.Command{
 	Use:               "moveToOU",
 	Short:             "Move or insert multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/chromeosdevices/moveDevicesToOu",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/chromeosdevices/moveDevicesToOu",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

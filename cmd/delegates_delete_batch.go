@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ var delegatesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified delegates using a CSV file as input.",
 	Long: `Note that a delegate user must be referred to by their primary email address, and not an email alias.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
+Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // schemasInsertBatchCmd represents the batch command
 var schemasInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch inserts schemas using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/schemas/insert",
+	Short: "Batch inserts custom schemas using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

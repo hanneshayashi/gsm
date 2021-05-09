@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -28,9 +27,11 @@ import (
 
 // filesDeleteCmd represents the delete command
 var filesDeleteCmd = &cobra.Command{
-	Use:               "delete",
-	Short:             "Permanently deletes a file owned by the user without moving it to the trash. If the file belongs to a shared drive the user must be an organizer on the parent. If the target is a folder, all descendants owned by the user are also deleted.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/files/delete",
+	Use: "delete",
+	Short: `Permanently deletes a file owned by the user without moving it to the trash.
+If the file belongs to a shared drive the user must be an organizer on the parent.
+If the target is a folder, all descendants owned by the user are also deleted.`,
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

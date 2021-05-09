@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ import (
 var featuresDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes feature resources using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/delete",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.features/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

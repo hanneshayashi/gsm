@@ -1,5 +1,4 @@
 /*
-Package gsmpeople implements the People API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,32 +17,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
-
-func listPeopleConnections(c *people.PeopleConnectionsListCall, ch chan *people.Person, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*people.ListConnectionsResponse)
-	for i := range r.Connections {
-		ch <- r.Connections[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listPeopleConnections(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
 
 // ListPeopleConnections provides a list of the authenticated user's contacts.
 func ListPeopleConnections(resourceName, personFields, sources, sortOrder, fields string, cap int) (<-chan *people.Person, <-chan error) {
@@ -64,7 +44,12 @@ func ListPeopleConnections(resourceName, personFields, sources, sortOrder, field
 	ch := make(chan *people.Person, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listPeopleConnections(c, ch, gsmhelpers.FormatErrorKey(resourceName))
+		e := c.Pages(context.Background(), func(response *people.ListConnectionsResponse) error {
+			for i := range response.Connections {
+				ch <- response.Connections[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

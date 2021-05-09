@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var repliesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a reply.",
-	Long:              "https://developers.google.com/drive/api/v3/reference/replies/delete",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

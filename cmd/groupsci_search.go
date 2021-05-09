@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ import (
 var groupsCiSearchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Searches for Groups matching a specified query.",
-	Long: `https://cloud.google.com/identity/docs/reference/rest/v1/groups/search
+	Long: `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/search
 Examples:
   - Search for security groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.security' in labels"
   - Search for dynamic groups: gsm groupsCi search --query "parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.dynamic' in labels"`,

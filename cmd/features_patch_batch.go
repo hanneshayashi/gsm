@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // featuresPatchBatchCmd represents the batch command
 var featuresPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patchs feature resources using a CSV file as input.",
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/resources/features/patch",
+	Short: "Batch patches feature resources using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.features/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

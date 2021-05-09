@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,8 +28,8 @@ import (
 // groupsCiPatchCmd represents the patch command
 var groupsCiPatchCmd = &cobra.Command{
 	Use:   "patch",
-	Short: "Updating a Google Group to a security group",
-	Long: `https://cloud.google.com/identity/docs/reference/rest/v1/groups/patch
+	Short: "Updates a Group.",
+	Long: `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/patch
 Examples:
   - Make group a security group: 
     gsm groupsCi patch --email group@example.org --updateMask labels --labels "cloudidentity.googleapis.com/groups.security,cloudidentity.googleapis.com/groups.discussion_forum"`,

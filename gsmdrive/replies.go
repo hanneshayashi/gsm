@@ -1,5 +1,4 @@
 /*
-Package gsmdrive implements the Drive API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	drive "google.golang.org/api/drive/v3"
@@ -68,24 +69,6 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	return r, nil
 }
 
-func listReplies(c *drive.RepliesListCall, ch chan *drive.Reply, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*drive.ReplyList)
-	for i := range r.Replies {
-		ch <- r.Replies[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listReplies(c, ch, errKey)
-	}
-	return err
-}
-
 // ListReplies Lists a comment's replies.
 func ListReplies(fileID, commentID, fields string, includeDeleted bool, cap int) (<-chan *drive.Reply, <-chan error) {
 	srv := getRepliesService()
@@ -96,7 +79,12 @@ func ListReplies(fileID, commentID, fields string, includeDeleted bool, cap int)
 	ch := make(chan *drive.Reply, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listReplies(c, ch, gsmhelpers.FormatErrorKey(fileID, commentID))
+		e := c.Pages(context.Background(), func(response *drive.ReplyList) error {
+			for i := range response.Replies {
+				ch <- response.Replies[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

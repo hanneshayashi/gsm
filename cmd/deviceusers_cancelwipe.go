@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var deviceUsersCancelWipeCmd = &cobra.Command{
 	Use:   "cancelWipe",
 	Short: "Cancels an unfinished user account wipe.",
 	Long: `This operation can be used to cancel device wipe in the gap between the wipe operation returning success and the device being wiped.
-https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/cancelWipe`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/cancelWipe`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

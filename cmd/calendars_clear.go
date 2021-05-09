@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var calendarsClearCmd = &cobra.Command{
 	Use: "clear",
 	Short: `Clears a primary calendar.
 This operation deletes all events associated with the primary calendar of an account.`,
-	Long:              "https://developers.google.com/calendar/v3/reference/calendars/clear",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendars/clear",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

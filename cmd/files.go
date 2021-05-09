@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var filesCmd = &cobra.Command{
 	Use:               "files",
 	Short:             "Managed files (Part of Drive API)",
-	Long:              "https://developers.google.com/drive/api/v3/reference/files",
+	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

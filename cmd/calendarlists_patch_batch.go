@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // calendarListsPatchBatchCmd represents the batch command
 var calendarListsPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch patches existing calendar entries using a CSV file as input.",
-	Long:  "https://developers.google.com/calendar/v3/reference/calendarList/patch",
+	Short: "Batch patches existing calendar list entries using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

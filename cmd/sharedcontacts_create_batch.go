@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,8 +29,8 @@ import (
 // sharedContactsCreateBatchCmd represents the batch command
 var sharedContactsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Create a Domain Shared Contact",
-	Long:  `https://developers.google.com/admin-sdk/domain-shared-contacts`,
+	Short: "Batch create Domain Shared Contacts",
+	Long:  `Implements the API documented at https://developers.google.com/admin-sdk/domain-shared-contacts`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var tokensListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Returns a list of tokens issued to 3rd party applications by referencing one or more organizational units and/or groups.`,
-	Long:  "https://developers.google.com/admin-sdk/directory/v1/reference/tokens/list",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/tokens/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

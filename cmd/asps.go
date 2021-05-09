@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -36,7 +35,7 @@ you commonly use when accessing an application through a browser. For more
 information about ASPs and how to create one, see the
 https://http//support.google.com/a/bin/answer.py?amp;answer=1032419.
 
-https://developers.google.com/admin-sdk/directory/v1/reference/asps`,
+https://developers.google.com/admin-sdk/directory/reference/rest/v1/asps`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

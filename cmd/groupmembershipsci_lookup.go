@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var groupMembershipsCiLookupCmd = &cobra.Command{
 	Use:               "lookup",
 	Short:             "Looks up the resource name of a Membership by its EntityKey.",
-	Long:              `https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/lookup`,
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups.memberships/lookup`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

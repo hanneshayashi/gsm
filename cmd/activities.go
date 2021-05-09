@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -29,7 +28,7 @@ import (
 var activitiesCmd = &cobra.Command{
 	Use:               "activities",
 	Short:             "Manage (list) activities (Part of Admin SDK)",
-	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities?hl=en",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

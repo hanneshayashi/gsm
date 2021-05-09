@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -33,7 +32,7 @@ var activitiesListCmd = &cobra.Command{
 	Short: `Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 For more information, see the guides for administrator and Google Drive activity reports.
 For more information about the activity report's parameters, see the activity parameters reference guides.`,
-	Long:              "https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities/list",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

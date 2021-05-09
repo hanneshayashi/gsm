@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var calendarACLPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches ACL rules using a CSV file as input.",
-	Long:  `https://developers.google.com/calendar/v3/reference/acl/patch`,
+	Long:  `Implements the API documented at https://developers.google.com/calendar/v3/reference/acl/patch`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

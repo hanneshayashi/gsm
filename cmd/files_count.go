@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 // filesCountCmd represents the count command
 var filesCountCmd = &cobra.Command{
 	Use:               "count",
-	Short:             "Count files in a folder and returns their number and size.",
+	Short:             "Counts files in a folder and returns their number and size.",
 	Long:              "Use the recursive subcommand to also scan subfolders",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var gmailSettingsUpdateAutoForwardingCmd = &cobra.Command{
 	Use: "updateAutoForwarding",
 	Short: `Updates the auto-forwarding setting for the specified account.
 A verified forwarding address must be specified when auto-forwarding is enabled.`,
-	Long:              "https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateAutoForwarding",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateAutoForwarding",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

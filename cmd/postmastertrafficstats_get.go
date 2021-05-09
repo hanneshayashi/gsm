@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ var postmasterTrafficStatsGetCmd = &cobra.Command{
 	Use: "get",
 	Short: `Get traffic statistics for a domain on a specific date.
 Returns PERMISSION_DENIED if user does not have permission to access TrafficStats for the domain.`,
-	Long:              "https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
+	Long:              "Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

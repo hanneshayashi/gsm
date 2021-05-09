@@ -124,15 +124,13 @@ var rootCmd = &cobra.Command{
 	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
 Copyright © 2020-2021 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
 		if err != nil {
 			log.Fatalln(err)
 		}
 	},
-	Version: "0.2.6",
+	Version: "v0.3.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -148,9 +146,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(setHomeDir, initConfig, initLog, auth)
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/gsm/.gsm.yaml)")
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
@@ -158,9 +153,6 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -184,11 +176,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err = viper.ReadInConfig(); err != nil {
-		// log.Printf("Error reading config file: %v", err)
-		// _, err = gsmconfig.CreateConfig(&gsmconfig.GSMConfig{Name: ".gsm"})
-		// if err != nil {
-		// 	log.Fatalf("Error creating default empty config file: %v", err)
-		// }
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("delay") {

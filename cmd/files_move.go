@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var filesMoveCmd = &cobra.Command{
 	Use:   "move",
 	Short: "Move a file.",
-	Long: `You can't move folders to Shared Drives with this command!
+	Long: `You can't move folders to Shared Drives ourside your organization with this command!
 Use "files move recursive" instead!`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

@@ -1,5 +1,4 @@
 /*
-Package gsmadmin implements the Admin SDK APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -68,24 +69,6 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	return r, nil
 }
 
-func listRoles(c *admin.RolesListCall, ch chan *admin.Role, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*admin.Roles)
-	for i := range r.Items {
-		ch <- r.Items[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listRoles(c, ch, errKey)
-	}
-	return err
-}
-
 // ListRoles retrieves a paginated list of all the roles in a domain.
 func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan error) {
 	srv := getRolesService()
@@ -96,7 +79,12 @@ func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan err
 	ch := make(chan *admin.Role, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listRoles(c, ch, customer)
+		e := c.Pages(context.Background(), func(response *admin.Roles) error {
+			for i := range response.Items {
+				ch <- response.Items[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

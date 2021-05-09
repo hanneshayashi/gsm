@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 // sharedContactsDeleteBatchCmd represents the batch command
 var sharedContactsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch deletes Domain Shared Contact via URL / ID using a CSV file as input",
+	Short: "Batch deletes Domain Shared Contacts via URL / ID using a CSV file as input",
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

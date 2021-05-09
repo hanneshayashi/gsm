@@ -1,5 +1,4 @@
 /*
-Package gsmdrive implements the Drive API
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	drive "google.golang.org/api/drive/v3"
@@ -71,24 +72,6 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	return r, nil
 }
 
-func listPermissions(c *drive.PermissionsListCall, ch chan *drive.Permission, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*drive.PermissionList)
-	for i := range r.Permissions {
-		ch <- r.Permissions[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listPermissions(c, ch, errKey)
-	}
-	return err
-}
-
 // ListPermissions lists a file's or shared drive's permissions.
 func ListPermissions(fileID, includePermissionsForView, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Permission, <-chan error) {
 	srv := getPermissionsService()
@@ -102,7 +85,12 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 	ch := make(chan *drive.Permission, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listPermissions(c, ch, gsmhelpers.FormatErrorKey(fileID))
+		e := c.Pages(context.Background(), func(response *drive.PermissionList) error {
+			for i := range response.Permissions {
+				ch <- response.Permissions[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

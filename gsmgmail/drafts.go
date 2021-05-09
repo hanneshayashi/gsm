@@ -1,5 +1,4 @@
 /*
-Package gsmgmail implements the Gmail APIs
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -18,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"context"
 	"io"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -76,27 +76,6 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	return r, nil
 }
 
-func listDrafts(c *gmail.UsersDraftsListCall, ch chan *gmail.Draft, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*gmail.ListDraftsResponse)
-	for i := range r.Drafts {
-		ch <- r.Drafts[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = listDrafts(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return err
-}
-
 // ListDrafts lists the drafts in the user's mailbox.
 func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-chan *gmail.Draft, <-chan error) {
 	srv := getUsersDraftsService()
@@ -110,7 +89,12 @@ func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-cha
 	ch := make(chan *gmail.Draft, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := listDrafts(c, ch, gsmhelpers.FormatErrorKey(userID))
+		e := c.Pages(context.Background(), func(response *gmail.ListDraftsResponse) error {
+			for i := range response.Drafts {
+				ch <- response.Drafts[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

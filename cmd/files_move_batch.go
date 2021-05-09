@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Moveright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ import (
 var filesMoveBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch moves files using a CSV file as input.",
-	Long: `You can't move folders to Shared Drives with this command!
+	Long: `You can't move folders to Shared Drives with this command if the Shared Drive is outside your organization!
 Use "files move recursive" instead!`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

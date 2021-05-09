@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -31,8 +30,8 @@ import (
 // labelsCreateBatchCmd represents the batch command
 var labelsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch Creates a new label using a CSV file as input.",
-	Long:  "https://developers.google.com/gmail/api/reference/rest/v1/users.labels/create",
+	Short: "Batch creates new labels using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

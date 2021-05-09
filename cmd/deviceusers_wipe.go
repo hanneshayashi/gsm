@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ var deviceUsersWipeCmd = &cobra.Command{
 	Short: "Wipes the user's account on a device.",
 	Long: `Other data on the device that is not associated with the user's work account is not affected.
 For example, if a Gmail app is installed on a device that is used for personal and work purposes, and the user is logged in to the Gmail app with their personal account as well as their work account, wiping the "deviceUser" by their work administrator will not affect their personal account within Gmail or other apps such as Photos.
-https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/wipe`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/wipe`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

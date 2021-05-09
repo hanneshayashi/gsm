@@ -1,5 +1,4 @@
 /*
-Package cmd contains the commands available to the end user
 Copyright © 2020-2021 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ import (
 var membersDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Removes a member from a group.",
-	Long:              "https://developers.google.com/admin-sdk/directory/v1/reference/members/delete",
+	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
