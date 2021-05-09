@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package cmd
 
 import (
@@ -28,9 +29,9 @@ import (
 
 // deviceUsersListCmd represents the list command
 var deviceUsersListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists/Searches DeviceUsers.",
-	Long: `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/list`,
+	Use:               "list",
+	Short:             "Lists/Searches DeviceUsers.",
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/list`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

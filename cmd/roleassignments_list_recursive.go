@@ -14,6 +14,7 @@ GNU General Public Role for more details.
 You should have received a copy of the GNU General Public Role
 along with this program. If not, see <http://www.gnu.org/roles/>.
 */
+
 package cmd
 
 import (

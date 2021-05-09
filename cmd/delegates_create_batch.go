@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package cmd
 
 import (
@@ -31,7 +32,7 @@ import (
 var delegatesCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch adds delegates using a CSV file as input.",
-	Long: `Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
+	Long:  `Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
