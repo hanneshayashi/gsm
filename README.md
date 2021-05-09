@@ -10,7 +10,7 @@ View complete documentation at https://gsm.hayashi-ke.online/.
 
 ### Introduction
 
-GSM is a no-dependency, free and open source command line interface (CLI) for managing Google Workspace resources. You don't need any software except for the [GSM binary](https://github.com/hanneshayashi/gsm/releases) itself and it is easy to [set up](https://gsm.hayashi-ke.online/setup).
+GSM is like gcloud for Google Workspace. It is a no-dependency, free and open source command line interface (CLI) for managing Google Workspace resources. You don't need any software except for the [GSM binary](https://github.com/hanneshayashi/gsm/releases) itself and it is easy to [set up](https://gsm.hayashi-ke.online/setup).
 
 GSM is extremely powerful and flexible, especially when used in [scripts](https://gsm.hayashi-ke.online/scripting) to implement your own custom logic for your specific use case. Since GSM supports pretty much every API endpoint that Google offers for Workspace, there shouldn't really be anything you can't do with GSM, as long as the API supports it.\
 You can also [configure](https://gsm.hayashi-ke.online/gsm/configs) pretty much every aspect of GSM, because everyone likes having choices.
@@ -93,6 +93,7 @@ GSM is based on open source technology and would not exist without the incredibl
   - https://github.com/googleapis/google-api-go-client
 - GSM uses Cobra and Viper for command and configuration management
   - https://github.com/spf13/cobra
+- See https://github.com/hanneshayashi/gsm/tree/main/third_party_licenses for a full list of third party licenses
 
 ### See Also
 
