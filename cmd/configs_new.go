@@ -48,7 +48,7 @@ var configsNewCmd = &cobra.Command{
 			fmt.Printf("Error creating config: %v\n", err)
 			return
 		}
-		fmt.Println(result)
+		fmt.Printf("Config file \"%s\" successfully created. Load with \"gsm configs load --name %s\"\n", result, c.Name)
 	},
 }
 
