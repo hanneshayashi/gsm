@@ -240,6 +240,9 @@ func LoadConfig(name string) error {
 }
 
 func sortConfigs(configs []*GSMConfig) []*GSMConfig {
+	if len(configs) == 0 {
+		return configs
+	}
 	var i int
 	for i = range configs {
 		if configs[i].Default {
@@ -247,7 +250,6 @@ func sortConfigs(configs []*GSMConfig) []*GSMConfig {
 		}
 	}
 	configsSorted := []*GSMConfig{}
-	configsSorted = append(configsSorted, configs[i])
 	for i = range configs {
 		if !configs[i].Default {
 			configsSorted = append(configsSorted, configs[i])
