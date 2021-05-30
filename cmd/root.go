@@ -131,7 +131,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 			log.Fatalln(err)
 		}
 	},
-	Version: "v0.3.0",
+	Version: "v0.3.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -176,7 +176,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err = viper.ReadInConfig(); err != nil {
+	if err = viper.ReadInConfig(); err != nil && !(configsNewCmd.CalledAs() != "" || configsLoadCmd.CalledAs() != "") {
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("delay") {
