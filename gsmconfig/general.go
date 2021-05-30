@@ -250,6 +250,7 @@ func sortConfigs(configs []*GSMConfig) []*GSMConfig {
 		}
 	}
 	configsSorted := []*GSMConfig{}
+	configsSorted = append(configsSorted, configs[i])
 	for i = range configs {
 		if !configs[i].Default {
 			configsSorted = append(configsSorted, configs[i])
