@@ -176,7 +176,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err = viper.ReadInConfig(); err != nil {
+	if err = viper.ReadInConfig(); err != nil && !(configsNewCmd.CalledAs() != "" || configsLoadCmd.CalledAs() != "") {
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("delay") {
