@@ -75,9 +75,6 @@ nfpms:
       - deb
       - rpm
 
-    # Version Release.
-    release: 1
-
     # Empty folders that should be created and managed by the packager
     # implementation.
     # Default is empty.
