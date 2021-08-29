@@ -39,8 +39,19 @@ var configsListCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.ListConfigs()
+		defaultPresent := false
+		for i := 0; i < len(result); i++ {
+			if result[i].Default {
+				defaultPresent = true
+			}
+		}
 		if err != nil {
-			log.Fatalf("Error listing configs: %v", err)
+			fmt.Printf("Error listing configs: %v\n", err)
+			return
+		}
+		if len(result) == 0 {
+			fmt.Println("Can't find any configs. Please create a config with \"gsm configs new\" to get started.")
+			return
 		}
 		if flags["details"].GetBool() {
 			err = gsmhelpers.Output(result, "yaml", false)
@@ -48,12 +59,16 @@ var configsListCmd = &cobra.Command{
 				log.Fatalln(err)
 			}
 		} else {
-			if len(result) > 0 {
-				fmt.Println(result[0].Name, "(Default)")
+			for i := 0; i < len(result); i++ {
+				if result[i].Default {
+					fmt.Println(result[i].Name, "(Default)")
+				} else {
+					fmt.Println(result[i].Name)
+				}
 			}
-			for i := 1; i < len(result); i++ {
-				fmt.Println(result[i].Name)
-			}
+		}
+		if !defaultPresent && !flags["config"].IsSet() {
+			fmt.Println("No config loaded. Please run \"gsm configs load --name\" to load a config file")
 		}
 	},
 }

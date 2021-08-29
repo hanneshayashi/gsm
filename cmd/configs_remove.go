@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -42,7 +41,8 @@ Credential files and tokens will not be removed!`,
 		name := flags["name"].GetString()
 		err := gsmconfig.RemoveConfig(name)
 		if err != nil {
-			log.Fatalf("Error removing config: %v", err)
+			fmt.Printf("Error removing config: %v", err)
+			return
 		}
 		fmt.Printf("'%s' successfully removed.\n", name)
 	},

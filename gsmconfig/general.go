@@ -243,14 +243,14 @@ func sortConfigs(configs []*GSMConfig) []*GSMConfig {
 	if len(configs) == 0 {
 		return configs
 	}
+	configsSorted := []*GSMConfig{}
 	var i int
 	for i = range configs {
 		if configs[i].Default {
+			configsSorted = append(configsSorted, configs[i])
 			break
 		}
 	}
-	configsSorted := []*GSMConfig{}
-	configsSorted = append(configsSorted, configs[i])
 	for i = range configs {
 		if !configs[i].Default {
 			configsSorted = append(configsSorted, configs[i])
@@ -297,6 +297,16 @@ func ListConfigs() ([]*GSMConfig, error) {
 // RemoveConfig removes a config
 func RemoveConfig(name string) error {
 	err := os.Remove(GetConfigPath(name))
+	if err != nil {
+		defaultConfig, er := GetConfig(".gsm")
+		if er != nil {
+			return er
+		}
+		if defaultConfig.Name == name {
+			er := os.Remove(GetConfigPath(".gsm"))
+			return er
+		}
+	}
 	return err
 }
 

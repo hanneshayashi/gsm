@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -40,7 +39,8 @@ var configsGetScopesCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.GetScopes(flags["name"].GetString())
 		if err != nil {
-			log.Fatalf("Error getting scopes: %v", err)
+			fmt.Printf("Error getting scopes: %v\n", err)
+			return
 		}
 		fmt.Println(result)
 	},

@@ -390,6 +390,21 @@ func sleep(ms int) {
 	time.Sleep(time.Duration(ms) * time.Millisecond)
 }
 
+// IsCommandOrChild returns true if the provided command or one of its children was called
+func IsCommandOrChild(command *cobra.Command) bool {
+	if command.CalledAs() != "" {
+		return true
+	} else {
+		children := command.Commands()
+		for i := range command.Commands() {
+			if children[i].CalledAs() != "" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
