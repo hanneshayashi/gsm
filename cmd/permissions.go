@@ -103,9 +103,9 @@ This is only applicable for permissions of type domain or anyone.`,
 	"role": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "string",
-		Description: `"The role granted by this permission.
+		Description: `The role granted by this permission.
 While new values may be supported in the future, the following are currently allowed:
-[owner|organizer|fileOrganizer|writer|commenter|reader]"`,
+[owner|organizer|fileOrganizer|writer|commenter|reader]`,
 		Required:  []string{"create"},
 		Recursive: []string{"create", "update"},
 	},
