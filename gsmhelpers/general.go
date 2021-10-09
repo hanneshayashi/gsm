@@ -391,14 +391,16 @@ func sleep(ms int) {
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called
-func IsCommandOrChild(command *cobra.Command) bool {
-	if command.CalledAs() != "" {
-		return true
-	} else {
-		children := command.Commands()
-		for i := range command.Commands() {
-			if children[i].CalledAs() != "" {
-				return true
+func IsCommandOrChild(command ...*cobra.Command) bool {
+	for i := range command {
+		if command[i].CalledAs() != "" {
+			return true
+		} else {
+			children := command[i].Commands()
+			for j := range command[i].Commands() {
+				if children[j].CalledAs() != "" {
+					return true
+				}
 			}
 		}
 	}
