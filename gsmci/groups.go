@@ -144,24 +144,6 @@ func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan 
 	return ch, err
 }
 
-func searchGroups(c *ci.GroupsSearchCall, ch chan *ci.Group, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.SearchGroupsResponse)
-	for i := range r.Groups {
-		ch <- r.Groups[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = searchGroups(c, ch, errKey)
-	}
-	return err
-}
-
 // SearchGroups searches for Groups matching a specified query.
 func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
 	srv := getGroupsService()
@@ -175,7 +157,12 @@ func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan
 	ch := make(chan *ci.Group, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := searchGroups(c, ch, gsmhelpers.FormatErrorKey(query))
+		e := c.Pages(context.Background(), func(response *ci.SearchGroupsResponse) error {
+			for i := range response.Groups {
+				ch <- response.Groups[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

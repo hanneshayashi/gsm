@@ -155,27 +155,6 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 	return ch, err
 }
 
-func searchDirectoryPeople(c *people.PeopleSearchDirectoryPeopleCall, ch chan *people.Person, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*people.SearchDirectoryPeopleResponse)
-	for i := range r.People {
-		ch <- r.People[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = searchDirectoryPeople(c, ch, errKey)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // SearchDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.
 func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
 	srv := getpService()
@@ -189,7 +168,12 @@ func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources
 	ch := make(chan *people.Person, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := searchDirectoryPeople(c, ch, gsmhelpers.FormatErrorKey("Search directory"))
+		e := c.Pages(context.Background(), func(response *people.SearchDirectoryPeopleResponse) error {
+			for i := range response.People {
+				ch <- response.People[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

@@ -172,24 +172,6 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 	return ch, err
 }
 
-func lookupDeviceUsers(c *ci.DevicesDeviceUsersLookupCall, ch chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ListDeviceUsersResponse)
-	for i := range r.DeviceUsers {
-		ch <- r.DeviceUsers[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = lookupDeviceUsers(c, ch, errKey)
-	}
-	return err
-}
-
 // LookupDeviceUsers looks up resource names of the DeviceUsers associated with the caller's credentials, as well as the properties provided in the request.
 // This method must be called with end-user credentials with the scope: https://www.googleapis.com/auth/cloud-identity.devices.lookup
 // If multiple properties are provided, only DeviceUsers having all of these properties are considered as matches - i.e. the query behaves like an AND.
@@ -197,7 +179,7 @@ func lookupDeviceUsers(c *ci.DevicesDeviceUsersLookupCall, ch chan *ci.GoogleApp
 //  - iOS: No properties need to be passed, the caller's credentials are sufficient to identify the corresponding DeviceUser.
 //  - Android: Specifying the 'androidId' field is required.
 //  - Desktop: Specifying the 'rawResourceId' field is required.
-func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, <-chan error) {
+func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, cap int) (<-chan string, <-chan error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Lookup(parent)
 	if fields != "" {
@@ -212,10 +194,15 @@ func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, 
 	if userID != "" {
 		c.UserId(userID)
 	}
-	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, cap)
+	ch := make(chan string, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := lookupDeviceUsers(c, ch, gsmhelpers.FormatErrorKey(parent, androidID, rawResourceID, userID))
+		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1LookupSelfDeviceUsersResponse) error {
+			for i := range response.Names {
+				ch <- response.Names[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
