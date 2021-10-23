@@ -31,7 +31,7 @@ import (
 var groupAliasesListBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch lists group aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups/aliases/list",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups.aliases/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

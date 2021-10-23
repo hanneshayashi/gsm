@@ -32,7 +32,7 @@ import (
 var peopleUpdateContactPhotoBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch update contact photos using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/people/updateContactPhoto",
+	Long:  "Implements the API documented at https://developers.google.com/people/api/rest/v1/people/updateContactPhoto",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

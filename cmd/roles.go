@@ -30,7 +30,7 @@ import (
 var rolesCmd = &cobra.Command{
 	Use:               "roles",
 	Short:             "Manage roles (Part of Admin SDK)",
-	Long:              "http://developers.google.com/admin-sdk/directory/v1/reference/roles",
+	Long:              "Implements the API documented at http://developers.google.com/admin-sdk/directory/v1/reference/roles",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

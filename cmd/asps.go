@@ -33,10 +33,9 @@ var aspsCmd = &cobra.Command{
 that do not accept a verification code when logging into the application on
 certain devices. The ASP access code is used instead of the login and password
 you commonly use when accessing an application through a browser. For more
-information about ASPs and how to create one, see the
-https://http//support.google.com/a/bin/answer.py?amp;answer=1032419.
+information about ASPs and how to create one, see https://support.google.com/a/answer/2537800#asp.
 
-https://developers.google.com/admin-sdk/directory/reference/rest/v1/asps`,
+Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/asps`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

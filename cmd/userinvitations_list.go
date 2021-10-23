@@ -32,7 +32,7 @@ import (
 var userInvitationsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieves a list of UserInvitation resources.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/invitations/list",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

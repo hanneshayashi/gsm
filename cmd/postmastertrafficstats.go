@@ -30,7 +30,7 @@ var postmasterTrafficStatsCmd = &cobra.Command{
 	Use:   "postmasterTrafficStats",
 	Short: "Use Gmail Postmaster Tools to view email traffic statistics (Part of Gmail Postmaster API)",
 	Long: `You need to set up your domain(s) at https://postmaster.google.com/u/1/managedomains first.
-https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats`,
+Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

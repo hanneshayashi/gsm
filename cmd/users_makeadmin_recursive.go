@@ -31,7 +31,7 @@ import (
 var usersMakeAdminRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Grants or removes the Super Admin role to/from users by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/makeadmin",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/makeAdmin",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

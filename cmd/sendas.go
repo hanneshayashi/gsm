@@ -34,7 +34,7 @@ var sendAsCmd = &cobra.Command{
 	Short: "Manage send-as settings for users (Part of Gmail API)",
 	Long: `Settings associated with a send-as alias, which can be either the primary login address associated with the account or a custom "from" address.
 Send-as aliases correspond to the "Send Mail As" feature in the web interface.
-https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs`,
+Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
