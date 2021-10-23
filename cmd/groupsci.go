@@ -26,6 +26,7 @@ import (
 
 	"github.com/spf13/cobra"
 	ci "google.golang.org/api/cloudidentity/v1"
+	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 )
 
 // groupsCiCmd represents the groupsCi command
@@ -70,7 +71,7 @@ Examples: {"cloudidentity.googleapis.com/groups.discussion_forum": ""} or {"syst
 An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 	},
 	"name": {
-		AvailableFor: []string{"get", "delete", "patch"},
+		AvailableFor: []string{"get", "getSecuritySettings", "delete", "patch", "updateSecuritySettings"},
 		Type:         "string",
 		Description: `The resource name of the Group.
 
@@ -78,7 +79,7 @@ Must be of the form groups/{group_id}.`,
 		ExcludeFromAll: true,
 	},
 	"email": {
-		AvailableFor: []string{"get", "delete", "patch"},
+		AvailableFor: []string{"get", "getSecuritySettings", "delete", "patch", "updateSecuritySettings"},
 		Type:         "string",
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
@@ -154,23 +155,56 @@ BASIC  - Default. Only basic resource information is returned.
 FULL   - All resource information is returned.`,
 	},
 	"query": {
-		AvailableFor: []string{"search"},
+		AvailableFor: []string{"search", "updateSecuritySettings"},
 		Type:         "string",
-		Description: `The search query.
-Must be specified in Common Expression Language.
-May only contain equality operators on the parent and inclusion operators on labels (e.g., parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.discussion_forum' in labels).`,
+		Description: `Must be specified in Common Expression Language.
+search:
+May only contain equality operators on the parent and inclusion operators on labels (e.g., parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.discussion_forum' in labels).
+
+updateSecuritySettings:
+Member Restriction as defined by CEL expression. Supported restrictions are: member.customer_id and member.type.
+
+Valid values for member.type are 1, 2 and 3. They correspond to USER, SERVICE_ACCOUNT, and GROUP respectively.
+
+The value for member.customer_id only supports groupCustomerId() currently which means the customer id of the group will be used for restriction.
+
+Supported operators are &&, || and ==, corresponding to AND, OR, and EQUAL.
+
+Examples: Allow only service accounts of given customer to be members.
+
+member.type == 2 && member.customer_id == groupCustomerId()
+
+Allow only users or groups to be members.
+
+member.type == 1 || member.type == 3`,
+	},
+	"readMask": {
+		AvailableFor: []string{"getSecuritySettings"},
+		Type:         "string",
+		Description: `Field-level read mask of which fields to return. "*" returns all fields.
+
+If not specified, all fields will be returned.
+
+A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
+		Defaults: map[string]interface{}{"updateSecuritySettings": "memberRestriction"},
 	},
 	"updateMask": {
-		AvailableFor: []string{"patch"},
+		AvailableFor: []string{"patch", "updateSecuritySettings"},
 		Type:         "string",
 		Description: `The fully-qualified names of fields to update.
 
-May only contain the following fields: displayName, description.
+May only contain the following fields:
+- patch:
+  - displayName
+  - description
+- updateSecuritySettings
+  - memberRestriction.query (default)
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
+		Defaults: map[string]interface{}{"updateSecuritySettings": "memberRestriction.query"},
 	},
 	"fields": {
-		AvailableFor: []string{"create", "get", "list", "lookup", "patch", "search"},
+		AvailableFor: []string{"create", "get", "getSecuritySettings", "list", "lookup", "patch", "search", "updateSecuritySettings"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -263,4 +297,16 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		}
 	}
 	return group, nil
+}
+
+func mapToSecuritySettings(flags map[string]*gsmhelpers.Value) (*cibeta.SecuritySettings, error) {
+	securitysettings := &cibeta.SecuritySettings{}
+	if flags["query"].IsSet() {
+		securitysettings.MemberRestriction = &cibeta.MemberRestriction{}
+		securitysettings.MemberRestriction.Query = flags["query"].GetString()
+		if securitysettings.MemberRestriction.Query == "" {
+			securitysettings.MemberRestriction.ForceSendFields = append(securitysettings.MemberRestriction.ForceSendFields, "Query")
+		}
+	}
+	return securitysettings, nil
 }
