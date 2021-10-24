@@ -31,6 +31,7 @@ var (
 	client                          *http.Client
 	ciBetaService                   *cibeta.Service
 	customersUserinvitationsService *cibeta.CustomersUserinvitationsService
+	groupsService                   *cibeta.GroupsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -50,6 +51,13 @@ func getCiBetaService() *cibeta.Service {
 		}
 	}
 	return ciBetaService
+}
+
+func getGroupsService() *cibeta.GroupsService {
+	if groupsService == nil {
+		groupsService = cibeta.NewGroupsService(getCiBetaService())
+	}
+	return groupsService
 }
 
 func getCustomersUserinvitationsServiceService() *cibeta.CustomersUserinvitationsService {

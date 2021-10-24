@@ -18,25 +18,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
 )
 
-// groupAliasesDeleteCmd represents the delete command
-var groupAliasesDeleteCmd = &cobra.Command{
-	Use:               "delete",
-	Short:             "Removes an alias.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups.aliases/delete",
+// groupsCiGetSecuritySettingsCmd represents the getSecuritySettings command
+var groupsCiGetSecuritySettingsCmd = &cobra.Command{
+	Use:               "getSecuritySettings",
+	Short:             "Retrieves the security settings (member restrictions) of a group.",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/getSecuritySettings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.DeleteGroupAlias(flags["groupKey"].GetString(), flags["alias"].GetString())
+		name, err := getGroupCiName(flags["name"].GetString(), flags["email"].GetString())
 		if err != nil {
-			log.Fatalf("Error deleting group alias: %v", err)
+			log.Fatalf("%v", err)
+		}
+		result, err := gsmcibeta.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), flags["readMask"].GetString(), flags["fields"].GetString())
+		if err != nil {
+			log.Fatalf("Error getting group's security settings: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {
@@ -46,5 +51,5 @@ var groupAliasesDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(groupAliasesCmd, groupAliasesDeleteCmd, groupAliasFlags)
+	gsmhelpers.InitCommand(groupsCiCmd, groupsCiGetSecuritySettingsCmd, groupCiFlags)
 }

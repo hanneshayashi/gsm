@@ -33,7 +33,7 @@ import (
 var licenseAssignmentsInsertRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Assigns licenses to users by referencing one or more organizational units and/or groups.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/licenseassignments/insert",
+	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

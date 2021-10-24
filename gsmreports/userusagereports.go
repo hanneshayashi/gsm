@@ -18,28 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
-
-func getUserUsageReport(c *reports.UserUsageReportGetCall, ch chan *reports.UsageReport, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*reports.UsageReports)
-	for i := range r.UsageReports {
-		ch <- r.UsageReports[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = getUserUsageReport(c, ch, errKey)
-	}
-	return err
-}
 
 // GetUserUsageReport Retrieves a report which is a collection of properties and statistics for a set of users with the account.
 // For more information, see the User Usage Report guide. For more information about the user report's parameters, see the Users Usage parameters reference guides.
@@ -67,7 +51,12 @@ func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameter
 	ch := make(chan *reports.UsageReport, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := getUserUsageReport(c, ch, gsmhelpers.FormatErrorKey(userKey, date))
+		e := c.Pages(context.Background(), func(response *reports.UsageReports) error {
+			for i := range response.UsageReports {
+				ch <- response.UsageReports[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

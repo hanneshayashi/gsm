@@ -18,44 +18,48 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"github.com/hanneshayashi/gsm/gsmpeople"
 
 	"github.com/spf13/cobra"
-	"google.golang.org/api/people/v1"
 )
 
-// peopleUpdateContactPhotoBatchCmd represents the batch command
-var peopleUpdateContactPhotoBatchCmd = &cobra.Command{
+// groupsCiUpdateSecuritySettingsBatchCmd represents the batch command
+var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch update contact photos using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/people/api/rest/v1/people/updateContactPhoto",
+	Short: "Batch retrieves groups' security settings (member restrictions) using a CSV file as input.",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/updateSecuritySettings",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, peopleFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan *people.Person, cap)
+		results := make(chan map[string]interface{}, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						u, err := mapToUpdateContactPhotoRequest(m)
+						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
 						if err != nil {
-							log.Printf("Error building updateContactPhotoRequest object: %v\n", err)
+							log.Printf("Error determining group name: %v\n", err)
 							continue
 						}
-						result, err := gsmpeople.UpdateContactPhoto(m["resourceName"].GetString(), m["fields"].GetString(), u)
+						securitySettings, err := mapToSecuritySettings(m)
+						if err != nil {
+							log.Fatalf("Error building security settings object: %v", err)
+						}
+						result, err := gsmcibeta.UpdateSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["updateMask"].GetString(), m["fields"].GetString(), securitySettings)
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -77,7 +81,7 @@ var peopleUpdateContactPhotoBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []*people.Person{}
+			final := []map[string]interface{}{}
 			for res := range results {
 				final = append(final, res)
 			}
@@ -90,5 +94,5 @@ var peopleUpdateContactPhotoBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(peopleUpdateContactPhotoCmd, peopleUpdateContactPhotoBatchCmd, peopleFlags, peopleFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(groupsCiUpdateSecuritySettingsCmd, groupsCiUpdateSecuritySettingsBatchCmd, groupCiFlags, groupCiFlagsALL, batchFlags)
 }

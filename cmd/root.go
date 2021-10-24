@@ -131,7 +131,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 			log.Fatalln(err)
 		}
 	},
-	Version: "v0.4.0",
+	Version: "v0.5.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -176,7 +176,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err = viper.ReadInConfig(); err != nil && !(gsmhelpers.IsCommandOrChild(configsCmd) || gsmhelpers.IsCommandOrChild(logCmd)) {
+	if err = viper.ReadInConfig(); err != nil && gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("delay") {
@@ -202,7 +202,7 @@ func setHomeDir() {
 }
 
 func auth() {
-	if gsmhelpers.IsCommandOrChild(configsCmd) || gsmhelpers.IsCommandOrChild(logCmd) {
+	if gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
 		return
 	}
 	mode := viper.GetString("mode")

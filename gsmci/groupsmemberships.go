@@ -172,24 +172,6 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	return r.Membership, nil
 }
 
-func searchTransitiveGroups(c *ci.GroupsMembershipsSearchTransitiveGroupsCall, ch chan *ci.GroupRelation, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.SearchTransitiveGroupsResponse)
-	for i := range r.Memberships {
-		ch <- r.Memberships[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = searchTransitiveGroups(c, ch, errKey)
-	}
-	return err
-}
-
 // SearchTransitiveGroups searches transitive groups of a member.
 func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.GroupRelation, <-chan error) {
 	srv := getGroupsMembershipsService()
@@ -200,7 +182,12 @@ func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.G
 	ch := make(chan *ci.GroupRelation, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := searchTransitiveGroups(c, ch, gsmhelpers.FormatErrorKey(parent, query))
+		e := c.Pages(context.Background(), func(response *ci.SearchTransitiveGroupsResponse) error {
+			for i := range response.Memberships {
+				ch <- response.Memberships[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}
@@ -209,24 +196,6 @@ func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.G
 	}()
 	gsmhelpers.Sleep()
 	return ch, err
-}
-
-func searchTransitiveMemberships(c *ci.GroupsMembershipsSearchTransitiveMembershipsCall, ch chan *ci.MemberRelation, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*ci.SearchTransitiveMembershipsResponse)
-	for i := range r.Memberships {
-		ch <- r.Memberships[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = searchTransitiveMemberships(c, ch, errKey)
-	}
-	return err
 }
 
 // SearchTransitiveMemberships search transitive memberships of a group.
@@ -239,7 +208,12 @@ func SearchTransitiveMemberships(parent, fields string, cap int) (<-chan *ci.Mem
 	ch := make(chan *ci.MemberRelation, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := searchTransitiveMemberships(c, ch, gsmhelpers.FormatErrorKey(parent))
+		e := c.Pages(context.Background(), func(response *ci.SearchTransitiveMembershipsResponse) error {
+			for i := range response.Memberships {
+				ch <- response.Memberships[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

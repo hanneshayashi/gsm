@@ -18,28 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"context"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
-
-func getEntityUsageReport(c *reports.EntityUsageReportsGetCall, ch chan *reports.UsageReport, errKey string) error {
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return err
-	}
-	r, _ := result.(*reports.UsageReports)
-	for i := range r.UsageReports {
-		ch <- r.UsageReports[i]
-	}
-	if r.NextPageToken != "" {
-		c.PageToken(r.NextPageToken)
-		err = getEntityUsageReport(c, ch, errKey)
-	}
-	return err
-}
 
 // GetEntityUsageReport retrieves a report which is a collection of properties and statistics for entities used by users within the account.
 // For more information, see the Entities Usage Report guide.
@@ -62,7 +46,12 @@ func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, para
 	ch := make(chan *reports.UsageReport, cap)
 	err := make(chan error, 1)
 	go func() {
-		e := getEntityUsageReport(c, ch, gsmhelpers.FormatErrorKey(entityType, entityKey, date))
+		e := c.Pages(context.Background(), func(response *reports.UsageReports) error {
+			for i := range response.UsageReports {
+				ch <- response.UsageReports[i]
+			}
+			return nil
+		})
 		if e != nil {
 			err <- e
 		}

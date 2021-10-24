@@ -22,7 +22,6 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -52,7 +51,7 @@ Different platforms require different amounts of information from the caller to 
 				}
 			}
 		} else {
-			final := []*ci.GoogleAppsCloudidentityDevicesV1DeviceUser{}
+			final := []string{}
 			for i := range result {
 				final = append(final, i)
 			}

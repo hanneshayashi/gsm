@@ -18,45 +18,50 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmadmin"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
+	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 )
 
-// usersMakeAdminRecursiveCmd represents the recursive command
-var usersMakeAdminRecursiveCmd = &cobra.Command{
-	Use:   "recursive",
-	Short: `Grants or removes the Super Admin role to/from users by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/makeAdmin",
+// groupsCiGetSecuritySettingsBatchCmd represents the batch command
+var groupsCiGetSecuritySettingsBatchCmd = &cobra.Command{
+	Use:   "batch",
+	Short: "Batch retrieves groups' security settings (member restrictions) using a CSV file as input.",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/getSecuritySettings",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		type resultStruct struct {
-			UserKey string `json:"userKey,omitempty"`
-			Result  bool   `json:"result"`
+		maps, err := gsmhelpers.GetBatchMaps(cmd, groupCiFlags)
+		if err != nil {
+			log.Fatalln(err)
 		}
-		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup
-		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
-		status := !flags["unmake"].GetBool()
+		cap := cap(maps)
+		results := make(chan *cibeta.SecuritySettings, cap)
 		go func() {
-			for i := 0; i < threads; i++ {
+			for i := 0; i < cap; i++ {
 				wg.Add(1)
 				go func() {
-					for uk := range userKeysUnique {
-						result, err := gsmadmin.MakeAdmin(uk, status)
+					for m := range maps {
+						name, err := getGroupCiName(m["name"].GetString(), m["email"].GetString())
+						if err != nil {
+							log.Printf("Error determining group name: %v\n", err)
+							continue
+						}
+						result, err := gsmcibeta.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["readMask"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
+						} else {
+							results <- result
 						}
-						results <- resultStruct{UserKey: uk, Result: result}
 					}
 					wg.Done()
 				}()
@@ -73,9 +78,9 @@ var usersMakeAdminRecursiveCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []resultStruct{}
-			for r := range results {
-				final = append(final, r)
+			final := []*cibeta.SecuritySettings{}
+			for res := range results {
+				final = append(final, res)
 			}
 			err := gsmhelpers.Output(final, "json", compressOutput)
 			if err != nil {
@@ -86,5 +91,5 @@ var usersMakeAdminRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(usersMakeAdminCmd, usersMakeAdminRecursiveCmd, userFlags, recursiveUserFlags)
+	gsmhelpers.InitBatchCommand(groupsCiGetSecuritySettingsCmd, groupsCiGetSecuritySettingsBatchCmd, groupCiFlags, groupCiFlagsALL, batchFlags)
 }
