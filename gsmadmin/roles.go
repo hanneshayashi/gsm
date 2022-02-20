@@ -73,7 +73,7 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 // ListRoles retrieves a paginated list of all the roles in a domain.
 func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan error) {
 	srv := getRolesService()
-	c := srv.List(customer).MaxResults(10000)
+	c := srv.List(customer).MaxResults(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
