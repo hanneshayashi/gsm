@@ -71,11 +71,11 @@ func GetCSVContent(path string, delimiter rune, skipHeader bool) ([][]string, er
 	r := csv.NewReader(f)
 	r.Comma = delimiter
 	csv, err := r.ReadAll()
-	if skipHeader {
-		csv = csv[1:]
-	}
 	if err != nil {
 		return nil, err
+	}
+	if skipHeader {
+		return csv[1:], nil
 	}
 	return csv, nil
 }
@@ -98,15 +98,6 @@ func retryLog(err error, errKey string) bool {
 	return false
 }
 
-func containsInt(i int, slice []int) bool {
-	for j := range slice {
-		if i == slice[j] {
-			return true
-		}
-	}
-	return false
-}
-
 // errorIsRetryable checks if a Google API response returned a retryable error
 func errorIsRetryable(err error) bool {
 	gerr, ok := err.(*googleapi.Error)
@@ -125,7 +116,7 @@ func errorIsRetryable(err error) bool {
 				return true
 			}
 		}
-	} else if containsInt(gerr.Code, RetryOn) {
+	} else if Contains(gerr.Code, RetryOn) {
 		return true
 	}
 	return false
@@ -139,10 +130,10 @@ func newStandardRetrier() *retrier.Retrier {
 	return retrier.New(retrier.ExponentialBackoff(4, 20*time.Second), nil)
 }
 
-// Contains checks if a string is inside a slice
-func Contains(s string, slice []string) bool {
+// Contains checks if a value is inside a slice
+func Contains[T comparable](value T, slice []T) bool {
 	for i := range slice {
-		if s == slice[i] {
+		if value == slice[i] {
 			return true
 		}
 	}
