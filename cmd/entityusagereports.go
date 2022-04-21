@@ -47,7 +47,7 @@ var entityUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		Description: `Represents the type of entity for the report.
 Accepted values are:
 GPLUS_COMMUNITIES  - Returns a report on Google+ communities.`,
-		Defaults: map[string]interface{}{"get": "GPLUS_COMMUNITIES"},
+		Defaults: map[string]any{"get": "GPLUS_COMMUNITIES"},
 	},
 	"entityKey": {
 		AvailableFor: []string{"get"},
@@ -57,7 +57,7 @@ Accepted values are:
 ALL         - Returns activity events for all users.
 ENTITY_KEY  - Represents an app-specific identifier for the entity.
               For details on how to obtain the entityKey for a particular entityType, see the https://developers.google.com/admin-sdk/reports/v1/reference/usage-ref-appendix-a/entities`,
-		Defaults: map[string]interface{}{"get": "ALL"},
+		Defaults: map[string]any{"get": "ALL"},
 	},
 	"date": {
 		AvailableFor: []string{"get"},
@@ -65,7 +65,7 @@ ENTITY_KEY  - Represents an app-specific identifier for the entity.
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]interface{}{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},

@@ -60,7 +60,7 @@ func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <
 func CheckTransitiveMembership(parent, query string) (bool, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.CheckTransitiveMembership(parent).Query(query)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -77,7 +77,7 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (googlea
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, membership.PreferredMemberKey.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, membership.PreferredMemberKey.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -91,7 +91,7 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (googlea
 func DeleteMembership(name string) (bool, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -107,7 +107,7 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -120,20 +120,20 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 // GetMembershipGraph gets a membership graph of just a member or both a member and a group.
 // Given a member, the response will contain all membership paths from the member.
 // Given both a group and a member, the response will contain all membership paths between the group and the member.
-func GetMembershipGraph(parent, query, fields string) (map[string]interface{}, error) {
+func GetMembershipGraph(parent, query, fields string) (map[string]any, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.GetMembershipGraph(parent).Query(query)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func GetMembershipGraph(parent, query, fields string) (map[string]interface{}, e
 func LookupMembership(parent, memberKeyID, memberKeyNamespace string) (string, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.Lookup(parent).MemberKeyId(memberKeyID).MemberKeyNamespace(memberKeyNamespace)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, memberKeyID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, memberKeyID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -162,7 +162,7 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

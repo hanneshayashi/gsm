@@ -44,7 +44,7 @@ var privilegeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  "Immutable ID of the Workspace account.",
-		Defaults:     map[string]interface{}{"list": "my_customer"},
+		Defaults:     map[string]any{"list": "my_customer"},
 	},
 	"fields": {
 		AvailableFor: []string{"list"},

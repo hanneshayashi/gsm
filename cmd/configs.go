@@ -51,7 +51,7 @@ var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Name of the configuration.
 This (plus ".yaml") will be used as the file name.`,
 		Required: []string{"new", "load", "remove"},
-		Defaults: map[string]interface{}{"get": ".gsm", "getScopes": ".gsm"},
+		Defaults: map[string]any{"get": ".gsm", "getScopes": ".gsm"},
 	},
 	"credentialsFile": {
 		AvailableFor: []string{"new", "update"},

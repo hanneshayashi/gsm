@@ -31,7 +31,7 @@ func QueryFreeBusy(freeBusyRequest *calendar.FreeBusyRequest, fields string) (*c
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Free/Busy Query"), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Free/Busy Query"), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

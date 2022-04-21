@@ -44,8 +44,8 @@ var userInvitationsSendBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Result map[string]interface{} `json:"result"`
-			Name   string                 `json:"name,omitempty"`
+			Result map[string]any `json:"result"`
+			Name   string         `json:"name,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

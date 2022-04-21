@@ -43,7 +43,7 @@ func GetRole(customer, roleID, fields string) (*admin.Role, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func PatchRole(customer, roleID, fields string, role *admin.Role) (*admin.Role, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

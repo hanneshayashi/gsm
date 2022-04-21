@@ -46,7 +46,7 @@ var calendarACLFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarAcl.acl method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Defaults: map[string]interface{}{"delete": "primary", "get": "primary", "insert": "primary", "list": "primary", "patch": "primary"},
+		Defaults: map[string]any{"delete": "primary", "get": "primary", "insert": "primary", "list": "primary", "patch": "primary"},
 	},
 	"ruleId": {
 		AvailableFor:   []string{"delete", "get", "patch"},
@@ -60,7 +60,7 @@ If you want to access the primary calendar of the currently logged in user, use 
 		Type:         "bool",
 		Description: `Whether to send notifications about the calendar sharing change.
 Optional. The default is True.`,
-		Defaults: map[string]interface{}{"insert": true, "patch": true},
+		Defaults: map[string]any{"insert": true, "patch": true},
 	},
 	"role": {
 		AvailableFor: []string{"insert", "patch"},
@@ -82,7 +82,7 @@ Optional. The default is True.`,
 "group" - Limits the scope to a group.
 "domain" - Limits the scope to a domain.
 Note: The permissions granted to the "default", or public, scope apply to any user, authenticated or not.`,
-		Defaults: map[string]interface{}{"insert": "default"},
+		Defaults: map[string]any{"insert": "default"},
 	},
 	"scopeValue": {
 		AvailableFor: []string{"insert", "patch"},

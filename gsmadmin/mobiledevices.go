@@ -56,7 +56,7 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

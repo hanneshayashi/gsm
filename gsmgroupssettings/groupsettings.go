@@ -31,7 +31,7 @@ func GetGroupSettings(groupUniqueID, fields string) (*groupssettings.Groups, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -48,7 +48,7 @@ func PatchGroupSettings(groupUniqueID, fields string, groups *groupssettings.Gro
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupUniqueID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

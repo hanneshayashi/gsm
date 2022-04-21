@@ -44,7 +44,7 @@ var threadFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"delete", "get", "list", "modify", "trash", "untrash"},
 		Type:         "string",
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"delete": "me", "get": "me", "list": "me", "modify": "me", "trash": "me", "untrash": "me"},
+		Defaults:     map[string]any{"delete": "me", "get": "me", "list": "me", "modify": "me", "trash": "me", "untrash": "me"},
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "modify", "trash", "untrash"},

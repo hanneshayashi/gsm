@@ -54,7 +54,7 @@ var deviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Resource name of the customer.
 If you're using this API for your own organization, use customers/my_customer.
 If you're using this API to manage another organization, use customers/{customer_id}, where customer_id is the customer to whom the device belongs.`,
-		Defaults: map[string]interface{}{"cancelWipe": "customers/my_customer", "create": "customers/my_customer", "delete": "customers/my_customer", "get": "customers/my_customer", "list": "customers/my_customer", "wipe": "customers/my_customer"},
+		Defaults: map[string]any{"cancelWipe": "customers/my_customer", "create": "customers/my_customer", "delete": "customers/my_customer", "get": "customers/my_customer", "list": "customers/my_customer", "wipe": "customers/my_customer"},
 	},
 	"serialNumber": {
 		AvailableFor:   []string{"create"},

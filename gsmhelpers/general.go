@@ -170,7 +170,7 @@ func GetJSONEncoder(indent bool) *json.Encoder {
 }
 
 // Output streams output in the specified format to stdout
-func Output(i interface{}, format string, compress bool) error {
+func Output(i any, format string, compress bool) error {
 	if format == "json" {
 		enc := GetJSONEncoder(!compress)
 		return enc.Encode(i)
@@ -328,9 +328,9 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 }
 
 // GetObjectRetry performs an action that returns an object, retrying on failure when appropriate
-func GetObjectRetry(errKey string, c func() (interface{}, error)) (interface{}, error) {
+func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
 	var err error
-	var result interface{}
+	var result any
 	operation := func() error {
 		result, err = c()
 		if retryLog(err, errKey) {

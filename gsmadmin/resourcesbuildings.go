@@ -43,7 +43,7 @@ func GetBuilding(customer, buildingID, fields string) (*admin.Building, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, building.BuildingName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, building.BuildingName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -108,7 +108,7 @@ func PatchBuilding(customer, buildingID, coordinatesSource, fields string, build
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

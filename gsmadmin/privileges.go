@@ -31,7 +31,7 @@ func ListPrivileges(customerID, fields string) ([]*admin.Privilege, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

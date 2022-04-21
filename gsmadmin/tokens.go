@@ -41,7 +41,7 @@ func GetToken(userKey, clientID, fields string) (*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func ListTokens(userKey, fields string) ([]*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

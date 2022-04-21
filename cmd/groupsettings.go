@@ -321,7 +321,7 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		AvailableFor: []string{"get", "patch"},
 		Type:         "bool",
 		Description:  `Ignore deprecated fields.`,
-		Defaults:     map[string]interface{}{"get": true, "patch": true},
+		Defaults:     map[string]any{"get": true, "patch": true},
 	},
 }
 var groupSettingFlagsALL = gsmhelpers.GetAllFlags(groupSettingFlags)

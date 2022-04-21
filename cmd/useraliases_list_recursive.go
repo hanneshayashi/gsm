@@ -40,8 +40,8 @@ var userAliasesListRecursiveCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
-			UserKey     string        `json:"userKey,omitempty"`
-			UserAliases []interface{} `json:"userAliases,omitempty"`
+			UserKey     string `json:"userKey,omitempty"`
+			UserAliases []any  `json:"userAliases,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup

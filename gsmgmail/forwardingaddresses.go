@@ -33,7 +33,7 @@ func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.For
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingAddress.ForwardingEmail), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingAddress.ForwardingEmail), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func GetForwardingAddress(userID, forwardingEmail, fields string) (*gmail.Forwar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -77,7 +77,7 @@ func ListForwardingAddresses(userID, fields string) ([]*gmail.ForwardingAddress,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

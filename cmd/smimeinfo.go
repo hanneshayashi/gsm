@@ -48,7 +48,7 @@ var smimeInfoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},
 		Type:         "string",
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"delete": "me", "get": "me", "insert": "me", "list": "me", "setDefault": "me"},
+		Defaults:     map[string]any{"delete": "me", "get": "me", "insert": "me", "list": "me", "setDefault": "me"},
 	},
 	"sendAsEmail": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},

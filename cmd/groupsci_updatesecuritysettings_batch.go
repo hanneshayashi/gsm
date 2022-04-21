@@ -44,7 +44,7 @@ var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan map[string]interface{}, cap)
+		results := make(chan map[string]any, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -81,7 +81,7 @@ var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []map[string]interface{}{}
+			final := []map[string]any{}
 			for res := range results {
 				final = append(final, res)
 			}

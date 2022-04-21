@@ -45,7 +45,7 @@ var customerFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"get", "patch"},
 		Type:         "string",
 		Description:  `Id of the customer.`,
-		Defaults:     map[string]interface{}{"get": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]any{"get": "my_customer", "patch": "my_customer"},
 	},
 	"alternateEmail": {
 		AvailableFor: []string{"patch"},

@@ -210,7 +210,7 @@ This is only available for files with binary content in Google Drive.`,
 		AvailableFor: []string{"generateIds"},
 		Type:         "int64",
 		Description:  `The number of IDs to return. Acceptable values are 1 to 1000, inclusive. (Default: 10)`,
-		Defaults:     map[string]interface{}{"generateIds": int64(10)},
+		Defaults:     map[string]any{"generateIds": int64(10)},
 	},
 	"space": {
 		AvailableFor: []string{"generateIds"},

@@ -36,7 +36,7 @@ func BatchGetContactGroups(resourceNames []string, maxMembers int64, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -53,7 +53,7 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(createContactGroupRequest.ContactGroup.Name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(createContactGroupRequest.ContactGroup.Name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -67,7 +67,7 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 func DeleteContactGroup(resourceName string, deleteContacts bool) (bool, error) {
 	srv := getContactGroupsService()
 	c := srv.Delete(resourceName).DeleteContacts(deleteContacts)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -130,7 +130,7 @@ func UpdateContactGroup(resourceName, fields string, updateContactGroupRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

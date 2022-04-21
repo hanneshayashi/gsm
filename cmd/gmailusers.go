@@ -44,7 +44,7 @@ var gmailUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"getProfile"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"getProfile": "me"},
+		Defaults:     map[string]any{"getProfile": "me"},
 	},
 	"fields": {
 		AvailableFor: []string{"getProfile"},

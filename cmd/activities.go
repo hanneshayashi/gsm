@@ -44,7 +44,7 @@ var activityFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  `Represents the profile ID or the user email for which the data should be filtered. Can be all for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
-		Defaults:     map[string]interface{}{"list": "all"},
+		Defaults:     map[string]any{"list": "all"},
 	},
 	"applicationName": {
 		AvailableFor: []string{"list"},

@@ -36,7 +36,7 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	if emailMessage != "" {
 		c = c.EmailMessage(emailMessage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -114,7 +114,7 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	if permission.Role == "owner" {
 		c.TransferOwnership(true)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

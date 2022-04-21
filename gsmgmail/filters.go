@@ -31,7 +31,7 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func GetFilter(userID, id, fields string) (*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -75,7 +75,7 @@ func ListFilters(userID, fields string) ([]*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

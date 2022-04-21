@@ -45,7 +45,7 @@ var attachmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `The user's email address.
 The special value me can be used to indicate the authenticated user.`,
-		Defaults: map[string]interface{}{"get": "me"},
+		Defaults: map[string]any{"get": "me"},
 	},
 	"messageId": {
 		AvailableFor: []string{"get"},

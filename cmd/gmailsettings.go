@@ -47,7 +47,7 @@ var gmailSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"getAutoForwarding", "getImap", "getLanguage", "getPop", "getVacation", "updateAutoForwarding", "updateImap", "updateLanguage", "updatePop", "updateVacation"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"getAutoForwarding": "me", "getImap": "me", "getLanguage": "me", "getPop": "me", "getVacation": "me", "updateAutoForwarding": "me", "updateImap": "me", "updateLanguage": "me", "updatePop": "me", "updateVacation": "me"},
+		Defaults:     map[string]any{"getAutoForwarding": "me", "getImap": "me", "getLanguage": "me", "getPop": "me", "getVacation": "me", "updateAutoForwarding": "me", "updateImap": "me", "updateLanguage": "me", "updatePop": "me", "updateVacation": "me"},
 	},
 	"enabled": {
 		AvailableFor: []string{"updateAutoForwarding", "updateImap"},

@@ -33,7 +33,7 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func UpdateReply(fileID, commentID, replyID, fields string, reply *drive.Reply) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

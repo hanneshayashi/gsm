@@ -76,7 +76,7 @@ Maximum length is 4,096 characters.`,
 In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]interface{}{"list": "my_customer"},
+		Defaults: map[string]any{"list": "my_customer"},
 	},
 	"domain": {
 		AvailableFor: []string{"list"},

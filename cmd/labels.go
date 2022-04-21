@@ -45,7 +45,7 @@ var labelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create", "delete", "get", "list", "patch"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me"},
+		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me"},
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "patch"},
@@ -65,13 +65,13 @@ var labelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create", "patch"},
 		Type:         "string",
 		Description:  "The visibility of messages with this label in the message list in the Gmail web interface. [SHOW|HIDE]",
-		Defaults:     map[string]interface{}{"create": "SHOW"},
+		Defaults:     map[string]any{"create": "SHOW"},
 	},
 	"labelListVisibility": {
 		AvailableFor: []string{"create", "patch"},
 		Type:         "string",
 		Description:  "The visibility of the label in the label list in the Gmail web interface. [LABEL_SHOW|LABEL_SHOW_IF_UNREAD|LABEL_HIDE]",
-		Defaults:     map[string]interface{}{"create": "LABEL_SHOW"},
+		Defaults:     map[string]any{"create": "LABEL_SHOW"},
 	},
 	"textColor": {
 		AvailableFor: []string{"create", "patch"},

@@ -43,7 +43,7 @@ func GetACL(calendarID, ruleID, fields string) (*calendar.AclRule, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, acl.Scope.Value), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, acl.Scope.Value), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func PatchACL(calendarID, ruleID, fields string, aclRule *calendar.AclRule, send
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

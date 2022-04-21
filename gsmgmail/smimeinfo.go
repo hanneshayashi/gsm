@@ -41,7 +41,7 @@ func GetSmimeInfo(userID, sendAsEmail, id, fields string) (*gmail.SmimeInfo, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -59,7 +59,7 @@ func InsertSmimeInfo(userID, sendAsEmail, fields string, smimeInfo *gmail.SmimeI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -76,7 +76,7 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

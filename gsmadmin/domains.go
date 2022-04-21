@@ -41,7 +41,7 @@ func GetDomain(customerID, domainName, fields string) (*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func InsertDomain(customerID, fields string, domain *admin.Domains) (*admin.Doma
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domain.DomainName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domain.DomainName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -75,7 +75,7 @@ func ListDomains(customerID, fields string) ([]*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

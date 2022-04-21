@@ -31,7 +31,7 @@ func GetColors(fields string) (*calendar.Colors, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Colors"), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Colors"), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

@@ -31,7 +31,7 @@ func ModifyContactGroupMembers(resourceName, fields string, modifyContactGroupMe
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

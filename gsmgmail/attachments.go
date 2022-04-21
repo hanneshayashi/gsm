@@ -31,7 +31,7 @@ func GetAttachment(userID, messageID, id, fields string) (*gmail.MessagePartBody
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, messageID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, messageID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

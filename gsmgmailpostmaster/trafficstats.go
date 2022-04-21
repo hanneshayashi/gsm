@@ -34,7 +34,7 @@ func GetTrafficStats(name, fields string) (*gmailpostmastertools.TrafficStats, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

@@ -46,7 +46,7 @@ var schemaFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
 		Type:         "string",
 		Description:  `Immutable ID of the Workspace account.`,
-		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
 	},
 	"schemaKey": {
 		AvailableFor:   []string{"delete", "get", "patch"},

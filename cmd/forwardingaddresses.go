@@ -49,7 +49,7 @@ var forwardingAddressFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		AvailableFor: []string{"create", "delete", "get", "list"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
+		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me"},
 	},
 	"forwardingEmail": {
 		AvailableFor:   []string{"create", "delete", "get"},

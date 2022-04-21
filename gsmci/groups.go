@@ -28,20 +28,20 @@ import (
 )
 
 // CreateGroup creates a group.
-func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string]interface{}, error) {
+func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string]any, error) {
 	srv := getGroupsService()
 	c := srv.Create(group).InitialGroupConfig(initialGroupConfig)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(group.GroupKey.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(group.GroupKey.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string
 func DeleteGroup(name string) (bool, error) {
 	srv := getGroupsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,20 +63,20 @@ func DeleteGroup(name string) (bool, error) {
 }
 
 // PatchGroup updates a group using patch semantics.
-func PatchGroup(name, updateMask, fields string, group *ci.Group) (map[string]interface{}, error) {
+func PatchGroup(name, updateMask, fields string, group *ci.Group) (map[string]any, error) {
 	srv := getGroupsService()
 	c := srv.Patch(name, group).UpdateMask(updateMask)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -105,7 +105,7 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 func LookupGroup(email string) (string, error) {
 	srv := getGroupsService()
 	c := srv.Lookup().GroupKeyId(email)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(email), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(email), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

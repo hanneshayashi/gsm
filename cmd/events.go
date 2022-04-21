@@ -58,7 +58,7 @@ var eventFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Type:         "string",
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Defaults: map[string]interface{}{"delete": "primary", "get": "primary", "import": "primary", "insert": "primary", "instances": "primary", "list": "primary", "move": "primary", "patch": "primary", "quickAdd": "primary"},
+		Defaults: map[string]any{"delete": "primary", "get": "primary", "import": "primary", "insert": "primary", "instances": "primary", "list": "primary", "move": "primary", "patch": "primary", "quickAdd": "primary"},
 	},
 	"conferenceDataVersion": {
 		AvailableFor: []string{"import", "insert", "patch"},
@@ -66,7 +66,7 @@ If you want to access the primary calendar of the currently logged in user, use 
 		Description: `Version number of conference data supported by the API client.
 Version 0 assumes no conference data support and ignores conference data in the event's body.
 Version 1 enables support for copying of ConferenceData as well as for creating new conferences using the createRequest field of conferenceData.`,
-		Defaults: map[string]interface{}{"import": int64(1), "insert": int64(1), "patch": int64(1)},
+		Defaults: map[string]any{"import": int64(1), "insert": int64(1), "patch": int64(1)},
 	},
 	"maxAttendees": {
 		AvailableFor: []string{"get", "insert", "instances", "list", "patch"},
@@ -82,7 +82,7 @@ If there are more than the specified number of attendees, only the participant i
 all           - Notifications are sent to all guests.
 externalOnly  - Notifications are sent to non-Google Calendar guests only.
 none          - No notifications are sent. This value should only be used for migration use cases (note that in most migration cases the import method should be used).`,
-		Defaults: map[string]interface{}{"delete": "none", "insert": "none", "move": "none", "patch": "none", "quickAdd": "none"},
+		Defaults: map[string]any{"delete": "none", "insert": "none", "move": "none", "patch": "none", "quickAdd": "none"},
 	},
 	"supportsAttachments": {
 		AvailableFor: []string{"import", "insert", "patch"},
@@ -164,7 +164,7 @@ For single events this field is optional and indicates a custom time zone for th
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `Whether attendees other than the organizer can invite others to the event.`,
-		Defaults:     map[string]interface{}{"import": true, "insert": true},
+		Defaults:     map[string]any{"import": true, "insert": true},
 	},
 	"guestsCanModify": {
 		AvailableFor: []string{"insert", "patch"},
@@ -175,7 +175,7 @@ For single events this field is optional and indicates a custom time zone for th
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `Whether attendees other than the organizer can see who the event's attendees are.`,
-		Defaults:     map[string]interface{}{"import": true, "insert": true},
+		Defaults:     map[string]any{"import": true, "insert": true},
 	},
 	"id": {
 		AvailableFor: []string{"insert", "patch"},
@@ -217,7 +217,7 @@ Can be used multiple times to specify more than one reminder override.`,
 		AvailableFor: []string{"insert", "patch"},
 		Type:         "bool",
 		Description:  `Whether the default reminders of the calendar apply to the event.`,
-		Defaults:     map[string]interface{}{"insert": true},
+		Defaults:     map[string]any{"insert": true},
 	},
 	"sequence": {
 		AvailableFor: []string{"insert", "patch"},
@@ -261,7 +261,7 @@ Deleted events are only guaranteed to have the id field populated.
 
 On the organizer's calendar, cancelled events continue to expose event details (summary, location, etc.) so that they can be restored (undeleted). Similarly, the events to which the user was invited and that they manually removed continue to provide details. However, incremental sync requests with showDeleted set to false will not return these details.
 If an event changes its organizer (for example via the move operation) and the original organizer is not on the attendee list, it will leave behind a cancelled event where only the id field is guaranteed to be populated.`,
-		Defaults: map[string]interface{}{"import": "confirmed", "insert": "confirmed"},
+		Defaults: map[string]any{"import": "confirmed", "insert": "confirmed"},
 	},
 	"summary": {
 		AvailableFor: []string{"insert", "patch"},
@@ -275,7 +275,7 @@ If an event changes its organizer (for example via the move operation) and the o
 [opaque|transparent]
 opaque       - Default value. The event does block time on the calendar. This is equivalent to setting Show me as to Busy in the Calendar UI.
 transparent  - The event does not block time on the calendar. This is equivalent to setting Show me as to Available in the Calendar UI.`,
-		Defaults: map[string]interface{}{"import": "opaque", "insert": "opaque"},
+		Defaults: map[string]any{"import": "opaque", "insert": "opaque"},
 	},
 	"visibility": {
 		AvailableFor: []string{"insert", "patch"},
@@ -286,7 +286,7 @@ default       - Uses the default visibility for events on the calendar. This is 
 public        - The event is public and event details are visible to all readers of the calendar.
 private       - The event is private and only event attendees may view event details.
 confidential  - The event is private. This value is provided for compatibility reasons.`,
-		Defaults: map[string]interface{}{"import": "default", "insert": "default"},
+		Defaults: map[string]any{"import": "default", "insert": "default"},
 	},
 	"iCalUID": {
 		AvailableFor:   []string{"list"},

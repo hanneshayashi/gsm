@@ -32,20 +32,20 @@ import (
 // This operation is possible when the device is in a "pending wipe" state.
 // The device enters the "pending wipe" state when a wipe device command is issued, but has not yet been sent to the device.
 // The cancel wipe will fail if the wipe command has already been issued to the device.
-func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest) (map[string]interface{}, error) {
+func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest) (map[string]any, error) {
 	srv := getDevicesService()
 	c := srv.CancelWipe(name, cancelWipeDeviceRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeDeviceRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeDeviceRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleApp
 
 // CreateDevice creates a device.
 // Only company-owned device may be created.
-func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDevicesV1Device) (map[string]interface{}, error) {
+func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDevicesV1Device) (map[string]any, error) {
 	srv := getDevicesService()
 	c := srv.Create(device)
 	if fields != "" {
@@ -64,14 +64,14 @@ func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDev
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, device.SerialNumber), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, device.SerialNumber), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -80,20 +80,20 @@ func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDev
 }
 
 // DeleteDevice deletes the specified device.
-func DeleteDevice(name, customer string) (map[string]interface{}, error) {
+func DeleteDevice(name, customer string) (map[string]any, error) {
 	srv := getDevicesService()
 	c := srv.Delete(name)
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -160,20 +160,20 @@ func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-cha
 }
 
 // WipeDevice wipes all data on the specified device.
-func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest) (map[string]interface{}, error) {
+func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest) (map[string]any, error) {
 	srv := getDevicesService()
 	c := srv.Wipe(name, wipeDeviceRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeDeviceRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeDeviceRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err

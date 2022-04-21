@@ -43,7 +43,7 @@ func GetCalendarResource(customer, calendarResourceID, fields string) (*admin.Ca
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResource.ResourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResource.ResourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -109,7 +109,7 @@ func PatchCalendarResource(customer, calendarResourceID, fields string, calendar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

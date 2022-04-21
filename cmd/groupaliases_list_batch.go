@@ -44,8 +44,8 @@ var groupAliasesListBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			GroupKey string        `json:"groupKey,omitempty"`
-			Aliases  []interface{} `json:"aliases"`
+			GroupKey string `json:"groupKey,omitempty"`
+			Aliases  []any  `json:"aliases"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

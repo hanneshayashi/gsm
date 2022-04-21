@@ -46,7 +46,7 @@ var userUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 		Type:         "string",
 		Description: `Represents the profile ID or the user email for which the data should be filtered.
 Can be "all" for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
-		Defaults: map[string]interface{}{"get": "all"},
+		Defaults: map[string]any{"get": "all"},
 	},
 	"date": {
 		AvailableFor: []string{"get"},
@@ -54,7 +54,7 @@ Can be "all" for all information, or userKey for a user's unique Workspace profi
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]interface{}{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},

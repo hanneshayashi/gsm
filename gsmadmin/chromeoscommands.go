@@ -33,7 +33,7 @@ func GetCommand(customerID, deviceID, fields string, commandID int64) (*admin.Di
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID, strconv.FormatInt(commandID, 10)), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID, strconv.FormatInt(commandID, 10)), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

@@ -43,7 +43,7 @@ func GetCalendarListEntry(calendarID, fields string) (*calendar.CalendarListEntr
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarListEntry.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarListEntry.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -106,7 +106,7 @@ func PatchCalendarListEntry(calendarID, fields string, calendarListEntry *calend
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

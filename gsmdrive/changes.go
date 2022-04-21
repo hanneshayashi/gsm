@@ -34,7 +34,7 @@ func GetStartPageToken(driveID, fields string) (*drive.StartPageToken, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -59,7 +59,7 @@ func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView s
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(errKey, func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(errKey, func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

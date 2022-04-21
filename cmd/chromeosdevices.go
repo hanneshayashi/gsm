@@ -48,7 +48,7 @@ var chromeOsDeviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]interface{}{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
+		Defaults: map[string]any{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
 		Required: []string{"moveToOU"},
 	},
 	"resourceId": {
@@ -92,7 +92,7 @@ upgrade_transfer             - Use if you're replacing your Cloud Ready devices 
 		Type:         "string",
 		Description: `The unique ID of the device.
 The deviceIds are returned in the response from the chromeosdevices.list method.`,
-		Defaults:       map[string]interface{}{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
+		Defaults:       map[string]any{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
 		Required:       []string{"get", "patch"},
 		ExcludeFromAll: true,
 	},

@@ -43,7 +43,7 @@ func GetFeature(customer, featureKey, fields string) (*admin.Feature, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, feature.Name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, feature.Name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

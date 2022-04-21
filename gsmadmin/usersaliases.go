@@ -41,7 +41,7 @@ func InsertUserAlias(userKey, fields string, alias *admin.Alias) (*admin.Alias, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, alias.Alias), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, alias.Alias), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -52,13 +52,13 @@ func InsertUserAlias(userKey, fields string, alias *admin.Alias) (*admin.Alias, 
 }
 
 // ListUserAliases lists all aliases for a user.
-func ListUserAliases(userKey, fields string) ([]interface{}, error) {
+func ListUserAliases(userKey, fields string) ([]any, error) {
 	srv := getUsersAliasesService()
 	c := srv.List(userKey)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

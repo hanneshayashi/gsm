@@ -51,7 +51,7 @@ func ListVerificationCodes(userKey, fields string) ([]*admin.VerificationCode, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
