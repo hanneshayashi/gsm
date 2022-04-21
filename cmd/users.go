@@ -179,7 +179,7 @@ type        - The type of the ID.
 				- "login_id"
 				- "network"
 				- "organization": IDs of this type map to employee ID in the Admin Console
-value           - The value of the ID.`,
+value       - The value of the ID.`,
 	},
 	"customGender": {
 		AvailableFor: []string{"insert", "update"},
@@ -276,15 +276,21 @@ value  -      Keyword.`,
 		Type:         "stringSlice",
 		Description: `The user's languages. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
-'--languages "customLanguage=..."'
-'--languages "languageCode=..."'
+'--languages "customLanguage=...;preference=..."'
+'--languages "languageCode=...;preference=..."'
 You can use the following properties:
 customLanguage  - Other language.
 				  A user can provide their own language name if there is no corresponding Google III language code.
 			      If this is set, LanguageCode can't be set
 languageCode    - Language Code.
                   Should be used for storing Google III LanguageCode string representation for language.
-				  Illegal values cause SchemaException.`,
+				  Illegal values cause SchemaException.
+preference      - Optional.
+                  If present, controls whether the specified languageCode is the user's preferred language.
+                  If customLanguage is set, this can't be set.
+                  Allowed values are:
+                    - preferred
+                    - not_preferred`,
 		Recursive: []string{"update"},
 	},
 	"locations": {
