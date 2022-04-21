@@ -19,7 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmhelpers
 
 import (
-	"bufio"
 	"encoding/csv"
 	"encoding/json"
 	"encoding/xml"
@@ -34,7 +33,6 @@ import (
 
 	"github.com/eapache/go-resiliency/retrier"
 	"github.com/spf13/cobra"
-	"github.com/spf13/cobra/doc"
 	"github.com/spf13/viper"
 	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v3"
@@ -200,82 +198,82 @@ func Output(i interface{}, format string, compress bool) error {
 	return nil
 }
 
-// CreateDocs creates GSM documentation
-func CreateDocs(cmd *cobra.Command) error {
-	dir := "../gsm-hosting/gsm.hayashi-ke.online/content"
-	tmpDir := dir + "/tmp"
-	err := os.MkdirAll(tmpDir, os.ModePerm)
-	if err != nil {
-		return err
-	}
-	filePrepender := func(filename string) string {
-		return filename
-	}
-	linkHandler := func(name string) string {
-		return "/" + strings.ReplaceAll(strings.TrimSuffix(strings.ToLower(name), ".md"), "_", "/")
-	}
-	err = doc.GenMarkdownTreeCustom(cmd, tmpDir, filePrepender, linkHandler)
-	if err != nil {
-		return err
-	}
-	d, err := os.Open(tmpDir)
-	if err != nil {
-		return err
-	}
-	defer d.Close()
-	files, err := d.Readdir(-1)
-	if err != nil {
-		return err
-	}
-	for i := range files {
-		name := strings.TrimSuffix(files[i].Name(), ".md")
-		split := strings.Split(name, "_")
-		url := "/" + strings.Join(split, "/")
-		oldPath := tmpDir + "/" + files[i].Name()
-		newPath := dir + url
-		err = os.MkdirAll(newPath, os.ModePerm)
-		if err != nil {
-			return err
-		}
-		f, err := os.Open(oldPath)
-		if err != nil {
-			return err
-		}
-		defer f.Close()
-		scanner := bufio.NewScanner(f)
-		lines := []string{
-			"---",
-			fmt.Sprintf(`title: "%s"`, split[len(split)-1]),
-			fmt.Sprintf(`url: "%s"`, url),
-			`---`,
-		}
-		i := 0
-		for scanner.Scan() {
-			if i < 2 {
-				i++
-				continue
-			}
-			lines = append(lines, scanner.Text())
-		}
-		if err = scanner.Err(); err != nil {
-			return err
-		}
-		n, err := os.Create(newPath + "/_index.md")
-		if err != nil {
-			return err
-		}
-		defer n.Close()
-		w := bufio.NewWriter(n)
-		for i := range lines {
-			fmt.Fprintln(w, lines[i])
-		}
-		err = w.Flush()
-		if err != nil {
-			return err
-		}
-	}
-	return os.Remove(tmpDir)
-}
+// // CreateDocs creates GSM documentation
+// func CreateDocs(cmd *cobra.Command) error {
+// 	dir := "../gsm-hosting/gsm.hayashi-ke.online/content"
+// 	tmpDir := dir + "/tmp"
+// 	err := os.MkdirAll(tmpDir, os.ModePerm)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	filePrepender := func(filename string) string {
+// 		return filename
+// 	}
+// 	linkHandler := func(name string) string {
+// 		return "/" + strings.ReplaceAll(strings.TrimSuffix(strings.ToLower(name), ".md"), "_", "/")
+// 	}
+// 	err = doc.GenMarkdownTreeCustom(cmd, tmpDir, filePrepender, linkHandler)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	d, err := os.Open(tmpDir)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer d.Close()
+// 	files, err := d.Readdir(-1)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for i := range files {
+// 		name := strings.TrimSuffix(files[i].Name(), ".md")
+// 		split := strings.Split(name, "_")
+// 		url := "/" + strings.Join(split, "/")
+// 		oldPath := tmpDir + "/" + files[i].Name()
+// 		newPath := dir + url
+// 		err = os.MkdirAll(newPath, os.ModePerm)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		f, err := os.Open(oldPath)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		defer f.Close()
+// 		scanner := bufio.NewScanner(f)
+// 		lines := []string{
+// 			"---",
+// 			fmt.Sprintf(`title: "%s"`, split[len(split)-1]),
+// 			fmt.Sprintf(`url: "%s"`, url),
+// 			`---`,
+// 		}
+// 		i := 0
+// 		for scanner.Scan() {
+// 			if i < 2 {
+// 				i++
+// 				continue
+// 			}
+// 			lines = append(lines, scanner.Text())
+// 		}
+// 		if err = scanner.Err(); err != nil {
+// 			return err
+// 		}
+// 		n, err := os.Create(newPath + "/_index.md")
+// 		if err != nil {
+// 			return err
+// 		}
+// 		defer n.Close()
+// 		w := bufio.NewWriter(n)
+// 		for i := range lines {
+// 			fmt.Fprintln(w, lines[i])
+// 		}
+// 		err = w.Flush()
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+// 	return os.Remove(tmpDir)
+// }
 
 // getCSVReader uses a FlagSet to read a CSV file and parse it accordingly
 func getCSVReader(flags map[string]*Value) (*csv.Reader, error) {
