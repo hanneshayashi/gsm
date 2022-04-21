@@ -257,7 +257,7 @@ func checkBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, len
 	return nil
 }
 
-//FlagToMap first splits a string by ";" to get the attributes, then each attribute is
+// FlagToMap first splits a string by ";" to get the attributes, then each attribute is split by "=" to get the key / value pair
 func FlagToMap(value string) (m map[string]string) {
 	if value != "" {
 		m = make(map[string]string)
