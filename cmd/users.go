@@ -62,7 +62,7 @@ For more information, see https://developers.google.com/admin-sdk/directory/v1/g
 Acceptable values are:
 admin_view     - Results include both administrator-only and domain-public fields for the user. (default)
 domain_public  - Results only include fields for the user that are publicly visible to other users in the domain.
-				 Contact sharing must be enabled for the domain.`,
+                 Contact sharing must be enabled for the domain.`,
 		Recursive: []string{"get"},
 	},
 	"fields": {
@@ -132,7 +132,7 @@ type                - The address type.
                         - "custom"
                         - "home"
                         - "other"
-						- "work"`,
+                        - "work"`,
 		Recursive: []string{"update"},
 	},
 	"archived": {
@@ -176,9 +176,9 @@ type        - The type of the ID.
                 - "account"
                 - "custom"
                 - "customer"
-				- "login_id"
-				- "network"
-				- "organization": IDs of this type map to employee ID in the Admin Console
+                - "login_id"
+                - "network"
+                - "organization": IDs of this type map to employee ID in the Admin Console
 value       - The value of the ID.`,
 	},
 	"customGender": {
@@ -267,7 +267,7 @@ type        - Each entry can have a type which indicates standard type of that e
                 - "custom"
                 - "mission"
                 - "occupation"
-				- "outlook"
+                - "outlook"
 value  -      Keyword.`,
 		Recursive: []string{"update"},
 	},
@@ -280,11 +280,11 @@ May be used multiple times in the form of:
 '--languages "languageCode=...;preference=..."'
 You can use the following properties:
 customLanguage  - Other language.
-				  A user can provide their own language name if there is no corresponding Google III language code.
-			      If this is set, LanguageCode can't be set
+                  A user can provide their own language name if there is no corresponding Google III language code.
+                  If this is set, LanguageCode can't be set
 languageCode    - Language Code.
                   Should be used for storing Google III LanguageCode string representation for language.
-				  Illegal values cause SchemaException.
+                  Illegal values cause SchemaException.
 preference      - Optional.
                   If present, controls whether the specified languageCode is the user's preferred language.
                   If customLanguage is set, this can't be set.
@@ -301,8 +301,8 @@ May be used multiple times in the form of:
 '--locations "area=...;buildingId=...;customType=..."', etc.
 You can use the following properties:
 area          - Textual location.
-		        This is most useful for display purposes to concisely describe the location.
-		        For example, "Mountain View, CA", "Near Seattle".
+                This is most useful for display purposes to concisely describe the location.
+                For example, "Mountain View, CA", "Near Seattle".
 buildingId    - Building identifier.
 customType    - If the location type is custom, this property contains the custom value.
 deskCode      - Most specific textual code of individual desk location.
@@ -313,7 +313,7 @@ type          - The location type.
                 Acceptable values are:
                   - "custom"
                   - "default"
-				  - "desk"`,
+                  - "desk"`,
 		Recursive: []string{"update"},
 	},
 	"notesContentType": {
@@ -351,9 +351,9 @@ customType          - If the value of type is custom, this property contains the
 department          - Specifies the department within the organization, such as 'sales' or 'engineering'.
 description         - The description of the organization.
 domain              - The domain the organization belongs to.
-fullTimeEquivalent  - INT! The full-time equivalent millipercent within the organization (100000 = 100%).	
+fullTimeEquivalent  - INT! The full-time equivalent millipercent within the organization (100000 = 100%).    
 location            - The physical location of the organization.
-			          This does not need to be a fully qualified address.
+                      This does not need to be a fully qualified address.
 name                - The name of the organization.
 primary             - BOOL! Indicates if this is the user's primary organization.
                       A user may only have one primary organization.
@@ -365,7 +365,7 @@ type                - The type of organization.
                         - "domain_only"
                         - "school"
                         - "unknown"
-						- "work"`,
+                        - "work"`,
 		Recursive: []string{"update"},
 	},
 	"phones": {
@@ -400,9 +400,9 @@ type        - The type of phone number.
                 - "work"
                 - "work_fax"
                 - "work_mobile"
-		        - "work_pager"
+                - "work_pager"
 value       - A human-readable phone number.
-			  It may be in any telephone number format.`,
+              It may be in any telephone number format.`,
 		Recursive: []string{"update"},
 	},
 	"posixAccounts": {
@@ -469,7 +469,7 @@ type        - The type of relation.
               - "referred_by"
               - "relative"
               - "sister"
-			  - "spouse"
+              - "spouse"
 value       - The name of the person the user is related to.`,
 		Recursive: []string{"update"},
 	},
@@ -500,21 +500,21 @@ You can use the following properties:
 customType  - The custom type. Only used if the type is custom.
 primary     - BOOL! If this is user's primary website or not.
 type        - The type or purpose of the website.
-			  For example, a website could be labeled as home or blog.
-			  Alternatively, an entry can have a custom type.
-			  Custom types must have a customType value.
-			  Acceptable values are:
-			    - "app_install_page"
-			    - "blog"
-			    - "custom"
-			    - "ftp"
-			    - "home"
-			    - "home_page"
-			    - "other"
-			    - "profile"
-			    - "reservations"
-			    - "resume"
-			    - "work"
+              For example, a website could be labeled as home or blog.
+              Alternatively, an entry can have a custom type.
+              Custom types must have a customType value.
+              Acceptable values are:
+                - "app_install_page"
+                - "blog"
+                - "custom"
+                - "ftp"
+                - "home"
+                - "home_page"
+                - "other"
+                - "profile"
+                - "reservations"
+                - "resume"
+                - "work"
 value       - The URL of the website.`,
 		Recursive: []string{"update"},
 	},

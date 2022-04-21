@@ -56,7 +56,7 @@ GPLUS_COMMUNITIES  - Returns a report on Google+ communities.`,
 Accepted values are:
 ALL         - Returns activity events for all users.
 ENTITY_KEY  - Represents an app-specific identifier for the entity.
-			  For details on how to obtain the entityKey for a particular entityType, see the https://developers.google.com/admin-sdk/reports/v1/reference/usage-ref-appendix-a/entities`,
+              For details on how to obtain the entityKey for a particular entityType, see the https://developers.google.com/admin-sdk/reports/v1/reference/usage-ref-appendix-a/entities`,
 		Defaults: map[string]interface{}{"get": "ALL"},
 	},
 	"date": {
