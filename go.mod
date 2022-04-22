@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	cloud.google.com/go/compute v1.6.0
-	github.com/eapache/go-resiliency v1.2.0
+	github.com/cenkalti/backoff/v4 v4.1.3
 	github.com/google/uuid v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.4.0

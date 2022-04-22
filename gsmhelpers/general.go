@@ -31,19 +31,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eapache/go-resiliency/retrier"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v3"
 )
 
-// StandardRetrier is a retrier object that should be used by every function that calls a Google API
-var StandardRetrier = newStandardRetrier()
-
-// StandardDelay is the delay (plus a random jitter between 0 and 20) that will be applied after every command.
-// This is can be configured either via the config file or via the --delay flag
-var StandardDelay int
+// standardRetrier is a retrier object that should be used by every function that calls a Google API
+var standardRetrier *backoff.ExponentialBackOff
 
 // RetryOn defines the HTTP error codes that should be retried on.
 // Note that GSM will always attempt to retry on a 403 error code with a message that indicates a quota / rate limit error
@@ -80,22 +76,16 @@ func GetCSVContent(path string, delimiter rune, skipHeader bool) ([][]string, er
 	return csv, nil
 }
 
-// FormatError adds an errKey prefix to an error message
-func FormatError(err error, errKey string) error {
+// formatError adds an errKey prefix to an error message
+func formatError(err error, errKey string) error {
 	return fmt.Errorf("%s: %v", errKey, err)
 }
 
-// retryLog returns a retryable error, indicating that the operation should be reattempted or nil if no error occurred or if the error is not retryable
-func retryLog(err error, errKey string) bool {
-	defer sleep(StandardDelay)
+// logError returns a retryable error, indicating that the operation should be reattempted or nil if no error occurred or if the error is not retryable
+func logError(err error, d time.Duration) {
 	if err != nil {
-		if errorIsRetryable(err) {
-			log.Println(FormatError(err, errKey), "- Retrying...")
-			return true
-		}
-		return false
+		log.Printf("%v - Retrying after %s...", err, d)
 	}
-	return false
 }
 
 // errorIsRetryable checks if a Google API response returned a retryable error
@@ -122,12 +112,12 @@ func errorIsRetryable(err error) bool {
 	return false
 }
 
-// newStandardRetrier returns a retrier with default values
-func newStandardRetrier() *retrier.Retrier {
-	// class := retrier.WhitelistClassifier{
-	// 	&googleapi.Error{Code: 403},
-	// }
-	return retrier.New(retrier.ExponentialBackoff(4, 20*time.Second), nil)
+// SetStandardRetrier sets the standard retrier
+func SetStandardRetrier(standardDelay time.Duration) {
+	standardRetrier = backoff.NewExponentialBackOff()
+	standardRetrier.InitialInterval = standardDelay
+	standardRetrier.MaxInterval = 320 * time.Second
+	standardRetrier.Multiplier = 2
 }
 
 // Contains checks if a value is inside a slice
@@ -332,15 +322,20 @@ func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
 	var err error
 	var result any
 	operation := func() error {
+		defer Sleep()
 		result, err = c()
-		if retryLog(err, errKey) {
-			return err
+		if err != nil {
+			ferr := formatError(err, errKey)
+			if errorIsRetryable(err) {
+				return ferr
+			}
+			return backoff.Permanent(ferr)
 		}
 		return nil
 	}
-	StandardRetrier.Run(operation)
+	err = backoff.RetryNotify(operation, standardRetrier, logError)
 	if err != nil {
-		return nil, FormatError(err, errKey)
+		return nil, err
 	}
 	return result, nil
 }
@@ -349,15 +344,20 @@ func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
 func ActionRetry(errKey string, c func() error) (bool, error) {
 	var err error
 	operation := func() error {
+		defer Sleep()
 		err = c()
-		if retryLog(err, errKey) {
-			return err
+		if err != nil {
+			ferr := formatError(err, errKey)
+			if errorIsRetryable(err) {
+				return ferr
+			}
+			return backoff.Permanent(ferr)
 		}
 		return nil
 	}
-	StandardRetrier.Run(operation)
+	err = backoff.RetryNotify(operation, standardRetrier, logError)
 	if err != nil {
-		return false, FormatError(err, errKey)
+		return false, err
 	}
 	return true, nil
 }
@@ -368,15 +368,9 @@ func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }
 
-// Sleep sleeps for StandardDelay ms
+// Sleep sleeps for standardDelay ms plus a random jitter between 0 and 50
 func Sleep() {
-	sleep(StandardDelay)
-}
-
-// sleep will sleep for the supplied amount of milliseconds plus a jitter between 0 and 20
-func sleep(ms int) {
-	ms += rand.Intn(50) + 1
-	time.Sleep(time.Duration(ms) * time.Millisecond)
+	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.Intn(50))*time.Millisecond)
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called

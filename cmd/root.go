@@ -24,6 +24,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmauth"
@@ -55,6 +56,7 @@ var (
 	dwdSubject     string
 	logFile        string
 	home           string
+	standardDelay  int
 	compressOutput bool
 	streamOutput   bool
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
@@ -151,7 +153,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&dwdSubject, "dwdSubject", "", "Specify a subject used for DWD impersonation (overrides value in config file)")
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
-	rootCmd.PersistentFlags().IntVar(&gsmhelpers.StandardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().IntVar(&standardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
 }
@@ -180,13 +182,14 @@ func initConfig() {
 		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
 	}
 	if rootCmd.Flags().Changed("delay") {
-		gsmhelpers.StandardDelay, err = rootCmd.Flags().GetInt("delay")
+		standardDelay, err = rootCmd.Flags().GetInt("delay")
 		if err != nil {
 			log.Fatalln(err)
 		}
 	} else {
-		gsmhelpers.StandardDelay = viper.GetInt("standardDelay")
+		standardDelay = viper.GetInt("standardDelay")
 	}
+	gsmhelpers.SetStandardRetrier(time.Duration(standardDelay) * time.Millisecond)
 	if streamOutput {
 		compressOutput = true
 	}
