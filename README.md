@@ -84,7 +84,7 @@ You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to vie
 ### License and Copyright
 
 GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
-Copyright © 2020-2021 Hannes Hayashi.
+Copyright © 2020-2022 Hannes Hayashi.
 
 ### Third Party Libraries
 
