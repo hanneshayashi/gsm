@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Name of the configuration.
 This (plus ".yaml") will be used as the file name.`,
 		Required: []string{"new", "load", "remove"},
-		Defaults: map[string]interface{}{"get": ".gsm", "getScopes": ".gsm"},
+		Defaults: map[string]any{"get": ".gsm", "getScopes": ".gsm"},
 	},
 	"credentialsFile": {
 		AvailableFor: []string{"new", "update"},

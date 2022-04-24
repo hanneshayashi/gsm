@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,20 +28,20 @@ import (
 )
 
 // ApproveDeviceUser approves device to access user data.
-func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1ApproveDeviceUserRequest) (map[string]interface{}, error) {
+func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1ApproveDeviceUserRequest) (map[string]any, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Approve(name, approveDeviceRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(approveDeviceRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(approveDeviceRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -50,20 +50,20 @@ func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsC
 }
 
 // BlockDeviceUser blocks device from accessing user data
-func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1BlockDeviceUserRequest) (map[string]interface{}, error) {
+func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1BlockDeviceUserRequest) (map[string]any, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Block(name, blockDeviceRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(blockDeviceRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(blockDeviceRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -73,20 +73,20 @@ func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloud
 
 // CancelDeviceUserWipe cancels an unfinished user account wipe.
 // This operation can be used to cancel device wipe in the gap between the wipe operation returning success and the device being wiped.
-func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceUserRequest) (map[string]interface{}, error) {
+func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceUserRequest) (map[string]any, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.CancelWipe(name, cancelWipeRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -96,20 +96,20 @@ func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsC
 
 // DeleteDeviceUser deletes the specified DeviceUser.
 // This also revokes the user's access to device data.
-func DeleteDeviceUser(name, customer string) (map[string]interface{}, error) {
+func DeleteDeviceUser(name, customer string) (map[string]any, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Delete(name)
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -218,20 +218,20 @@ func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, 
 // For example, if a Gmail app is installed on a device that is used for personal and work purposes,
 // and the user is logged in to the Gmail app with their personal account as well as their work account,
 // wiping the "deviceUser" by their work administrator will not affect their personal account within Gmail or other apps such as Photos.
-func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceUserRequest) (map[string]interface{}, error) {
+func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceUserRequest) (map[string]any, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Wipe(name, wipeRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeRequest.Customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeRequest.Customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err

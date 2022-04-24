@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 func BatchDeletePrinters(parent string, batchDeletePrintersRequest *admin.BatchDeletePrintersRequest) (*PrinterResults, error) {
 	srv := getCustomersChromePrintersService()
 	c := srv.BatchDeletePrinters(parent, batchDeletePrintersRequest)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -79,7 +79,7 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -93,7 +93,7 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 func DeletePrinter(name string) (bool, error) {
 	srv := getCustomersChromePrintersService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -109,7 +109,7 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -189,7 +189,7 @@ func PatchPrinter(name, updateMask, clearMask, fields string, printer *admin.Pri
 	if clearMask != "" {
 		c.ClearMask(clearMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

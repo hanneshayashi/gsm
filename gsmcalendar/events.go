@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ func GetEvent(calendarID, eventID, timeZone, fields string, maxAttendees int64) 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -66,7 +66,7 @@ func ImportEvent(calendarID, fields string, event *calendar.Event, conferenceDat
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -200,7 +200,7 @@ func MoveEvent(calendarID, eventID, destination, sendUpdates, fields string) (*c
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID, destination), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID, destination), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -222,7 +222,7 @@ func PatchEvent(calendarID, eventID, sendUpdates, fields string, event *calendar
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -239,7 +239,7 @@ func QuickAddEvent(calendarID, text, sendUpdates, fields string) (*calendar.Even
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

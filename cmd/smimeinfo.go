@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ var smimeInfoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},
 		Type:         "string",
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"delete": "me", "get": "me", "insert": "me", "list": "me", "setDefault": "me"},
+		Defaults:     map[string]any{"delete": "me", "get": "me", "insert": "me", "list": "me", "setDefault": "me"},
 	},
 	"sendAsEmail": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},

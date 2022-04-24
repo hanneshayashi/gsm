@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ You may specify - in place of the {device_id}, so the ClientState resource name 
 		Description: `Resource name of the customer.
 If you're using this API for your own organization, use customers/my_customer.
 If you're using this API to manage another organization, use customers/{customer_id}, where customer_id is the customer to whom the device belongs.`,
-		Defaults: map[string]interface{}{"get": "customers/my_customer", "list": "customers/my_customer", "patch": "customers/my_customer"},
+		Defaults: map[string]any{"get": "customers/my_customer", "list": "customers/my_customer", "patch": "customers/my_customer"},
 	},
 	"parent": {
 		AvailableFor: []string{"list"},

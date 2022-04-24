@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ var peopleConnectionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.F
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  `The resource name to return connections for. Only people/me is valid.`,
-		Defaults:     map[string]interface{}{"list": "people/me"},
+		Defaults:     map[string]any{"list": "people/me"},
 	},
 	"personFields": {
 		AvailableFor: []string{"list"},

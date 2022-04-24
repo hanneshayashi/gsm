@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ var groupCiFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 WITH_INITIAL_OWNER  - The end user making the request will be added as the initial owner of the Group.
 EMPTY               - An empty group is created without any initial owners.
                       This can only be used by admins of the domain.`,
-		Defaults: map[string]interface{}{"create": "EMPTY"},
+		Defaults: map[string]any{"create": "EMPTY"},
 	},
 	"labels": {
 		AvailableFor: []string{"create", "patch"},
@@ -186,7 +186,7 @@ member.type == 1 || member.type == 3`,
 If not specified, all fields will be returned.
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
-		Defaults: map[string]interface{}{"updateSecuritySettings": "memberRestriction"},
+		Defaults: map[string]any{"updateSecuritySettings": "memberRestriction"},
 	},
 	"updateMask": {
 		AvailableFor: []string{"patch", "updateSecuritySettings"},
@@ -201,7 +201,7 @@ May only contain the following fields:
   - memberRestriction.query (default)
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
-		Defaults: map[string]interface{}{"updateSecuritySettings": "memberRestriction.query"},
+		Defaults: map[string]any{"updateSecuritySettings": "memberRestriction.query"},
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "getSecuritySettings", "list", "lookup", "patch", "search", "updateSecuritySettings"},

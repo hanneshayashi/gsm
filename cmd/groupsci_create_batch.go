@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan map[string]interface{}, cap)
+		results := make(chan map[string]any, cap)
 		customerID, err := gsmadmin.GetOwnCustomerID()
 		if err != nil {
 			log.Printf("Error determining customer ID: %v\n", err)
@@ -90,7 +90,7 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []map[string]interface{}{}
+			final := []map[string]any{}
 			for res := range results {
 				final = append(final, res)
 			}

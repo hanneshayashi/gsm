@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ func GetDomainAlias(customerID, domainAliasName, fields string) (*admin.DomainAl
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func InsertDomainAlias(customerID, fields string, domainAlias *admin.DomainAlias
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAlias.DomainAliasName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAlias.DomainAliasName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -78,7 +78,7 @@ func ListDomainAliases(customerID, parentDomainName, fields string) ([]*admin.Do
 	if parentDomainName != "" {
 		c = c.ParentDomainName(parentDomainName)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, parentDomainName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, parentDomainName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

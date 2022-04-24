@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	if emailMessage != "" {
 		c = c.EmailMessage(emailMessage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -114,7 +114,7 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	if permission.Role == "owner" {
 		c.TransferOwnership(true)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

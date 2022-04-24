@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ var forwardingAddressFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		AvailableFor: []string{"create", "delete", "get", "list"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me"},
+		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me"},
 	},
 	"forwardingEmail": {
 		AvailableFor:   []string{"create", "delete", "get"},

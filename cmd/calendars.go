@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ var calendarFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
 		Required:       []string{"clear", "delete", "patch"},
-		Defaults:       map[string]interface{}{"get": "primary"},
+		Defaults:       map[string]any{"get": "primary"},
 		ExcludeFromAll: true,
 	},
 	"summary": {

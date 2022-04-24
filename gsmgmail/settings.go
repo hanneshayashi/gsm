@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ func GetAutoForwardingSettings(userID, fields string) (*gmail.AutoForwarding, er
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -48,7 +48,7 @@ func GetIMAPSettings(userID, fields string) (*gmail.ImapSettings, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -65,7 +65,7 @@ func GetLanguageSettings(userID, fields string) (*gmail.LanguageSettings, error)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -82,7 +82,7 @@ func GetPOPSettings(userID, fields string) (*gmail.PopSettings, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -99,7 +99,7 @@ func GetVacationResponderSettings(userID, fields string) (*gmail.VacationSetting
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -117,7 +117,7 @@ func UpdateAutoForwardingSettings(userID, fields string, autoForwarding *gmail.A
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -134,7 +134,7 @@ func UpdateIMAPSettings(userID, fields string, imapSettings *gmail.ImapSettings)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -153,7 +153,7 @@ func UpdateLanguageSettings(userID, fields string, languageSetting *gmail.Langua
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -170,7 +170,7 @@ func UpdatePOPSettings(userID, fields string, popSettings *gmail.PopSettings) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -187,7 +187,7 @@ func UpdateVacationResponderSettings(userID, fields string, vacationSettings *gm
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

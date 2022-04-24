@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ func GetUser(userKey, fields, projection, customFieldMask, viewType string) (*ad
 	if viewType != "" {
 		c.ViewType(viewType)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -69,7 +69,7 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(user.PrimaryEmail), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(user.PrimaryEmail), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -150,7 +150,7 @@ func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

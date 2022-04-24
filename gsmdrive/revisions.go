@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ func GetRevision(fileID, revisionID, fields string) (*drive.Revision, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -66,7 +66,7 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 		return "", err
 	}
 	c := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
 		return c.Download()
 	})
 	if err != nil {
@@ -116,7 +116,7 @@ func UpdateRevision(fileID, revisionID, fields string, revision *drive.Revision)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ var mobileDeviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]interface{}{"action": "my_customer", "delete": "my_customer", "get": "my_customer", "list": "my_customer"},
+		Defaults: map[string]any{"action": "my_customer", "delete": "my_customer", "get": "my_customer", "list": "my_customer"},
 	},
 	"resourceId": {
 		AvailableFor:   []string{"action", "delete", "get"},

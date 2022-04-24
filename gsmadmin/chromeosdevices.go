@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -111,7 +111,7 @@ func PatchChromeOsDevice(customerID, deviceID, fields, projection string, chrome
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

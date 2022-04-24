@@ -1,14 +1,14 @@
-## GSM
+# GSM
 
 GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/hanneshayashi/gsm)](https://goreportcard.com/report/github.com/hanneshayashi/gsm)
 
-### Documentation
+## Documentation
 
 View complete documentation at https://gsm.hayashi-ke.online/.
 
-### Introduction
+## Introduction
 
 GSM is like gcloud for Google Workspace. It is a no-dependency, free and open source command line interface (CLI) for managing Google Workspace resources. You don't need any software except for the [GSM binary](https://github.com/hanneshayashi/gsm/releases) itself and it is easy to [set up](https://gsm.hayashi-ke.online/setup).
 
@@ -27,7 +27,7 @@ GSM was intentionally designed to be as close to the actual APIs as possible.\
 Because of that, it may not be as user-friendly as some of the alternatives out there.\
 On the plus-side, you can usually look at the Google API documentation that is linked to in every command's description to figure out how something works. Most flag descriptions are also taken from the official API docs, so I take no credit there.
 
-### Features
+## Features
 
 GSM currently supports the following APIs:
 - [Admin SDK Directory API](https://developers.google.com/admin-sdk/directory)
@@ -57,7 +57,7 @@ See [Setup](https://gsm.hayashi-ke.online/setup) on how to set up GSM in these m
 
 You can also set up multiple configurations using [gsm configs](https://gsm.hayashi-ke.online/gsm/configs) and switch between them using [gsm configs load](https://gsm.hayashi-ke.online/gsm/configs/load) or by specifying the name of the config with the `--config` flag.
 
-### Output
+## Output
 
 GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to ommit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parseable JSON or XML (mostly what the API returns).
 
@@ -65,7 +65,7 @@ If you want to use GSM's output in scripts, you may want to consider using the `
 
 *the [configs](https://gsm.hayashi-ke.online/gsm/configs) command is a notable exception.
 
-#### Scripting examples
+### Scripting examples
 
 I highly recommend considering using GSM together with PowerShell or Python when creating scripts.\
 GSM works nicely with PowerShell's ConvertFrom-Json commandlet (although there are some [issues with very large amounts of data](https://gsm.hayashi-ke.online/scripting/#processing-very-large-amounts-of-data-with-powershell)).
@@ -75,18 +75,18 @@ You can take a look at some examples under [scripting](https://gsm.hayashi-ke.on
 You can also try the auto-generated [PowerShell module](https://github.com/hanneshayashi/gsm-powershell).\
 Note that this module is created with [Crescendo](https://github.com/PowerShell/Crescendo), which is also still in beta. However, for an auto-generated module, it seems to work reasonably well. The module also automatically utilizes streaming.
 
-#### Logging
+### Logging
 
 As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
 You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--log` flag when running a command.
 You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
 
-### License and Copyright
+## License and Copyright
 
 GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
-Copyright © 2020-2021 Hannes Hayashi.
+Copyright © 2020-2022 Hannes Hayashi.
 
-### Third Party Libraries
+## Third Party Libraries
 
 GSM is based on open source technology and would not exist without the incredible work of some people:
 - The engineers at Google who created the APIs and Go libraries GSM is based on
@@ -95,7 +95,7 @@ GSM is based on open source technology and would not exist without the incredibl
   - https://github.com/spf13/cobra
 - See https://github.com/hanneshayashi/gsm/tree/main/third_party_licenses for a full list of third party licenses
 
-### See Also
+## See Also
 
 * [Setup](https://gsm.hayashi-ke.online/setup)       - How to set up GSM
 * [GSM](https://gsm.hayashi-ke.online/gsm)   - Command overview

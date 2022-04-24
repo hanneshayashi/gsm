@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -321,7 +321,7 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 		AvailableFor: []string{"get", "patch"},
 		Type:         "bool",
 		Description:  `Ignore deprecated fields.`,
-		Defaults:     map[string]interface{}{"get": true, "patch": true},
+		Defaults:     map[string]any{"get": true, "patch": true},
 	},
 }
 var groupSettingFlagsALL = gsmhelpers.GetAllFlags(groupSettingFlags)

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ func GetRoleAssignment(customer, roleAssignmentID, fields string) (*admin.RoleAs
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -61,7 +61,7 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, strconv.FormatInt(roleAssignment.RoleId, 10), roleAssignment.AssignedTo), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, strconv.FormatInt(roleAssignment.RoleId, 10), roleAssignment.AssignedTo), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

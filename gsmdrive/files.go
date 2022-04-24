@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 	if ocrLanguage != "" {
 		c = c.OcrLanguage(ocrLanguage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -74,7 +74,7 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 	if ocrLanguage != "" {
 		c = c.OcrLanguage(ocrLanguage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(file.Name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(file.Name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -147,7 +147,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 		return "", err
 	}
 	c := srv.Export(fileID, mimeType)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Download()
 	})
 	if err != nil {
@@ -183,7 +183,7 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 	if space != "" {
 		c = c.Space(space)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Generate File Ids"), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Generate File Ids"), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -201,7 +201,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 		return "", err
 	}
 	c := srv.Get(fileID).SupportsAllDrives(true).AcknowledgeAbuse(acknowledgeAbuse)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Download()
 	})
 	if err != nil {
@@ -270,7 +270,7 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -345,7 +345,7 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

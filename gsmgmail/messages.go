@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ func GetMessage(userID, id, format, metadataHeaders, fields string) (*gmail.Mess
 			c = c.MetadataHeaders(metadataHeaders)
 		}
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -88,7 +88,7 @@ func ImportMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -106,7 +106,7 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -155,7 +155,7 @@ func ModifyMessage(userID, id, fields string, addLabelIds, removeLabelIds []stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -172,7 +172,7 @@ func SendMessage(userID, fields string, message *gmail.Message) (*gmail.Message,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -189,7 +189,7 @@ func TrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -206,7 +206,7 @@ func UntrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

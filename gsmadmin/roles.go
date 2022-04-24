@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ func GetRole(customer, roleID, fields string) (*admin.Role, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -73,7 +73,7 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 // ListRoles retrieves a paginated list of all the roles in a domain.
 func ListRoles(customer, fields string, cap int) (<-chan *admin.Role, <-chan error) {
 	srv := getRolesService()
-	c := srv.List(customer).MaxResults(10000)
+	c := srv.List(customer).MaxResults(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -103,7 +103,7 @@ func PatchRole(customer, roleID, fields string, role *admin.Role) (*admin.Role, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

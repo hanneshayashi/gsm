@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ var licenseAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.
 		Type:         "string",
 		Description: `A product's unique identifier.
 For more information about products in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
-		Defaults:  map[string]interface{}{"delete": "Google-Apps", "get": "Google-Apps", "insert": "Google-Apps", "listForProduct": "Google-Apps", "listForProductAndSku": "Google-Apps", "patch": "Google-Apps"},
+		Defaults:  map[string]any{"delete": "Google-Apps", "get": "Google-Apps", "insert": "Google-Apps", "listForProduct": "Google-Apps", "listForProductAndSku": "Google-Apps", "patch": "Google-Apps"},
 		Recursive: []string{"delete", "get", "insert", "patch"},
 	},
 	"skuId": {

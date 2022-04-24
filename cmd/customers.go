@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ var customerFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"get", "patch"},
 		Type:         "string",
 		Description:  `Id of the customer.`,
-		Defaults:     map[string]interface{}{"get": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]any{"get": "my_customer", "patch": "my_customer"},
 	},
 	"alternateEmail": {
 		AvailableFor: []string{"patch"},

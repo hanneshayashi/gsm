@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 func DeleteLicenseAssignment(productID, skuID, userID string) (bool, error) {
 	srv := getLicenseAssignmentsService()
 	c := srv.Delete(productID, skuID, userID)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -46,7 +46,7 @@ func GetLicenseAssignment(productID, skuID, userID, fields string) (*licensing.L
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, licenseAssignmentInsert.UserId), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, licenseAssignmentInsert.UserId), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -132,7 +132,7 @@ func PatchLicenseAssignment(productID, skuID, userID, fields string, licenseAssi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

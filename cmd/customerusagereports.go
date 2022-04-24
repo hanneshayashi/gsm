@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ var customerUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelper
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]interface{}{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},

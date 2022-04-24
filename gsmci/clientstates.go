@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -83,7 +83,7 @@ func ListClientStates(parent, customer, filter, orderBy, fields string, cap int)
 }
 
 // PatchClientState updates the client state for the device user
-func PatchClientState(name, customer, updateMask, fields string, clientState *ci.GoogleAppsCloudidentityDevicesV1ClientState) (map[string]interface{}, error) {
+func PatchClientState(name, customer, updateMask, fields string, clientState *ci.GoogleAppsCloudidentityDevicesV1ClientState) (map[string]any, error) {
 	srv := getDevicesDeviceUsersClientStatesService()
 	c := srv.Patch(name, clientState)
 	if fields != "" {
@@ -95,14 +95,14 @@ func PatchClientState(name, customer, updateMask, fields string, clientState *ci
 	if updateMask != "" {
 		c.UpdateMask(updateMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*ci.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err

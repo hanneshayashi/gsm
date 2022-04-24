@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,17 +28,17 @@ import (
 )
 
 // CancelInvitation cancels a UserInvitation that was already sent.
-func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUserInvitationRequest) (map[string]interface{}, error) {
+func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUserInvitationRequest) (map[string]any, error) {
 	srv := getCustomersUserinvitationsServiceService()
 	c := srv.Cancel(name, cancelUserInvitationRequest)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*cibeta.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -71,7 +71,7 @@ func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
 func IsInvitableUser(name string) (bool, error) {
 	srv := getCustomersUserinvitationsServiceService()
 	c := srv.IsInvitableUser(name)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -115,20 +115,20 @@ func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-cha
 
 // SendInvitation sends a UserInvitation to email.
 // If the UserInvitation does not exist for this request and it is a valid request, the request creates a UserInvitation.
-func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendUserInvitationRequest) (map[string]interface{}, error) {
+func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendUserInvitationRequest) (map[string]any, error) {
 	srv := getCustomersUserinvitationsServiceService()
 	c := srv.Send(name, sendUserInvitationRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*cibeta.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err

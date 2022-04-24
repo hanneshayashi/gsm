@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 		AvailableFor: []string{"delete", "get", "insert", "list"},
 		Type:         "string",
 		Description:  `Immutable ID of the Workspace account.`,
-		Defaults:     map[string]interface{}{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
+		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
 		Recursive:    []string{"insert", "list"},
 	},
 	"roleAssignmentId": {
@@ -81,7 +81,7 @@ var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fla
 Acceptable values are:
 CUSTOMER
 ORG_UNIT`,
-		Defaults:  map[string]interface{}{"insert": "CUSTOMER"},
+		Defaults:  map[string]any{"insert": "CUSTOMER"},
 		Recursive: []string{"insert"},
 	},
 	"userKey": {

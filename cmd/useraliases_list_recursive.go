@@ -1,5 +1,5 @@
-/*alias
-Copyright © 2020-2021 Hannes Hayashi
+/*
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,8 +40,8 @@ var userAliasesListRecursiveCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
 		type resultStruct struct {
-			UserKey     string        `json:"userKey,omitempty"`
-			UserAliases []interface{} `json:"userAliases,omitempty"`
+			UserKey     string `json:"userKey,omitempty"`
+			UserAliases []any  `json:"userAliases,omitempty"`
 		}
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup

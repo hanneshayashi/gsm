@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ var sendAsFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create", "delete", "get", "list", "patch", "verify"},
 		Type:         "string",
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me", "verify": "me"},
+		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me", "verify": "me"},
 	},
 	"sendAsEmail": {
 		AvailableFor: []string{"create", "delete", "get", "patch", "verify"},
@@ -116,7 +116,7 @@ This setting only applies to custom "from" aliases. See https://support.google.c
 NONE      - Communication with the remote SMTP service is unsecured. Requires port 25.
 SSL       - Communication with the remote SMTP service is secured using SSL.
 STARTTLS  - Communication with the remote SMTP service is secured using STARTTLS.`,
-		Defaults: map[string]interface{}{"create": "NONE", "patch": "NONE"},
+		Defaults: map[string]any{"create": "NONE", "patch": "NONE"},
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "patch"},

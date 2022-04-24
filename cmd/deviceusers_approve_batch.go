@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,9 +44,9 @@ var deviceUsersApproveBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Result   map[string]interface{} `json:"result"`
-			Name     string                 `json:"name,omitempty"`
-			Customer string                 `json:"customer,omitempty"`
+			Result   map[string]any `json:"result"`
+			Name     string         `json:"name,omitempty"`
+			Customer string         `json:"customer,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

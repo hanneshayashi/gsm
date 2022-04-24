@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ var chromeOsCommandFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]interface{}{"get": "my_customer"},
+		Defaults: map[string]any{"get": "my_customer"},
 	},
 	"deviceId": {
 		AvailableFor:   []string{"get"},

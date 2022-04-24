@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,8 +44,8 @@ var userAliasesListBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			UserKey string        `json:"userKey,omitempty"`
-			Aliases []interface{} `json:"aliases"`
+			UserKey string `json:"userKey,omitempty"`
+			Aliases []any  `json:"aliases"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

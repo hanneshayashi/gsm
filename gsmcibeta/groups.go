@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySetting
 	if readMask != "" {
 		c.ReadMask(readMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -47,7 +47,7 @@ func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySetting
 }
 
 // UpdateSecuritySettings updates the security settings of a group.
-func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *cibeta.SecuritySettings) (map[string]interface{}, error) {
+func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *cibeta.SecuritySettings) (map[string]any, error) {
 	srv := getGroupsService()
 	c := srv.UpdateSecuritySettings(name, securitysettings)
 	if fields != "" {
@@ -56,14 +56,14 @@ func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *c
 	if updateMask != "" {
 		c.UpdateMask(updateMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
 		return nil, err
 	}
 	r, _ := result.(*cibeta.Operation)
-	var m map[string]interface{}
+	var m map[string]any
 	err = json.Unmarshal(r.Response, &m)
 	if err != nil {
 		return nil, err

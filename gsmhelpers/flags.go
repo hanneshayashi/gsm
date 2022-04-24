@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 
 // Flag represents a flag configuration that can be easily reused for multiple commands
 type Flag struct {
-	Defaults       map[string]interface{}
+	Defaults       map[string]any
 	Type           string
 	Description    string
 	Required       []string
@@ -40,7 +40,7 @@ type Flag struct {
 
 // Value is the value representation of a flag
 type Value struct {
-	Value   interface{}
+	Value   any
 	Type    string
 	Index   int64
 	Changed bool
@@ -97,7 +97,7 @@ func (v Value) GetFloat64() float64 {
 
 // interfaceToStringSlice converts an interface to a string slice ([]string] or returns nil if the interface is nil
 // Panics if the interface is not a string slice
-func interfaceToStringSlice(i interface{}) []string {
+func interfaceToStringSlice(i any) []string {
 	if i != nil {
 		return i.([]string)
 	}
@@ -106,7 +106,7 @@ func interfaceToStringSlice(i interface{}) []string {
 
 // interfaceToRune converts an interface to a rune or returns rune(-1 )if the interface is nil
 // Panics if the interface is not a rune
-func interfaceToRune(i interface{}) rune {
+func interfaceToRune(i any) rune {
 	if i != nil {
 		s := i.(string)
 		if len(s) != 1 {
@@ -119,7 +119,7 @@ func interfaceToRune(i interface{}) rune {
 
 // interfaceToString converts an interface to a string or returns 0 if the interface is nil
 // Panics if the interface is not a string
-func interfaceToString(i interface{}) string {
+func interfaceToString(i any) string {
 	if i != nil {
 		return i.(string)
 	}
@@ -147,7 +147,7 @@ func batchFlagToStringSlice(line []string, index int64) (value []string) {
 }
 
 // batchFlagToString returns a value from a slice based on an index and default value
-func batchFlagToString(line []string, index int64, def interface{}) (value string) {
+func batchFlagToString(line []string, index int64, def any) (value string) {
 	if index != 0 {
 		value = line[index-1]
 	} else {
@@ -158,7 +158,7 @@ func batchFlagToString(line []string, index int64, def interface{}) (value strin
 
 // interfaceToFloat64 converts an interface to an float64 or returns 0 if the interface is nil
 // Panics if the interface is not an float64
-func interfaceToFloat64(i interface{}) float64 {
+func interfaceToFloat64(i any) float64 {
 	if i != nil {
 		return i.(float64)
 	}
@@ -166,7 +166,7 @@ func interfaceToFloat64(i interface{}) float64 {
 }
 
 // batchFlagToFloat64 returns a value from a slice based on an index and default value
-func batchFlagToFloat64(line []string, index int64, def interface{}) (value float64, err error) {
+func batchFlagToFloat64(line []string, index int64, def any) (value float64, err error) {
 	if index != 0 {
 		value, err = strconv.ParseFloat(line[index-1], 64)
 		if err != nil {
@@ -180,7 +180,7 @@ func batchFlagToFloat64(line []string, index int64, def interface{}) (value floa
 
 // interfaceToUint64 converts an interface to a uint64 or returns 0 if the interface is nil
 // Panics if the interface is not a uint64
-func interfaceToUint64(i interface{}) uint64 {
+func interfaceToUint64(i any) uint64 {
 	if i != nil {
 		return i.(uint64)
 	}
@@ -189,7 +189,7 @@ func interfaceToUint64(i interface{}) uint64 {
 
 // interfaceToInt64 converts an interface to an int64 or returns 0 if the interface is nil
 // Panics if the interface is not an int64
-func interfaceToInt64(i interface{}) int64 {
+func interfaceToInt64(i any) int64 {
 	if i != nil {
 		return i.(int64)
 	}
@@ -198,7 +198,7 @@ func interfaceToInt64(i interface{}) int64 {
 
 // interfaceToInt converts an interface to an int or returns 0 if the interface is nil
 // Panics if the interface is not an int
-func interfaceToInt(i interface{}) int {
+func interfaceToInt(i any) int {
 	if i != nil {
 		return i.(int)
 	}
@@ -206,7 +206,7 @@ func interfaceToInt(i interface{}) int {
 }
 
 // batchFlagToInt64 returns a value from a slice based on an index and default value
-func batchFlagToInt64(line []string, index int64, def interface{}) (value int64, err error) {
+func batchFlagToInt64(line []string, index int64, def any) (value int64, err error) {
 	if index != 0 {
 		value, err = strconv.ParseInt(line[index-1], 10, 64)
 		if err != nil {
@@ -220,7 +220,7 @@ func batchFlagToInt64(line []string, index int64, def interface{}) (value int64,
 
 // interfaceToBool converts an interface to a bool or returns false if the interface is nil
 // Panics if the interface is not a bool
-func interfaceToBool(i interface{}) bool {
+func interfaceToBool(i any) bool {
 	if i != nil {
 		return i.(bool)
 	}
@@ -228,7 +228,7 @@ func interfaceToBool(i interface{}) bool {
 }
 
 // batchFlagToBool returns a value from a slice based on an index and default value
-func batchFlagToBool(line []string, index int64, def interface{}) (value bool, err error) {
+func batchFlagToBool(line []string, index int64, def any) (value bool, err error) {
 	if index != 0 {
 		value, err = strconv.ParseBool(line[index-1])
 		if err != nil {
@@ -257,7 +257,7 @@ func checkBatchFlags(flags map[string]*Value, defaultFlags map[string]*Flag, len
 	return nil
 }
 
-//FlagToMap first splits a string by ";" to get the attributes, then each attribute is
+// FlagToMap first splits a string by ";" to get the attributes, then each attribute is split by "=" to get the key / value pair
 func FlagToMap(value string) (m map[string]string) {
 	if value != "" {
 		m = make(map[string]string)

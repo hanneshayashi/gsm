@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ var draftFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"create", "delete", "get", "list", "send", "update"},
 		Type:         "string",
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]interface{}{"create": "me", "delete": "me", "get": "me", "list": "me", "send": "me", "update": "me"},
+		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me", "send": "me", "update": "me"},
 	},
 	"subject": {
 		AvailableFor: []string{"create", "update"},
@@ -79,7 +79,7 @@ MINIMAL   - Returns only email message ID and labels; does not return the email 
 FULL      - Returns the full email message data with body content parsed in the payload field; the raw field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 RAW       - Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 METADATA  - Returns only email message ID, labels, and email headers.`,
-		Defaults: map[string]interface{}{"get": "MINIMAL"},
+		Defaults: map[string]any{"get": "MINIMAL"},
 	},
 	"q": {
 		AvailableFor: []string{"list"},

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -58,7 +58,7 @@ func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.Or
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -81,7 +81,7 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 	if t != "" {
 		c = c.Type(t)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -98,7 +98,7 @@ func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {

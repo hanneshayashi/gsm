@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ var privilegeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		AvailableFor: []string{"list"},
 		Type:         "string",
 		Description:  "Immutable ID of the Workspace account.",
-		Defaults:     map[string]interface{}{"list": "my_customer"},
+		Defaults:     map[string]any{"list": "my_customer"},
 	},
 	"fields": {
 		AvailableFor: []string{"list"},

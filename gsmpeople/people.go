@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 Hannes Hayashi
+Copyright © 2020-2022 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Create Contact"), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Create Contact"), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -50,7 +50,7 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 func DeleteContact(resourceName string) (bool, error) {
 	srv := getpService()
 	c := srv.DeleteContact(resourceName)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -72,7 +72,7 @@ func DeleteContactPhoto(resourceName, personFields, sources, fields string) (boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -95,7 +95,7 @@ func GetContact(resourceName, personFields, sources, fields string) (*people.Per
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -116,7 +116,7 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -197,7 +197,7 @@ func UpdateContact(resourceName, updatePersonFields, personFields, sources, fiel
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
@@ -214,7 +214,7 @@ func UpdateContactPhoto(resourceName, fields string, updateContactPhotoRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (interface{}, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
