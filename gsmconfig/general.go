@@ -30,6 +30,7 @@ import (
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
+	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/gmailpostmastertools/v1"
@@ -171,8 +172,8 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
 			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-			"https://www.googleapis.com/auth/cloud-identity.devices",
-			"https://www.googleapis.com/auth/cloud-identity.devices.lookup",
+			cibeta.CloudIdentityDevicesScope,
+			cibeta.CloudIdentityDevicesLookupScope,
 			"https://www.googleapis.com/auth/cloud-identity.orgunits",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
