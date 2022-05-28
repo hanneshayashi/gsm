@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcibeta
 
 import (
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -47,7 +47,7 @@ func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySetting
 }
 
 // UpdateSecuritySettings updates the security settings of a group.
-func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *cibeta.SecuritySettings) (map[string]any, error) {
+func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *cibeta.SecuritySettings) (*googleapi.RawMessage, error) {
 	srv := getGroupsService()
 	c := srv.UpdateSecuritySettings(name, securitysettings)
 	if fields != "" {
@@ -62,11 +62,9 @@ func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *c
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*cibeta.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

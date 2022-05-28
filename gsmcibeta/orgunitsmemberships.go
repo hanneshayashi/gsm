@@ -19,7 +19,7 @@ package gsmcibeta
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -57,7 +57,7 @@ func ListOrgUnitMemberships(parent, customer, filter, fields string, cap int) (c
 }
 
 // MoveOrgUnitMembership moves an OrgMembership to a new OrgUnit.
-func MoveOrgUnitMemberships(name, fields string, moveOrgMembershipRequest *cibeta.MoveOrgMembershipRequest) (map[string]any, error) {
+func MoveOrgUnitMemberships(name, fields string, moveOrgMembershipRequest *cibeta.MoveOrgMembershipRequest) (*googleapi.RawMessage, error) {
 	srv := getOrgUnitsMembershipsService()
 	c := srv.Move(name, moveOrgMembershipRequest)
 	if fields != "" {
@@ -69,11 +69,9 @@ func MoveOrgUnitMemberships(name, fields string, moveOrgMembershipRequest *cibet
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*cibeta.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

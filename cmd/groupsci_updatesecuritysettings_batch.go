@@ -24,6 +24,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/googleapi"
 
 	"github.com/spf13/cobra"
 )
@@ -44,7 +45,7 @@ var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan map[string]any, cap)
+		results := make(chan *googleapi.RawMessage, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -81,7 +82,7 @@ var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []map[string]any{}
+			final := []*googleapi.RawMessage{}
 			for res := range results {
 				final = append(final, res)
 			}

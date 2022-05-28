@@ -19,7 +19,7 @@ package gsmcibeta
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,7 +28,7 @@ import (
 )
 
 // CancelInvitation cancels a UserInvitation that was already sent.
-func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUserInvitationRequest) (map[string]any, error) {
+func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUserInvitationRequest) (*googleapi.RawMessage, error) {
 	srv := getCustomersUserinvitationsService()
 	c := srv.Cancel(name, cancelUserInvitationRequest)
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
@@ -37,13 +37,11 @@ func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUse
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*cibeta.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // GetInvitation retrieves a UserInvitation resource.
@@ -115,7 +113,7 @@ func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-cha
 
 // SendInvitation sends a UserInvitation to email.
 // If the UserInvitation does not exist for this request and it is a valid request, the request creates a UserInvitation.
-func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendUserInvitationRequest) (map[string]any, error) {
+func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendUserInvitationRequest) (*googleapi.RawMessage, error) {
 	srv := getCustomersUserinvitationsService()
 	c := srv.Send(name, sendUserInvitationRequest)
 	if fields != "" {
@@ -127,11 +125,9 @@ func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendU
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*cibeta.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

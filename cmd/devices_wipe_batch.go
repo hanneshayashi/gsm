@@ -23,6 +23,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/googleapi"
 
 	"github.com/spf13/cobra"
 )
@@ -44,9 +45,9 @@ var devicesWipeBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Result   map[string]any `json:"result"`
-			Name     string         `json:"name,omitempty"`
-			Customer string         `json:"customer,omitempty"`
+			Result   *googleapi.RawMessage `json:"result"`
+			Name     string                `json:"name,omitempty"`
+			Customer string                `json:"customer,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
