@@ -57,6 +57,7 @@ var (
 	logFile        string
 	home           string
 	standardDelay  int
+	redirectPort   int
 	compressOutput bool
 	streamOutput   bool
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
@@ -154,6 +155,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
 	rootCmd.PersistentFlags().IntVar(&standardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().IntVar(&redirectPort, "redirectPort", 8081, "This is the TCP port on which GSM will create web server if you authenticate with a user account for the first time. This is necessary for the OAuth flow. See https://developers.google.com/identity/protocols/oauth2/native-app#redirect-uri_loopback")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
 }
@@ -228,11 +230,14 @@ func auth() {
 	}
 	switch mode {
 	case "dwd":
-		client = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
+		client, err = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
 	case "user":
-		client = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), viper.GetStringSlice("scopes")...)
+		client, err = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), redirectPort, viper.GetStringSlice("scopes")...)
 	case "adc":
-		client = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
+		client, err = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
+	}
+	if err != nil {
+		log.Fatalf("Unable to get client: %v", err)
 	}
 	gsmadmin.SetClient(client)
 	gsmgmail.SetClient(client)
