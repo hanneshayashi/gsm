@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -49,7 +50,10 @@ func GetAsp(userKey, fields string, codeID int64) (*admin.Asp, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Asp)
+	r, ok := result.(*admin.Asp)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,6 +70,9 @@ func ListAsps(userKey, fields string) ([]*admin.Asp, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Asps)
+	r, ok := result.(*admin.Asps)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Items, nil
 }

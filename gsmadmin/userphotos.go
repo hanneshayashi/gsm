@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func GetUserPhoto(userKey, fields string) (*admin.UserPhoto, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.UserPhoto)
+	r, ok := result.(*admin.UserPhoto)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,6 +69,9 @@ func UpdateUserPhoto(userKey, fields string, userPhoto *admin.UserPhoto) (*admin
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.UserPhoto)
+	r, ok := result.(*admin.UserPhoto)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

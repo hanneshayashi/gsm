@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetMember(groupKey, memberKey, fields string) (*admin.Member, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Member)
+	r, ok := result.(*admin.Member)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -63,7 +67,10 @@ func HasMember(groupKey, memberKey string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, _ := result.(*admin.MembersHasMember)
+	r, ok := result.(*admin.MembersHasMember)
+	if !ok {
+		return false, fmt.Errorf("Result unknown")
+	}
 	return r.IsMember, nil
 }
 
@@ -80,7 +87,10 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Member)
+	r, ok := result.(*admin.Member)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -126,6 +136,9 @@ func PatchMember(groupKey, memberKey, fields string, member *admin.Member) (*adm
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Member)
+	r, ok := result.(*admin.Member)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

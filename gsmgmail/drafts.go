@@ -19,6 +19,7 @@ package gsmgmail
 
 import (
 	"context"
+	"fmt"
 	"io"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -43,7 +44,10 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Draft)
+	r, ok := result.(*gmail.Draft)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -73,7 +77,10 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Draft)
+	r, ok := result.(*gmail.Draft)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -119,7 +126,10 @@ func SendDraft(userID string, draft *gmail.Draft, media ...io.Reader) (*gmail.Me
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -139,6 +149,9 @@ func UpdateDraft(userID, id, fields string, draft *gmail.Draft, media ...io.Read
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Draft)
+	r, ok := result.(*gmail.Draft)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

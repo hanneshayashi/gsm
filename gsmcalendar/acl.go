@@ -19,6 +19,7 @@ package gsmcalendar
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetACL(calendarID, ruleID, fields string) (*calendar.AclRule, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.AclRule)
+	r, ok := result.(*calendar.AclRule)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.AclRule)
+	r, ok := result.(*calendar.AclRule)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -109,6 +116,9 @@ func PatchACL(calendarID, ruleID, fields string, aclRule *calendar.AclRule, send
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.AclRule)
+	r, ok := result.(*calendar.AclRule)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

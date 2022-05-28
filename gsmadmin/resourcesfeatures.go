@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetFeature(customer, featureKey, fields string) (*admin.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Feature)
+	r, ok := result.(*admin.Feature)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Feature)
+	r, ok := result.(*admin.Feature)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -109,7 +116,10 @@ func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Feature)
+	r, ok := result.(*admin.Feature)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

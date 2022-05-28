@@ -57,7 +57,10 @@ func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.UserInvitation)
+	r, ok := result.(*cibeta.UserInvitation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -75,7 +78,10 @@ func IsInvitableUser(name string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, _ := result.(*cibeta.IsInvitableUserResponse)
+	r, ok := result.(*cibeta.IsInvitableUserResponse)
+	if !ok {
+		return false, fmt.Errorf("Result unknown")
+	}
 	return r.IsInvitableUser, nil
 }
 

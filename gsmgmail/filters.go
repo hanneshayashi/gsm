@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -37,7 +39,10 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Filter)
+	r, ok := result.(*gmail.Filter)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,7 +69,10 @@ func GetFilter(userID, id, fields string) (*gmail.Filter, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Filter)
+	r, ok := result.(*gmail.Filter)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -81,6 +89,9 @@ func ListFilters(userID, fields string) ([]*gmail.Filter, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListFiltersResponse)
+	r, ok := result.(*gmail.ListFiltersResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Filter, nil
 }

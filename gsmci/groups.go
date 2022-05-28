@@ -93,7 +93,10 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Group)
+	r, ok := result.(*ci.Group)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -107,7 +110,10 @@ func LookupGroup(email string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*ci.LookupGroupNameResponse)
+	r, ok := result.(*ci.LookupGroupNameResponse)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	return r.Name, nil
 }
 

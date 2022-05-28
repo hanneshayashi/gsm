@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -52,7 +53,10 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.ChromeOsDevice)
+	r, ok := result.(*admin.ChromeOsDevice)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -117,6 +121,9 @@ func PatchChromeOsDevice(customerID, deviceID, fields, projection string, chrome
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.ChromeOsDevice)
+	r, ok := result.(*admin.ChromeOsDevice)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -50,7 +51,10 @@ func GetRoleAssignment(customer, roleAssignmentID, fields string) (*admin.RoleAs
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.RoleAssignment)
+	r, ok := result.(*admin.RoleAssignment)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -67,7 +71,10 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.RoleAssignment)
+	r, ok := result.(*admin.RoleAssignment)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

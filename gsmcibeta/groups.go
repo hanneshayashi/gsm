@@ -42,7 +42,10 @@ func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySetting
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*cibeta.SecuritySettings)
+	r, ok := result.(*cibeta.SecuritySettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

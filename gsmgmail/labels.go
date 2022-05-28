@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -37,7 +39,10 @@ func CreateLabel(userID, fields string, label *gmail.Label) (*gmail.Label, error
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Label)
+	r, ok := result.(*gmail.Label)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,7 +69,10 @@ func GetLabel(userID, id, fields string) (*gmail.Label, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Label)
+	r, ok := result.(*gmail.Label)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -81,7 +89,10 @@ func ListLabels(userID, fields string) ([]*gmail.Label, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListLabelsResponse)
+	r, ok := result.(*gmail.ListLabelsResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Labels, nil
 }
 
@@ -98,6 +109,9 @@ func PatchLabel(userID, id, fields string, label *gmail.Label) (*gmail.Label, er
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Label)
+	r, ok := result.(*gmail.Label)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

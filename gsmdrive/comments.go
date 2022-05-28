@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -39,7 +40,10 @@ func CreateComment(fileID, fields string, comment *drive.Comment) (*drive.Commen
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Comment)
+	r, ok := result.(*drive.Comment)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Comment)
+	r, ok := result.(*drive.Comment)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -112,6 +119,9 @@ func UpdateComment(fileID, commentID, fields string, comment *drive.Comment) (*d
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Comment)
+	r, ok := result.(*drive.Comment)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

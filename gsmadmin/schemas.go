@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func GetSchema(customerID, schemaKey, fields string) (*admin.Schema, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Schema)
+	r, ok := result.(*admin.Schema)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,7 +69,10 @@ func InsertSchema(customerID, fields string, schema *admin.Schema) (*admin.Schem
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Schema)
+	r, ok := result.(*admin.Schema)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -81,7 +89,10 @@ func ListSchema(customerID, fields string) ([]*admin.Schema, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Schemas)
+	r, ok := result.(*admin.Schemas)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Schemas, nil
 }
 
@@ -98,6 +109,9 @@ func PatchSchema(customerID, schemaKey, fields string, schema *admin.Schema) (*a
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Schema)
+	r, ok := result.(*admin.Schema)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

@@ -66,7 +66,10 @@ func CheckTransitiveMembership(parent, query string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, _ := result.(*ci.CheckTransitiveMembershipResponse)
+	r, ok := result.(*ci.CheckTransitiveMembershipResponse)
+	if !ok {
+		return false, fmt.Errorf("Result unknown")
+	}
 	return r.HasMembership, nil
 }
 
@@ -116,7 +119,10 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Membership)
+	r, ok := result.(*ci.Membership)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -152,7 +158,10 @@ func LookupMembership(parent, memberKeyID, memberKeyNamespace string) (string, e
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*ci.LookupMembershipNameResponse)
+	r, ok := result.(*ci.LookupMembershipNameResponse)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	return r.Name, nil
 }
 
@@ -169,7 +178,10 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.ModifyMembershipRolesResponse)
+	r, ok := result.(*ci.ModifyMembershipRolesResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Membership, nil
 }
 

@@ -111,7 +111,10 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1Device)
+	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1Device)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

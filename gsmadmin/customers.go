@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -39,7 +40,10 @@ func GetCustomer(id, fields string) (*admin.Customer, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Customer)
+	r, ok := result.(*admin.Customer)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -77,6 +81,9 @@ func PatchCustomer(customerKey, fields string, customer *admin.Customer) (*admin
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Customer)
+	r, ok := result.(*admin.Customer)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

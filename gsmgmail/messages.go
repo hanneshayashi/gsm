@@ -19,6 +19,7 @@ package gsmgmail
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -76,7 +77,10 @@ func GetMessage(userID, id, format, metadataHeaders, fields string) (*gmail.Mess
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -94,7 +98,10 @@ func ImportMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -112,7 +119,10 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -161,7 +171,10 @@ func ModifyMessage(userID, id, fields string, addLabelIds, removeLabelIds []stri
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -178,7 +191,10 @@ func SendMessage(userID, fields string, message *gmail.Message) (*gmail.Message,
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -195,7 +211,10 @@ func TrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -212,6 +231,9 @@ func UntrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Message)
+	r, ok := result.(*gmail.Message)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

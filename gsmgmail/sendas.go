@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -41,7 +43,10 @@ func CreateSendAs(userID, fields string, sendAs *gmail.SendAs) (*gmail.SendAs, e
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.SendAs)
+	r, ok := result.(*gmail.SendAs)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -70,7 +75,10 @@ func GetSendAs(userID, sendAsEmail, fields string) (*gmail.SendAs, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.SendAs)
+	r, ok := result.(*gmail.SendAs)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -88,7 +96,10 @@ func ListSendAs(userID, fields string) ([]*gmail.SendAs, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListSendAsResponse)
+	r, ok := result.(*gmail.ListSendAsResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.SendAs, nil
 }
 
@@ -105,7 +116,10 @@ func PatchSendAs(userID, sendAsEmail, fields string, sendAs *gmail.SendAs) (*gma
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.SendAs)
+	r, ok := result.(*gmail.SendAs)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

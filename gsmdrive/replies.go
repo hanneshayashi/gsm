@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -39,7 +40,10 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Reply)
+	r, ok := result.(*drive.Reply)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Reply)
+	r, ok := result.(*drive.Reply)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -109,6 +116,9 @@ func UpdateReply(fileID, commentID, replyID, fields string, reply *drive.Reply) 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Reply)
+	r, ok := result.(*drive.Reply)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

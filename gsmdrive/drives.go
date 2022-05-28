@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -43,7 +44,10 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Drive)
+	r, ok := result.(*drive.Drive)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	if returnWhenReady {
 		about, err := GetAbout("user(permissionId)")
 		if err != nil {
@@ -81,7 +85,10 @@ func GetDrive(driveID, fields string, useDomainAdminAccess bool) (*drive.Drive, 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Drive)
+	r, ok := result.(*drive.Drive)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -98,7 +105,10 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Drive)
+	r, ok := result.(*drive.Drive)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -146,7 +156,10 @@ func UnhideDrive(driveID, fields string) (*drive.Drive, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Drive)
+	r, ok := result.(*drive.Drive)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -163,6 +176,9 @@ func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, d *drive.Dri
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Drive)
+	r, ok := result.(*drive.Drive)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

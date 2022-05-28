@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func GetDomainAlias(customerID, domainAliasName, fields string) (*admin.DomainAl
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.DomainAlias)
+	r, ok := result.(*admin.DomainAlias)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,7 +69,10 @@ func InsertDomainAlias(customerID, fields string, domainAlias *admin.DomainAlias
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.DomainAlias)
+	r, ok := result.(*admin.DomainAlias)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -84,6 +92,9 @@ func ListDomainAliases(customerID, parentDomainName, fields string) ([]*admin.Do
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.DomainAliases)
+	r, ok := result.(*admin.DomainAliases)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.DomainAliases, nil
 }

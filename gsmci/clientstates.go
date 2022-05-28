@@ -43,7 +43,10 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
+	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

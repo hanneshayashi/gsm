@@ -19,6 +19,7 @@ package gsmgmailpostmaster
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -40,7 +41,10 @@ func GetTrafficStats(name, fields string) (*gmailpostmastertools.TrafficStats, e
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmailpostmastertools.TrafficStats)
+	r, ok := result.(*gmailpostmastertools.TrafficStats)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

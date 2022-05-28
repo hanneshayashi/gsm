@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	drive "google.golang.org/api/drive/v3"
@@ -37,6 +39,9 @@ func GetAbout(fields string) (*drive.About, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.About)
+	r, ok := result.(*drive.About)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

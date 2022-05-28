@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.OrgUnit)
+	r, ok := result.(*admin.OrgUnit)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,7 +69,10 @@ func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.Or
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.OrgUnit)
+	r, ok := result.(*admin.OrgUnit)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -87,7 +95,10 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.OrgUnits)
+	r, ok := result.(*admin.OrgUnits)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.OrganizationUnits, nil
 }
 
@@ -104,6 +115,9 @@ func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.OrgUnit)
+	r, ok := result.(*admin.OrgUnit)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

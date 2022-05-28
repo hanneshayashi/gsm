@@ -19,6 +19,7 @@ package gsmcalendar
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -39,7 +40,10 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.Setting)
+	r, ok := result.(*calendar.Setting)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

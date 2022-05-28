@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -57,6 +59,9 @@ func ListVerificationCodes(userKey, fields string) ([]*admin.VerificationCode, e
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.VerificationCodes)
+	r, ok := result.(*admin.VerificationCodes)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Items, nil
 }

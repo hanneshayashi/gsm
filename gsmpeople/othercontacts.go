@@ -19,6 +19,7 @@ package gsmpeople
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -39,7 +40,10 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, copyOtherCon
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.Person)
+	r, ok := result.(*people.Person)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

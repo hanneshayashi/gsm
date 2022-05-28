@@ -19,6 +19,7 @@ package gsmpeople
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,7 +43,10 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.Person)
+	r, ok := result.(*people.Person)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -101,7 +105,10 @@ func GetContact(resourceName, personFields, sources, fields string) (*people.Per
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.Person)
+	r, ok := result.(*people.Person)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -122,7 +129,10 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.GetPeopleResponse)
+	r, ok := result.(*people.GetPeopleResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -203,7 +213,10 @@ func UpdateContact(resourceName, updatePersonFields, personFields, sources, fiel
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.Person)
+	r, ok := result.(*people.Person)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -220,6 +233,9 @@ func UpdateContactPhoto(resourceName, fields string, updateContactPhotoRequest *
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.UpdateContactPhotoResponse)
+	r, ok := result.(*people.UpdateContactPhotoResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Person, nil
 }
