@@ -173,6 +173,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
 			"https://www.googleapis.com/auth/cloud-identity.devices",
 			"https://www.googleapis.com/auth/cloud-identity.devices.lookup",
+			"https://www.googleapis.com/auth/cloud-identity.orgunits",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
 			licensing.AppsLicensingScope,
