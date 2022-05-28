@@ -61,7 +61,7 @@ func getGroupsService() *cibeta.GroupsService {
 	return groupsService
 }
 
-func getCustomersUserinvitationsServiceService() *cibeta.CustomersUserinvitationsService {
+func getCustomersUserinvitationsService() *cibeta.CustomersUserinvitationsService {
 	if customersUserinvitationsService == nil {
 		customersUserinvitationsService = cibeta.NewCustomersUserinvitationsService(getCiBetaService())
 	}

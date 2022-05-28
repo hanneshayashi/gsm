@@ -29,7 +29,7 @@ import (
 
 // CancelInvitation cancels a UserInvitation that was already sent.
 func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUserInvitationRequest) (map[string]any, error) {
-	srv := getCustomersUserinvitationsServiceService()
+	srv := getCustomersUserinvitationsService()
 	c := srv.Cancel(name, cancelUserInvitationRequest)
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
@@ -48,7 +48,7 @@ func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUse
 
 // GetInvitation retrieves a UserInvitation resource.
 func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
-	srv := getCustomersUserinvitationsServiceService()
+	srv := getCustomersUserinvitationsService()
 	c := srv.Get(name)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
@@ -69,7 +69,7 @@ func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
 //  - the domain of the email address matches an existing verified Google Workspace or Cloud Identity domain
 // If both conditions are met, the user is eligible.
 func IsInvitableUser(name string) (bool, error) {
-	srv := getCustomersUserinvitationsServiceService()
+	srv := getCustomersUserinvitationsService()
 	c := srv.IsInvitableUser(name)
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
@@ -83,7 +83,7 @@ func IsInvitableUser(name string) (bool, error) {
 
 // ListUserInvitations retrieves a list of UserInvitation resources.
 func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-chan *cibeta.UserInvitation, <-chan error) {
-	srv := getCustomersUserinvitationsServiceService()
+	srv := getCustomersUserinvitationsService()
 	c := srv.List(parent).PageSize(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
@@ -116,7 +116,7 @@ func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-cha
 // SendInvitation sends a UserInvitation to email.
 // If the UserInvitation does not exist for this request and it is a valid request, the request creates a UserInvitation.
 func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendUserInvitationRequest) (map[string]any, error) {
-	srv := getCustomersUserinvitationsServiceService()
+	srv := getCustomersUserinvitationsService()
 	c := srv.Send(name, sendUserInvitationRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
