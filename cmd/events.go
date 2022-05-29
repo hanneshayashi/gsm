@@ -426,7 +426,10 @@ func mapToEvent(flags map[string]*gsmhelpers.Value) (*calendar.Event, error) {
 	}
 	addConferenceData := flags["addConferenceData"].GetBool()
 	if addConferenceData {
-		u, _ := uuid.NewRandom()
+		u, err := uuid.NewRandom()
+		if err != nil {
+			return nil, err
+		}
 		event.ConferenceData = &calendar.ConferenceData{
 			CreateRequest: &calendar.CreateConferenceRequest{
 				RequestId: u.String(),

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgroupssettings
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -37,7 +39,10 @@ func GetGroupSettings(groupUniqueID, fields string) (*groupssettings.Groups, err
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*groupssettings.Groups)
+	r, ok := result.(*groupssettings.Groups)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -54,6 +59,9 @@ func PatchGroupSettings(groupUniqueID, fields string, groups *groupssettings.Gro
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*groupssettings.Groups)
+	r, ok := result.(*groupssettings.Groups)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

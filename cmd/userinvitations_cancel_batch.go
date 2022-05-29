@@ -23,6 +23,7 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/googleapi"
 
 	"github.com/spf13/cobra"
 )
@@ -44,8 +45,8 @@ var userInvitationsCancelBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Result map[string]any `json:"result"`
-			Name   string         `json:"name,omitempty"`
+			Result *googleapi.RawMessage `json:"result"`
+			Name   string                `json:"name,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {

@@ -19,6 +19,7 @@ package gsmgmail
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -56,7 +57,10 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Thread)
+	r, ok := result.(*gmail.Thread)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -105,7 +109,10 @@ func ModifyThread(userID, id, fields string, addLabelIds, removeLabelIds []strin
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Thread)
+	r, ok := result.(*gmail.Thread)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -122,7 +129,10 @@ func TrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Thread)
+	r, ok := result.(*gmail.Thread)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -139,6 +149,9 @@ func UntrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Thread)
+	r, ok := result.(*gmail.Thread)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

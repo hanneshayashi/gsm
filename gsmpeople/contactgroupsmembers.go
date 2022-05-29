@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -37,6 +39,9 @@ func ModifyContactGroupMembers(resourceName, fields string, modifyContactGroupMe
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.ModifyContactGroupMembersResponse)
+	r, ok := result.(*people.ModifyContactGroupMembersResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

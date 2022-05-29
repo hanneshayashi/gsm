@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -59,7 +61,10 @@ func GetCalendar(calendarID, fields string) (*calendar.Calendar, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.Calendar)
+	r, ok := result.(*calendar.Calendar)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -76,7 +81,10 @@ func InsertCalendar(cal *calendar.Calendar, fields string) (*calendar.Calendar, 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.Calendar)
+	r, ok := result.(*calendar.Calendar)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -94,6 +102,9 @@ func PatchCalendar(calendarID, fields string, cal *calendar.Calendar) (*calendar
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.Calendar)
+	r, ok := result.(*calendar.Calendar)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

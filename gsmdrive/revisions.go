@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -54,7 +55,10 @@ func GetRevision(fileID, revisionID, fields string) (*drive.Revision, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Revision)
+	r, ok := result.(*drive.Revision)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -72,7 +76,10 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*http.Response)
+	r, ok := result.(*http.Response)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	defer r.Body.Close()
 	fileLocal, err := os.Create(file.OriginalFilename)
 	if err != nil {
@@ -122,6 +129,9 @@ func UpdateRevision(fileID, revisionID, fields string, revision *drive.Revision)
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Revision)
+	r, ok := result.(*drive.Revision)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

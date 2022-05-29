@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/calendar/v3"
@@ -37,6 +39,9 @@ func GetColors(fields string) (*calendar.Colors, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.Colors)
+	r, ok := result.(*calendar.Colors)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

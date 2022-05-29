@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func GetToken(userKey, clientID, fields string) (*admin.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Token)
+	r, ok := result.(*admin.Token)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,6 +69,9 @@ func ListTokens(userKey, fields string) ([]*admin.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Tokens)
+	r, ok := result.(*admin.Tokens)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Items, nil
 }

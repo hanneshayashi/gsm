@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -47,7 +49,10 @@ func InsertGroupAlias(groupKey, fields string, alias *admin.Alias) (*admin.Alias
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Alias)
+	r, ok := result.(*admin.Alias)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -64,6 +69,9 @@ func ListGroupAliases(groupKey, fields string) ([]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Aliases)
+	r, ok := result.(*admin.Aliases)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Aliases, nil
 }

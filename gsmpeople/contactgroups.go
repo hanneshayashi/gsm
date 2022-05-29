@@ -19,6 +19,7 @@ package gsmpeople
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,7 +43,10 @@ func BatchGetContactGroups(resourceNames []string, maxMembers int64, fields stri
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.BatchGetContactGroupsResponse)
+	r, ok := result.(*people.BatchGetContactGroupsResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -59,7 +63,10 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.ContactGroup)
+	r, ok := result.(*people.ContactGroup)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -92,7 +99,10 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.ContactGroup)
+	r, ok := result.(*people.ContactGroup)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -136,6 +146,9 @@ func UpdateContactGroup(resourceName, fields string, updateContactGroupRequest *
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*people.ContactGroup)
+	r, ok := result.(*people.ContactGroup)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

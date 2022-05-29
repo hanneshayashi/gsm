@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -43,7 +43,10 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
+	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -83,7 +86,7 @@ func ListClientStates(parent, customer, filter, orderBy, fields string, cap int)
 }
 
 // PatchClientState updates the client state for the device user
-func PatchClientState(name, customer, updateMask, fields string, clientState *ci.GoogleAppsCloudidentityDevicesV1ClientState) (map[string]any, error) {
+func PatchClientState(name, customer, updateMask, fields string, clientState *ci.GoogleAppsCloudidentityDevicesV1ClientState) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersClientStatesService()
 	c := srv.Patch(name, clientState)
 	if fields != "" {
@@ -101,11 +104,9 @@ func PatchClientState(name, customer, updateMask, fields string, clientState *ci
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

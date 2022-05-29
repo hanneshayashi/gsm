@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,7 +43,10 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Permission)
+	r, ok := result.(*drive.Permission)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -69,7 +73,10 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Permission)
+	r, ok := result.(*drive.Permission)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -120,6 +127,9 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.Permission)
+	r, ok := result.(*drive.Permission)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

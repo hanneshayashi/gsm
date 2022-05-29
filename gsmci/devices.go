@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -32,7 +32,7 @@ import (
 // This operation is possible when the device is in a "pending wipe" state.
 // The device enters the "pending wipe" state when a wipe device command is issued, but has not yet been sent to the device.
 // The cancel wipe will fail if the wipe command has already been issued to the device.
-func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest) (map[string]any, error) {
+func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesService()
 	c := srv.CancelWipe(name, cancelWipeDeviceRequest)
 	if fields != "" {
@@ -44,18 +44,16 @@ func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleApp
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // CreateDevice creates a device.
 // Only company-owned device may be created.
-func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDevicesV1Device) (map[string]any, error) {
+func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDevicesV1Device) (*googleapi.RawMessage, error) {
 	srv := getDevicesService()
 	c := srv.Create(device)
 	if fields != "" {
@@ -70,17 +68,15 @@ func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDev
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // DeleteDevice deletes the specified device.
-func DeleteDevice(name, customer string) (map[string]any, error) {
+func DeleteDevice(name, customer string) (*googleapi.RawMessage, error) {
 	srv := getDevicesService()
 	c := srv.Delete(name)
 	if customer != "" {
@@ -92,13 +88,11 @@ func DeleteDevice(name, customer string) (map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // GetDevice retrieves the specified device.
@@ -117,7 +111,10 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1Device)
+	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1Device)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -160,7 +157,7 @@ func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-cha
 }
 
 // WipeDevice wipes all data on the specified device.
-func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest) (map[string]any, error) {
+func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesService()
 	c := srv.Wipe(name, wipeDeviceRequest)
 	if fields != "" {
@@ -172,11 +169,9 @@ func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidenti
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

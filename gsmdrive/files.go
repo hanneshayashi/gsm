@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -51,7 +52,10 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.File)
+	r, ok := result.(*drive.File)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -80,7 +84,10 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.File)
+	r, ok := result.(*drive.File)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -153,7 +160,10 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*http.Response)
+	r, ok := result.(*http.Response)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
@@ -189,7 +199,10 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.GeneratedIds)
+	r, ok := result.(*drive.GeneratedIds)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Ids, nil
 }
 
@@ -207,7 +220,10 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*http.Response)
+	r, ok := result.(*http.Response)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
@@ -256,7 +272,10 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	r, _ := result.(*drive.File)
+// 	r, ok := result.(*drive.File)
+// if !ok {
+// 	return nil, fmt.Errorf("Result unknown")
+// }
 // 	return r, nil
 // }
 
@@ -276,7 +295,10 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.File)
+	r, ok := result.(*drive.File)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -351,6 +373,9 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*drive.File)
+	r, ok := result.(*drive.File)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -39,7 +41,10 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Delegate)
+	r, ok := result.(*gmail.Delegate)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -69,7 +74,10 @@ func ListDelegates(userID, fields string) ([]*gmail.Delegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListDelegatesResponse)
+	r, ok := result.(*gmail.ListDelegatesResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Delegates, nil
 }
 
@@ -92,6 +100,9 @@ func CreateDelegate(userID, fields string, delegate *gmail.Delegate) (*gmail.Del
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.Delegate)
+	r, ok := result.(*gmail.Delegate)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

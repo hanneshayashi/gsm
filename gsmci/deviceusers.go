@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,7 +28,7 @@ import (
 )
 
 // ApproveDeviceUser approves device to access user data.
-func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1ApproveDeviceUserRequest) (map[string]any, error) {
+func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1ApproveDeviceUserRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Approve(name, approveDeviceRequest)
 	if fields != "" {
@@ -40,17 +40,15 @@ func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsC
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // BlockDeviceUser blocks device from accessing user data
-func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1BlockDeviceUserRequest) (map[string]any, error) {
+func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloudidentityDevicesV1BlockDeviceUserRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Block(name, blockDeviceRequest)
 	if fields != "" {
@@ -62,18 +60,16 @@ func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloud
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // CancelDeviceUserWipe cancels an unfinished user account wipe.
 // This operation can be used to cancel device wipe in the gap between the wipe operation returning success and the device being wiped.
-func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceUserRequest) (map[string]any, error) {
+func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsCloudidentityDevicesV1CancelWipeDeviceUserRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.CancelWipe(name, cancelWipeRequest)
 	if fields != "" {
@@ -85,18 +81,16 @@ func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsC
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // DeleteDeviceUser deletes the specified DeviceUser.
 // This also revokes the user's access to device data.
-func DeleteDeviceUser(name, customer string) (map[string]any, error) {
+func DeleteDeviceUser(name, customer string) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Delete(name)
 	if customer != "" {
@@ -108,13 +102,11 @@ func DeleteDeviceUser(name, customer string) (map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // GetDeviceUser retrieves the specified DeviceUser
@@ -133,7 +125,10 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.GoogleAppsCloudidentityDevicesV1DeviceUser)
+	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1DeviceUser)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -218,7 +213,7 @@ func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, 
 // For example, if a Gmail app is installed on a device that is used for personal and work purposes,
 // and the user is logged in to the Gmail app with their personal account as well as their work account,
 // wiping the "deviceUser" by their work administrator will not affect their personal account within Gmail or other apps such as Photos.
-func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceUserRequest) (map[string]any, error) {
+func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentityDevicesV1WipeDeviceUserRequest) (*googleapi.RawMessage, error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Wipe(name, wipeRequest)
 	if fields != "" {
@@ -230,11 +225,9 @@ func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentity
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }

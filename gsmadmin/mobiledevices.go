@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -62,7 +63,10 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.MobileDevice)
+	r, ok := result.(*admin.MobileDevice)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

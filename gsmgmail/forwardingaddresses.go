@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -39,7 +41,10 @@ func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.For
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ForwardingAddress)
+	r, ok := result.(*gmail.ForwardingAddress)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +71,10 @@ func GetForwardingAddress(userID, forwardingEmail, fields string) (*gmail.Forwar
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ForwardingAddress)
+	r, ok := result.(*gmail.ForwardingAddress)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -83,6 +91,9 @@ func ListForwardingAddresses(userID, fields string) ([]*gmail.ForwardingAddress,
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListForwardingAddressesResponse)
+	r, ok := result.(*gmail.ListForwardingAddressesResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.ForwardingAddresses, nil
 }

@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -37,7 +39,10 @@ func GetAutoForwardingSettings(userID, fields string) (*gmail.AutoForwarding, er
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.AutoForwarding)
+	r, ok := result.(*gmail.AutoForwarding)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -54,7 +59,10 @@ func GetIMAPSettings(userID, fields string) (*gmail.ImapSettings, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ImapSettings)
+	r, ok := result.(*gmail.ImapSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -71,7 +79,10 @@ func GetLanguageSettings(userID, fields string) (*gmail.LanguageSettings, error)
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.LanguageSettings)
+	r, ok := result.(*gmail.LanguageSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -88,7 +99,10 @@ func GetPOPSettings(userID, fields string) (*gmail.PopSettings, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.PopSettings)
+	r, ok := result.(*gmail.PopSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -105,7 +119,10 @@ func GetVacationResponderSettings(userID, fields string) (*gmail.VacationSetting
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.VacationSettings)
+	r, ok := result.(*gmail.VacationSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -123,7 +140,10 @@ func UpdateAutoForwardingSettings(userID, fields string, autoForwarding *gmail.A
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.AutoForwarding)
+	r, ok := result.(*gmail.AutoForwarding)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -140,7 +160,10 @@ func UpdateIMAPSettings(userID, fields string, imapSettings *gmail.ImapSettings)
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ImapSettings)
+	r, ok := result.(*gmail.ImapSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -159,7 +182,10 @@ func UpdateLanguageSettings(userID, fields string, languageSetting *gmail.Langua
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.LanguageSettings)
+	r, ok := result.(*gmail.LanguageSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -176,7 +202,10 @@ func UpdatePOPSettings(userID, fields string, popSettings *gmail.PopSettings) (*
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.PopSettings)
+	r, ok := result.(*gmail.PopSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -193,6 +222,9 @@ func UpdateVacationResponderSettings(userID, fields string, vacationSettings *gm
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.VacationSettings)
+	r, ok := result.(*gmail.VacationSettings)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

@@ -19,6 +19,7 @@ package gsmcalendar
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetCalendarListEntry(calendarID, fields string) (*calendar.CalendarListEntr
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.CalendarListEntry)
+	r, ok := result.(*calendar.CalendarListEntry)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.CalendarListEntry)
+	r, ok := result.(*calendar.CalendarListEntry)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -112,6 +119,9 @@ func PatchCalendarListEntry(calendarID, fields string, calendarListEntry *calend
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*calendar.CalendarListEntry)
+	r, ok := result.(*calendar.CalendarListEntry)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

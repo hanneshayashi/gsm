@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetBuilding(customer, buildingID, fields string) (*admin.Building, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Building)
+	r, ok := result.(*admin.Building)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -69,7 +73,10 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Building)
+	r, ok := result.(*admin.Building)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -114,6 +121,9 @@ func PatchBuilding(customer, buildingID, coordinatesSource, fields string, build
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Building)
+	r, ok := result.(*admin.Building)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetCalendarResource(customer, calendarResourceID, fields string) (*admin.Ca
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.CalendarResource)
+	r, ok := result.(*admin.CalendarResource)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.CalendarResource)
+	r, ok := result.(*admin.CalendarResource)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -115,6 +122,9 @@ func PatchCalendarResource(customer, calendarResourceID, fields string, calendar
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.CalendarResource)
+	r, ok := result.(*admin.CalendarResource)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

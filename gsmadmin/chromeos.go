@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -33,6 +35,9 @@ func IssueCommand(customerID, deviceID string, issueCommandRequest *admin.Direct
 	if err != nil {
 		return 0, err
 	}
-	r, _ := result.(*admin.DirectoryChromeosdevicesIssueCommandResponse)
+	r, ok := result.(*admin.DirectoryChromeosdevicesIssueCommandResponse)
+	if !ok {
+		return 0, fmt.Errorf("Result unknown")
+	}
 	return r.CommandId, nil
 }

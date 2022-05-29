@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcibeta
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -26,38 +27,41 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// GetSecuritySettings returns the security settings of a group.
-func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySettings, error) {
-	srv := getGroupsService()
-	c := srv.GetSecuritySettings(name)
+// ListOrgUnitMemberships lists OrgMembership resources in an OrgUnit treated as 'parent'.
+func ListOrgUnitMemberships(parent, customer, filter, fields string, cap int) (chan *cibeta.OrgMembership, chan error) {
+	srv := getOrgUnitsMembershipsService()
+	c := srv.List(parent).Customer(customer).PageSize(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	if readMask != "" {
-		c.ReadMask(readMask)
+	if filter != "" {
+		c.Filter(filter)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
-	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*cibeta.SecuritySettings)
-	if !ok {
-		return nil, fmt.Errorf("Result unknown")
-	}
-	return r, nil
+	ch := make(chan *cibeta.OrgMembership, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := c.Pages(context.Background(), func(response *cibeta.ListOrgMembershipsResponse) error {
+			for i := range response.OrgMemberships {
+				ch <- response.OrgMemberships[i]
+			}
+			return nil
+		})
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	gsmhelpers.Sleep()
+	return ch, err
 }
 
-// UpdateSecuritySettings updates the security settings of a group.
-func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *cibeta.SecuritySettings) (*googleapi.RawMessage, error) {
-	srv := getGroupsService()
-	c := srv.UpdateSecuritySettings(name, securitysettings)
+// MoveOrgUnitMembership moves an OrgMembership to a new OrgUnit.
+func MoveOrgUnitMemberships(name, fields string, moveOrgMembershipRequest *cibeta.MoveOrgMembershipRequest) (*googleapi.RawMessage, error) {
+	srv := getOrgUnitsMembershipsService()
+	c := srv.Move(name, moveOrgMembershipRequest)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
-	}
-	if updateMask != "" {
-		c.UpdateMask(updateMask)
 	}
 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()

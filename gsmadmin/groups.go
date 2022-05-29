@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -49,7 +50,10 @@ func GetGroup(groupKey, fields string) (*admin.Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Group)
+	r, ok := result.(*admin.Group)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -66,7 +70,10 @@ func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Group)
+	r, ok := result.(*admin.Group)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -120,6 +127,9 @@ func PatchGroup(groupKey, fields string, Group *admin.Group) (*admin.Group, erro
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Group)
+	r, ok := result.(*admin.Group)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

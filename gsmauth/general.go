@@ -23,10 +23,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
+	"github.com/skratchdot/open-golang/open"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -34,38 +36,11 @@ import (
 	"google.golang.org/api/impersonate"
 )
 
-// Retrieve a token, saves the token, then returns the generated client.
-func getClient(config *oauth2.Config, tokenName string) *http.Client {
-	// The file token.json stores the user's access and refresh tokens, and is
-	// created automatically when the authorization flow completes for the first
-	// time.
-	tokenName = fmt.Sprintf("%s/%s", gsmconfig.CfgDir, tokenName)
-	tok, err := tokenFromFile(tokenName)
-	if err != nil {
-		tok = getTokenFromWeb(config)
-		saveToken(tokenName, tok)
-	}
-	return config.Client(context.Background(), tok)
-}
-
-// Request a token from the web, then returns the retrieved token.
-func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
-	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
-	fmt.Printf("Go to the following link in your browser then type the authorization code: \n%v\n", authURL)
-	var authCode string
-	if _, err := fmt.Scan(&authCode); err != nil {
-		log.Fatalf("Unable to read authorization code: %v", err)
-	}
-	tok, err := config.Exchange(context.TODO(), authCode)
-	if err != nil {
-		log.Fatalf("Unable to retrieve token from web: %v", err)
-	}
-	return tok
-}
+var ctx context.Context
 
 // Retrieves a token from a local file.
-func tokenFromFile(file string) (*oauth2.Token, error) {
-	f, err := os.Open(file)
+func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
+	f, err := os.Open(tokenPath)
 	if err != nil {
 		return nil, err
 	}
@@ -76,37 +51,65 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 }
 
 // Saves a token to a file path.
-func saveToken(path string, token *oauth2.Token) {
+func saveToken(path string, token *oauth2.Token) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
-		log.Fatalf("Unable to cache OAuth token: %v", err)
+		return fmt.Errorf("Unable to cache OAuth token: %v", err)
 	}
 	defer f.Close()
 	err = json.NewEncoder(f).Encode(token)
 	if err != nil {
-		log.Fatalf("Unable to save OAuth token: %v", err)
+		return fmt.Errorf("Unable to save OAuth token: %v", err)
 	}
+	return nil
 }
 
 //GetClientUser does user-based authentication via OAuth and returns an *http.Client
-func GetClientUser(credentials []byte, tokenName string, scope ...string) (client *http.Client) {
+func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope ...string) (client *http.Client, err error) {
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(credentials, scope...)
+	config.RedirectURL = fmt.Sprintf("http://127.0.0.1:%d/oauth/callback", redirectPort)
 	if err != nil {
 		log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
-	client = getClient(config, tokenName)
-	return
+	tokenPath := fmt.Sprintf("%s/%s", gsmconfig.CfgDir, tokenName)
+	// The file token.json stores the user's access and refresh tokens, and is
+	// created automatically when the authorization flow completes for the first
+	// time.
+	tok, err := tokenFromFile(tokenPath)
+	if err != nil {
+		authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
+		srv := &http.Server{Addr: fmt.Sprintf(":%d", redirectPort)}
+		done := make(chan bool, 1)
+		http.HandleFunc("/oauth/callback", func(w http.ResponseWriter, r *http.Request) {
+			queryParts, _ := url.ParseQuery(r.URL.RawQuery)
+			code := queryParts["code"][0]
+			tok, err = config.Exchange(ctx, code)
+			if err != nil {
+				log.Fatal(err)
+			}
+			saveToken(tokenPath, tok)
+			fmt.Fprintf(w, "You can close this window now")
+			done <- true
+			close(done)
+		})
+		open.Run(authURL)
+		go func() {
+			if <-done {
+				srv.Shutdown(ctx)
+			}
+		}()
+		srv.ListenAndServe()
+	}
+	return config.Client(ctx, tok), nil
 }
 
 //GetClientADC returns a client to be used for API services
-func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client) {
-	ctx := context.Background()
+func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client, err error) {
 	if serviceAccountEmail == "" {
-		var err error
 		serviceAccountEmail, err = metadata.Email("")
 		if err != nil {
-			log.Fatalf("Error getting Service Account email: %v", err)
+			return nil, fmt.Errorf("Error getting Service Account email: %v", err)
 		}
 	}
 	ts, err := impersonate.CredentialsTokenSource(ctx, impersonate.CredentialsConfig{
@@ -115,18 +118,22 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 		Subject:         subject,
 	})
 	if err != nil {
-		log.Fatalf("Error getting token source: %v", err)
+		return nil, fmt.Errorf("Error getting token source: %v", err)
 	}
 	client = oauth2.NewClient(ctx, ts)
 	return
 }
 
 //GetClient returns a client to be used for API services
-func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client) {
+func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client, err error) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {
-		log.Fatalf("Error parsing Service Account credential file to config: %v", err)
+		return nil, fmt.Errorf("Error parsing Service Account credential file to config: %v", err)
 	}
 	config.Subject = subject
-	return config.Client(context.Background())
+	return config.Client(ctx), nil
+}
+
+func init() {
+	ctx = context.Background()
 }

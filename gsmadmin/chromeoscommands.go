@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -39,6 +40,9 @@ func GetCommand(customerID, deviceID, fields string, commandID int64) (*admin.Di
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.DirectoryChromeosdevicesCommand)
+	r, ok := result.(*admin.DirectoryChromeosdevicesCommand)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

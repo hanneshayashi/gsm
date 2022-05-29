@@ -21,33 +21,33 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmci"
+	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"google.golang.org/api/googleapi"
 
 	"github.com/spf13/cobra"
 )
 
-// deviceUsersDeleteBatchCmd represents the batch command
-var deviceUsersDeleteBatchCmd = &cobra.Command{
+// orgUnitsMembershipsMoveBatchCmd represents the batch command
+var orgUnitsMembershipsMoveBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch deletes device users using a CSV file as input.",
-	Long:  `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.deviceUsers/delete`,
+	Short: "Batch move Shared Drives to organizational units using a CSV file as input.",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/orgUnits.memberships/move",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, deviceUserFlags)
+		maps, err := gsmhelpers.GetBatchMaps(cmd, orgUnitsMembershipFlags)
 		if err != nil {
 			log.Fatalln(err)
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Result   *googleapi.RawMessage `json:"result"`
-			Name     string                `json:"name,omitempty"`
-			Customer string                `json:"customer,omitempty"`
+			Result             *googleapi.RawMessage `json:"result"`
+			Name               string                `json:"name,omitempty"`
+			DestinationOrgUnit string                `json:"destinationOrgUnit,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
@@ -55,13 +55,22 @@ var deviceUsersDeleteBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						name := m["name"].GetString()
-						customer := m["customer"].GetString()
-						result, err := gsmci.DeleteDeviceUser(name, m["fields"].GetString())
+						orgMembershipMoveRequest, err := mapToOrgMembershipMoveRequest(m)
+						if err != nil {
+							log.Printf("Error building org unit membership move request object: %v", err)
+							continue
+						}
+						var name string
+						if m["name"].IsSet() {
+							name = m["name"].GetString()
+						} else if m["driveId"].IsSet() {
+							name = "orgUnits/-/memberships/shared_drive;" + m["driveId"].GetString()
+						}
+						result, err := gsmcibeta.MoveOrgUnitMemberships(name, m["fields"].GetString(), orgMembershipMoveRequest)
 						if err != nil {
 							log.Println(err)
 						} else {
-							results <- resultStruct{Name: name, Customer: customer, Result: result}
+							results <- resultStruct{Name: name, DestinationOrgUnit: orgMembershipMoveRequest.DestinationOrgUnit, Result: result}
 						}
 					}
 					wg.Done()
@@ -92,5 +101,5 @@ var deviceUsersDeleteBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(deviceUsersDeleteCmd, deviceUsersDeleteBatchCmd, deviceUserFlags, deviceUserFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(orgUnitsMembershipsMoveCmd, orgUnitsMembershipsMoveBatchCmd, orgUnitsMembershipFlags, orgUnitsMembershipFlagsALL, batchFlags)
 }

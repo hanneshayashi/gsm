@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -66,12 +66,15 @@ func CheckTransitiveMembership(parent, query string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, _ := result.(*ci.CheckTransitiveMembershipResponse)
+	r, ok := result.(*ci.CheckTransitiveMembershipResponse)
+	if !ok {
+		return false, fmt.Errorf("Result unknown")
+	}
 	return r.HasMembership, nil
 }
 
 // CreateMembership creates a Membership.
-func CreateMembership(parent, fields string, membership *ci.Membership) (googleapi.RawMessage, error) {
+func CreateMembership(parent, fields string, membership *ci.Membership) (*googleapi.RawMessage, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.Create(parent, membership)
 	if fields != "" {
@@ -83,8 +86,11 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (googlea
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	return r.Response, nil
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
+	return &r.Response, nil
 }
 
 // DeleteMembership deletes a Membership.
@@ -113,14 +119,17 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Membership)
+	r, ok := result.(*ci.Membership)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
 // GetMembershipGraph gets a membership graph of just a member or both a member and a group.
 // Given a member, the response will contain all membership paths from the member.
 // Given both a group and a member, the response will contain all membership paths between the group and the member.
-func GetMembershipGraph(parent, query, fields string) (map[string]any, error) {
+func GetMembershipGraph(parent, query, fields string) (*googleapi.RawMessage, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.GetMembershipGraph(parent).Query(query)
 	if fields != "" {
@@ -132,13 +141,11 @@ func GetMembershipGraph(parent, query, fields string) (map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // LookupMembership looks up the resource name of a Membership by its EntityKey.
@@ -151,7 +158,10 @@ func LookupMembership(parent, memberKeyID, memberKeyNamespace string) (string, e
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*ci.LookupMembershipNameResponse)
+	r, ok := result.(*ci.LookupMembershipNameResponse)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	return r.Name, nil
 }
 
@@ -168,7 +178,10 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.ModifyMembershipRolesResponse)
+	r, ok := result.(*ci.ModifyMembershipRolesResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Membership, nil
 }
 

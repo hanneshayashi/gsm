@@ -24,6 +24,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/googleapi"
 
 	"github.com/spf13/cobra"
 )
@@ -44,7 +45,7 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan map[string]any, cap)
+		results := make(chan *googleapi.RawMessage, cap)
 		customerID, err := gsmadmin.GetOwnCustomerID()
 		if err != nil {
 			log.Printf("Error determining customer ID: %v\n", err)
@@ -90,7 +91,7 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []map[string]any{}
+			final := []*googleapi.RawMessage{}
 			for res := range results {
 				final = append(final, res)
 			}

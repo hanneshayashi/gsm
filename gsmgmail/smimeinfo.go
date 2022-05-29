@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/gmail/v1"
@@ -47,7 +49,10 @@ func GetSmimeInfo(userID, sendAsEmail, id, fields string) (*gmail.SmimeInfo, err
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.SmimeInfo)
+	r, ok := result.(*gmail.SmimeInfo)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -65,7 +70,10 @@ func InsertSmimeInfo(userID, sendAsEmail, fields string, smimeInfo *gmail.SmimeI
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.SmimeInfo)
+	r, ok := result.(*gmail.SmimeInfo)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -82,7 +90,10 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmail.ListSmimeInfoResponse)
+	r, ok := result.(*gmail.ListSmimeInfoResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.SmimeInfo, nil
 }
 

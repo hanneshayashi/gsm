@@ -19,6 +19,7 @@ package gsmgmailpostmaster
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -40,7 +41,10 @@ func GetDomain(name, fields string) (*gmailpostmastertools.Domain, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*gmailpostmastertools.Domain)
+	r, ok := result.(*gmailpostmastertools.Domain)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

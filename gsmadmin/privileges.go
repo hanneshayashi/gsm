@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	admin "google.golang.org/api/admin/directory/v1"
@@ -37,6 +39,9 @@ func ListPrivileges(customerID, fields string) ([]*admin.Privilege, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Privileges)
+	r, ok := result.(*admin.Privileges)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r.Items, nil
 }

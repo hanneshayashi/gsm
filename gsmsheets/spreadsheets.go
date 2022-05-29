@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmsheets
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"google.golang.org/api/googleapi"
@@ -37,7 +39,10 @@ func BatchUpdateSpreadsheet(spreadsheetID, fields string, batchUpdateSpreadsheet
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*sheets.BatchUpdateSpreadsheetResponse)
+	r, ok := result.(*sheets.BatchUpdateSpreadsheetResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -54,7 +59,10 @@ func CreateSpreadsheet(spreadsheet *sheets.Spreadsheet, fields string) (*sheets.
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*sheets.Spreadsheet)
+	r, ok := result.(*sheets.Spreadsheet)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -74,7 +82,10 @@ func GetSpreadsheet(spreadsheetID, fields string, ranges []string, includeGridDa
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*sheets.Spreadsheet)
+	r, ok := result.(*sheets.Spreadsheet)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

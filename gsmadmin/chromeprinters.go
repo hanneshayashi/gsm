@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -46,7 +47,10 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.BatchCreatePrintersResponse)
+	r, ok := result.(*admin.BatchCreatePrintersResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	response := &PrinterResults{
 		Failures: r.Failures,
 		Printers: r.Printers,
@@ -64,7 +68,10 @@ func BatchDeletePrinters(parent string, batchDeletePrintersRequest *admin.BatchD
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.BatchDeletePrintersResponse)
+	r, ok := result.(*admin.BatchDeletePrintersResponse)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	response := &PrinterResults{
 		Failures:   r.FailedPrinters,
 		PrinterIDs: r.PrinterIds,
@@ -85,7 +92,10 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Printer)
+	r, ok := result.(*admin.Printer)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -115,7 +125,10 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Printer)
+	r, ok := result.(*admin.Printer)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -195,6 +208,9 @@ func PatchPrinter(name, updateMask, clearMask, fields string, printer *admin.Pri
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.Printer)
+	r, ok := result.(*admin.Printer)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }

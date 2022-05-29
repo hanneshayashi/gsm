@@ -19,6 +19,7 @@ package gsmadmin
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -58,7 +59,10 @@ func GetUser(userKey, fields, projection, customFieldMask, viewType string) (*ad
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.User)
+	r, ok := result.(*admin.User)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -75,7 +79,10 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.User)
+	r, ok := result.(*admin.User)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -156,7 +163,10 @@ func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*admin.User)
+	r, ok := result.(*admin.User)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 

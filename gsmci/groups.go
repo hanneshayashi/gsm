@@ -19,7 +19,7 @@ package gsmci
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,7 +28,7 @@ import (
 )
 
 // CreateGroup creates a group.
-func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string]any, error) {
+func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (*googleapi.RawMessage, error) {
 	srv := getGroupsService()
 	c := srv.Create(group).InitialGroupConfig(initialGroupConfig)
 	if fields != "" {
@@ -40,13 +40,11 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (map[string
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // DeleteGroup deletes a group.
@@ -63,7 +61,7 @@ func DeleteGroup(name string) (bool, error) {
 }
 
 // PatchGroup updates a group using patch semantics.
-func PatchGroup(name, updateMask, fields string, group *ci.Group) (map[string]any, error) {
+func PatchGroup(name, updateMask, fields string, group *ci.Group) (*googleapi.RawMessage, error) {
 	srv := getGroupsService()
 	c := srv.Patch(name, group).UpdateMask(updateMask)
 	if fields != "" {
@@ -75,13 +73,11 @@ func PatchGroup(name, updateMask, fields string, group *ci.Group) (map[string]an
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Operation)
-	var m map[string]any
-	err = json.Unmarshal(r.Response, &m)
-	if err != nil {
-		return nil, err
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
 	}
-	return m, nil
+	return &r.Response, nil
 }
 
 // GetGroup retrieves a group.
@@ -97,7 +93,10 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, _ := result.(*ci.Group)
+	r, ok := result.(*ci.Group)
+	if !ok {
+		return nil, fmt.Errorf("Result unknown")
+	}
 	return r, nil
 }
 
@@ -111,7 +110,10 @@ func LookupGroup(email string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	r, _ := result.(*ci.LookupGroupNameResponse)
+	r, ok := result.(*ci.LookupGroupNameResponse)
+	if !ok {
+		return "", fmt.Errorf("Result unknown")
+	}
 	return r.Name, nil
 }
 
