@@ -80,7 +80,8 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 	if err != nil {
 		authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 		srv := &http.Server{Addr: fmt.Sprintf(":%d", redirectPort)}
-		http.HandleFunc("/oauth/callback", func(_ http.ResponseWriter, r *http.Request) {
+		done := make(chan bool, 1)
+		http.HandleFunc("/oauth/callback", func(w http.ResponseWriter, r *http.Request) {
 			queryParts, _ := url.ParseQuery(r.URL.RawQuery)
 			code := queryParts["code"][0]
 			tok, err = config.Exchange(ctx, code)
@@ -88,9 +89,16 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 				log.Fatal(err)
 			}
 			saveToken(tokenPath, tok)
-			srv.Shutdown(ctx)
+			fmt.Fprintf(w, "You can close this window now")
+			done <- true
+			close(done)
 		})
 		open.Run(authURL)
+		go func() {
+			if <-done {
+				srv.Shutdown(ctx)
+			}
+		}()
 		srv.ListenAndServe()
 	}
 	return config.Client(ctx, tok), nil
