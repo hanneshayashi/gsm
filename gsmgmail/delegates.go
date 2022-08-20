@@ -43,7 +43,7 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 	}
 	r, ok := result.(*gmail.Delegate)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -76,7 +76,7 @@ func ListDelegates(userID, fields string) ([]*gmail.Delegate, error) {
 	}
 	r, ok := result.(*gmail.ListDelegatesResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Delegates, nil
 }
@@ -102,7 +102,7 @@ func CreateDelegate(userID, fields string, delegate *gmail.Delegate) (*gmail.Del
 	}
 	r, ok := result.(*gmail.Delegate)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -52,7 +52,7 @@ func GetCalendarResource(customer, calendarResourceID, fields string) (*admin.Ca
 	}
 	r, ok := result.(*admin.CalendarResource)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	}
 	r, ok := result.(*admin.CalendarResource)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -124,7 +124,7 @@ func PatchCalendarResource(customer, calendarResourceID, fields string, calendar
 	}
 	r, ok := result.(*admin.CalendarResource)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

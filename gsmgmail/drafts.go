@@ -46,7 +46,7 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 	}
 	r, ok := result.(*gmail.Draft)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -79,7 +79,7 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	}
 	r, ok := result.(*gmail.Draft)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -128,7 +128,7 @@ func SendDraft(userID string, draft *gmail.Draft, media ...io.Reader) (*gmail.Me
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -151,7 +151,7 @@ func UpdateDraft(userID, id, fields string, draft *gmail.Draft, media ...io.Read
 	}
 	r, ok := result.(*gmail.Draft)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -52,7 +52,7 @@ func GetRole(customer, roleID, fields string) (*admin.Role, error) {
 	}
 	r, ok := result.(*admin.Role)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	}
 	r, ok := result.(*admin.Role)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -118,7 +118,7 @@ func PatchRole(customer, roleID, fields string, role *admin.Role) (*admin.Role, 
 	}
 	r, ok := result.(*admin.Role)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

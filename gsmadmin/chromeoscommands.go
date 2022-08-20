@@ -42,7 +42,7 @@ func GetCommand(customerID, deviceID, fields string, commandID int64) (*admin.Di
 	}
 	r, ok := result.(*admin.DirectoryChromeosdevicesCommand)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

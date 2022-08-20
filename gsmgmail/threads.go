@@ -59,7 +59,7 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 	}
 	r, ok := result.(*gmail.Thread)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -111,7 +111,7 @@ func ModifyThread(userID, id, fields string, addLabelIds, removeLabelIds []strin
 	}
 	r, ok := result.(*gmail.Thread)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -131,7 +131,7 @@ func TrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	}
 	r, ok := result.(*gmail.Thread)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -151,7 +151,7 @@ func UntrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	}
 	r, ok := result.(*gmail.Thread)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

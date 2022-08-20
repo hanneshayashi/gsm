@@ -44,7 +44,7 @@ func GetSecuritySettings(name, readMask, fields string) (*cibeta.SecuritySetting
 	}
 	r, ok := result.(*cibeta.SecuritySettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -67,7 +67,7 @@ func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *c
 	}
 	r, ok := result.(*cibeta.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

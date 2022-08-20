@@ -41,7 +41,7 @@ func GetColors(fields string) (*calendar.Colors, error) {
 	}
 	r, ok := result.(*calendar.Colors)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

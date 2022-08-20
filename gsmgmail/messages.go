@@ -79,7 +79,7 @@ func GetMessage(userID, id, format, metadataHeaders, fields string) (*gmail.Mess
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -100,7 +100,7 @@ func ImportMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -121,7 +121,7 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -173,7 +173,7 @@ func ModifyMessage(userID, id, fields string, addLabelIds, removeLabelIds []stri
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -193,7 +193,7 @@ func SendMessage(userID, fields string, message *gmail.Message) (*gmail.Message,
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -213,7 +213,7 @@ func TrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -233,7 +233,7 @@ func UntrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	}
 	r, ok := result.(*gmail.Message)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

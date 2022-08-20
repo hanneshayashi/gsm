@@ -42,7 +42,7 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (*googleapi
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -75,7 +75,7 @@ func PatchGroup(name, updateMask, fields string, group *ci.Group) (*googleapi.Ra
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -95,7 +95,7 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	}
 	r, ok := result.(*ci.Group)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -112,7 +112,7 @@ func LookupGroup(email string) (string, error) {
 	}
 	r, ok := result.(*ci.LookupGroupNameResponse)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	return r.Name, nil
 }

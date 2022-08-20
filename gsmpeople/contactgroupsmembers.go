@@ -41,7 +41,7 @@ func ModifyContactGroupMembers(resourceName, fields string, modifyContactGroupMe
 	}
 	r, ok := result.(*people.ModifyContactGroupMembersResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

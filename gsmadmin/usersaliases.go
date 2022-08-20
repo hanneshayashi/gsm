@@ -51,7 +51,7 @@ func InsertUserAlias(userKey, fields string, alias *admin.Alias) (*admin.Alias, 
 	}
 	r, ok := result.(*admin.Alias)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func ListUserAliases(userKey, fields string) ([]any, error) {
 	}
 	r, ok := result.(*admin.Aliases)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Aliases, nil
 }

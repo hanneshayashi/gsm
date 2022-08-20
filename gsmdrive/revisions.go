@@ -57,7 +57,7 @@ func GetRevision(fileID, revisionID, fields string) (*drive.Revision, error) {
 	}
 	r, ok := result.(*drive.Revision)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -78,7 +78,7 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	}
 	r, ok := result.(*http.Response)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	defer r.Body.Close()
 	fileLocal, err := os.Create(file.OriginalFilename)
@@ -131,7 +131,7 @@ func UpdateRevision(fileID, revisionID, fields string, revision *drive.Revision)
 	}
 	r, ok := result.(*drive.Revision)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

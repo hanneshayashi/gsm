@@ -55,7 +55,7 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	}
 	r, ok := result.(*admin.ChromeOsDevice)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -123,7 +123,7 @@ func PatchChromeOsDevice(customerID, deviceID, fields, projection string, chrome
 	}
 	r, ok := result.(*admin.ChromeOsDevice)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

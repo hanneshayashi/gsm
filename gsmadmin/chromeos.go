@@ -37,7 +37,7 @@ func IssueCommand(customerID, deviceID string, issueCommandRequest *admin.Direct
 	}
 	r, ok := result.(*admin.DirectoryChromeosdevicesIssueCommandResponse)
 	if !ok {
-		return 0, fmt.Errorf("Result unknown")
+		return 0, fmt.Errorf("result unknown")
 	}
 	return r.CommandId, nil
 }

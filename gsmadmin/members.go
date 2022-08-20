@@ -52,7 +52,7 @@ func GetMember(groupKey, memberKey, fields string) (*admin.Member, error) {
 	}
 	r, ok := result.(*admin.Member)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -69,7 +69,7 @@ func HasMember(groupKey, memberKey string) (bool, error) {
 	}
 	r, ok := result.(*admin.MembersHasMember)
 	if !ok {
-		return false, fmt.Errorf("Result unknown")
+		return false, fmt.Errorf("result unknown")
 	}
 	return r.IsMember, nil
 }
@@ -89,7 +89,7 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 	}
 	r, ok := result.(*admin.Member)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -138,7 +138,7 @@ func PatchMember(groupKey, memberKey, fields string, member *admin.Member) (*adm
 	}
 	r, ok := result.(*admin.Member)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

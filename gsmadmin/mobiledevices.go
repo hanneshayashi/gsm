@@ -65,7 +65,7 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	}
 	r, ok := result.(*admin.MobileDevice)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

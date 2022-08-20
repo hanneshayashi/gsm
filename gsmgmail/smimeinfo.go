@@ -51,7 +51,7 @@ func GetSmimeInfo(userID, sendAsEmail, id, fields string) (*gmail.SmimeInfo, err
 	}
 	r, ok := result.(*gmail.SmimeInfo)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertSmimeInfo(userID, sendAsEmail, fields string, smimeInfo *gmail.SmimeI
 	}
 	r, ok := result.(*gmail.SmimeInfo)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -92,7 +92,7 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 	}
 	r, ok := result.(*gmail.ListSmimeInfoResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.SmimeInfo, nil
 }

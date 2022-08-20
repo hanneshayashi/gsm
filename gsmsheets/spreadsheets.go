@@ -41,7 +41,7 @@ func BatchUpdateSpreadsheet(spreadsheetID, fields string, batchUpdateSpreadsheet
 	}
 	r, ok := result.(*sheets.BatchUpdateSpreadsheetResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -61,7 +61,7 @@ func CreateSpreadsheet(spreadsheet *sheets.Spreadsheet, fields string) (*sheets.
 	}
 	r, ok := result.(*sheets.Spreadsheet)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -84,7 +84,7 @@ func GetSpreadsheet(spreadsheetID, fields string, ranges []string, includeGridDa
 	}
 	r, ok := result.(*sheets.Spreadsheet)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

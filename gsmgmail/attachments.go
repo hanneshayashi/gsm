@@ -41,7 +41,7 @@ func GetAttachment(userID, messageID, id, fields string) (*gmail.MessagePartBody
 	}
 	r, ok := result.(*gmail.MessagePartBody)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -41,7 +41,7 @@ func GetAbout(fields string) (*drive.About, error) {
 	}
 	r, ok := result.(*drive.About)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

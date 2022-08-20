@@ -41,7 +41,7 @@ func CreateLabel(userID, fields string, label *gmail.Label) (*gmail.Label, error
 	}
 	r, ok := result.(*gmail.Label)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func GetLabel(userID, id, fields string) (*gmail.Label, error) {
 	}
 	r, ok := result.(*gmail.Label)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -91,7 +91,7 @@ func ListLabels(userID, fields string) ([]*gmail.Label, error) {
 	}
 	r, ok := result.(*gmail.ListLabelsResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Labels, nil
 }
@@ -111,7 +111,7 @@ func PatchLabel(userID, id, fields string, label *gmail.Label) (*gmail.Label, er
 	}
 	r, ok := result.(*gmail.Label)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -41,7 +41,7 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 	}
 	r, ok := result.(*gmail.Filter)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func GetFilter(userID, id, fields string) (*gmail.Filter, error) {
 	}
 	r, ok := result.(*gmail.Filter)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -91,7 +91,7 @@ func ListFilters(userID, fields string) ([]*gmail.Filter, error) {
 	}
 	r, ok := result.(*gmail.ListFiltersResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Filter, nil
 }

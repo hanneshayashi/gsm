@@ -41,7 +41,7 @@ func QueryFreeBusy(freeBusyRequest *calendar.FreeBusyRequest, fields string) (*c
 	}
 	r, ok := result.(*calendar.FreeBusyResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

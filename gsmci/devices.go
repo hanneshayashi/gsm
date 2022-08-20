@@ -46,7 +46,7 @@ func CancelDeviceWipe(name, fields string, cancelWipeDeviceRequest *ci.GoogleApp
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -70,7 +70,7 @@ func CreateDevice(customer, fields string, device *ci.GoogleAppsCloudidentityDev
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -90,7 +90,7 @@ func DeleteDevice(name, customer string) (*googleapi.RawMessage, error) {
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -113,7 +113,7 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 	}
 	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1Device)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -171,7 +171,7 @@ func WipeDevice(name, fields string, wipeDeviceRequest *ci.GoogleAppsCloudidenti
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

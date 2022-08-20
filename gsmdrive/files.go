@@ -54,7 +54,7 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -86,7 +86,7 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -162,7 +162,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	}
 	r, ok := result.(*http.Response)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -201,7 +201,7 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 	}
 	r, ok := result.(*drive.GeneratedIds)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Ids, nil
 }
@@ -222,7 +222,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 	}
 	r, ok := result.(*http.Response)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -274,7 +274,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 // 	}
 // 	r, ok := result.(*drive.File)
 // if !ok {
-// 	return nil, fmt.Errorf("Result unknown")
+// 	return nil, fmt.Errorf("result unknown")
 // }
 // 	return r, nil
 // }
@@ -297,7 +297,7 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -375,7 +375,7 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

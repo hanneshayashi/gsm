@@ -61,7 +61,7 @@ func ListVerificationCodes(userKey, fields string) ([]*admin.VerificationCode, e
 	}
 	r, ok := result.(*admin.VerificationCodes)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Items, nil
 }

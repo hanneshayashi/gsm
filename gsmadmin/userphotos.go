@@ -51,7 +51,7 @@ func GetUserPhoto(userKey, fields string) (*admin.UserPhoto, error) {
 	}
 	r, ok := result.(*admin.UserPhoto)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func UpdateUserPhoto(userKey, fields string, userPhoto *admin.UserPhoto) (*admin
 	}
 	r, ok := result.(*admin.UserPhoto)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

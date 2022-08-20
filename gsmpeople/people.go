@@ -45,7 +45,7 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 	}
 	r, ok := result.(*people.Person)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -107,7 +107,7 @@ func GetContact(resourceName, personFields, sources, fields string) (*people.Per
 	}
 	r, ok := result.(*people.Person)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -131,7 +131,7 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	}
 	r, ok := result.(*people.GetPeopleResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -215,7 +215,7 @@ func UpdateContact(resourceName, updatePersonFields, personFields, sources, fiel
 	}
 	r, ok := result.(*people.Person)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -235,7 +235,7 @@ func UpdateContactPhoto(resourceName, fields string, updateContactPhotoRequest *
 	}
 	r, ok := result.(*people.UpdateContactPhotoResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Person, nil
 }

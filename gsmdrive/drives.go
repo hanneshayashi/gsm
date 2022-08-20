@@ -46,7 +46,7 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 	}
 	r, ok := result.(*drive.Drive)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	if returnWhenReady {
 		about, err := GetAbout("user(permissionId)")
@@ -87,7 +87,7 @@ func GetDrive(driveID, fields string, useDomainAdminAccess bool) (*drive.Drive, 
 	}
 	r, ok := result.(*drive.Drive)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -107,7 +107,7 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	}
 	r, ok := result.(*drive.Drive)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -158,7 +158,7 @@ func UnhideDrive(driveID, fields string) (*drive.Drive, error) {
 	}
 	r, ok := result.(*drive.Drive)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -178,7 +178,7 @@ func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, d *drive.Dri
 	}
 	r, ok := result.(*drive.Drive)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

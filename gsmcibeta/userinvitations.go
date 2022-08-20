@@ -39,7 +39,7 @@ func CancelInvitation(name string, cancelUserInvitationRequest *cibeta.CancelUse
 	}
 	r, ok := result.(*cibeta.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -59,15 +59,16 @@ func GetInvitation(name, fields string) (*cibeta.UserInvitation, error) {
 	}
 	r, ok := result.(*cibeta.UserInvitation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
 
 // IsInvitableUser verifies whether a user account is eligible to receive a UserInvitation (is an unmanaged account).
 // Eligibility is based on the following criteria:
-//  - the email address is a consumer account and it's the primary email address of the account, and
-//  - the domain of the email address matches an existing verified Google Workspace or Cloud Identity domain
+//   - the email address is a consumer account and it's the primary email address of the account, and
+//   - the domain of the email address matches an existing verified Google Workspace or Cloud Identity domain
+//
 // If both conditions are met, the user is eligible.
 func IsInvitableUser(name string) (bool, error) {
 	srv := getCustomersUserinvitationsService()
@@ -80,7 +81,7 @@ func IsInvitableUser(name string) (bool, error) {
 	}
 	r, ok := result.(*cibeta.IsInvitableUserResponse)
 	if !ok {
-		return false, fmt.Errorf("Result unknown")
+		return false, fmt.Errorf("result unknown")
 	}
 	return r.IsInvitableUser, nil
 }
@@ -133,7 +134,7 @@ func SendInvitation(name, fields string, sendUserInvitationRequest *cibeta.SendU
 	}
 	r, ok := result.(*cibeta.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

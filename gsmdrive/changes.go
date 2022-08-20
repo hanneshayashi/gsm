@@ -44,7 +44,7 @@ func GetStartPageToken(driveID, fields string) (*drive.StartPageToken, error) {
 	}
 	r, ok := result.(*drive.StartPageToken)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func listChanges(pageToken, driveID, spaces, fields, includePermissionsForView s
 	}
 	r, ok := result.(*drive.ChangeList)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	changes = append(changes, r.Changes...)
 	if r.NextPageToken != "" {

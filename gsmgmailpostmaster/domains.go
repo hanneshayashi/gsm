@@ -43,7 +43,7 @@ func GetDomain(name, fields string) (*gmailpostmastertools.Domain, error) {
 	}
 	r, ok := result.(*gmailpostmastertools.Domain)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

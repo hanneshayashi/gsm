@@ -42,7 +42,7 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 	}
 	r, ok := result.(*calendar.Setting)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -45,7 +45,7 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	}
 	r, ok := result.(*drive.Permission)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -75,7 +75,7 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	}
 	r, ok := result.(*drive.Permission)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -129,7 +129,7 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	}
 	r, ok := result.(*drive.Permission)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

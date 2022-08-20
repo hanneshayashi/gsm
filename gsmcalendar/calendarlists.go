@@ -52,7 +52,7 @@ func GetCalendarListEntry(calendarID, fields string) (*calendar.CalendarListEntr
 	}
 	r, ok := result.(*calendar.CalendarListEntry)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	}
 	r, ok := result.(*calendar.CalendarListEntry)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -121,7 +121,7 @@ func PatchCalendarListEntry(calendarID, fields string, calendarListEntry *calend
 	}
 	r, ok := result.(*calendar.CalendarListEntry)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

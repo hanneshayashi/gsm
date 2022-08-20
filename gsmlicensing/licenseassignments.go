@@ -55,7 +55,7 @@ func GetLicenseAssignment(productID, skuID, userID, fields string) (*licensing.L
 	}
 	r, ok := result.(*licensing.LicenseAssignment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -75,7 +75,7 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	}
 	r, ok := result.(*licensing.LicenseAssignment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -147,7 +147,7 @@ func PatchLicenseAssignment(productID, skuID, userID, fields string, licenseAssi
 	}
 	r, ok := result.(*licensing.LicenseAssignment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

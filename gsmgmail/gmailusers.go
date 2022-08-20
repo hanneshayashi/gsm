@@ -41,7 +41,7 @@ func GetUserProfile(userID, fields string) (*gmail.Profile, error) {
 	}
 	r, ok := result.(*gmail.Profile)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

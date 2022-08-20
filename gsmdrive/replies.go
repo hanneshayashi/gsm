@@ -42,7 +42,7 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 	}
 	r, ok := result.(*drive.Reply)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	}
 	r, ok := result.(*drive.Reply)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -118,7 +118,7 @@ func UpdateReply(fileID, commentID, replyID, fields string, reply *drive.Reply) 
 	}
 	r, ok := result.(*drive.Reply)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

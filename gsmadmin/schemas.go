@@ -51,7 +51,7 @@ func GetSchema(customerID, schemaKey, fields string) (*admin.Schema, error) {
 	}
 	r, ok := result.(*admin.Schema)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func InsertSchema(customerID, fields string, schema *admin.Schema) (*admin.Schem
 	}
 	r, ok := result.(*admin.Schema)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -91,7 +91,7 @@ func ListSchema(customerID, fields string) ([]*admin.Schema, error) {
 	}
 	r, ok := result.(*admin.Schemas)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Schemas, nil
 }
@@ -111,7 +111,7 @@ func PatchSchema(customerID, schemaKey, fields string, schema *admin.Schema) (*a
 	}
 	r, ok := result.(*admin.Schema)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

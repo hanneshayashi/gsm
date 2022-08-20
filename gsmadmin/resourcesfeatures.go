@@ -52,7 +52,7 @@ func GetFeature(customer, featureKey, fields string) (*admin.Feature, error) {
 	}
 	r, ok := result.(*admin.Feature)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	}
 	r, ok := result.(*admin.Feature)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -118,7 +118,7 @@ func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (
 	}
 	r, ok := result.(*admin.Feature)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
