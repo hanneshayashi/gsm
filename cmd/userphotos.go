@@ -19,7 +19,7 @@ package cmd
 
 import (
 	"encoding/base64"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 
@@ -81,7 +81,7 @@ func mapToUserPhoto(flags map[string]*gsmhelpers.Value) (*admin.UserPhoto, error
 		if err != nil {
 			return nil, err
 		}
-		b, err := ioutil.ReadAll(f)
+		b, err := io.ReadAll(f)
 		if err != nil {
 			return nil, err
 		}

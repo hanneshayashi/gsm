@@ -20,14 +20,13 @@ package gsmlog
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 )
 
 // PrintLastLines prints the last n lines in the specified file
 func PrintLastLines(path string, n int) error {
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}

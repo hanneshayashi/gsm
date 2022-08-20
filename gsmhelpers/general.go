@@ -24,7 +24,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
@@ -51,7 +50,7 @@ func GetFileContentAsString(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	content, err := ioutil.ReadAll(f)
+	content, err := io.ReadAll(f)
 	if err != nil {
 		return "", err
 	}

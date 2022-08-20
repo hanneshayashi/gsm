@@ -21,7 +21,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -151,7 +151,7 @@ type StructuredPostalAddress struct {
 	FormattedAddress string `xml:"formattedAddress"`
 }
 
-//EntryLinkEntryLink is a Link in an EntryLinkEntry object
+// EntryLinkEntryLink is a Link in an EntryLinkEntry object
 type EntryLinkEntryLink struct {
 	Text string `xml:",chardata"`
 	Href string `xml:"href,attr"`
@@ -253,7 +253,7 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -298,7 +298,7 @@ func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -323,7 +323,7 @@ func DeleteSharedContact(url string) ([]byte, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +342,7 @@ func GetSharedContact(url string) (*Entry, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -371,7 +371,7 @@ func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}

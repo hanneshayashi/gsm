@@ -20,7 +20,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -223,7 +222,7 @@ func auth() {
 		}
 	}
 	if mode == "dwd" || mode == "user" {
-		credentials, err = ioutil.ReadFile(viper.GetString("credentialsFile"))
+		credentials, err = os.ReadFile(viper.GetString("credentialsFile"))
 		if err != nil {
 			fmt.Printf("Error reading service account credentials file: %v", err)
 		}
