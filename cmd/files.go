@@ -19,6 +19,8 @@ package cmd
 
 import (
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,10 +44,10 @@ var filesCmd = &cobra.Command{
 
 var fileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
-		AvailableFor:   []string{"copy", "delete", "export", "get", "move", "update", "download"},
+		AvailableFor:   []string{"copy", "delete", "export", "get", "move", "update", "download", "listLabels", "modifyLabels", "removeLabels"},
 		Type:           "string",
 		Description:    "The ID of the file",
-		Required:       []string{"copy", "delete", "export", "get", "move", "update", "download"},
+		Required:       []string{"copy", "delete", "export", "get", "move", "update", "download", "listLabels", "modifyLabels", "removeLabels"},
 		ExcludeFromAll: true,
 	},
 	"ignoreDefaultVisibility": {
@@ -285,8 +287,36 @@ All users with access can copy, download, export, and share the file.`,
 		Type:         "string",
 		Description:  `Id of the folder.`,
 	},
+	"labelField": {
+		AvailableFor: []string{"modifyLabels"},
+		Type:         "stringSlice",
+		Required:     []string{"modifyLabels"},
+		Description: `A single label field that should be updated on a file.
+Can be used multiple times in the form of "--labelField "labelId=...;fieldId=...;valueType=...,value=...", etc.
+GSM will consolidate all instances into a single request.
+You can use the following properties:
+labelId              The ID of the label.
+fieldId              The identifier of this field.
+valueType            The field type. While new values may be supported in the future, the following are currently allowed:
+                     - dateString
+                     - integer
+                     - selection
+                     - text
+                     - user
+values				The value that should be set.
+                    Must be compatible with the specified valueType.
+                    When specifying multiple values use the pipe character ('|') to separate them.
+index               The index of the value if the field is multi-value`,
+	},
+	"labelId": {
+		AvailableFor: []string{"removeLabels"},
+		Type:         "stringSlice",
+		Required:     []string{"removeLabels"},
+		Description: `The ID of a label that should be removed from the file
+Can be used multiple times to remove multiple labels in one request`,
+	},
 	"fields": {
-		AvailableFor: []string{"copy", "create", "get", "list", "update"},
+		AvailableFor: []string{"copy", "create", "get", "list", "update", "listLabels", "modifyLabels", "removeLabels"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -453,4 +483,71 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 		}
 	}
 	return file, nil
+}
+
+func mapToModifyLabelsRequest(flags map[string]*gsmhelpers.Value) (*drive.ModifyLabelsRequest, error) {
+	modifyLabelsRequest := &drive.ModifyLabelsRequest{}
+	if flags["labelField"].IsSet() {
+		labelFields := flags["labelField"].GetStringSlice()
+		if len(labelFields) > 0 {
+			fields := make(map[string][]*drive.LabelFieldModification)
+			for i := range labelFields {
+				m := gsmhelpers.FlagToMap(labelFields[i])
+				f := &drive.LabelFieldModification{
+					FieldId: m["fieldId"],
+				}
+				if m["values"] == "" {
+					f.UnsetValues = true
+				} else {
+					values := strings.Split(m["values"], "|")
+					switch m["valueType"] {
+					case "text":
+						f.SetTextValues = values
+					case "dateString":
+						f.SetDateValues = values
+					case "user":
+						f.SetUserValues = values
+					case "selection":
+						f.SetSelectionValues = values
+					case "integer":
+						for value := range values {
+							v, err := strconv.ParseInt(values[value], 10, 64)
+							if err != nil {
+								return nil, err
+							}
+							f.SetIntegerValues = append(f.SetIntegerValues, v)
+						}
+					}
+				}
+				fields[m["labelId"]] = append(fields[m["labelId"]], f)
+			}
+			modifyLabelsRequest.LabelModifications = make([]*drive.LabelModification, 0)
+			for i := range fields {
+				l := &drive.LabelModification{
+					LabelId:            i,
+					FieldModifications: make([]*drive.LabelFieldModification, len(fields[i])),
+				}
+				l.FieldModifications = fields[i]
+				modifyLabelsRequest.LabelModifications = append(modifyLabelsRequest.LabelModifications, l)
+			}
+		}
+	}
+	return modifyLabelsRequest, nil
+}
+
+func mapToRemoveLabelsRequest(flags map[string]*gsmhelpers.Value) (*drive.ModifyLabelsRequest, error) {
+	modifyLabelsRequest := &drive.ModifyLabelsRequest{}
+	if flags["labelId"].IsSet() {
+		labels := flags["labelId"].GetStringSlice()
+		if len(labels) > 0 {
+			modifyLabelsRequest.LabelModifications = make([]*drive.LabelModification, len(labels))
+			for i := range labels {
+				modifyLabelsRequest.LabelModifications[i] = &drive.LabelModification{
+					LabelId:     labels[i],
+					RemoveLabel: true,
+				}
+			}
+		}
+	}
+	return modifyLabelsRequest, nil
 }
