@@ -320,7 +320,7 @@ Can be used multiple times to remove multiple labels in one request`,
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Recursive: []string{"copy", "create", "get", "list", "update"},
+		Recursive: []string{"copy", "create", "get", "list", "update", "listLabels", "modifyLabels", "removeLabels"},
 	},
 }
 var fileFlagsALL = gsmhelpers.GetAllFlags(fileFlags)
