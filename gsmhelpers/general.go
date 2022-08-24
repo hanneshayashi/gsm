@@ -389,6 +389,13 @@ func IsCommandOrChild(command ...*cobra.Command) bool {
 	return false
 }
 
+func EnsurePrefix(s, p string) string {
+	if !strings.HasPrefix(s, p) {
+		return p + s
+	}
+	return s
+}
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
