@@ -60,7 +60,7 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 }
 
 // CreateFile creates a new file.
-func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, fields string) (*drive.File, error) {
+func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, sourceMimeType, fields string) (*drive.File, error) {
 	srv := getFilesService()
 	if content == nil {
 		file.MimeType = folderMimetype
@@ -70,7 +70,11 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 		c.Fields(googleapi.Field(fields))
 	}
 	if content != nil {
-		c = c.Media(content)
+		if sourceMimeType != "" {
+			c = c.Media(content, googleapi.ContentType(sourceMimeType))
+		} else {
+			c = c.Media(content)
+		}
 	}
 	if includePermissionsForView != "" {
 		c = c.IncludePermissionsForView(includePermissionsForView)

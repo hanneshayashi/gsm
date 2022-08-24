@@ -69,7 +69,7 @@ var filesCreateBatchCmd = &cobra.Command{
 								f.Name = filepath.Base(content.Name())
 							}
 						}
-						result, err := gsmdrive.CreateFile(f, content, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["fields"].GetString())
+						result, err := gsmdrive.CreateFile(f, content, m["ignoreDefaultVisibility"].GetBool(), m["keepRevisionForever"].GetBool(), m["useContentAsIndexableText"].GetBool(), m["includePermissionsForView"].GetString(), m["ocrLanguage"].GetString(), m["sourceMimeType"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {

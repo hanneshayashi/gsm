@@ -118,7 +118,7 @@ This is only mutable on requests that also set readOnly=true.`,
 	"mimeType": {
 		AvailableFor: []string{"copy", "create", "export", "update"},
 		Type:         "string",
-		Description: `The MIME type of the file.
+		Description: `The target MIME type of the file.
 Google Drive will attempt to automatically detect an appropriate value from uploaded content if no value is provided.
 The value cannot be changed unless a new revision is uploaded.
 
@@ -307,6 +307,7 @@ values				The value that should be set.
                     Must be compatible with the specified valueType.
                     When specifying multiple values use the pipe character ('|') to separate them.
 index               The index of the value if the field is multi-value`,
+		Recursive: []string{"modifyLabels"},
 	},
 	"labelId": {
 		AvailableFor: []string{"removeLabels"},
@@ -314,6 +315,13 @@ index               The index of the value if the field is multi-value`,
 		Required:     []string{"removeLabels"},
 		Description: `The ID of a label that should be removed from the file
 Can be used multiple times to remove multiple labels in one request`,
+		Recursive: []string{"removeLabels"},
+	},
+	"sourceMimeType": {
+		AvailableFor: []string{"create"},
+		Type:         "string",
+		Description: `The MIME type of the source file to upload.
+Set this to "text/csv" and "mimeType" to "application/vnd.google-apps.spreadsheet" in order to import a CSV file as a Sheet`,
 	},
 	"fields": {
 		AvailableFor: []string{"copy", "create", "get", "list", "update", "listLabels", "modifyLabels", "removeLabels"},

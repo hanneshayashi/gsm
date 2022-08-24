@@ -51,7 +51,7 @@ var filesCreateCmd = &cobra.Command{
 				f.Name = filepath.Base(content.Name())
 			}
 		}
-		result, err := gsmdrive.CreateFile(f, content, flags["ignoreDefaultVisibility"].GetBool(), flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool(), flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString())
+		result, err := gsmdrive.CreateFile(f, content, flags["ignoreDefaultVisibility"].GetBool(), flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool(), flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["sourceMimeType"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error creating file: %v", err)
 		}
