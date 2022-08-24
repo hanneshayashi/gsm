@@ -32,6 +32,7 @@ import (
 	"github.com/hanneshayashi/gsm/gsmcibeta"
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmdrive"
+	"github.com/hanneshayashi/gsm/gsmdrivelabels"
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmgmailpostmaster"
 	"github.com/hanneshayashi/gsm/gsmgroupssettings"
@@ -69,7 +70,7 @@ var (
 		"delimiter": {
 			AvailableFor: []string{"batch"},
 			Type:         "string",
-			Description:  "Delimiter to use for CSV columns. Must be exactly one character.",
+			Description:  "Delimiter to use for CSV columns. Must be exactly one character. Default is ';'",
 		},
 		"skipHeader": {
 			AvailableFor: []string{"batch"},
@@ -99,6 +100,11 @@ var (
 			Type:         "stringSlice",
 			Description: `Ids of folders to exclude.
 Note that due to the way permissions are automatically inherited in Drive, this may not have the desired result for permission commands!`,
+		},
+		"includeRoot": {
+			AvailableFor: []string{"recursive"},
+			Type:         "bool",
+			Description:  `If set to true, the root (specified parent) is included in the results`,
 		},
 	}
 	recursiveUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
@@ -250,6 +256,7 @@ func auth() {
 	gsmreports.SetClient(client)
 	gsmgmailpostmaster.SetClient(client)
 	gsmcibeta.SetClient(client)
+	gsmdrivelabels.SetClient(client)
 }
 
 func initLog() {

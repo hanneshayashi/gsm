@@ -42,7 +42,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), threads)
 		type resultStruct struct {
 			FileID      string              `json:"fileId,omitempty"`
 			Permissions []*drive.Permission `json:"permissions,omitempty"`

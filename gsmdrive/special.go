@@ -48,7 +48,7 @@ func createFolder(parent, name string) (*drive.File, error) {
 		Parents:  []string{parent},
 		Name:     name,
 	}
-	newFolder, err := CreateFile(f, nil, false, false, false, "", "", "id,mimeType,name")
+	newFolder, err := CreateFile(f, nil, false, false, false, "", "", "", "id,mimeType,name")
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 		return nil, err
 	}
 	folderMap[root.Id] = newRoot.Id
-	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", excludeFolders, threads)
+	items := ListFilesRecursive(folderID, "files(id,parents,mimeType,name),nextPageToken", excludeFolders, false, threads)
 	files := make(chan *drive.File, threads)
 	results <- newRoot
 	go func() {
@@ -92,12 +92,20 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 }
 
 // ListFilesRecursive lists all files and foldes in a parent folder recursively
-func ListFilesRecursive(id, fields string, excludeFolders []string, threads int) <-chan *drive.File {
+func ListFilesRecursive(id, fields string, excludeFolders []string, includeRoot bool, threads int) <-chan *drive.File {
 	wg := &sync.WaitGroup{}
 	folders := make(chan string, threads)
 	files := make(chan *drive.File, threads)
 	wg.Add(1)
 	folders <- id
+	if includeRoot {
+		root, err := GetFile(id, "*", "")
+		if err != nil {
+			log.Println(err)
+		} else {
+			files <- root
+		}
+	}
 	go func() {
 		for i := 0; i < threads; i++ {
 			go func() {
