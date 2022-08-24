@@ -245,22 +245,22 @@ type Feed struct {
 func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
 	feed := Feed{}
 	err = xml.Unmarshal(responseBody, &feed)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error unmarshalling response: %v. %s", err, string(responseBody))
 	}
 	for i := range feed.Link {
 		if feed.Link[i].Rel == "next" {
@@ -285,27 +285,27 @@ func ListSharedContacts(domain string) ([]Entry, error) {
 func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 	personXML, err := xml.Marshal(person)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error marshalling XML: %v", err)
 	}
 	body := bytes.NewReader(personXML)
 	req, err := http.NewRequest("POST", fmt.Sprintf(feedURL, domain), body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
 	personC := &Entry{}
 	err = xml.Unmarshal(responseBody, personC)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error unmarshalling response: %v. %s", err, string(responseBody))
 	}
 	return personC, nil
 }
@@ -320,12 +320,12 @@ func DeleteSharedContact(url string) ([]byte, error) {
 	req.Header.Add("If-Match", "*")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
 	return responseBody, nil
 }
@@ -334,22 +334,22 @@ func DeleteSharedContact(url string) ([]byte, error) {
 func GetSharedContact(url string) (*Entry, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
 	person := &Entry{}
 	err = xml.Unmarshal(responseBody, person)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error unmarshalling response: %v. %s", err, string(responseBody))
 	}
 	return person, nil
 }
@@ -358,27 +358,29 @@ func GetSharedContact(url string) (*Entry, error) {
 func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 	personXML, err := xml.Marshal(person)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error marshalling XML: %v", err)
 	}
 	body := bytes.NewReader(personXML)
 	req, err := http.NewRequest("PUT", url, body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
+	req.Header.Add("If-Match", "*")
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
 	personU := &Entry{}
 	err = xml.Unmarshal(responseBody, personU)
 	if err != nil {
-		return nil, err
+		fmt.Println(string(personXML))
+		return nil, fmt.Errorf("error unmarshalling response: %v. %s", err, string(responseBody))
 	}
 	return personU, nil
 }
