@@ -351,7 +351,7 @@ customType          - If the value of type is custom, this property contains the
 department          - Specifies the department within the organization, such as 'sales' or 'engineering'.
 description         - The description of the organization.
 domain              - The domain the organization belongs to.
-fullTimeEquivalent  - INT! The full-time equivalent millipercent within the organization (100000 = 100%).    
+fullTimeEquivalent  - INT! The full-time equivalent millipercent within the organization (100000 = 100%).
 location            - The physical location of the organization.
                       This does not need to be a fully qualified address.
 name                - The name of the organization.
