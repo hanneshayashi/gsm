@@ -29,7 +29,6 @@ import (
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/gmailpostmastertools/v1"
@@ -170,9 +169,9 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmail.GmailSettingsBasicScope,
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
-			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-			cibeta.CloudIdentityDevicesScope,
-			cibeta.CloudIdentityDevicesLookupScope,
+			ci.CloudIdentityUserinvitationsScope,
+			ci.CloudIdentityDevicesScope,
+			ci.CloudIdentityDevicesLookupScope,
 			"https://www.googleapis.com/auth/cloud-identity.orgunits",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
@@ -185,6 +184,8 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmailpostmastertools.PostmasterReadonlyScope,
 			"https://www.googleapis.com/auth/admin.contact.delegation",
 			"https://www.googleapis.com/auth/admin.chrome.printers",
+			"https://www.googleapis.com/auth/drive.labels",
+			"https://www.googleapis.com/auth/drive.admin.labels",
 		}
 	}
 	b, err := yaml.Marshal(config)
