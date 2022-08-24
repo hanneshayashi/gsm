@@ -28,44 +28,43 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-// filesListLabelsBatchCmd represents the batch command
-var filesListLabelsBatchCmd = &cobra.Command{
-	Use:   "batch",
-	Short: "Batch list the labels on files using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
+// filesModifyLabelsRecursiveCmd represents the recursive command
+var filesModifyLabelsRecursiveCmd = &cobra.Command{
+	Use:   "recursive",
+	Short: "Recursively modifies the labels on a folder and all of its children.",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/modifyLabels",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
-		maps, err := gsmhelpers.GetBatchMaps(cmd, fileFlags)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		var wg sync.WaitGroup
-		cap := cap(maps)
+		flags := gsmhelpers.FlagsToMap(cmd.Flags())
+		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), threads)
 		type resultStruct struct {
 			FileID string         `json:"fileId,omitempty"`
 			Labels []*drive.Label `json:"labels,omitempty"`
 		}
-		results := make(chan resultStruct, cap)
+		results := make(chan resultStruct, threads)
+		wg := &sync.WaitGroup{}
+		fields := flags["fields"].GetString()
+		req, err := mapToModifyLabelsRequest(flags)
+		if err != nil {
+			log.Fatalf("Error building modify labels request: %v", err)
+		}
 		go func() {
-			for i := 0; i < cap; i++ {
+			for i := 0; i < threads; i++ {
 				wg.Add(1)
 				go func() {
-					for m := range maps {
-						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.ListLabels(fileID, m["fields"].GetString(), cap)
-						r := resultStruct{FileID: fileID}
-						for i := range result {
-							r.Labels = append(r.Labels, i)
-						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+					for file := range files {
+						r := resultStruct{FileID: file.Id}
+						result, err := gsmdrive.ModifyLabels(file.Id, fields, req)
+						if err != nil {
+							log.Println(err)
 						} else {
-							results <- r
+							r.Labels = result
 						}
+						results <- r
 					}
 					wg.Done()
 				}()
@@ -83,8 +82,8 @@ var filesListLabelsBatchCmd = &cobra.Command{
 			}
 		} else {
 			final := []resultStruct{}
-			for res := range results {
-				final = append(final, res)
+			for r := range results {
+				final = append(final, r)
 			}
 			err := gsmhelpers.Output(final, "json", compressOutput)
 			if err != nil {
@@ -95,5 +94,5 @@ var filesListLabelsBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesListLabelsCmd, filesListLabelsBatchCmd, fileFlags, fileFlagsALL, batchFlags)
+	gsmhelpers.InitRecursiveCommand(filesModifyLabelsCmd, filesModifyLabelsRecursiveCmd, fileFlags, recursiveFileFlags)
 }

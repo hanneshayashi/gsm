@@ -28,8 +28,8 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-// filesListlabelsRecursiveCmd represents the recursive command
-var filesListlabelsRecursiveCmd = &cobra.Command{
+// filesListLabelsRecursiveCmd represents the recursive command
+var filesListLabelsRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively lists labels on a folder and all of its children.",
 	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
@@ -40,7 +40,7 @@ var filesListlabelsRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), threads)
 		type resultStruct struct {
 			FileID string         `json:"fileId,omitempty"`
 			Labels []*drive.Label `json:"labels,omitempty"`
@@ -93,5 +93,5 @@ var filesListlabelsRecursiveCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitRecursiveCommand(filesListLabelsCmd, filesListlabelsRecursiveCmd, fileFlags, recursiveFileFlags)
+	gsmhelpers.InitRecursiveCommand(filesListLabelsCmd, filesListLabelsRecursiveCmd, fileFlags, recursiveFileFlags)
 }

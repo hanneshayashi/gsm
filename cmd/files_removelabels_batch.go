@@ -28,11 +28,11 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-// filesListLabelsBatchCmd represents the batch command
-var filesListLabelsBatchCmd = &cobra.Command{
+// filesRemoveLabelsBatchCmd represents the batch command
+var filesRemoveLabelsBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch list the labels on files using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
+	Short: "Batch remove the specified labels on files using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/modifyLabels",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -55,17 +55,19 @@ var filesListLabelsBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.ListLabels(fileID, m["fields"].GetString(), cap)
+						req, err := mapToRemoveLabelsRequest(m)
+						if err != nil {
+							log.Printf("Error building remove labels request: %v", err)
+							continue
+						}
 						r := resultStruct{FileID: fileID}
-						for i := range result {
-							r.Labels = append(r.Labels, i)
-						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						result, err := gsmdrive.ModifyLabels(fileID, m["fields"].GetString(), req)
+						if err != nil {
+							log.Println(err)
 						} else {
-							results <- r
+							r.Labels = result
 						}
+						results <- r
 					}
 					wg.Done()
 				}()
@@ -95,5 +97,5 @@ var filesListLabelsBatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitBatchCommand(filesListLabelsCmd, filesListLabelsBatchCmd, fileFlags, fileFlagsALL, batchFlags)
+	gsmhelpers.InitBatchCommand(filesRemoveLabelsCmd, filesRemoveLabelsBatchCmd, fileFlags, fileFlagsALL, batchFlags)
 }
