@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"google.golang.org/api/googleapi"
 
@@ -32,7 +32,7 @@ import (
 var userInvitationsSendBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch sends user invitations using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/send",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -59,7 +59,7 @@ var userInvitationsSendBatchCmd = &cobra.Command{
 						if err != nil {
 							log.Fatalf("Error building sendUserInvitationRequest object: %v", err)
 						}
-						result, err := gsmcibeta.SendInvitation(name, m["fields"].GetString(), sendUserInvitationRequest)
+						result, err := gsmci.SendInvitation(name, m["fields"].GetString(), sendUserInvitationRequest)
 						if err != nil {
 							log.Println(err)
 						}

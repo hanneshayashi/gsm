@@ -21,9 +21,9 @@ import (
 	"log"
 
 	"github.com/hanneshayashi/gsm/gsmadmin"
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,7 @@ import (
 var userInvitationsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieves a list of UserInvitation resources.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/list",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -44,7 +44,7 @@ var userInvitationsListCmd = &cobra.Command{
 			}
 			parent = "customers/" + customerID
 		}
-		result, err := gsmcibeta.ListUserInvitations(parent, flags["filter"].GetString(), flags["orderBy"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		result, err := gsmci.ListUserInvitations(parent, flags["filter"].GetString(), flags["orderBy"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
@@ -54,7 +54,7 @@ var userInvitationsListCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []*cibeta.UserInvitation{}
+			final := []*ci.UserInvitation{}
 			for i := range result {
 				final = append(final, i)
 			}

@@ -22,18 +22,18 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 )
 
 // groupsCiGetSecuritySettingsBatchCmd represents the batch command
 var groupsCiGetSecuritySettingsBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups' security settings (member restrictions) using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/getSecuritySettings",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/getSecuritySettings",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -45,7 +45,7 @@ var groupsCiGetSecuritySettingsBatchCmd = &cobra.Command{
 		}
 		var wg sync.WaitGroup
 		cap := cap(maps)
-		results := make(chan *cibeta.SecuritySettings, cap)
+		results := make(chan *ci.SecuritySettings, cap)
 		go func() {
 			for i := 0; i < cap; i++ {
 				wg.Add(1)
@@ -56,7 +56,7 @@ var groupsCiGetSecuritySettingsBatchCmd = &cobra.Command{
 							log.Printf("Error determining group name: %v\n", err)
 							continue
 						}
-						result, err := gsmcibeta.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["readMask"].GetString(), m["fields"].GetString())
+						result, err := gsmci.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["readMask"].GetString(), m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						} else {
@@ -78,7 +78,7 @@ var groupsCiGetSecuritySettingsBatchCmd = &cobra.Command{
 				}
 			}
 		} else {
-			final := []*cibeta.SecuritySettings{}
+			final := []*ci.SecuritySettings{}
 			for res := range results {
 				final = append(final, res)
 			}

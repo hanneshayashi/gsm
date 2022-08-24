@@ -22,7 +22,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"google.golang.org/api/googleapi"
 
@@ -33,7 +33,7 @@ import (
 var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves groups' security settings (member restrictions) using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/updateSecuritySettings",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/updateSecuritySettings",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -60,7 +60,7 @@ var groupsCiUpdateSecuritySettingsBatchCmd = &cobra.Command{
 						if err != nil {
 							log.Fatalf("Error building security settings object: %v", err)
 						}
-						result, err := gsmcibeta.UpdateSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["updateMask"].GetString(), m["fields"].GetString(), securitySettings)
+						result, err := gsmci.UpdateSecuritySettings(fmt.Sprintf("%s/securitySettings", name), m["updateMask"].GetString(), m["fields"].GetString(), securitySettings)
 						if err != nil {
 							log.Println(err)
 						} else {

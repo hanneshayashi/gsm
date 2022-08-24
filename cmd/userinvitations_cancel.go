@@ -20,7 +20,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,7 +30,7 @@ import (
 var userInvitationsCancelCmd = &cobra.Command{
 	Use:               "cancel",
 	Short:             "Cancels a UserInvitation that was already sent.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/cancel",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/cancel",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -38,7 +38,7 @@ var userInvitationsCancelCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building cancelUserInvitationRequest object: %v", err)
 		}
-		result, err := gsmcibeta.CancelInvitation(flags["name"].GetString(), cancelUserInvitationRequest)
+		result, err := gsmci.CancelInvitation(flags["name"].GetString(), cancelUserInvitationRequest)
 		if err != nil {
 			log.Fatalf("Error cancelling user invitation: %v", err)
 		}

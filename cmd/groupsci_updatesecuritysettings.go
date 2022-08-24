@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -31,7 +31,7 @@ import (
 var groupsCiUpdateSecuritySettingsCmd = &cobra.Command{
 	Use:               "updateSecuritySettings",
 	Short:             "Updates the security settings (member restrictions) of a group.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/updateSecuritySettings",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/updateSecuritySettings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -43,7 +43,7 @@ var groupsCiUpdateSecuritySettingsCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building security settings object: %v", err)
 		}
-		result, err := gsmcibeta.UpdateSecuritySettings(fmt.Sprintf("%s/securitySettings", name), flags["updateMask"].GetString(), flags["fields"].GetString(), securitySettings)
+		result, err := gsmci.UpdateSecuritySettings(fmt.Sprintf("%s/securitySettings", name), flags["updateMask"].GetString(), flags["fields"].GetString(), securitySettings)
 		if err != nil {
 			log.Fatalf("Error updating group's security settings: %v", err)
 		}

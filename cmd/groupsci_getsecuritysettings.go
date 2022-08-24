@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -31,7 +31,7 @@ import (
 var groupsCiGetSecuritySettingsCmd = &cobra.Command{
 	Use:               "getSecuritySettings",
 	Short:             "Retrieves the security settings (member restrictions) of a group.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/groups/getSecuritySettings",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/groups/getSecuritySettings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -39,7 +39,7 @@ var groupsCiGetSecuritySettingsCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("%v", err)
 		}
-		result, err := gsmcibeta.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), flags["readMask"].GetString(), flags["fields"].GetString())
+		result, err := gsmci.GetSecuritySettings(fmt.Sprintf("%s/securitySettings", name), flags["readMask"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting group's security settings: %v", err)
 		}

@@ -23,14 +23,14 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 )
 
 // userInvitationsCmd represents the userInvitations command
 var userInvitationsCmd = &cobra.Command{
 	Use:               "userInvitations",
 	Short:             "Manage user invitations for unmanaged accounts (Part of Cloud Identity Beta API)",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -80,12 +80,12 @@ func init() {
 	rootCmd.AddCommand(userInvitationsCmd)
 }
 
-func mapToCancelUserInvitationRequest(_ map[string]*gsmhelpers.Value) (*cibeta.CancelUserInvitationRequest, error) {
-	cancelUserInvitationRequest := &cibeta.CancelUserInvitationRequest{}
+func mapToCancelUserInvitationRequest(_ map[string]*gsmhelpers.Value) (*ci.CancelUserInvitationRequest, error) {
+	cancelUserInvitationRequest := &ci.CancelUserInvitationRequest{}
 	return cancelUserInvitationRequest, nil
 }
 
-func mapToSendUserInvitationRequest(_ map[string]*gsmhelpers.Value) (*cibeta.SendUserInvitationRequest, error) {
-	sendUserInvitationRequest := &cibeta.SendUserInvitationRequest{}
+func mapToSendUserInvitationRequest(_ map[string]*gsmhelpers.Value) (*ci.SendUserInvitationRequest, error) {
+	sendUserInvitationRequest := &ci.SendUserInvitationRequest{}
 	return sendUserInvitationRequest, nil
 }
