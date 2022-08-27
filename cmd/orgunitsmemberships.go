@@ -19,7 +19,6 @@ package cmd
 
 import (
 	"log"
-	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	cibeta "google.golang.org/api/cloudidentity/v1beta1"
@@ -120,15 +119,8 @@ func mapToOrgMembershipMoveRequest(flags map[string]*gsmhelpers.Value) (*cibeta.
 		if destinationOrgUnit == "" {
 			moveOrgMembershipRequest.ForceSendFields = append(moveOrgMembershipRequest.ForceSendFields, "DestinationOrgUnit")
 		} else {
-			moveOrgMembershipRequest.DestinationOrgUnit = orgUnitsPrefix(destinationOrgUnit)
+			moveOrgMembershipRequest.DestinationOrgUnit = gsmhelpers.EnsurePrefix(destinationOrgUnit, "orgUnits/")
 		}
 	}
 	return moveOrgMembershipRequest, nil
-}
-
-func orgUnitsPrefix(orgUnit string) string {
-	if !strings.HasPrefix(orgUnit, "orgUnits/") {
-		orgUnit = "orgUnits/" + orgUnit
-	}
-	return orgUnit
 }

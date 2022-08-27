@@ -50,7 +50,7 @@ var postmasterDomainsGetBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						name := gsmgmailpostmaster.GetPostmasterDomainName(m["name"].GetString())
+						name := gsmhelpers.EnsurePrefix(m["name"].GetString(), "/domains")
 						result, err := gsmgmailpostmaster.GetDomain(name, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)

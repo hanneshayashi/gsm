@@ -35,7 +35,7 @@ var orgUnitsMembershipsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcibeta.ListOrgUnitMemberships(orgUnitsPrefix(flags["parent"].GetString()), flags["customer"].GetString(), flags["filter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		result, err := gsmcibeta.ListOrgUnitMemberships(gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "orgUnits/"), flags["customer"].GetString(), flags["filter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {

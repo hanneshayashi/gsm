@@ -34,7 +34,7 @@ var postmasterDomainsGetCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		name := gsmgmailpostmaster.GetPostmasterDomainName(flags["name"].GetString())
+		name := gsmhelpers.EnsurePrefix(flags["name"].GetString(), "/domains")
 		result, err := gsmgmailpostmaster.GetDomain(name, flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting domain: %v", err)
