@@ -45,7 +45,7 @@ var permissionsUpdateRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error getting folder: %v", err)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
+		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), threads)
 		type resultStruct struct {
 			Permission *drive.Permission `json:"permission,omitempty"`
 			FileID     string            `json:"fileId,omitempty"`

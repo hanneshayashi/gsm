@@ -54,13 +54,13 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
 
 // CreateFile creates a new file.
-func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, fields string) (*drive.File, error) {
+func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, sourceMimeType, fields string) (*drive.File, error) {
 	srv := getFilesService()
 	if content == nil {
 		file.MimeType = folderMimetype
@@ -70,7 +70,11 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 		c.Fields(googleapi.Field(fields))
 	}
 	if content != nil {
-		c = c.Media(content)
+		if sourceMimeType != "" {
+			c = c.Media(content, googleapi.ContentType(sourceMimeType))
+		} else {
+			c = c.Media(content)
+		}
 	}
 	if includePermissionsForView != "" {
 		c = c.IncludePermissionsForView(includePermissionsForView)
@@ -86,7 +90,7 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -162,7 +166,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	}
 	r, ok := result.(*http.Response)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -201,7 +205,7 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 	}
 	r, ok := result.(*drive.GeneratedIds)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Ids, nil
 }
@@ -222,7 +226,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 	}
 	r, ok := result.(*http.Response)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -274,7 +278,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 // 	}
 // 	r, ok := result.(*drive.File)
 // if !ok {
-// 	return nil, fmt.Errorf("Result unknown")
+// 	return nil, fmt.Errorf("result unknown")
 // }
 // 	return r, nil
 // }
@@ -297,7 +301,7 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -375,7 +379,53 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 	}
 	r, ok := result.(*drive.File)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
+}
+
+// ListLabels lists the labels on a file.
+func ListLabels(fileID, fields string, cap int) (<-chan *drive.Label, <-chan error) {
+	srv := getFilesService()
+	c := srv.ListLabels(fileID).MaxResults(100)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	ch := make(chan *drive.Label, cap)
+	err := make(chan error, 1)
+	go func() {
+		e := c.Pages(context.Background(), func(response *drive.LabelList) error {
+			for i := range response.Labels {
+				ch <- response.Labels[i]
+			}
+			return nil
+		})
+		if e != nil {
+			err <- e
+		}
+		close(ch)
+		close(err)
+	}()
+	gsmhelpers.Sleep()
+	return ch, err
+}
+
+// ModifyLabels modifies the set of labels on a file.
+func ModifyLabels(fileID, fields string, modifyLabelsRequest *drive.ModifyLabelsRequest) ([]*drive.Label, error) {
+	srv := getFilesService()
+	c := srv.ModifyLabels(fileID, modifyLabelsRequest)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drive.ModifyLabelsResponse)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r.ModifiedLabels, nil
 }

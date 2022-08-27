@@ -57,7 +57,7 @@ var orgUnitsMembershipsListBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						parent := orgUnitsPrefix(m["parent"].GetString())
+						parent := gsmhelpers.EnsurePrefix(m["parent"].GetString(), "orgUnits/")
 						filter := m["filter"].GetString()
 						customer := m["customer"].GetString()
 						result, err := gsmcibeta.ListOrgUnitMemberships(parent, customer, filter, m["fields"].GetString(), gsmhelpers.MaxThreads(0))

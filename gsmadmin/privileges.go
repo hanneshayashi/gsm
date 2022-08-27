@@ -41,7 +41,7 @@ func ListPrivileges(customerID, fields string) ([]*admin.Privilege, error) {
 	}
 	r, ok := result.(*admin.Privileges)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Items, nil
 }

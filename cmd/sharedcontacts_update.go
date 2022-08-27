@@ -48,7 +48,7 @@ Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;l
 		}
 		result, err := gsmadmin.UpdateSharedContact(flags["url"].GetString(), s)
 		if err != nil {
-			log.Fatalf("Error creating shared contact: %v", err)
+			log.Fatalf("Error updating shared contact: %v", err)
 		}
 		if flags["json"].GetBool() {
 			err = gsmhelpers.Output(result, "json", compressOutput)

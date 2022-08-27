@@ -20,7 +20,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -34,11 +34,11 @@ var userInvitationsIsInvitableUserCmd = &cobra.Command{
  - the email address is a consumer account and it's the primary email address of the account, and
  - the domain of the email address matches an existing verified Google Workspace or Cloud Identity domain
 If both conditions are met, the user is eligible.
-Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/isInvitableUser`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcibeta.IsInvitableUser(flags["name"].GetString())
+		result, err := gsmci.IsInvitableUser(flags["name"].GetString())
 		if err != nil {
 			log.Fatalf("Error checking if user is invitable: %v", err)
 		}

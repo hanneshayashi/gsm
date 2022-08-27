@@ -42,7 +42,7 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, copyOtherCon
 	}
 	r, ok := result.(*people.Person)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -71,7 +71,7 @@ func MoveOrgUnitMemberships(name, fields string, moveOrgMembershipRequest *cibet
 	}
 	r, ok := result.(*cibeta.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

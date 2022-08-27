@@ -52,7 +52,7 @@ func GetACL(calendarID, ruleID, fields string) (*calendar.AclRule, error) {
 	}
 	r, ok := result.(*calendar.AclRule)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	}
 	r, ok := result.(*calendar.AclRule)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -118,7 +118,7 @@ func PatchACL(calendarID, ruleID, fields string, aclRule *calendar.AclRule, send
 	}
 	r, ok := result.(*calendar.AclRule)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

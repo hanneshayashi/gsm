@@ -52,7 +52,7 @@ func GetAsp(userKey, fields string, codeID int64) (*admin.Asp, error) {
 	}
 	r, ok := result.(*admin.Asp)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func ListAsps(userKey, fields string) ([]*admin.Asp, error) {
 	}
 	r, ok := result.(*admin.Asps)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Items, nil
 }

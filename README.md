@@ -41,6 +41,7 @@ GSM currently supports the following APIs:
 - [Domain Shared Contacts API](https://developers.google.com/admin-sdk/domain-shared-contacts)
 - [Google People API](https://developers.google.com/people/api/rest)
 - [Google Drive API](https://developers.google.com/drive/api/v3/reference)
+- [Google Drive Labels API](https://developers.google.com/drive/labels/reference/rest)
 - [Google Sheets API](https://developers.google.com/sheets/api/reference/rest) (partly)
 
 Most of these APIs allow you to manage multiple object types with each object type allowing multiple operations.\

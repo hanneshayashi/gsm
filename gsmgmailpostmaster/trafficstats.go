@@ -43,7 +43,7 @@ func GetTrafficStats(name, fields string) (*gmailpostmastertools.TrafficStats, e
 	}
 	r, ok := result.(*gmailpostmastertools.TrafficStats)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

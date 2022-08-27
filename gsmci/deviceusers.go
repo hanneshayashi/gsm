@@ -42,7 +42,7 @@ func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsC
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -62,7 +62,7 @@ func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloud
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -83,7 +83,7 @@ func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsC
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -104,7 +104,7 @@ func DeleteDeviceUser(name, customer string) (*googleapi.RawMessage, error) {
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -127,7 +127,7 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 	}
 	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1DeviceUser)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -171,9 +171,9 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 // This method must be called with end-user credentials with the scope: https://www.googleapis.com/auth/cloud-identity.devices.lookup
 // If multiple properties are provided, only DeviceUsers having all of these properties are considered as matches - i.e. the query behaves like an AND.
 // Different platforms require different amounts of information from the caller to ensure that the DeviceUser is uniquely identified.
-//  - iOS: No properties need to be passed, the caller's credentials are sufficient to identify the corresponding DeviceUser.
-//  - Android: Specifying the 'androidId' field is required.
-//  - Desktop: Specifying the 'rawResourceId' field is required.
+//   - iOS: No properties need to be passed, the caller's credentials are sufficient to identify the corresponding DeviceUser.
+//   - Android: Specifying the 'androidId' field is required.
+//   - Desktop: Specifying the 'rawResourceId' field is required.
 func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, cap int) (<-chan string, <-chan error) {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Lookup(parent)
@@ -227,7 +227,7 @@ func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentity
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

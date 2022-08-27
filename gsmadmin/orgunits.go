@@ -51,7 +51,7 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 	}
 	r, ok := result.(*admin.OrgUnit)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.Or
 	}
 	r, ok := result.(*admin.OrgUnit)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -97,7 +97,7 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 	}
 	r, ok := result.(*admin.OrgUnits)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.OrganizationUnits, nil
 }
@@ -117,7 +117,7 @@ func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit
 	}
 	r, ok := result.(*admin.OrgUnit)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

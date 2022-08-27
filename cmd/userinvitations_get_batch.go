@@ -21,9 +21,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
+	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,7 @@ import (
 var userInvitationsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets user invitations using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/get",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -45,8 +45,8 @@ var userInvitationsGetBatchCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		cap := cap(maps)
 		type resultStruct struct {
-			Invitation *cibeta.UserInvitation `json:"result"`
-			Name       string                 `json:"name,omitempty"`
+			Invitation *ci.UserInvitation `json:"result"`
+			Name       string             `json:"name,omitempty"`
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
@@ -55,7 +55,7 @@ var userInvitationsGetBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						name := m["name"].GetString()
-						result, err := gsmcibeta.GetInvitation(name, m["fields"].GetString())
+						result, err := gsmci.GetInvitation(name, m["fields"].GetString())
 						if err != nil {
 							log.Println(err)
 						}

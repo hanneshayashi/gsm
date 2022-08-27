@@ -35,6 +35,7 @@ var (
 	devicesService                        *ci.DevicesService
 	devicesDeviceUsersService             *ci.DevicesDeviceUsersService
 	devicesDeviceUsersClientStatesService *ci.DevicesDeviceUsersClientStatesService
+	customersUserinvitationsService       *ci.CustomersUserinvitationsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -89,4 +90,11 @@ func getDevicesDeviceUsersClientStatesService() *ci.DevicesDeviceUsersClientStat
 		devicesDeviceUsersClientStatesService = ci.NewDevicesDeviceUsersClientStatesService(getCiService())
 	}
 	return devicesDeviceUsersClientStatesService
+}
+
+func getCustomersUserinvitationsService() *ci.CustomersUserinvitationsService {
+	if customersUserinvitationsService == nil {
+		customersUserinvitationsService = ci.NewCustomersUserinvitationsService(getCiService())
+	}
+	return customersUserinvitationsService
 }

@@ -42,7 +42,7 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (*googleapi
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -75,7 +75,7 @@ func PatchGroup(name, updateMask, fields string, group *ci.Group) (*googleapi.Ra
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -95,7 +95,7 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	}
 	r, ok := result.(*ci.Group)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -112,7 +112,7 @@ func LookupGroup(email string) (string, error) {
 	}
 	r, ok := result.(*ci.LookupGroupNameResponse)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	return r.Name, nil
 }
@@ -173,4 +173,50 @@ func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan
 	}()
 	gsmhelpers.Sleep()
 	return ch, err
+}
+
+// GetSecuritySettings returns the security settings of a group.
+func GetSecuritySettings(name, readMask, fields string) (*ci.SecuritySettings, error) {
+	srv := getGroupsService()
+	c := srv.GetSecuritySettings(name)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	if readMask != "" {
+		c.ReadMask(readMask)
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*ci.SecuritySettings)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
+// UpdateSecuritySettings updates the security settings of a group.
+func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *ci.SecuritySettings) (*googleapi.RawMessage, error) {
+	srv := getGroupsService()
+	c := srv.UpdateSecuritySettings(name, securitysettings)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	if updateMask != "" {
+		c.UpdateMask(updateMask)
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*ci.Operation)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return &r.Response, nil
 }

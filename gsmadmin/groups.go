@@ -52,7 +52,7 @@ func GetGroup(groupKey, fields string) (*admin.Group, error) {
 	}
 	r, ok := result.(*admin.Group)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
 	}
 	r, ok := result.(*admin.Group)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -129,7 +129,7 @@ func PatchGroup(groupKey, fields string, Group *admin.Group) (*admin.Group, erro
 	}
 	r, ok := result.(*admin.Group)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

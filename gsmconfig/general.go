@@ -20,7 +20,6 @@ package gsmconfig
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -30,7 +29,6 @@ import (
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/gmailpostmastertools/v1"
@@ -106,7 +104,7 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 		return nil, err
 	}
 	configPath := GetConfigPath(name)
-	err = ioutil.WriteFile(configPath, b, os.ModeAppend)
+	err = os.WriteFile(configPath, b, os.ModeAppend)
 	if name != ".gsm" && configOld.Name != name {
 		err = os.Rename(configPath, GetConfigPath(configOld.Name))
 	}
@@ -171,9 +169,9 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmail.GmailSettingsBasicScope,
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
-			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-			cibeta.CloudIdentityDevicesScope,
-			cibeta.CloudIdentityDevicesLookupScope,
+			ci.CloudIdentityUserinvitationsScope,
+			ci.CloudIdentityDevicesScope,
+			ci.CloudIdentityDevicesLookupScope,
 			"https://www.googleapis.com/auth/cloud-identity.orgunits",
 			groupssettings.AppsGroupsSettingsScope,
 			calendar.CalendarScope,
@@ -186,6 +184,8 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmailpostmastertools.PostmasterReadonlyScope,
 			"https://www.googleapis.com/auth/admin.contact.delegation",
 			"https://www.googleapis.com/auth/admin.chrome.printers",
+			"https://www.googleapis.com/auth/drive.labels",
+			"https://www.googleapis.com/auth/drive.admin.labels",
 		}
 	}
 	b, err := yaml.Marshal(config)
@@ -205,7 +205,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 
 // GetConfig returns a single GSM config or an error
 func GetConfig(name string) (*GSMConfig, error) {
-	f, err := ioutil.ReadFile(fmt.Sprintf("%s/%s.yaml", CfgDir, name))
+	f, err := os.ReadFile(fmt.Sprintf("%s/%s.yaml", CfgDir, name))
 	if err != nil {
 		return nil, err
 	}
@@ -277,7 +277,7 @@ func ListConfigs() ([]*GSMConfig, error) {
 		if !strings.HasSuffix(files[i].Name(), ".yaml") {
 			continue
 		}
-		b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", CfgDir, files[i].Name()))
+		b, err := os.ReadFile(fmt.Sprintf("%s/%s", CfgDir, files[i].Name()))
 		if err != nil {
 			fmt.Printf("Error reading %s: %v\n", files[i].Name(), err)
 			continue

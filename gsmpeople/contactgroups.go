@@ -45,7 +45,7 @@ func BatchGetContactGroups(resourceNames []string, maxMembers int64, fields stri
 	}
 	r, ok := result.(*people.BatchGetContactGroupsResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -65,7 +65,7 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 	}
 	r, ok := result.(*people.ContactGroup)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -101,7 +101,7 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	}
 	r, ok := result.(*people.ContactGroup)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -148,7 +148,7 @@ func UpdateContactGroup(resourceName, fields string, updateContactGroupRequest *
 	}
 	r, ok := result.(*people.ContactGroup)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

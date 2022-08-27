@@ -21,7 +21,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -48,7 +48,7 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 		return nil, err
 	}
 	defer r.Body.Close()
-	responseBody, err := ioutil.ReadAll(r.Body)
+	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}

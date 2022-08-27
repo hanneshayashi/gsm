@@ -49,7 +49,7 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 	}
 	r, ok := result.(*admin.BatchCreatePrintersResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	response := &PrinterResults{
 		Failures: r.Failures,
@@ -70,7 +70,7 @@ func BatchDeletePrinters(parent string, batchDeletePrintersRequest *admin.BatchD
 	}
 	r, ok := result.(*admin.BatchDeletePrintersResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	response := &PrinterResults{
 		Failures:   r.FailedPrinters,
@@ -94,7 +94,7 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 	}
 	r, ok := result.(*admin.Printer)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -127,7 +127,7 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 	}
 	r, ok := result.(*admin.Printer)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -210,7 +210,7 @@ func PatchPrinter(name, updateMask, clearMask, fields string, printer *admin.Pri
 	}
 	r, ok := result.(*admin.Printer)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

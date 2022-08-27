@@ -68,7 +68,7 @@ func CheckTransitiveMembership(parent, query string) (bool, error) {
 	}
 	r, ok := result.(*ci.CheckTransitiveMembershipResponse)
 	if !ok {
-		return false, fmt.Errorf("Result unknown")
+		return false, fmt.Errorf("result unknown")
 	}
 	return r.HasMembership, nil
 }
@@ -88,7 +88,7 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (*google
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -121,7 +121,7 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 	}
 	r, ok := result.(*ci.Membership)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -143,7 +143,7 @@ func GetMembershipGraph(parent, query, fields string) (*googleapi.RawMessage, er
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }
@@ -160,7 +160,7 @@ func LookupMembership(parent, memberKeyID, memberKeyNamespace string) (string, e
 	}
 	r, ok := result.(*ci.LookupMembershipNameResponse)
 	if !ok {
-		return "", fmt.Errorf("Result unknown")
+		return "", fmt.Errorf("result unknown")
 	}
 	return r.Name, nil
 }
@@ -180,7 +180,7 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	}
 	r, ok := result.(*ci.ModifyMembershipRolesResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Membership, nil
 }

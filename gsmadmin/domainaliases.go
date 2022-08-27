@@ -51,7 +51,7 @@ func GetDomainAlias(customerID, domainAliasName, fields string) (*admin.DomainAl
 	}
 	r, ok := result.(*admin.DomainAlias)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func InsertDomainAlias(customerID, fields string, domainAlias *admin.DomainAlias
 	}
 	r, ok := result.(*admin.DomainAlias)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -94,7 +94,7 @@ func ListDomainAliases(customerID, parentDomainName, fields string) ([]*admin.Do
 	}
 	r, ok := result.(*admin.DomainAliases)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.DomainAliases, nil
 }

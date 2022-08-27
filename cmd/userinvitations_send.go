@@ -20,7 +20,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -33,7 +33,7 @@ var userInvitationsSendCmd = &cobra.Command{
 	Long: `If the UserInvitation does not exist for this request and it is a valid request, the request creates a UserInvitation.
 Note: The get and list methods have a 48-hour delay where newly-created consumer accounts will not appear in the results.
 You can still send a UserInvitation to those accounts if you know the unmanaged email address and userinvitations.isInvitableUser==True.
-Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/send`,
+Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/send`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -41,7 +41,7 @@ Implements the API documented at https://cloud.google.com/identity/docs/referenc
 		if err != nil {
 			log.Fatalf("Error building sendUserInvitationRequest object: %v", err)
 		}
-		result, err := gsmcibeta.SendInvitation(flags["name"].GetString(), flags["fields"].GetString(), sendUserInvitationRequest)
+		result, err := gsmci.SendInvitation(flags["name"].GetString(), flags["fields"].GetString(), sendUserInvitationRequest)
 		if err != nil {
 			log.Fatalf("Error sending user invitation: %v", err)
 		}

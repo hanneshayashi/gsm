@@ -20,7 +20,7 @@ package cmd
 import (
 	"bufio"
 	"encoding/base64"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -1272,7 +1272,7 @@ func mapToUpdateContactPhotoRequest(flags map[string]*gsmhelpers.Value) (*people
 		return nil, err
 	}
 	reader := bufio.NewReader(f)
-	content, err := ioutil.ReadAll(reader)
+	content, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err
 	}

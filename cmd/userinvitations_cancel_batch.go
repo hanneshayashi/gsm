@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"google.golang.org/api/googleapi"
 
@@ -32,7 +32,7 @@ import (
 var userInvitationsCancelBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch cancels user invitations using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/cancel",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/cancel",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -60,7 +60,7 @@ var userInvitationsCancelBatchCmd = &cobra.Command{
 							log.Printf("Error building cancelUserInvitationRequest object: %v\n", err)
 							continue
 						}
-						result, err := gsmcibeta.CancelInvitation(name, cancelUserInvitationRequest)
+						result, err := gsmci.CancelInvitation(name, cancelUserInvitationRequest)
 						if err != nil {
 							log.Println(err)
 						}

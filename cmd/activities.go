@@ -120,12 +120,12 @@ The list is composed of event parameters that are manipulated by relational oper
 Event parameters are in the form [parameter1 name][relational operator][parameter1 value],[parameter2 name][relational operator][parameter2 value],...
 
 These event parameters are associated with a specific eventName. An empty report is returned if the filtered request's parameter does not belong to the eventName. For more information about eventName parameters, see the list of event names for various applications above in applicationName.
-		
-In the following Admin Activity example, the <> operator is URL-encoded in the request's query string (%3C%3E):	
+
+In the following Admin Activity example, the <> operator is URL-encoded in the request's query string (%3C%3E):
 
 GET...&eventName=CHANGE_CALENDAR_SETTING
 &filters=NEW_VALUE%3C%3EREAD_ONLY_ACCESS
-		
+
 In the following Drive example, the list can be a view or edit event's doc_id parameter with a value that is manipulated by an 'equal to' (==) or 'not equal to' (<>) relational operator. In the first example, the report returns each edited document's doc_id. In the second example, the report returns each viewed document's doc_id that equals the value 12345 and does not return any viewed document's which have a doc_id value of 98765. The <> operator is URL-encoded in the request's query string (%3C%3E):
 
 GET...&eventName=edit&filters=doc_id

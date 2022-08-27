@@ -61,7 +61,7 @@ func GetUser(userKey, fields, projection, customFieldMask, viewType string) (*ad
 	}
 	r, ok := result.(*admin.User)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -81,7 +81,7 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	}
 	r, ok := result.(*admin.User)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -165,7 +165,7 @@ func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	}
 	r, ok := result.(*admin.User)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

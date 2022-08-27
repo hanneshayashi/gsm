@@ -45,7 +45,7 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	}
 	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -106,7 +106,7 @@ func PatchClientState(name, customer, updateMask, fields string, clientState *ci
 	}
 	r, ok := result.(*ci.Operation)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return &r.Response, nil
 }

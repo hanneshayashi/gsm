@@ -51,7 +51,7 @@ func GetToken(userKey, clientID, fields string) (*admin.Token, error) {
 	}
 	r, ok := result.(*admin.Token)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func ListTokens(userKey, fields string) ([]*admin.Token, error) {
 	}
 	r, ok := result.(*admin.Tokens)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Items, nil
 }

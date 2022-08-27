@@ -42,7 +42,7 @@ func CreateComment(fileID, fields string, comment *drive.Comment) (*drive.Commen
 	}
 	r, ok := result.(*drive.Comment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -72,7 +72,7 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	}
 	r, ok := result.(*drive.Comment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -121,7 +121,7 @@ func UpdateComment(fileID, commentID, fields string, comment *drive.Comment) (*d
 	}
 	r, ok := result.(*drive.Comment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

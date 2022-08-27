@@ -41,7 +41,7 @@ func GetAutoForwardingSettings(userID, fields string) (*gmail.AutoForwarding, er
 	}
 	r, ok := result.(*gmail.AutoForwarding)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -61,7 +61,7 @@ func GetIMAPSettings(userID, fields string) (*gmail.ImapSettings, error) {
 	}
 	r, ok := result.(*gmail.ImapSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -81,7 +81,7 @@ func GetLanguageSettings(userID, fields string) (*gmail.LanguageSettings, error)
 	}
 	r, ok := result.(*gmail.LanguageSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -101,7 +101,7 @@ func GetPOPSettings(userID, fields string) (*gmail.PopSettings, error) {
 	}
 	r, ok := result.(*gmail.PopSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -121,7 +121,7 @@ func GetVacationResponderSettings(userID, fields string) (*gmail.VacationSetting
 	}
 	r, ok := result.(*gmail.VacationSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -142,7 +142,7 @@ func UpdateAutoForwardingSettings(userID, fields string, autoForwarding *gmail.A
 	}
 	r, ok := result.(*gmail.AutoForwarding)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -162,7 +162,7 @@ func UpdateIMAPSettings(userID, fields string, imapSettings *gmail.ImapSettings)
 	}
 	r, ok := result.(*gmail.ImapSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -184,7 +184,7 @@ func UpdateLanguageSettings(userID, fields string, languageSetting *gmail.Langua
 	}
 	r, ok := result.(*gmail.LanguageSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -204,7 +204,7 @@ func UpdatePOPSettings(userID, fields string, popSettings *gmail.PopSettings) (*
 	}
 	r, ok := result.(*gmail.PopSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -224,7 +224,7 @@ func UpdateVacationResponderSettings(userID, fields string, vacationSettings *gm
 	}
 	r, ok := result.(*gmail.VacationSettings)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

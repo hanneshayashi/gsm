@@ -41,7 +41,7 @@ func GetGroupSettings(groupUniqueID, fields string) (*groupssettings.Groups, err
 	}
 	r, ok := result.(*groupssettings.Groups)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -61,7 +61,7 @@ func PatchGroupSettings(groupUniqueID, fields string, groups *groupssettings.Gro
 	}
 	r, ok := result.(*groupssettings.Groups)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -51,7 +51,7 @@ func GetDomain(customerID, domainName, fields string) (*admin.Domains, error) {
 	}
 	r, ok := result.(*admin.Domains)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -71,7 +71,7 @@ func InsertDomain(customerID, fields string, domain *admin.Domains) (*admin.Doma
 	}
 	r, ok := result.(*admin.Domains)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -91,7 +91,7 @@ func ListDomains(customerID, fields string) ([]*admin.Domains, error) {
 	}
 	r, ok := result.(*admin.Domains2)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.Domains, nil
 }

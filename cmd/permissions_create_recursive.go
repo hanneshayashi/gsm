@@ -49,7 +49,7 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error building permission object: %v", err)
 		}
 		threads := gsmhelpers.MaxThreads(flags["batchThreads"].GetInt())
-		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), threads)
+		files := gsmdrive.ListFilesRecursive(folderID, "files(id,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), threads)
 		type resultStruct struct {
 			Permissions *drive.Permission `json:"permissions,omitempty"`
 			FileID      string            `json:"fileId,omitempty"`

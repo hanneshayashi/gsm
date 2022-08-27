@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -31,7 +31,7 @@ import (
 var userInvitationsIsInvitableUserBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch checks if users are invitable using a CSV file as input.",
-	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/isInvitableUser",
+	Long:  "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/isInvitableUser",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -54,7 +54,7 @@ var userInvitationsIsInvitableUserBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						name := m["name"].GetString()
-						result, err := gsmcibeta.IsInvitableUser(name)
+						result, err := gsmci.IsInvitableUser(name)
 						if err != nil {
 							log.Println(err)
 						}

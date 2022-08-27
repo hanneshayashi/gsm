@@ -64,7 +64,7 @@ func saveToken(path string, token *oauth2.Token) error {
 	return nil
 }
 
-//GetClientUser does user-based authentication via OAuth and returns an *http.Client
+// GetClientUser does user-based authentication via OAuth and returns an *http.Client
 func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope ...string) (client *http.Client, err error) {
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(credentials, scope...)
@@ -104,7 +104,7 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 	return config.Client(ctx, tok), nil
 }
 
-//GetClientADC returns a client to be used for API services
+// GetClientADC returns a client to be used for API services
 func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client, err error) {
 	if serviceAccountEmail == "" {
 		serviceAccountEmail, err = metadata.Email("")
@@ -124,7 +124,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 	return
 }
 
-//GetClient returns a client to be used for API services
+// GetClient returns a client to be used for API services
 func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client, err error) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {

@@ -20,7 +20,7 @@ package cmd
 import (
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -235,7 +235,7 @@ func mapToMessage(flags map[string]*gsmhelpers.Value) (*gmail.Message, error) {
 			if err != nil {
 				return nil, err
 			}
-			bytes, err := ioutil.ReadAll(file)
+			bytes, err := io.ReadAll(file)
 			if err != nil {
 				return nil, err
 			}
@@ -257,7 +257,7 @@ func emlToMessage(eml string) (*gmail.Message, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error opening %s: %v", eml, err)
 	}
-	bytes, err := ioutil.ReadAll(file)
+	bytes, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("error reading %s: %v", eml, err)
 	}

@@ -43,7 +43,7 @@ func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.For
 	}
 	r, ok := result.(*gmail.ForwardingAddress)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -73,7 +73,7 @@ func GetForwardingAddress(userID, forwardingEmail, fields string) (*gmail.Forwar
 	}
 	r, ok := result.(*gmail.ForwardingAddress)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -93,7 +93,7 @@ func ListForwardingAddresses(userID, fields string) ([]*gmail.ForwardingAddress,
 	}
 	r, ok := result.(*gmail.ListForwardingAddressesResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.ForwardingAddresses, nil
 }

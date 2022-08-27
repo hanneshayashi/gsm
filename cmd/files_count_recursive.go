@@ -38,7 +38,7 @@ var filesCountRecursiveCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
+		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
 		result := gsmdrive.CountFilesAndFolders(files)
 		err := gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

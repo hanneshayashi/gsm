@@ -42,7 +42,7 @@ func GetCustomer(id, fields string) (*admin.Customer, error) {
 	}
 	r, ok := result.(*admin.Customer)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -83,7 +83,7 @@ func PatchCustomer(customerKey, fields string, customer *admin.Customer) (*admin
 	}
 	r, ok := result.(*admin.Customer)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

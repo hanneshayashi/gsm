@@ -86,7 +86,7 @@ In this example, the <> 'not equal to' operator is URL-encoded in the request's 
 GET
 https://www.googleapis.com/admin/reports/v1/usage/gplus_communities/all/dates/2017-12-01
 ?parameters=gplus:community_name,gplus:num_total_members
-&filters=gplus:num_total_members%3C%3E0 
+&filters=gplus:num_total_members%3C%3E0
 The relational operators include:
 
 == - 'equal to'.

@@ -45,7 +45,7 @@ func CreateSendAs(userID, fields string, sendAs *gmail.SendAs) (*gmail.SendAs, e
 	}
 	r, ok := result.(*gmail.SendAs)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -77,7 +77,7 @@ func GetSendAs(userID, sendAsEmail, fields string) (*gmail.SendAs, error) {
 	}
 	r, ok := result.(*gmail.SendAs)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -98,7 +98,7 @@ func ListSendAs(userID, fields string) ([]*gmail.SendAs, error) {
 	}
 	r, ok := result.(*gmail.ListSendAsResponse)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r.SendAs, nil
 }
@@ -118,7 +118,7 @@ func PatchSendAs(userID, sendAsEmail, fields string, sendAs *gmail.SendAs) (*gma
 	}
 	r, ok := result.(*gmail.SendAs)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

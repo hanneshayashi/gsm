@@ -28,11 +28,9 @@ import (
 )
 
 var (
-	client                          *http.Client
-	ciBetaService                   *cibeta.Service
-	customersUserinvitationsService *cibeta.CustomersUserinvitationsService
-	groupsService                   *cibeta.GroupsService
-	orgUnitsMembershipsService      *cibeta.OrgUnitsMembershipsService
+	client                     *http.Client
+	ciBetaService              *cibeta.Service
+	orgUnitsMembershipsService *cibeta.OrgUnitsMembershipsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -52,20 +50,6 @@ func getCiBetaService() *cibeta.Service {
 		}
 	}
 	return ciBetaService
-}
-
-func getGroupsService() *cibeta.GroupsService {
-	if groupsService == nil {
-		groupsService = cibeta.NewGroupsService(getCiBetaService())
-	}
-	return groupsService
-}
-
-func getCustomersUserinvitationsService() *cibeta.CustomersUserinvitationsService {
-	if customersUserinvitationsService == nil {
-		customersUserinvitationsService = cibeta.NewCustomersUserinvitationsService(getCiBetaService())
-	}
-	return customersUserinvitationsService
 }
 
 func getOrgUnitsMembershipsService() *cibeta.OrgUnitsMembershipsService {

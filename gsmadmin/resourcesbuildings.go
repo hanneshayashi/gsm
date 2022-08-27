@@ -52,7 +52,7 @@ func GetBuilding(customer, buildingID, fields string) (*admin.Building, error) {
 	}
 	r, ok := result.(*admin.Building)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -75,7 +75,7 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	}
 	r, ok := result.(*admin.Building)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -123,7 +123,7 @@ func PatchBuilding(customer, buildingID, coordinatesSource, fields string, build
 	}
 	r, ok := result.(*admin.Building)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

@@ -26,7 +26,6 @@ import (
 
 	"github.com/spf13/cobra"
 	ci "google.golang.org/api/cloudidentity/v1"
-	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 )
 
 // groupsCiCmd represents the groupsCi command
@@ -299,10 +298,10 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 	return group, nil
 }
 
-func mapToSecuritySettings(flags map[string]*gsmhelpers.Value) (*cibeta.SecuritySettings, error) {
-	securitysettings := &cibeta.SecuritySettings{}
+func mapToSecuritySettings(flags map[string]*gsmhelpers.Value) (*ci.SecuritySettings, error) {
+	securitysettings := &ci.SecuritySettings{}
 	if flags["query"].IsSet() {
-		securitysettings.MemberRestriction = &cibeta.MemberRestriction{}
+		securitysettings.MemberRestriction = &ci.MemberRestriction{}
 		securitysettings.MemberRestriction.Query = flags["query"].GetString()
 		if securitysettings.MemberRestriction.Query == "" {
 			securitysettings.MemberRestriction.ForceSendFields = append(securitysettings.MemberRestriction.ForceSendFields, "Query")

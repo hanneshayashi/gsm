@@ -20,7 +20,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/hanneshayashi/gsm/gsmcibeta"
+	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
 	"github.com/spf13/cobra"
@@ -30,11 +30,11 @@ import (
 var userInvitationsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a UserInvitation resource.",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1beta1/customers.userinvitations/get",
+	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcibeta.GetInvitation(flags["name"].GetString(), flags["fields"].GetString())
+		result, err := gsmci.GetInvitation(flags["name"].GetString(), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error getting user invitation: %v", err)
 		}

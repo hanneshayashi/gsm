@@ -53,7 +53,7 @@ func GetRoleAssignment(customer, roleAssignmentID, fields string) (*admin.RoleAs
 	}
 	r, ok := result.(*admin.RoleAssignment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -73,7 +73,7 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	}
 	r, ok := result.(*admin.RoleAssignment)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }

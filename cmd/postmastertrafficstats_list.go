@@ -36,7 +36,7 @@ Returns PERMISSION_DENIED if user does not have permission to access TrafficStat
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		parent := gsmgmailpostmaster.GetPostmasterDomainName(flags["parent"].GetString())
+		parent := gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "/domains")
 		result, err := gsmgmailpostmaster.ListTrafficStats(parent, flags["fields"].GetString(), flags["startDateDay"].GetInt64(), flags["startDateMonth"].GetInt64(), flags["startDateYear"].GetInt64(), flags["endDateDay"].GetInt64(), flags["endDateMonth"].GetInt64(), flags["endDateYear"].GetInt64(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)

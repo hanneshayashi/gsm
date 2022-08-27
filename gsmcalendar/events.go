@@ -58,7 +58,7 @@ func GetEvent(calendarID, eventID, timeZone, fields string, maxAttendees int64) 
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -78,7 +78,7 @@ func ImportEvent(calendarID, fields string, event *calendar.Event, conferenceDat
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -101,7 +101,7 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -218,7 +218,7 @@ func MoveEvent(calendarID, eventID, destination, sendUpdates, fields string) (*c
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -243,7 +243,7 @@ func PatchEvent(calendarID, eventID, sendUpdates, fields string, event *calendar
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
@@ -263,7 +263,7 @@ func QuickAddEvent(calendarID, text, sendUpdates, fields string) (*calendar.Even
 	}
 	r, ok := result.(*calendar.Event)
 	if !ok {
-		return nil, fmt.Errorf("Result unknown")
+		return nil, fmt.Errorf("result unknown")
 	}
 	return r, nil
 }
