@@ -338,10 +338,9 @@ func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
 
 // ActionRetry performs an action that does not return an object, retrying on failure when appropriate
 func ActionRetry(errKey string, c func() error) (bool, error) {
-	var err error
-	operation := func() error {
+	err := backoff.RetryNotify(func() error {
 		defer Sleep()
-		err = c()
+		err := c()
 		if err != nil {
 			ferr := formatError(err, errKey)
 			if errorIsRetryable(err) {
@@ -350,8 +349,7 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 			return backoff.Permanent(ferr)
 		}
 		return nil
-	}
-	err = backoff.RetryNotify(operation, standardRetrier, logError)
+	}, standardRetrier, logError)
 	if err != nil {
 		return false, err
 	}
