@@ -318,21 +318,18 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 
 // GetObjectRetry performs an action that returns an object, retrying on failure when appropriate
 func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
-	var err error
-	var result any
-	operation := func() error {
+	result, err := backoff.RetryNotifyWithData(func() (any, error) {
 		defer Sleep()
-		result, err = c()
+		result, err := c()
 		if err != nil {
 			ferr := formatError(err, errKey)
 			if errorIsRetryable(err) {
-				return ferr
+				return nil, ferr
 			}
-			return backoff.Permanent(ferr)
+			return nil, backoff.Permanent(ferr)
 		}
-		return nil
-	}
-	err = backoff.RetryNotify(operation, standardRetrier, logError)
+		return result, nil
+	}, standardRetrier, logError)
 	if err != nil {
 		return nil, err
 	}
