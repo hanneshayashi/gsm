@@ -169,7 +169,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmail.GmailSettingsBasicScope,
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
-			ci.CloudIdentityUserinvitationsScope,
+			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
 			ci.CloudIdentityDevicesScope,
 			ci.CloudIdentityDevicesLookupScope,
 			"https://www.googleapis.com/auth/cloud-identity.orgunits",
