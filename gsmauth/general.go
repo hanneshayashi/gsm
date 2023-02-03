@@ -88,18 +88,30 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 			if err != nil {
 				log.Fatal(err)
 			}
-			saveToken(tokenPath, tok)
+			err = saveToken(tokenPath, tok)
+			if err != nil {
+				log.Fatal(err)
+			}
 			fmt.Fprintf(w, "You can close this window now")
 			done <- true
 			close(done)
 		})
-		open.Run(authURL)
+		err = open.Run(authURL)
+		if err != nil {
+			log.Fatal(err)
+		}
 		go func() {
 			if <-done {
-				srv.Shutdown(ctx)
+				errShutdown := srv.Shutdown(ctx)
+				if errShutdown != nil {
+					log.Fatal(errShutdown)
+				}
 			}
 		}()
-		srv.ListenAndServe()
+		err = srv.ListenAndServe()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return config.Client(ctx, tok), nil
 }
