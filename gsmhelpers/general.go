@@ -390,7 +390,3 @@ func EnsurePrefix(s, p string) string {
 	}
 	return s
 }
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
