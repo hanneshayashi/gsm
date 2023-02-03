@@ -49,13 +49,35 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 		return nil, fmt.Errorf("result unknown")
 	}
 	if returnWhenReady {
+		d, err := GetDrive(r.Id, "", false)
+		for err != nil {
+			d, err = GetDrive(r.Id, "", false)
+			time.Sleep(1 * time.Second)
+		}
 		about, err := GetAbout("user(permissionId)")
 		if err != nil {
 			return nil, err
 		}
-		_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+		_, err = GetPermission(d.Id, about.User.PermissionId, "", false)
 		for err != nil {
-			_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+			_, err = GetPermission(d.Id, about.User.PermissionId, "", false)
+			time.Sleep(1 * time.Second)
+		}
+		r.Restrictions = &drive.DriveRestrictions{
+			DomainUsersOnly: true,
+		}
+		d, err = UpdateDrive(d.Id, "", false, r)
+		for err != nil {
+			d, err = UpdateDrive(d.Id, "", false, r)
+			time.Sleep(1 * time.Second)
+		}
+		r.Restrictions = &drive.DriveRestrictions{
+			DomainUsersOnly: false,
+			ForceSendFields: []string{"DomainUsersOnly"},
+		}
+		d, err = UpdateDrive(d.Id, "", false, r)
+		for err != nil {
+			d, err = UpdateDrive(d.Id, "", false, r)
 			time.Sleep(1 * time.Second)
 		}
 	}
