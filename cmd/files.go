@@ -292,7 +292,7 @@ All users with access can copy, download, export, and share the file.`,
 		Type:         "stringSlice",
 		Required:     []string{"modifyLabels"},
 		Description: `A single label field that should be updated on a file.
-Can be used multiple times in the form of "--labelField "labelId=...;fieldId=...;valueType=...,value=...", etc.
+Can be used multiple times in the form of "--labelField "labelId=...;fieldId=...;valueType=...,values=...", etc.
 GSM will consolidate all instances into a single request.
 You can use the following properties:
 labelId              The ID of the label.
