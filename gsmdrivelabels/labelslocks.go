@@ -27,9 +27,9 @@ import (
 )
 
 // Lists the LabelLocks on a Label.
-func ListLabelLocks(fileID, fields string, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2LabelLock, <-chan error) {
+func ListLabelLocks(parent, fields string, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2LabelLock, <-chan error) {
 	srv := getLabelsLocksService()
-	c := srv.List(fileID).PageSize(200)
+	c := srv.List(parent).PageSize(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
