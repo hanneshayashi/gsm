@@ -56,7 +56,7 @@ var driveLabelsListCmd = &cobra.Command{
 		}
 		e := <-err
 		if e != nil {
-			log.Fatalf("Error listing drive labels: %v", e)
+			log.Fatalf("Error listing Drive labels: %v", e)
 		}
 	},
 }

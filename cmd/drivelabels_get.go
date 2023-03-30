@@ -42,7 +42,7 @@ Implements the API documented at https://developers.google.com/drive/labels/refe
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrivelabels.GetLabel(gsmhelpers.EnsurePrefix(flags["name"].GetString(), "labels/"), flags["languageCode"].GetString(), flags["view"].GetString(), flags["fields"].GetString(), flags["useAdminAccess"].GetBool())
 		if err != nil {
-			log.Fatalf("Error getting drive label: %v", err)
+			log.Fatalf("Error getting Drive label: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {
