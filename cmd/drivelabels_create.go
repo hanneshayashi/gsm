@@ -38,7 +38,7 @@ var driveLabelsCreateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error building Drive Label object: %v\n", err)
 		}
-		result, err := gsmdrivelabels.CreateLabel(l, "", "", true)
+		result, err := gsmdrivelabels.CreateLabel(l, flags["languageCode"].GetString(), flags["fields"].GetString(), flags["useAdminAccess"].GetBool())
 		if err != nil {
 			log.Fatalf("Error creating Drive Label: %v", err)
 		}

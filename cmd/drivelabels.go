@@ -59,13 +59,13 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list"},
+		AvailableFor: []string{"get", "list", "create"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list"},
+		AvailableFor: []string{"get", "list", "create"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
@@ -158,7 +158,7 @@ The following options are available:
 		Description:  `Custom URL to present to users to allow them to learn more about this label and how it should be used.`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list"},
+		AvailableFor: []string{"get", "list", "create"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
