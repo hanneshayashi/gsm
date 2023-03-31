@@ -46,7 +46,7 @@ var driveLabelsCmd = &cobra.Command{
 
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get"},
+		AvailableFor: []string{"get", "delete"},
 		Type:         "string",
 		Description: `Label resource name.
 May be any of:
@@ -55,14 +55,20 @@ May be any of:
   - labels/{id}@published
   - labels/{id}@{revisionId}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
-		Required:       []string{"get"},
+		Required:       []string{"get", "delete"},
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list", "create"},
+		AvailableFor: []string{"get", "list", "create", "delete"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
+	},
+	"requiredRevisionId": {
+		AvailableFor: []string{"delete"},
+		Type:         "string",
+		Description: `The [revisionId][google.apps.drive.labels.v1.Label.revision_id] of the label that the write request will be applied to.
+If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
 		AvailableFor: []string{"get", "list", "create"},

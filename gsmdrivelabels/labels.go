@@ -50,6 +50,22 @@ func CreateLabel(label *drivelabels.GoogleAppsDriveLabelsV2Label, languageCode, 
 	return r, nil
 }
 
+// DeleteLabel permanently deletes a Label and related metadata on Drive Items.
+// Once deleted, the Label and related Drive item metadata will be deleted.
+// Only draft Labels, and disabled Labels may be deleted.
+func DeleteLabel(name, requiredRevisionId string, useAdminAccess bool) (bool, error) {
+	srv := getLabelsService()
+	c := srv.Delete(name).UseAdminAccess(useAdminAccess)
+	if requiredRevisionId != "" {
+		c.WriteControlRequiredRevisionId(requiredRevisionId)
+	}
+	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(name), func() error {
+		_, err := c.Do()
+		return err
+	})
+	return result, err
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
