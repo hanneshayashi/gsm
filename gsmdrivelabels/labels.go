@@ -27,6 +27,29 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+// CreateLabel creates a new Label.
+func CreateLabel(label *drivelabels.GoogleAppsDriveLabelsV2Label, languageCode, fields string, useAdminAccess bool) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
+	srv := getLabelsService()
+	c := srv.Create(label).UseAdminAccess(useAdminAccess)
+	if languageCode != "" {
+		c.LanguageCode(languageCode)
+	}
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(label.Name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
