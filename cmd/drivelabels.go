@@ -64,19 +64,19 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 The server verifies that the user is an admin for the label before allowing access.`,
 	},
 	"requiredRevisionId": {
-		AvailableFor: []string{"delete"},
+		AvailableFor: []string{"delete", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
 		Type:         "string",
 		Description: `The [revisionId][google.apps.drive.labels.v1.Label.revision_id] of the label that the write request will be applied to.
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list", "create", "disable", "enable"},
+		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
 	},
 	"view": {
-		AvailableFor: []string{"get", "list"},
+		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
 		Type:         "string",
 		Description: `When specified, only certain fields belonging to the indicated view are returned.
 [LABEL_VIEW_BASIC|LABEL_VIEW_FULL]
@@ -385,6 +385,26 @@ func mapToUpdateDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelab
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	if flags["title"].IsSet() {
 		request.Requests[0].UpdateLabel.Properties.Title = flags["title"].GetString()
 		if request.Requests[0].UpdateLabel.Properties.Title == "" {
@@ -410,6 +430,26 @@ func mapToUpdateDriveLabelFieldTypeRequest(flags map[string]*gsmhelpers.Value) (
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	valueType := flags["valueType"].GetString()
 	switch valueType {
@@ -474,6 +514,26 @@ func mapToUpdateDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	if flags["displayName"].IsSet() {
 		request.Requests[0].UpdateField.Properties.DisplayName = flags["displayName"].GetString()
 		if request.Requests[0].UpdateField.Properties.DisplayName == "" {
@@ -509,6 +569,26 @@ func mapToCreateDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	if flags["insertBeforeField"].IsSet() {
 		request.Requests[0].UpdateField.Properties.InsertBeforeField = flags["insertBeforeField"].GetString()
@@ -584,6 +664,26 @@ func mapToDeleteDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	return request, nil
 }
 
@@ -598,6 +698,26 @@ func mapToDisableDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dr
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	if flags["hideInSearch"].IsSet() {
 		request.Requests[0].DisableField.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
@@ -625,6 +745,26 @@ func mapToEnableDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	return request, nil
 }
 
@@ -643,6 +783,26 @@ func mapToCreateDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	if request.Requests[0].CreateSelectionChoice.Choice.Properties.DisplayName == "" {
 		request.Requests[0].CreateSelectionChoice.Choice.Properties.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.ForceSendFields, "DisplayName")
@@ -668,6 +828,26 @@ func mapToUpdateDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	if flags["displayName"].IsSet() {
 		request.Requests[0].UpdateSelectionChoiceProperties.Properties.DisplayName = flags["displayName"].GetString()
@@ -697,6 +877,26 @@ func mapToDisableDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelp
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	if flags["hideInSearch"].IsSet() {
 		request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
 		if !request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch {
@@ -724,6 +924,26 @@ func mapToEnableDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 			},
 		},
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
+	}
 	return request, nil
 }
 
@@ -738,6 +958,26 @@ func mapToDeleteDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 				},
 			},
 		},
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
+		}
 	}
 	return request, nil
 }
@@ -765,6 +1005,14 @@ func mapToDisableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivela
 			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
 		}
 	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
 	return request, nil
 }
 
@@ -776,6 +1024,14 @@ func mapToEnableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelab
 		request.LanguageCode = flags["languageCode"].GetString()
 		if request.LanguageCode == "" {
 			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
 		}
 	}
 	return request, nil
