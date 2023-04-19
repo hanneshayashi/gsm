@@ -66,6 +66,28 @@ func DeleteLabel(name, requiredRevisionId string, useAdminAccess bool) (bool, er
 	return result, err
 }
 
+// Delta updates a single Label by applying a set of update requests resulting in a new draft revision.
+// The batch update is all-or-nothing: If any of the update requests are invalid, no changes are applied.
+// The resulting draft revision must be published before the changes may be used with Drive Items.
+func Delta(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2DeltaUpdateLabelRequest) (*drivelabels.GoogleAppsDriveLabelsV2DeltaUpdateLabelResponse, error) {
+	srv := getLabelsService()
+	c := srv.Delta(name, request)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2DeltaUpdateLabelResponse)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
