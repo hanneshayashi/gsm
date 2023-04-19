@@ -45,7 +45,7 @@ var driveLabelsCmd = &cobra.Command{
 
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
 		Type:         "string",
 		Description: `Label resource name.
 May be any of:
@@ -54,29 +54,29 @@ May be any of:
   - labels/{id}@published
   - labels/{id}@{revisionId}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
-		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
 	},
 	"requiredRevisionId": {
-		AvailableFor: []string{"delete", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
+		AvailableFor: []string{"delete", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
 		Type:         "string",
 		Description: `The [revisionId][google.apps.drive.labels.v1.Label.revision_id] of the label that the write request will be applied to.
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
+		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
 	},
 	"view": {
-		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties"},
+		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
 		Type:         "string",
 		Description: `When specified, only certain fields belonging to the indicated view are returned.
 [LABEL_VIEW_BASIC|LABEL_VIEW_FULL]
@@ -130,10 +130,10 @@ ADMIN   - Admin-owned label. Only creatable and editable by admins. Supports som
 		Required:     []string{"create"},
 	},
 	"fieldId": {
-		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
 		Type:         "string",
 		Description:  `The ID of the field.`,
-		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
 	},
 	"choiceId": {
 		AvailableFor: []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
@@ -242,7 +242,7 @@ May be one of the following:
 Can be used with "user" or "selection type fields`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
+		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -1018,6 +1018,27 @@ func mapToDisableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivela
 
 func mapToEnableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelabels.GoogleAppsDriveLabelsV2EnableLabelRequest, error) {
 	request := &drivelabels.GoogleAppsDriveLabelsV2EnableLabelRequest{
+		UseAdminAccess: flags["useAdminAccess"].GetBool(),
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["requiredRevisionId"].IsSet() {
+		request.WriteControl = &drivelabels.GoogleAppsDriveLabelsV2WriteControl{
+			RequiredRevisionId: flags["requiredRevisionId"].GetString(),
+		}
+		if request.WriteControl.RequiredRevisionId == "" {
+			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	return request, nil
+}
+
+func mapToPublishDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelabels.GoogleAppsDriveLabelsV2PublishLabelRequest, error) {
+	request := &drivelabels.GoogleAppsDriveLabelsV2PublishLabelRequest{
 		UseAdminAccess: flags["useAdminAccess"].GetBool(),
 	}
 	if flags["languageCode"].IsSet() {
