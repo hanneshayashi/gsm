@@ -45,7 +45,7 @@ var driveLabelsCmd = &cobra.Command{
 
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 		Type:         "string",
 		Description: `Label resource name.
 May be any of:
@@ -54,11 +54,11 @@ May be any of:
   - labels/{id}@published
   - labels/{id}@{revisionId}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
-		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
@@ -70,7 +70,7 @@ The server verifies that the user is an admin for the label before allowing acce
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list", "create", "disable"},
+		AvailableFor: []string{"get", "list", "create", "disable", "enable"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
@@ -130,10 +130,10 @@ ADMIN   - Admin-owned label. Only creatable and editable by admins. Supports som
 		Required:     []string{"create"},
 	},
 	"fieldId": {
-		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 		Type:         "string",
 		Description:  `The ID of the field.`,
-		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 	},
 	"choiceId": {
 		AvailableFor: []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
@@ -242,7 +242,7 @@ May be one of the following:
 Can be used with "user" or "selection type fields`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
+		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -758,6 +758,19 @@ func mapToDisableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivela
 		if !request.DisabledPolicy.ShowInApply {
 			request.DisabledPolicy.ForceSendFields = append(request.DisabledPolicy.ForceSendFields, "ShowInApply")
 		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	return request, nil
+}
+
+func mapToEnableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelabels.GoogleAppsDriveLabelsV2EnableLabelRequest, error) {
+	request := &drivelabels.GoogleAppsDriveLabelsV2EnableLabelRequest{
+		UseAdminAccess: flags["useAdminAccess"].GetBool(),
 	}
 	if flags["languageCode"].IsSet() {
 		request.LanguageCode = flags["languageCode"].GetString()
