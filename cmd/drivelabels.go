@@ -45,7 +45,7 @@ var driveLabelsCmd = &cobra.Command{
 
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
+		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
 		Type:         "string",
 		Description: `Label resource name.
 May be any of:
@@ -54,11 +54,11 @@ May be any of:
   - labels/{id}@published
   - labels/{id}@{revisionId}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
-		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
+		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
+		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
@@ -70,13 +70,13 @@ The server verifies that the user is an admin for the label before allowing acce
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
+		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish", "updateLabelCopyMode"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
 	},
 	"view": {
-		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
+		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish", "updateLabelCopyMode"},
 		Type:         "string",
 		Description: `When specified, only certain fields belonging to the indicated view are returned.
 [LABEL_VIEW_BASIC|LABEL_VIEW_FULL]
@@ -224,6 +224,16 @@ SHORT_DATE  - Short, numeric, representation. For example, 12/13/99 (M/d/yy)`,
 		Type:         "bool",
 		Description:  `Whether the field should be marked as required.`,
 	},
+	"copyMode": {
+		AvailableFor: []string{"updateLabelCopyMode"},
+		Type:         "string",
+		Description: `Indicates how the applied label and field values should be copied when a Drive item is copied.
+May be one of the following:
+- DO_NOT_COPY     - The applied label and field values are not copied by default when the Drive item it's applied to is copied.
+- ALWAYS_COPY     - The applied label and field values are always copied when the Drive item it's applied to is copied. Only admins can use this mode.
+- COPY_APPLIABLE  - The applied label and field values are copied if the label is appliable by the user making the copy.`,
+		Required: []string{"updateLabelCopyMode"},
+	},
 	"valueType": {
 		AvailableFor: []string{"createField", "updateFieldType"},
 		Type:         "string",
@@ -242,7 +252,7 @@ May be one of the following:
 Can be used with "user" or "selection type fields`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish"},
+		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -1053,6 +1063,31 @@ func mapToPublishDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivela
 		}
 		if request.WriteControl.RequiredRevisionId == "" {
 			request.WriteControl.ForceSendFields = append(request.WriteControl.ForceSendFields, "RequiredRevisionId")
+		}
+	}
+	return request, nil
+}
+
+func mapToUpdateLabelCopyModeRequest(flags map[string]*gsmhelpers.Value) (*drivelabels.GoogleAppsDriveLabelsV2UpdateLabelCopyModeRequest, error) {
+	request := &drivelabels.GoogleAppsDriveLabelsV2UpdateLabelCopyModeRequest{
+		UseAdminAccess: flags["useAdminAccess"].GetBool(),
+	}
+	if flags["copyMode"].IsSet() {
+		request.CopyMode = flags["copyMode"].GetString()
+		if request.CopyMode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "CopyMode")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
+	}
+	if flags["view"].IsSet() {
+		request.View = flags["view"].GetString()
+		if request.View == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "View")
 		}
 	}
 	return request, nil

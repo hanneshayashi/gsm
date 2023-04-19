@@ -160,6 +160,33 @@ func Publish(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Pu
 	return r, nil
 }
 
+// Publish all draft changes to the Label.
+// Once published, the Label may not return to its draft state.
+// See google.apps.drive.labels.v2.Lifecycle for more information.
+// Publishing a Label will result in a new published revision.
+// All previous draft revisions will be deleted.
+// Previous published revisions will be kept but are subject to automated deletion as needed.
+// Once published, some changes are no longer permitted.
+// Generally, any change that would invalidate or cause new restrictions on existing metadata related to the Label will be rejected.
+func UpdateLabelCopyMode(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2UpdateLabelCopyModeRequest) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
+	srv := getLabelsService()
+	c := srv.UpdateLabelCopyMode(name, request)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
