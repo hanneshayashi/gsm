@@ -42,11 +42,11 @@ Implements the API documented at https://developers.google.com/drive/labels/refe
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		r, err := mapToDisableDriveLabelRequest(flags)
 		if err != nil {
-			log.Fatalf("Error building Drive Label DisableFieldRequest object: %v\n", err)
+			log.Fatalf("Error building Drive Label disable request object: %v\n", err)
 		}
 		result, err := gsmdrivelabels.Disable(gsmhelpers.EnsurePrefix(flags["name"].GetString(), "labels/"), flags["fields"].GetString(), r)
 		if err != nil {
-			log.Fatalf("Error deleting Drive Label: %v", err)
+			log.Fatalf("Error disabling Drive Label: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

@@ -111,6 +111,27 @@ func Disable(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Di
 	return r, nil
 }
 
+// Enable enables a disabled Label and restore it to its published state.
+// This will result in a new published revision based on the current disabled published revision.
+// If there is an existing disabled draft revision, a new revision will be created based on that draft and will be enabled.
+func Enable(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2EnableLabelRequest) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
+	srv := getLabelsService()
+	c := srv.Enable(name, request)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
