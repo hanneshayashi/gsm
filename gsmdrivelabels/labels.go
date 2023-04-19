@@ -88,6 +88,29 @@ func Delta(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Delt
 	return r, nil
 }
 
+// Disable disables a published Label.
+// Disabling a Label will result in a new disabled published revision based on the current published revision.
+// If there is a draft revision, a new disabled draft revision will be created based on the latest draft revision.
+// Older draft revisions will be deleted.
+func Disable(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2DisableLabelRequest) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
+	srv := getLabelsService()
+	c := srv.Disable(name, request)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.

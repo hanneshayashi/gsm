@@ -45,7 +45,7 @@ var driveLabelsCmd = &cobra.Command{
 
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
-		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 		Type:         "string",
 		Description: `Label resource name.
 May be any of:
@@ -54,11 +54,11 @@ May be any of:
   - labels/{id}@published
   - labels/{id}@{revisionId}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
-		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		Required:       []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 		ExcludeFromAll: true,
 	},
 	"useAdminAccess": {
-		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 		Type:         "bool",
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
@@ -70,7 +70,7 @@ The server verifies that the user is an admin for the label before allowing acce
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
-		AvailableFor: []string{"get", "list", "create"},
+		AvailableFor: []string{"get", "list", "create", "disable"},
 		Type:         "string",
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
@@ -130,10 +130,10 @@ ADMIN   - Admin-owned label. Only creatable and editable by admins. Supports som
 		Required:     []string{"create"},
 	},
 	"fieldId": {
-		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 		Type:         "string",
 		Description:  `The ID of the field.`,
-		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 	},
 	"choiceId": {
 		AvailableFor: []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
@@ -142,14 +142,14 @@ ADMIN   - Admin-owned label. Only creatable and editable by admins. Supports som
 		Required:     []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
 	},
 	"hideInSearch": {
-		AvailableFor: []string{"disableField", "disableSelectionChoice"},
+		AvailableFor: []string{"disableField", "disableSelectionChoice", "disable"},
 		Type:         "bool",
 		Description: `Whether to hide this disabled object in the search menu for Drive items.
 When false, the object is generally shown in the UI as disabled but it appears in the search results when searching for Drive items.
 When true, the object is generally hidden in the UI when searching for Drive items.`,
 	},
 	"showInApply": {
-		AvailableFor: []string{"disableField", "disableSelectionChoice"},
+		AvailableFor: []string{"disableField", "disableSelectionChoice", "disable"},
 		Type:         "bool",
 		Description: `Whether to show this disabled object in the apply menu on Drive items.
 When true, the object is generally shown in the UI as disabled and is unselectable.
@@ -242,7 +242,7 @@ May be one of the following:
 Can be used with "user" or "selection type fields`,
 	},
 	"fields": {
-		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
+		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable"},
 		Type:         "string",
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
@@ -599,13 +599,17 @@ func mapToDisableDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dr
 			},
 		},
 	}
-	request.Requests[0].DisableField.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
-	if !request.Requests[0].DisableField.DisabledPolicy.HideInSearch {
-		request.Requests[0].DisableField.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableField.DisabledPolicy.ForceSendFields, "HideInSearch")
+	if flags["hideInSearch"].IsSet() {
+		request.Requests[0].DisableField.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
+		if !request.Requests[0].DisableField.DisabledPolicy.HideInSearch {
+			request.Requests[0].DisableField.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableField.DisabledPolicy.ForceSendFields, "HideInSearch")
+		}
 	}
-	request.Requests[0].DisableField.DisabledPolicy.ShowInApply = flags["showInApply"].GetBool()
-	if !request.Requests[0].DisableField.DisabledPolicy.ShowInApply {
-		request.Requests[0].DisableField.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableField.DisabledPolicy.ForceSendFields, "ShowInApply")
+	if flags["showInApply"].IsSet() {
+		request.Requests[0].DisableField.DisabledPolicy.ShowInApply = flags["showInApply"].GetBool()
+		if !request.Requests[0].DisableField.DisabledPolicy.ShowInApply {
+			request.Requests[0].DisableField.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableField.DisabledPolicy.ForceSendFields, "ShowInApply")
+		}
 	}
 	return request, nil
 }
@@ -693,13 +697,17 @@ func mapToDisableDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelp
 			},
 		},
 	}
-	request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
-	if !request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch {
-		request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields, "HideInSearch")
+	if flags["hideInSearch"].IsSet() {
+		request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
+		if !request.Requests[0].DisableSelectionChoice.DisabledPolicy.HideInSearch {
+			request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields, "HideInSearch")
+		}
 	}
-	request.Requests[0].DisableSelectionChoice.DisabledPolicy.ShowInApply = flags["showInApply"].GetBool()
-	if !request.Requests[0].DisableSelectionChoice.DisabledPolicy.ShowInApply {
-		request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields, "ShowInApply")
+	if flags["showInApply"].IsSet() {
+		request.Requests[0].DisableSelectionChoice.DisabledPolicy.ShowInApply = flags["showInApply"].GetBool()
+		if !request.Requests[0].DisableSelectionChoice.DisabledPolicy.ShowInApply {
+			request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields = append(request.Requests[0].DisableSelectionChoice.DisabledPolicy.ForceSendFields, "ShowInApply")
+		}
 	}
 	return request, nil
 }
@@ -730,6 +738,32 @@ func mapToDeleteDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 				},
 			},
 		},
+	}
+	return request, nil
+}
+
+func mapToDisableDriveLabelRequest(flags map[string]*gsmhelpers.Value) (*drivelabels.GoogleAppsDriveLabelsV2DisableLabelRequest, error) {
+	request := &drivelabels.GoogleAppsDriveLabelsV2DisableLabelRequest{
+		UseAdminAccess: flags["useAdminAccess"].GetBool(),
+		DisabledPolicy: &drivelabels.GoogleAppsDriveLabelsV2LifecycleDisabledPolicy{},
+	}
+	if flags["hideInSearch"].IsSet() {
+		request.DisabledPolicy.HideInSearch = flags["hideInSearch"].GetBool()
+		if !request.DisabledPolicy.HideInSearch {
+			request.DisabledPolicy.ForceSendFields = append(request.DisabledPolicy.ForceSendFields, "HideInSearch")
+		}
+	}
+	if flags["showInApply"].IsSet() {
+		request.DisabledPolicy.ShowInApply = flags["showInApply"].GetBool()
+		if !request.DisabledPolicy.ShowInApply {
+			request.DisabledPolicy.ForceSendFields = append(request.DisabledPolicy.ForceSendFields, "ShowInApply")
+		}
+	}
+	if flags["languageCode"].IsSet() {
+		request.LanguageCode = flags["languageCode"].GetString()
+		if request.LanguageCode == "" {
+			request.ForceSendFields = append(request.ForceSendFields, "LanguageCode")
+		}
 	}
 	return request, nil
 }
