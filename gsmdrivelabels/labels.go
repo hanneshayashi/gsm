@@ -187,6 +187,28 @@ func UpdateLabelCopyMode(name, fields string, request *drivelabels.GoogleAppsDri
 	return r, nil
 }
 
+// UpdatePermissions updates a Label's permissions.
+// If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated.
+// Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.
+func UpdatePermissions(name, fields string, useAdminAccess bool, request *drivelabels.GoogleAppsDriveLabelsV2LabelPermission) (*drivelabels.GoogleAppsDriveLabelsV2LabelPermission, error) {
+	srv := getLabelsService()
+	c := srv.UpdatePermissions(name, request).UseAdminAccess(useAdminAccess)
+	if fields != "" {
+		c.Fields(googleapi.Field(fields))
+	}
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
+		return c.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2LabelPermission)
+	if !ok {
+		return nil, fmt.Errorf("result unknown")
+	}
+	return r, nil
+}
+
 // GetLabel gets a label by its resource name. Resource name may be any of:
 // labels/{id} - See labels/{id}@latest
 // labels/{id}@latest - Gets the latest revision of the label.
@@ -220,10 +242,7 @@ func GetLabel(fileID, languageCode, view, fields string, useAdminAccess bool) (*
 // ListLabels list labels.
 func ListLabels(languageCode, view, minimumRole, fields string, useAdminAccess, publishedOnly bool, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2Label, <-chan error) {
 	srv := getLabelsService()
-	c := srv.List().PublishedOnly(publishedOnly)
-	if useAdminAccess {
-		c.UseAdminAccess(useAdminAccess)
-	}
+	c := srv.List().PublishedOnly(publishedOnly).UseAdminAccess(useAdminAccess)
 	if languageCode != "" {
 		c.LanguageCode(languageCode)
 	}

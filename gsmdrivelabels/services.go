@@ -28,10 +28,11 @@ import (
 )
 
 var (
-	client             *http.Client
-	driveLabelsService *drivelabels.Service
-	labelsService      *drivelabels.LabelsService
-	labelsLocksService *drivelabels.LabelsLocksService
+	client                   *http.Client
+	driveLabelsService       *drivelabels.Service
+	labelsService            *drivelabels.LabelsService
+	labelsLocksService       *drivelabels.LabelsLocksService
+	labelsPermissionsService *drivelabels.LabelsPermissionsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -65,4 +66,11 @@ func getLabelsLocksService() *drivelabels.LabelsLocksService {
 		labelsLocksService = drivelabels.NewLabelsLocksService(getDriveService())
 	}
 	return labelsLocksService
+}
+
+func getLabelsPermissionsService() *drivelabels.LabelsPermissionsService {
+	if labelsPermissionsService == nil {
+		labelsPermissionsService = drivelabels.NewLabelsPermissionsService(getDriveService())
+	}
+	return labelsPermissionsService
 }
