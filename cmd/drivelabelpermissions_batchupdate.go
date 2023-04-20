@@ -38,11 +38,11 @@ Permissions affect the Label resource as a whole, are not revisioned, and do not
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		request, err := mapToBatchUpdateDriveLabelsRequest(flags)
 		if err != nil {
-			log.Fatalf("Error building drive label batch update request object: %v\n", err)
+			log.Fatalf("Error building Drive Label batch update request object: %v\n", err)
 		}
 		result, err := gsmdrivelabels.BatchUpdateLabelPermissions(gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "labels/"), flags["fields"].GetString(), request)
 		if err != nil {
-			log.Fatalf("Error batch updatig Drive label permission: %v", err)
+			log.Fatalf("Error batch updatig Drive Label permission: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

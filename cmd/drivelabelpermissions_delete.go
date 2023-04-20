@@ -37,7 +37,7 @@ Permissions affect the Label resource as a whole, are not revisioned, and do not
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmdrivelabels.DeleteLabelPermission(flags["name"].GetString(), flags["useAdminAccess"].GetBool())
 		if err != nil {
-			log.Fatalf("Error deleting Drive label permission: %v", err)
+			log.Fatalf("Error deleting Drive Label permission: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

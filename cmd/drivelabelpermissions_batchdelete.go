@@ -37,11 +37,11 @@ Permissions affect the Label resource as a whole, are not revisioned, and do not
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		request, err := mapToBatchDeleteDriveLabelsRequest(flags)
 		if err != nil {
-			log.Fatalf("Error building drive label batch delete request object: %v\n", err)
+			log.Fatalf("Error building Drive Label batch delete request object: %v\n", err)
 		}
 		result, err := gsmdrivelabels.BatchDeleteLabelPermissions(gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "labels/"), request)
 		if err != nil {
-			log.Fatalf("Error deleting Drive label permission: %v", err)
+			log.Fatalf("Error deleting Drive Label permission: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

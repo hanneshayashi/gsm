@@ -56,7 +56,7 @@ var driveLabelPermissionsListCmd = &cobra.Command{
 		}
 		e := <-err
 		if e != nil {
-			log.Fatalf("Error listing Drive label permissions: %v", e)
+			log.Fatalf("Error listing Drive Label permissions: %v", e)
 		}
 	},
 }

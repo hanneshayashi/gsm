@@ -48,7 +48,7 @@ func getDriveService() *drivelabels.Service {
 		var err error
 		driveLabelsService, err = drivelabels.NewService(context.Background(), option.WithHTTPClient(client))
 		if err != nil {
-			log.Fatalf("Error creating drive labels service: %v", err)
+			log.Fatalf("Error creating Drive Labels service: %v", err)
 		}
 	}
 	return driveLabelsService

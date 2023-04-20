@@ -56,7 +56,7 @@ var driveLabelLocksListCmd = &cobra.Command{
 		}
 		e := <-err
 		if e != nil {
-			log.Fatalf("Error listing Drive label locks: %v", e)
+			log.Fatalf("Error listing Drive Label locks: %v", e)
 		}
 	},
 }

@@ -38,11 +38,11 @@ Permissions affect the Label resource as a whole, are not revisioned, and do not
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		p, err := mapToDriveLabelCreatePermission(flags)
 		if err != nil {
-			log.Fatalf("Error building drive label permission object: %v\n", err)
+			log.Fatalf("Error building Drive Label permission object: %v\n", err)
 		}
 		result, err := gsmdrivelabels.CreateLabelPermission(gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "labels/"), flags["fields"].GetString(), flags["useAdminAccess"].GetBool(), p)
 		if err != nil {
-			log.Fatalf("Error creation Drive label permission: %v", err)
+			log.Fatalf("Error creation Drive Label permission: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {
