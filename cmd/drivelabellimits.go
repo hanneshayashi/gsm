@@ -43,8 +43,9 @@ var driveLabelLimitFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Fl
 	"name": {
 		AvailableFor: []string{"getLabel"},
 		Type:         "string",
-		Description:  `Label revision resource name Must be: "limits/label" (Default)`,
-		Defaults:     map[string]any{"name": "limits/label"},
+		Description: `Label revision resource name.
+API docs say this must be: "limits/label".
+However, only an empty string seems to work currently, so leave empty, if you get an error.`,
 	},
 	"fields": {
 		AvailableFor: []string{"getLabel"},
