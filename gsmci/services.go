@@ -28,16 +28,17 @@ import (
 )
 
 var (
-	client                                *http.Client
-	ciService                             *ci.Service
-	groupsService                         *ci.GroupsService
-	groupsMembershipsService              *ci.GroupsMembershipsService
-	devicesService                        *ci.DevicesService
-	devicesDeviceUsersService             *ci.DevicesDeviceUsersService
-	devicesDeviceUsersClientStatesService *ci.DevicesDeviceUsersClientStatesService
-	customersUserinvitationsService       *ci.CustomersUserinvitationsService
-	inboundSamlSsoProfilesService         *ci.InboundSamlSsoProfilesService
-	inboundSamlSsoProfilesIdpCredentialsService         *ci.InboundSamlSsoProfilesIdpCredentialsService
+	client                                      *http.Client
+	ciService                                   *ci.Service
+	groupsService                               *ci.GroupsService
+	groupsMembershipsService                    *ci.GroupsMembershipsService
+	devicesService                              *ci.DevicesService
+	devicesDeviceUsersService                   *ci.DevicesDeviceUsersService
+	devicesDeviceUsersClientStatesService       *ci.DevicesDeviceUsersClientStatesService
+	customersUserinvitationsService             *ci.CustomersUserinvitationsService
+	inboundSamlSsoProfilesService               *ci.InboundSamlSsoProfilesService
+	inboundSamlSsoProfilesIdpCredentialsService *ci.InboundSamlSsoProfilesIdpCredentialsService
+	inboundSsoAssignmentsService                *ci.InboundSsoAssignmentsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -113,4 +114,11 @@ func getInboundSamlSsoProfilesIdpCredentialsService() *ci.InboundSamlSsoProfiles
 		inboundSamlSsoProfilesIdpCredentialsService = ci.NewInboundSamlSsoProfilesIdpCredentialsService(getCiService())
 	}
 	return inboundSamlSsoProfilesIdpCredentialsService
+}
+
+func getInboundSsoAssignmentsService() *ci.InboundSsoAssignmentsService {
+	if inboundSsoAssignmentsService == nil {
+		inboundSsoAssignmentsService = ci.NewInboundSsoAssignmentsService(getCiService())
+	}
+	return inboundSsoAssignmentsService
 }
