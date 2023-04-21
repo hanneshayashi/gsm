@@ -33,7 +33,8 @@ var (
 	labelsService            *drivelabels.LabelsService
 	labelsLocksService       *drivelabels.LabelsLocksService
 	labelsPermissionsService *drivelabels.LabelsPermissionsService
-	labelsLimitsService      *drivelabels.LimitsService
+	limitsService            *drivelabels.LimitsService
+	usersService             *drivelabels.UsersService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -76,9 +77,16 @@ func getLabelsPermissionsService() *drivelabels.LabelsPermissionsService {
 	return labelsPermissionsService
 }
 
-func getLabelsLimitsService() *drivelabels.LimitsService {
-	if labelsLimitsService == nil {
-		labelsLimitsService = drivelabels.NewLimitsService(getDriveService())
+func getLimitsService() *drivelabels.LimitsService {
+	if limitsService == nil {
+		limitsService = drivelabels.NewLimitsService(getDriveService())
 	}
-	return labelsLimitsService
+	return limitsService
+}
+
+func getUsersService() *drivelabels.UsersService {
+	if usersService == nil {
+		usersService = drivelabels.NewUsersService(getDriveService())
+	}
+	return usersService
 }

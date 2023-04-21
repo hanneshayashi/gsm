@@ -26,10 +26,13 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// Get the constraints on the structure of a Label; such as, the maximum number of Fields allowed and maximum length of the label title.
-func GetLabelLimits(name, fields string) (*drivelabels.GoogleAppsDriveLabelsV2LabelLimits, error) {
-	srv := getLimitsService()
-	c := srv.GetLabel().Name(name)
+// Gets the user capabilities.
+func GetCapabilities(name, customer, fields string) (*drivelabels.GoogleAppsDriveLabelsV2UserCapabilities, error) {
+	srv := getUsersService()
+	c := srv.GetCapabilities(name)
+	if customer != "" {
+		c.Customer(customer)
+	}
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
@@ -39,7 +42,7 @@ func GetLabelLimits(name, fields string) (*drivelabels.GoogleAppsDriveLabelsV2La
 	if err != nil {
 		return nil, err
 	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2LabelLimits)
+	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2UserCapabilities)
 	if !ok {
 		return nil, fmt.Errorf("result unknown")
 	}
