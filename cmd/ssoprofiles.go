@@ -27,10 +27,10 @@ import (
 	ci "google.golang.org/api/cloudidentity/v1"
 )
 
-// ssoProfilesCmd represents the inboundSamlSsoProfiles command
+// ssoProfilesCmd represents the ssoProfiles command
 var ssoProfilesCmd = &cobra.Command{
 	Use:               "ssoProfiles",
-	Short:             "Manage inbound SAML SSO profiles (Part of Cloud Identity Beta API)",
+	Short:             "Manage inbound SAML SSO profiles (Part of Cloud Identity API)",
 	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

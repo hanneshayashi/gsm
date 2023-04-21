@@ -37,6 +37,7 @@ var (
 	devicesDeviceUsersClientStatesService *ci.DevicesDeviceUsersClientStatesService
 	customersUserinvitationsService       *ci.CustomersUserinvitationsService
 	inboundSamlSsoProfilesService         *ci.InboundSamlSsoProfilesService
+	inboundSamlSsoProfilesIdpCredentialsService         *ci.InboundSamlSsoProfilesIdpCredentialsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -105,4 +106,11 @@ func getInboundSamlSsoProfilesService() *ci.InboundSamlSsoProfilesService {
 		inboundSamlSsoProfilesService = ci.NewInboundSamlSsoProfilesService(getCiService())
 	}
 	return inboundSamlSsoProfilesService
+}
+
+func getInboundSamlSsoProfilesIdpCredentialsService() *ci.InboundSamlSsoProfilesIdpCredentialsService {
+	if inboundSamlSsoProfilesIdpCredentialsService == nil {
+		inboundSamlSsoProfilesIdpCredentialsService = ci.NewInboundSamlSsoProfilesIdpCredentialsService(getCiService())
+	}
+	return inboundSamlSsoProfilesIdpCredentialsService
 }
