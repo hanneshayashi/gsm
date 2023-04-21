@@ -26,19 +26,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// inboundSamlSsoProfilesCreateCmd represents the create command
-var inboundSamlSsoProfilesCreateCmd = &cobra.Command{
-	Use:               "create",
-	Short:             "Creates an InboundSamlSsoProfile for a customer.",
-	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/create`,
+// ssoProfilesGetCmd represents the get command
+var ssoProfilesGetCmd = &cobra.Command{
+	Use:               "get",
+	Short:             "Gets an InboundSamlSsoProfile.",
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/get`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		r, _, err := mapToInboundSamlSsoProfile(flags)
-		if err != nil {
-			log.Fatalf("Error building InboundSamlSsoProfile object: %v", err)
-		}
-		result, err := gsmci.CreateInboundSamlSsoProfile(flags["fields"].GetString(), r)
+		result, err := gsmci.GetSsoProfile(gsmhelpers.EnsurePrefix(flags["name"].GetString(), "inboundSamlSsoProfiles/"), flags["fields"].GetString())
 		if err != nil {
 			log.Fatalf("Error creating inbound SAML SSO profile: %v", err)
 		}
@@ -50,5 +46,5 @@ var inboundSamlSsoProfilesCreateCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(inboundSamlSsoProfilesCmd, inboundSamlSsoProfilesCreateCmd, inboundSamlSsoProfileFlags)
+	gsmhelpers.InitCommand(ssoProfilesCmd, ssoProfilesGetCmd, ssoProfileFlags)
 }

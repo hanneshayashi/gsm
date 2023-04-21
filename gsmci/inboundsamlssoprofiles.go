@@ -27,8 +27,8 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// CreateInboundSamlSsoProfile creates an InboundSamlSsoProfile for a customer.
-func CreateInboundSamlSsoProfile(fields string, profile *ci.InboundSamlSsoProfile) (*googleapi.RawMessage, error) {
+// CreateSsoProfile creates an InboundSamlSsoProfile for a customer.
+func CreateSsoProfile(fields string, profile *ci.InboundSamlSsoProfile) (*googleapi.RawMessage, error) {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.Create(profile)
 	if fields != "" {
@@ -47,8 +47,8 @@ func CreateInboundSamlSsoProfile(fields string, profile *ci.InboundSamlSsoProfil
 	return &r.Response, nil
 }
 
-// DeleteInboundSamlSsoProfile deletes an InboundSamlSsoProfile.
-func DeleteInboundSamlSsoProfile(name string) (bool, error) {
+// DeleteSsoProfile deletes an InboundSamlSsoProfile.
+func DeleteSsoProfile(name string) (bool, error) {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.Delete(name)
 	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
@@ -60,8 +60,8 @@ func DeleteInboundSamlSsoProfile(name string) (bool, error) {
 	return true, nil
 }
 
-// GetInboundSamlSsoProfile gets an InboundSamlSsoProfile.
-func GetInboundSamlSsoProfile(name, fields string) (*ci.InboundSamlSsoProfile, error) {
+// GetSsoProfile gets an InboundSamlSsoProfile.
+func GetSsoProfile(name, fields string) (*ci.InboundSamlSsoProfile, error) {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.Get(name)
 	if fields != "" {
@@ -80,8 +80,8 @@ func GetInboundSamlSsoProfile(name, fields string) (*ci.InboundSamlSsoProfile, e
 	return r, nil
 }
 
-// ListInboundSamlSsoProfiles retrieves a list of InboundSamlSsoProfile resources.
-func ListInboundSamlSsoProfiles(filter, fields string, cap int) (<-chan *ci.InboundSamlSsoProfile, <-chan error) {
+// ListSsoProfiles retrieves a list of InboundSamlSsoProfile resources.
+func ListSsoProfiles(filter, fields string, cap int) (<-chan *ci.InboundSamlSsoProfile, <-chan error) {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.List().PageSize(100)
 	if fields != "" {
@@ -109,8 +109,8 @@ func ListInboundSamlSsoProfiles(filter, fields string, cap int) (<-chan *ci.Inbo
 	return ch, err
 }
 
-// PatchInboundSamlSsoProfile updates an InboundSamlSsoProfile.
-func PatchInboundSamlSsoProfile(name, updateMask, fields string, profile *ci.InboundSamlSsoProfile) (*googleapi.RawMessage, error) {
+// PatchSsoProfile updates an InboundSamlSsoProfile.
+func PatchSsoProfile(name, updateMask, fields string, profile *ci.InboundSamlSsoProfile) (*googleapi.RawMessage, error) {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.Patch(name, profile).UpdateMask(updateMask)
 	if fields != "" {

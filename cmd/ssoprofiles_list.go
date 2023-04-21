@@ -27,15 +27,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// inboundSamlSsoProfilesListCmd represents the list command
-var inboundSamlSsoProfilesListCmd = &cobra.Command{
+// ssoProfilesListCmd represents the list command
+var ssoProfilesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists InboundSamlSsoProfiles for a customer.",
 	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/list`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmci.ListInboundSamlSsoProfiles(flags["filter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
+		result, err := gsmci.ListSsoProfiles(flags["filter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
 		if streamOutput {
 			enc := gsmhelpers.GetJSONEncoder(false)
 			for i := range result {
@@ -62,5 +62,5 @@ var inboundSamlSsoProfilesListCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(inboundSamlSsoProfilesCmd, inboundSamlSsoProfilesListCmd, inboundSamlSsoProfileFlags)
+	gsmhelpers.InitCommand(ssoProfilesCmd, ssoProfilesListCmd, ssoProfileFlags)
 }

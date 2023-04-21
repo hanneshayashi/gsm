@@ -26,21 +26,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// inboundSamlSsoProfilesPatchCmd represents the patch command
-var inboundSamlSsoProfilesPatchCmd = &cobra.Command{
-	Use:               "patch",
-	Short:             "Updates an InboundSamlSsoProfile.",
-	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/patch`,
+// ssoProfilesDeleteCmd represents the delete command
+var ssoProfilesDeleteCmd = &cobra.Command{
+	Use:               "delete",
+	Short:             "Deletes an InboundSamlSsoProfile",
+	Long:              `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		r, updateMask, err := mapToInboundSamlSsoProfile(flags)
+		result, err := gsmci.DeleteSsoProfile(flags["name"].GetString())
 		if err != nil {
-			log.Fatalf("Error building InboundSamlSsoProfile object: %v", err)
-		}
-		result, err := gsmci.PatchInboundSamlSsoProfile(flags["name"].GetString(), updateMask, flags["fields"].GetString(), r)
-		if err != nil {
-			log.Fatalf("Error patching inbound SAML SSO profile: %v", err)
+			log.Fatalf("Error deleting inbound SAML SSO profile: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {
@@ -50,5 +46,5 @@ var inboundSamlSsoProfilesPatchCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(inboundSamlSsoProfilesCmd, inboundSamlSsoProfilesPatchCmd, inboundSamlSsoProfileFlags)
+	gsmhelpers.InitCommand(ssoProfilesCmd, ssoProfilesDeleteCmd, ssoProfileFlags)
 }

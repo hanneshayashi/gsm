@@ -27,9 +27,9 @@ import (
 	ci "google.golang.org/api/cloudidentity/v1"
 )
 
-// inboundSamlSsoProfilesCmd represents the inboundSamlSsoProfiles command
-var inboundSamlSsoProfilesCmd = &cobra.Command{
-	Use:               "inboundSamlSsoProfiles",
+// ssoProfilesCmd represents the inboundSamlSsoProfiles command
+var ssoProfilesCmd = &cobra.Command{
+	Use:               "ssoProfiles",
 	Short:             "Manage inbound SAML SSO profiles (Part of Cloud Identity Beta API)",
 	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles",
 	DisableAutoGenTag: true,
@@ -41,7 +41,7 @@ var inboundSamlSsoProfilesCmd = &cobra.Command{
 	},
 }
 
-var inboundSamlSsoProfileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
+var ssoProfileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"delete", "get", "patch"},
 		Type:         "string",
@@ -107,13 +107,13 @@ Must use HTTPS.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var inboundSamlSsoProfileFlagsALL = gsmhelpers.GetAllFlags(inboundSamlSsoProfileFlags)
+var ssoProfileFlagsALL = gsmhelpers.GetAllFlags(ssoProfileFlags)
 
 func init() {
-	rootCmd.AddCommand(inboundSamlSsoProfilesCmd)
+	rootCmd.AddCommand(ssoProfilesCmd)
 }
 
-func mapToInboundSamlSsoProfile(flags map[string]*gsmhelpers.Value) (*ci.InboundSamlSsoProfile, string, error) {
+func mapToSsoProfile(flags map[string]*gsmhelpers.Value) (*ci.InboundSamlSsoProfile, string, error) {
 	updateMask := []string{}
 	profile := &ci.InboundSamlSsoProfile{
 		Customer:  flags["customer"].GetString(),
