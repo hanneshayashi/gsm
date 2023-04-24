@@ -181,6 +181,32 @@ If empty, the choice is placed at the end of the list.`,
 		Description: `A choice for a selection field.
 Can be used multiple times to create multiple choices that will be set in the order specified.`,
 	},
+	"priorityOverride": {
+		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
+		Type:         "int64",
+		Description: `Override the default global priority of this badge.
+When set to 0, the default priority heuristic is used.`,
+	},
+	"red": {
+		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
+		Type:         "float64",
+		Description:  `The red value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
+	},
+	"green": {
+		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
+		Type:         "float64",
+		Description:  `The green value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
+	},
+	"blue": {
+		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
+		Type:         "float64",
+		Description:  `The blue value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
+	},
+	"alpha": {
+		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
+		Type:         "float64",
+		Description:  `The alpha value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
+	},
 	"field": {
 		AvailableFor: []string{"create"},
 		Type:         "stringSlice",
@@ -823,6 +849,47 @@ func mapToCreateDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 			request.Requests[0].CreateSelectionChoice.Choice.Properties.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.ForceSendFields, "InsertBeforeChoice")
 		}
 	}
+	priorityOverrideSet := flags["priorityOverride"].IsSet()
+	alphaSet := flags["alpha"].IsSet()
+	blueSet := flags["blue"].IsSet()
+	greenSet := flags["green"].IsSet()
+	redSet := flags["red"].IsSet()
+	if priorityOverrideSet || alphaSet || blueSet || greenSet || redSet {
+		request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig = &drivelabels.GoogleAppsDriveLabelsV2BadgeConfig{}
+		if priorityOverrideSet {
+			request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.PriorityOverride = flags["priorityOverride"].GetInt64()
+			if request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.PriorityOverride == 0 {
+				request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.ForceSendFields, "PriorityOverride")
+			}
+		}
+		if alphaSet || blueSet || greenSet || redSet {
+			request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color = &drivelabels.GoogleTypeColor{}
+			if alphaSet {
+				request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Alpha = flags["alpha"].GetFloat64()
+				if request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Alpha == 0 {
+					request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields, "Alpha")
+				}
+			}
+			if blueSet {
+				request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Blue = flags["blue"].GetFloat64()
+				if request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Blue == 0 {
+					request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields, "Blue")
+				}
+			}
+			if greenSet {
+				request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Green = flags["green"].GetFloat64()
+				if request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Green == 0 {
+					request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields, "Green")
+				}
+			}
+			if redSet {
+				request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Red = flags["red"].GetFloat64()
+				if request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.Red == 0 {
+					request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].CreateSelectionChoice.Choice.Properties.BadgeConfig.Color.ForceSendFields, "Red")
+				}
+			}
+		}
+	}
 	return request, nil
 }
 
@@ -869,6 +936,47 @@ func mapToUpdateDriveLabelFieldSelectionChoiceRequest(flags map[string]*gsmhelpe
 		request.Requests[0].UpdateSelectionChoiceProperties.Properties.InsertBeforeChoice = flags["insertBeforeChoice"].GetString()
 		if request.Requests[0].UpdateSelectionChoiceProperties.Properties.InsertBeforeChoice == "" {
 			request.Requests[0].UpdateSelectionChoiceProperties.Properties.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.ForceSendFields, "InsertBeforeChoice")
+		}
+	}
+	priorityOverrideSet := flags["priorityOverride"].IsSet()
+	alphaSet := flags["alpha"].IsSet()
+	blueSet := flags["blue"].IsSet()
+	greenSet := flags["green"].IsSet()
+	redSet := flags["red"].IsSet()
+	if priorityOverrideSet || alphaSet || blueSet || greenSet || redSet {
+		request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig = &drivelabels.GoogleAppsDriveLabelsV2BadgeConfig{}
+		if priorityOverrideSet {
+			request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.PriorityOverride = flags["priorityOverride"].GetInt64()
+			if request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.PriorityOverride == 0 {
+				request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.ForceSendFields, "PriorityOverride")
+			}
+		}
+		if alphaSet || blueSet || greenSet || redSet {
+			request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color = &drivelabels.GoogleTypeColor{}
+			if alphaSet {
+				request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Alpha = flags["alpha"].GetFloat64()
+				if request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Alpha == 0 {
+					request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields, "Alpha")
+				}
+			}
+			if blueSet {
+				request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Blue = flags["blue"].GetFloat64()
+				if request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Blue == 0 {
+					request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields, "Blue")
+				}
+			}
+			if greenSet {
+				request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Green = flags["green"].GetFloat64()
+				if request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Green == 0 {
+					request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields, "Green")
+				}
+			}
+			if redSet {
+				request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Red = flags["red"].GetFloat64()
+				if request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.Red == 0 {
+					request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields = append(request.Requests[0].UpdateSelectionChoiceProperties.Properties.BadgeConfig.Color.ForceSendFields, "Red")
+				}
+			}
 		}
 	}
 	return request, nil
