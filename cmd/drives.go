@@ -90,7 +90,7 @@ yCoordinate:  The Y coordinate of the upper left corner of the cropping area in 
               This value represents the vertical distance from the top side of the entire image to the top side of the cropping area divided by the height of the entire image.`,
 	},
 	"useDomainAdminAccess": {
-		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},
+		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update", "delete"},
 		Type:         "bool",
 		Description:  "Issue the request as a domain administrator",
 	},

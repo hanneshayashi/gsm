@@ -85,9 +85,9 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 }
 
 // DeleteDrive permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items.
-func DeleteDrive(driveID string) (bool, error) {
+func DeleteDrive(driveID string, useDomainAdminAccess bool) (bool, error) {
 	srv := getDrivesService()
-	c := srv.Delete(driveID)
+	c := srv.Delete(driveID).UseDomainAdminAccess(useDomainAdminAccess)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(driveID), func() error {
 		return c.Do()
 	})

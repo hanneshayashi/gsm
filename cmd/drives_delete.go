@@ -35,7 +35,7 @@ The shared drive cannot contain any untrashed items.`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.DeleteDrive(flags["driveId"].GetString())
+		result, err := gsmdrive.DeleteDrive(flags["driveId"].GetString(), flags["useDomainAdminAccess"].GetBool())
 		if err != nil {
 			log.Fatalf("Error deleting drive: %v", err)
 		}

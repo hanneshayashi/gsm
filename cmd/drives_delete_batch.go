@@ -54,7 +54,7 @@ var drivesDeleteBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						driveID := m["driveId"].GetString()
-						result, err := gsmdrive.DeleteDrive(driveID)
+						result, err := gsmdrive.DeleteDrive(driveID, m["useDomainAdminAccess"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}
