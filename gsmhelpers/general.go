@@ -112,10 +112,10 @@ func errorIsRetryable(err error) bool {
 }
 
 // SetStandardRetrier sets the standard retrier
-func SetStandardRetrier(standardDelay time.Duration) {
+func SetStandardRetrier(standardDelay, maxInterval time.Duration) {
 	standardRetrier = backoff.NewExponentialBackOff()
 	standardRetrier.InitialInterval = standardDelay
-	standardRetrier.MaxInterval = 320 * time.Second
+	standardRetrier.MaxInterval = maxInterval
 	standardRetrier.Multiplier = 2
 }
 
