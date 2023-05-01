@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ yCoordinate:  The Y coordinate of the upper left corner of the cropping area in 
               This value represents the vertical distance from the top side of the entire image to the top side of the cropping area divided by the height of the entire image.`,
 	},
 	"useDomainAdminAccess": {
-		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},
+		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update", "delete"},
 		Type:         "bool",
 		Description:  "Issue the request as a domain administrator",
 	},
@@ -131,7 +131,14 @@ See the https://developers.google.com/drive/api/v3/search-shareddrives for suppo
 		AvailableFor: []string{"create"},
 		Type:         "bool",
 		Description: `The Google Drive API returns the drive after creation immediately, but usually before it can be used in subsequent requests.
-Setting this flag will cause GSM to try to to read the permission on the newly created drive to make sure that it is available before returning it.`,
+Setting this flag will cause GSM to try and do the follwing on the newly created drive to make sure that it is available before returning it:
+1. Get the Drive by its driveId
+2. Get the user's permissionId from the about method
+3. Get the user's permission on the newly created Drive using the Drive's driveId and the user's permissionId
+4. Update the drive's DomainUsersOnly restriction to 'true'
+5. Update the drive's DomainUsersOnly restriction to 'false' (default)
+Note that this will cause additional API requests that may be subject to your quota.
+The API requests are made with useDomainAdminAccess set to 'false'`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},

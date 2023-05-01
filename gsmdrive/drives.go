@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,13 +49,35 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 		return nil, fmt.Errorf("result unknown")
 	}
 	if returnWhenReady {
+		d, err := GetDrive(r.Id, "", false)
+		for err != nil {
+			d, err = GetDrive(r.Id, "", false)
+			time.Sleep(1 * time.Second)
+		}
 		about, err := GetAbout("user(permissionId)")
 		if err != nil {
 			return nil, err
 		}
-		_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+		_, err = GetPermission(d.Id, about.User.PermissionId, "", false)
 		for err != nil {
-			_, err = GetPermission(r.Id, about.User.PermissionId, "", false)
+			_, err = GetPermission(d.Id, about.User.PermissionId, "", false)
+			time.Sleep(1 * time.Second)
+		}
+		r.Restrictions = &drive.DriveRestrictions{
+			DomainUsersOnly: true,
+		}
+		d, err = UpdateDrive(d.Id, "", false, r)
+		for err != nil {
+			d, err = UpdateDrive(d.Id, "", false, r)
+			time.Sleep(1 * time.Second)
+		}
+		r.Restrictions = &drive.DriveRestrictions{
+			DomainUsersOnly: false,
+			ForceSendFields: []string{"DomainUsersOnly"},
+		}
+		d, err = UpdateDrive(d.Id, "", false, r)
+		for err != nil {
+			d, err = UpdateDrive(d.Id, "", false, r)
 			time.Sleep(1 * time.Second)
 		}
 	}
@@ -63,9 +85,9 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 }
 
 // DeleteDrive permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items.
-func DeleteDrive(driveID string) (bool, error) {
+func DeleteDrive(driveID string, useDomainAdminAccess bool) (bool, error) {
 	srv := getDrivesService()
-	c := srv.Delete(driveID)
+	c := srv.Delete(driveID).UseDomainAdminAccess(useDomainAdminAccess)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(driveID), func() error {
 		return c.Do()
 	})

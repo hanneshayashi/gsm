@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ var drivesDeleteBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						driveID := m["driveId"].GetString()
-						result, err := gsmdrive.DeleteDrive(driveID)
+						result, err := gsmdrive.DeleteDrive(driveID, m["useDomainAdminAccess"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}

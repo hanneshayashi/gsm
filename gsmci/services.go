@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,14 +28,17 @@ import (
 )
 
 var (
-	client                                *http.Client
-	ciService                             *ci.Service
-	groupsService                         *ci.GroupsService
-	groupsMembershipsService              *ci.GroupsMembershipsService
-	devicesService                        *ci.DevicesService
-	devicesDeviceUsersService             *ci.DevicesDeviceUsersService
-	devicesDeviceUsersClientStatesService *ci.DevicesDeviceUsersClientStatesService
-	customersUserinvitationsService       *ci.CustomersUserinvitationsService
+	client                                      *http.Client
+	ciService                                   *ci.Service
+	groupsService                               *ci.GroupsService
+	groupsMembershipsService                    *ci.GroupsMembershipsService
+	devicesService                              *ci.DevicesService
+	devicesDeviceUsersService                   *ci.DevicesDeviceUsersService
+	devicesDeviceUsersClientStatesService       *ci.DevicesDeviceUsersClientStatesService
+	customersUserinvitationsService             *ci.CustomersUserinvitationsService
+	inboundSamlSsoProfilesService               *ci.InboundSamlSsoProfilesService
+	inboundSamlSsoProfilesIdpCredentialsService *ci.InboundSamlSsoProfilesIdpCredentialsService
+	inboundSsoAssignmentsService                *ci.InboundSsoAssignmentsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -97,4 +100,25 @@ func getCustomersUserinvitationsService() *ci.CustomersUserinvitationsService {
 		customersUserinvitationsService = ci.NewCustomersUserinvitationsService(getCiService())
 	}
 	return customersUserinvitationsService
+}
+
+func getInboundSamlSsoProfilesService() *ci.InboundSamlSsoProfilesService {
+	if inboundSamlSsoProfilesService == nil {
+		inboundSamlSsoProfilesService = ci.NewInboundSamlSsoProfilesService(getCiService())
+	}
+	return inboundSamlSsoProfilesService
+}
+
+func getInboundSamlSsoProfilesIdpCredentialsService() *ci.InboundSamlSsoProfilesIdpCredentialsService {
+	if inboundSamlSsoProfilesIdpCredentialsService == nil {
+		inboundSamlSsoProfilesIdpCredentialsService = ci.NewInboundSamlSsoProfilesIdpCredentialsService(getCiService())
+	}
+	return inboundSamlSsoProfilesIdpCredentialsService
+}
+
+func getInboundSsoAssignmentsService() *ci.InboundSsoAssignmentsService {
+	if inboundSsoAssignmentsService == nil {
+		inboundSsoAssignmentsService = ci.NewInboundSsoAssignmentsService(getCiService())
+	}
+	return inboundSsoAssignmentsService
 }

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -112,10 +112,10 @@ func errorIsRetryable(err error) bool {
 }
 
 // SetStandardRetrier sets the standard retrier
-func SetStandardRetrier(standardDelay time.Duration) {
+func SetStandardRetrier(standardDelay, maxInterval time.Duration) {
 	standardRetrier = backoff.NewExponentialBackOff()
 	standardRetrier.InitialInterval = standardDelay
-	standardRetrier.MaxInterval = 320 * time.Second
+	standardRetrier.MaxInterval = maxInterval
 	standardRetrier.Multiplier = 2
 }
 
@@ -318,21 +318,18 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 
 // GetObjectRetry performs an action that returns an object, retrying on failure when appropriate
 func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
-	var err error
-	var result any
-	operation := func() error {
+	result, err := backoff.RetryNotifyWithData(func() (any, error) {
 		defer Sleep()
-		result, err = c()
+		result, err := c()
 		if err != nil {
 			ferr := formatError(err, errKey)
 			if errorIsRetryable(err) {
-				return ferr
+				return nil, ferr
 			}
-			return backoff.Permanent(ferr)
+			return nil, backoff.Permanent(ferr)
 		}
-		return nil
-	}
-	err = backoff.RetryNotify(operation, standardRetrier, logError)
+		return result, nil
+	}, standardRetrier, logError)
 	if err != nil {
 		return nil, err
 	}
@@ -341,10 +338,9 @@ func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
 
 // ActionRetry performs an action that does not return an object, retrying on failure when appropriate
 func ActionRetry(errKey string, c func() error) (bool, error) {
-	var err error
-	operation := func() error {
+	err := backoff.RetryNotify(func() error {
 		defer Sleep()
-		err = c()
+		err := c()
 		if err != nil {
 			ferr := formatError(err, errKey)
 			if errorIsRetryable(err) {
@@ -353,8 +349,7 @@ func ActionRetry(errKey string, c func() error) (bool, error) {
 			return backoff.Permanent(ferr)
 		}
 		return nil
-	}
-	err = backoff.RetryNotify(operation, standardRetrier, logError)
+	}, standardRetrier, logError)
 	if err != nil {
 		return false, err
 	}
@@ -394,8 +389,4 @@ func EnsurePrefix(s, p string) string {
 		return p + s
 	}
 	return s
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }

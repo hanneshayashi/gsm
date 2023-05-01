@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ var driveLabelsListCmd = &cobra.Command{
 		}
 		e := <-err
 		if e != nil {
-			log.Fatalf("Error listing drive labels: %v", e)
+			log.Fatalf("Error listing Drive Labels: %v", e)
 		}
 	},
 }

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,9 +28,13 @@ import (
 )
 
 var (
-	client             *http.Client
-	driveLabelsService *drivelabels.Service
-	labelsService      *drivelabels.LabelsService
+	client                   *http.Client
+	driveLabelsService       *drivelabels.Service
+	labelsService            *drivelabels.LabelsService
+	labelsLocksService       *drivelabels.LabelsLocksService
+	labelsPermissionsService *drivelabels.LabelsPermissionsService
+	limitsService            *drivelabels.LimitsService
+	usersService             *drivelabels.UsersService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -46,7 +50,7 @@ func getDriveService() *drivelabels.Service {
 		var err error
 		driveLabelsService, err = drivelabels.NewService(context.Background(), option.WithHTTPClient(client))
 		if err != nil {
-			log.Fatalf("Error creating drive labels service: %v", err)
+			log.Fatalf("Error creating Drive Labels service: %v", err)
 		}
 	}
 	return driveLabelsService
@@ -57,4 +61,32 @@ func getLabelsService() *drivelabels.LabelsService {
 		labelsService = drivelabels.NewLabelsService(getDriveService())
 	}
 	return labelsService
+}
+
+func getLabelsLocksService() *drivelabels.LabelsLocksService {
+	if labelsLocksService == nil {
+		labelsLocksService = drivelabels.NewLabelsLocksService(getDriveService())
+	}
+	return labelsLocksService
+}
+
+func getLabelsPermissionsService() *drivelabels.LabelsPermissionsService {
+	if labelsPermissionsService == nil {
+		labelsPermissionsService = drivelabels.NewLabelsPermissionsService(getDriveService())
+	}
+	return labelsPermissionsService
+}
+
+func getLimitsService() *drivelabels.LimitsService {
+	if limitsService == nil {
+		limitsService = drivelabels.NewLimitsService(getDriveService())
+	}
+	return limitsService
+}
+
+func getUsersService() *drivelabels.UsersService {
+	if usersService == nil {
+		usersService = drivelabels.NewUsersService(getDriveService())
+	}
+	return usersService
 }

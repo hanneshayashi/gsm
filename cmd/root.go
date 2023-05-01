@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ var (
 	logFile        string
 	home           string
 	standardDelay  int
+	maxInterval    int
 	redirectPort   int
 	compressOutput bool
 	streamOutput   bool
@@ -131,7 +132,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
 	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
-Copyright © 2020-2022 Hannes Hayashi.
+Copyright © 2020-2023 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -139,7 +140,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 			log.Fatalln(err)
 		}
 	},
-	Version: "v0.8.0",
+	Version: "v0.9.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -160,6 +161,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&compressOutput, "compressOutput", false, `By default, GSM outputs "pretty" (indented) objects. By setting this flag, GSM's output will be compressed. This may or may not improve performance in scripts.`)
 	rootCmd.PersistentFlags().BoolVar(&streamOutput, "streamOutput", false, `Setting this flag will cause GSM to output slice values to stdout one by one, instead of one large object`)
 	rootCmd.PersistentFlags().IntVar(&standardDelay, "delay", 0, "This delay (plus a random jitter between 0 and 50) will be applied after every command to avoid reaching quota and rate limits. Set to 0 to disable.")
+	rootCmd.PersistentFlags().IntVar(&maxInterval, "maxRetryInterval", 320, "This is the maximum interval that will be used between retry attempts in seconds.")
 	rootCmd.PersistentFlags().IntVar(&redirectPort, "redirectPort", 8081, "This is the TCP port on which GSM will create web server if you authenticate with a user account for the first time. This is necessary for the OAuth flow. See https://developers.google.com/identity/protocols/oauth2/native-app#redirect-uri_loopback")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
@@ -196,7 +198,7 @@ func initConfig() {
 	} else {
 		standardDelay = viper.GetInt("standardDelay")
 	}
-	gsmhelpers.SetStandardRetrier(time.Duration(standardDelay) * time.Millisecond)
+	gsmhelpers.SetStandardRetrier(time.Duration(standardDelay)*time.Millisecond, time.Duration(maxInterval)*time.Second)
 	if streamOutput {
 		compressOutput = true
 	}

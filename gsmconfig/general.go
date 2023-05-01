@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2022 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -169,7 +169,8 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			gmail.GmailSettingsBasicScope,
 			gmail.GmailModifyScope,
 			ci.CloudIdentityGroupsScope,
-			ci.CloudIdentityUserinvitationsScope,
+			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
+			"https://www.googleapis.com/auth/cloud-identity.inboundsso",
 			ci.CloudIdentityDevicesScope,
 			ci.CloudIdentityDevicesLookupScope,
 			"https://www.googleapis.com/auth/cloud-identity.orgunits",
