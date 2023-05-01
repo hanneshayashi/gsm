@@ -107,7 +107,7 @@ Must use HTTPS.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var ssoProfileFlagsALL = gsmhelpers.GetAllFlags(ssoProfileFlags)
+// var ssoProfileFlagsALL = gsmhelpers.GetAllFlags(ssoProfileFlags)
 
 func init() {
 	rootCmd.AddCommand(ssoProfilesCmd)

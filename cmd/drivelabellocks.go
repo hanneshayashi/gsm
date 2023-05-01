@@ -54,7 +54,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var labelLockFlagsALL = gsmhelpers.GetAllFlags(driveLabelLockFlags)
+// var labelLockFlagsALL = gsmhelpers.GetAllFlags(driveLabelLockFlags)
 
 func init() {
 	rootCmd.AddCommand(driveLabelLocksCmd)

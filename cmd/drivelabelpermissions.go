@@ -125,7 +125,7 @@ The server verifies that the user is an admin for the label before allowing acce
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var labelPermissionFlagsALL = gsmhelpers.GetAllFlags(driveLabelPermissionFlags)
+// var labelPermissionFlagsALL = gsmhelpers.GetAllFlags(driveLabelPermissionFlags)
 
 func init() {
 	rootCmd.AddCommand(driveLabelPermissionsCmd)

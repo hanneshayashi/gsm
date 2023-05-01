@@ -69,7 +69,7 @@ Format: inboundSamlSsoProfiles/{sso_profile_id}/idpCredentials/{idp_credential_i
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var ssoProfileCredentialFlagsALL = gsmhelpers.GetAllFlags(ssoProfileCredentialFlags)
+// var ssoProfileCredentialFlagsALL = gsmhelpers.GetAllFlags(ssoProfileCredentialFlags)
 
 func init() {
 	rootCmd.AddCommand(ssoProfileCredentialsCmd)

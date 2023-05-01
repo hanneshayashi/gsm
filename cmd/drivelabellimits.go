@@ -54,7 +54,7 @@ However, only an empty string seems to work currently, so leave empty, if you ge
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var labelLimitFlagsALL = gsmhelpers.GetAllFlags(driveLabelLimitFlags)
+// var labelLimitFlagsALL = gsmhelpers.GetAllFlags(driveLabelLimitFlags)
 
 func init() {
 	rootCmd.AddCommand(driveLabelLimitsCmd)

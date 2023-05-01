@@ -60,7 +60,7 @@ If unset, will return settings within the current customer.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var labelUserFlagsALL = gsmhelpers.GetAllFlags(driveLabelUserFlags)
+// var labelUserFlagsALL = gsmhelpers.GetAllFlags(driveLabelUserFlags)
 
 func init() {
 	rootCmd.AddCommand(driveLabelUsersCmd)

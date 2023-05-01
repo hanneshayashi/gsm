@@ -105,7 +105,7 @@ Omitting the filter or specifying a filter of customer==customers/my_customer wi
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
-var ssoAssignmentFlagsALL = gsmhelpers.GetAllFlags(ssoAssignmentFlags)
+// var ssoAssignmentFlagsALL = gsmhelpers.GetAllFlags(ssoAssignmentFlags)
 
 func init() {
 	rootCmd.AddCommand(ssoAssignmentsCmd)
