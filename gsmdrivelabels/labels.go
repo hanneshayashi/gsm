@@ -214,9 +214,9 @@ func UpdatePermissions(name, fields string, useAdminAccess bool, request *drivel
 // labels/{id}@latest - Gets the latest revision of the label.
 // labels/{id}@published - Gets the current published revision of the label.
 // labels/{id}@{revisionId} - Gets the label at the specified revision ID.
-func GetLabel(fileID, languageCode, view, fields string, useAdminAccess bool) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
+func GetLabel(name, languageCode, view, fields string, useAdminAccess bool) (*drivelabels.GoogleAppsDriveLabelsV2Label, error) {
 	srv := getLabelsService()
-	c := srv.Get(fileID).UseAdminAccess(useAdminAccess)
+	c := srv.Get(name).UseAdminAccess(useAdminAccess)
 	if languageCode != "" {
 		c.LanguageCode(languageCode)
 	}
@@ -226,7 +226,7 @@ func GetLabel(fileID, languageCode, view, fields string, useAdminAccess bool) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
+	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
 		return c.Do()
 	})
 	if err != nil {
