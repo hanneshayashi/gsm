@@ -62,7 +62,7 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 // CreateFile creates a new file.
 func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, keepRevisionForever, useContentAsIndexableText bool, includePermissionsForView, ocrLanguage, sourceMimeType, fields string) (*drive.File, error) {
 	srv := getFilesService()
-	if content == nil {
+	if file.MimeType == "" && content == nil {
 		file.MimeType = folderMimetype
 	}
 	c := srv.Create(file).SupportsAllDrives(true).IgnoreDefaultVisibility(ignoreDefaultVisibility).KeepRevisionForever(keepRevisionForever).UseContentAsIndexableText(useContentAsIndexableText)
