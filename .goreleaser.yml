@@ -10,7 +10,7 @@ builds:
       - arm64
 archives:
   - format: tar.gz
-    name_template: '{{ .ProjectName }}-{{ .Version }}_{{- if eq .Os "darwin" }}mac{{- else if eq .Os "windows" }}win{{- else }}{{ .Os }}{{ end }}-{{ .Arch }}'
+    name_template: '{{ .ProjectName }}-{{ .Version }}_{{- if eq .Os "windows" }}win{{- else }}{{ .Os }}{{ end }}-{{ .Arch }}'
     format_overrides:
       - goos: windows
         format: zip
@@ -36,12 +36,16 @@ release:
   draft: true
 changelog:
   skip: true
-
+announce:
+  skip: true
+universal_binaries:
+  - name_template: "{{ .ProjectName }}"
+    replace: true
 nfpms:
   # note that this is an array of nfpm configs
   - # You can change the file name of the package.
     # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
-    file_name_template: '{{ .ProjectName }}-{{ .Version }}_{{- if eq .Os "darwin" }}mac{{- else if eq .Os "windows" }}win{{- else }}{{ .Os }}{{ end }}-{{ .Arch }}'
+    file_name_template: "{{ .ProjectName }}-{{ .Version }}_{{ .Os }}-{{ .Arch }}"
 
     # Template to your app's homepage.
     # Default is empty.
