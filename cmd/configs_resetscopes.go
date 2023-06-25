@@ -20,6 +20,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -27,25 +28,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configsUpdateCmd represents the update command
-var configsUpdateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Updates the current config.",
-	Long:  `To update a config that is not currently loaded, use the --config flag to load it temporarily.`,
+// configsResetScopesCmd represents the resetScopes command
+var configsResetScopesCmd = &cobra.Command{
+	Use:   "resetScopes",
+	Short: "Resets the scopes of a config back to the defaults.",
+	Long: fmt.Sprintf(`Sets the the scopes of the specified config or the default config if not specified back to the defaults:
+%s`, strings.Join(gsmconfig.GetDefaultScopes(), ",\n")),
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
 	},
 	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, _ []string) {
-		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		c, err := mapToConfig(flags)
+	Run: func(_ *cobra.Command, _ []string) {
+		result, err := gsmconfig.UpdateConfig(&gsmconfig.GSMConfig{
+			Scopes: gsmconfig.GetDefaultScopes(),
+		}, cfgFile)
 		if err != nil {
-			fmt.Printf("Error building config object: %v\n", err)
-			return
-		}
-		result, err := gsmconfig.UpdateConfig(c, cfgFile)
-		if err != nil {
-			fmt.Printf("Error updating config: %v\n", err)
+			fmt.Printf("Error resetting scopes: %v\n", err)
 			return
 		}
 		err = gsmhelpers.Output(result, "yaml", false)
@@ -56,5 +54,5 @@ var configsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	gsmhelpers.InitCommand(configsCmd, configsUpdateCmd, configFlags)
+	gsmhelpers.InitCommand(configsCmd, configsResetScopesCmd, configFlags)
 }
