@@ -53,6 +53,48 @@ type GSMConfig struct {
 	Default         bool     `yaml:"default,omitempty"`
 }
 
+func GetDefaultScopes() []string {
+	return []string{
+		admin.AdminDirectoryUserScope,
+		admin.AdminDirectoryCustomerScope,
+		admin.AdminDirectoryGroupScope,
+		admin.AdminDirectoryGroupMemberScope,
+		admin.AdminDirectoryOrgunitScope,
+		admin.AdminDirectoryRolemanagementScope,
+		admin.AdminDirectoryUserSecurityScope,
+		admin.AdminDirectoryDomainScope,
+		admin.AdminDirectoryDeviceMobileScope,
+		admin.AdminDirectoryDeviceChromeosScope,
+		admin.AdminDirectoryResourceCalendarScope,
+		admin.AdminDirectoryUserschemaScope,
+		"https://www.google.com/m8/feeds/contacts/",
+		drive.DriveScope,
+		gmail.MailGoogleComScope,
+		gmail.GmailSettingsSharingScope,
+		gmail.GmailSettingsBasicScope,
+		gmail.GmailModifyScope,
+		ci.CloudIdentityGroupsScope,
+		"https://www.googleapis.com/auth/cloud-identity.userinvitations",
+		"https://www.googleapis.com/auth/cloud-identity.inboundsso",
+		ci.CloudIdentityDevicesScope,
+		ci.CloudIdentityDevicesLookupScope,
+		"https://www.googleapis.com/auth/cloud-identity.orgunits",
+		groupssettings.AppsGroupsSettingsScope,
+		calendar.CalendarScope,
+		licensing.AppsLicensingScope,
+		people.DirectoryReadonlyScope,
+		people.ContactsOtherReadonlyScope,
+		sheets.SpreadsheetsScope,
+		reports.AdminReportsAuditReadonlyScope,
+		reports.AdminReportsUsageReadonlyScope,
+		gmailpostmastertools.PostmasterReadonlyScope,
+		"https://www.googleapis.com/auth/admin.contact.delegation",
+		"https://www.googleapis.com/auth/admin.chrome.printers",
+		"https://www.googleapis.com/auth/drive.labels",
+		"https://www.googleapis.com/auth/drive.admin.labels",
+	}
+}
+
 // CfgDir should be set to the directory containing all GSM configuration files
 var CfgDir string
 
@@ -111,7 +153,7 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	return configOld, err
+	return configOld, nil
 }
 
 // CreateConfig creates a new config
@@ -150,44 +192,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
 	}
 	if config.Scopes == nil {
-		config.Scopes = []string{admin.AdminDirectoryUserScope,
-			admin.AdminDirectoryCustomerScope,
-			admin.AdminDirectoryGroupScope,
-			admin.AdminDirectoryGroupMemberScope,
-			admin.AdminDirectoryOrgunitScope,
-			admin.AdminDirectoryRolemanagementScope,
-			admin.AdminDirectoryUserSecurityScope,
-			admin.AdminDirectoryDomainScope,
-			admin.AdminDirectoryDeviceMobileScope,
-			admin.AdminDirectoryDeviceChromeosScope,
-			admin.AdminDirectoryResourceCalendarScope,
-			admin.AdminDirectoryUserschemaScope,
-			"https://www.google.com/m8/feeds/contacts/",
-			drive.DriveScope,
-			gmail.MailGoogleComScope,
-			gmail.GmailSettingsSharingScope,
-			gmail.GmailSettingsBasicScope,
-			gmail.GmailModifyScope,
-			ci.CloudIdentityGroupsScope,
-			"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-			"https://www.googleapis.com/auth/cloud-identity.inboundsso",
-			ci.CloudIdentityDevicesScope,
-			ci.CloudIdentityDevicesLookupScope,
-			"https://www.googleapis.com/auth/cloud-identity.orgunits",
-			groupssettings.AppsGroupsSettingsScope,
-			calendar.CalendarScope,
-			licensing.AppsLicensingScope,
-			people.DirectoryReadonlyScope,
-			people.ContactsOtherReadonlyScope,
-			sheets.SpreadsheetsScope,
-			reports.AdminReportsAuditReadonlyScope,
-			reports.AdminReportsUsageReadonlyScope,
-			gmailpostmastertools.PostmasterReadonlyScope,
-			"https://www.googleapis.com/auth/admin.contact.delegation",
-			"https://www.googleapis.com/auth/admin.chrome.printers",
-			"https://www.googleapis.com/auth/drive.labels",
-			"https://www.googleapis.com/auth/drive.admin.labels",
-		}
+		config.Scopes = GetDefaultScopes()
 	}
 	b, err := yaml.Marshal(config)
 	if err != nil {

@@ -2,5 +2,3 @@ gsm.log
 .vscode/settings.json
 *.csv
 *.ps1
-gsmchat/
-cmd/chat*
