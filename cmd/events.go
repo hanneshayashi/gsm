@@ -35,7 +35,7 @@ var eventsCmd = &cobra.Command{
 	Short: "Manage events in users' calendars (Part of Calendar API)",
 	Long: `This API only works in the user's context. Set the subject to the user's
 email address to use this API!
-Implements the API documented at https://developers.google.com/calendar/v3/reference/events`,
+Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

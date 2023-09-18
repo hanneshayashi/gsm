@@ -31,7 +31,7 @@ import (
 var calendarACLDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes ACL rules using a CSV file as input.",
-	Long:  `Implements the API documented at https://developers.google.com/calendar/v3/reference/acl/delete`,
+	Long:  `Implements the API documented at https://developers.google.com/calendar/api/v3/reference/acl/delete`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

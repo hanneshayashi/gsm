@@ -31,7 +31,7 @@ import (
 var eventsInstancesCmd = &cobra.Command{
 	Use:               "instances",
 	Short:             "Returns instances of the specified recurring event.",
-	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/instances",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events/instances",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

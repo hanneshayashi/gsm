@@ -31,7 +31,7 @@ import (
 var calendarSettingsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns all user settings for the authenticated user.",
-	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/settings/list",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/settings/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
