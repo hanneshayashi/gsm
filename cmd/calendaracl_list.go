@@ -31,7 +31,7 @@ import (
 var calendarACLListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns the rules in the access control list for the calendar.",
-	Long:              `Implements the API documented at https://developers.google.com/calendar/v3/reference/acl/list`,
+	Long:              `Implements the API documented at https://developers.google.com/calendar/api/v3/reference/acl/list`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

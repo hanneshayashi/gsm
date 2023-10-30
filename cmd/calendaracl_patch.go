@@ -30,7 +30,7 @@ import (
 var calendarACLPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Updates an access control rule. This method supports patch semantics.",
-	Long:              `Implements the API documented at https://developers.google.com/calendar/v3/reference/acl/patch`,
+	Long:              `Implements the API documented at https://developers.google.com/calendar/api/v3/reference/acl/patch`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

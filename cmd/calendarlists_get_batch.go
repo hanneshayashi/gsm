@@ -32,7 +32,7 @@ import (
 var calendarListsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch returns calendars from the user's calendar list using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendarList/get",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendarList/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

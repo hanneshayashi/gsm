@@ -30,7 +30,7 @@ import (
 var calendarsPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             `Updates metadata for a calendar.`,
-	Long:              "Implements the API documented at https://developers.google.com/calendar/v3/reference/calendars/patch",
+	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendars/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var eventsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes events using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/calendar/v3/reference/events/delete",
+	Long:  "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

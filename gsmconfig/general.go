@@ -30,6 +30,7 @@ import (
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
 	"google.golang.org/api/drive/v3"
+	"google.golang.org/api/drivelabels/v2"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/gmailpostmastertools/v1"
 	"google.golang.org/api/groupssettings/v1"
@@ -90,8 +91,8 @@ func GetDefaultScopes() []string {
 		gmailpostmastertools.PostmasterReadonlyScope,
 		"https://www.googleapis.com/auth/admin.contact.delegation",
 		"https://www.googleapis.com/auth/admin.chrome.printers",
-		"https://www.googleapis.com/auth/drive.labels",
-		"https://www.googleapis.com/auth/drive.admin.labels",
+		drivelabels.DriveLabelsScope,
+		drivelabels.DriveAdminLabelsScope,
 	}
 }
 
