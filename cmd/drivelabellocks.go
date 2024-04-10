@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020-2024 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var labelLockFlagsALL = gsmhelpers.GetAllFlags(driveLabelLockFlags)
 
 func init() {
