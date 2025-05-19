@@ -358,7 +358,7 @@ func mapToDriveLabelField(m map[string]string) (*drivelabels.GoogleAppsDriveLabe
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", m["valueType"])
+		return nil, fmt.Errorf("unknown valueType: %s", m["valueType"])
 	}
 	return field, nil
 }
@@ -533,7 +533,7 @@ func mapToUpdateDriveLabelFieldTypeRequest(flags map[string]*gsmhelpers.Value) (
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", valueType)
+		return nil, fmt.Errorf("unknown valueType: %s", valueType)
 	}
 	return request, nil
 }
@@ -684,7 +684,7 @@ func mapToCreateDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", valueType)
+		return nil, fmt.Errorf("unknown valueType: %s", valueType)
 	}
 	return request, nil
 }
