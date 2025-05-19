@@ -54,12 +54,12 @@ func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
 func saveToken(path string, token *oauth2.Token) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
-		return fmt.Errorf("Unable to cache OAuth token: %v", err)
+		return fmt.Errorf("unable to cache OAuth token: %v", err)
 	}
 	defer f.Close()
 	err = json.NewEncoder(f).Encode(token)
 	if err != nil {
-		return fmt.Errorf("Unable to save OAuth token: %v", err)
+		return fmt.Errorf("unable to save OAuth token: %v", err)
 	}
 	return nil
 }
@@ -121,7 +121,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 	if serviceAccountEmail == "" {
 		serviceAccountEmail, err = metadata.Email("")
 		if err != nil {
-			return nil, fmt.Errorf("Error getting Service Account email: %v", err)
+			return nil, fmt.Errorf("error getting Service Account email: %v", err)
 		}
 	}
 	ts, err := impersonate.CredentialsTokenSource(ctx, impersonate.CredentialsConfig{
@@ -130,7 +130,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 		Subject:         subject,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Error getting token source: %v", err)
+		return nil, fmt.Errorf("error getting token source: %v", err)
 	}
 	client = oauth2.NewClient(ctx, ts)
 	return
@@ -140,7 +140,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client, err error) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing Service Account credential file to config: %v", err)
+		return nil, fmt.Errorf("error parsing Service Account credential file to config: %v", err)
 	}
 	config.Subject = subject
 	return config.Client(ctx), nil
