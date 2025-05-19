@@ -44,7 +44,7 @@ var sharedContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag
 	"domain": {
 		AvailableFor: []string{"create", "delete", "get", "list"},
 		Type:         "string",
-		Description:  "DNS domain the contact should be created in",
+		Description:  "DNS domain of the shared contact",
 		Required:     []string{"create", "delete", "get", "list"},
 	},
 	"givenName": {
