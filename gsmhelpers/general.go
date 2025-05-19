@@ -391,3 +391,11 @@ func EnsurePrefix(s, p string) string {
 	}
 	return s
 }
+
+// CloseLog is used when deferring Close() because we also want to check for the error of the Close()
+func CloseLog(closer io.Closer, resource string) {
+	err := closer.Close()
+	if err != nil {
+		log.Printf("Error while closing resource %q: %+v", resource, err)
+	}
+}

@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const contactDelegateURL = `https://www.googleapis.com/admin/contacts/v1/users/%s/delegates`
@@ -47,7 +49,7 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "createContactDelegateBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
@@ -86,7 +88,7 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "listContactDelegatesBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err

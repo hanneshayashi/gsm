@@ -57,7 +57,7 @@ var filesUpdateCmd = &cobra.Command{
 			if err != nil {
 				log.Fatalf("Error opening file %s: %v", flags["localFilePath"].GetString(), err)
 			}
-			defer content.Close()
+			defer gsmhelpers.CloseLog(content, "fileContent")
 		}
 		result, err := gsmdrive.UpdateFile(flags["fileId"].GetString(), flags["parent"].GetString(), removeParents, flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString(), f, content, flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool())
 		if err != nil {

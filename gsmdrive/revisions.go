@@ -80,12 +80,12 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 	if !ok {
 		return "", fmt.Errorf("result unknown")
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "downloadRevisionBody")
 	fileLocal, err := os.Create(file.OriginalFilename)
 	if err != nil {
 		return "", err
 	}
-	defer fileLocal.Close()
+	defer gsmhelpers.CloseLog(fileLocal, "fileLocal")
 	_, err = io.Copy(fileLocal, r.Body)
 	return file.OriginalFilename, err
 }

@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const feedURL = `https://www.google.com/m8/feeds/contacts/%s/full?v=3.0`
@@ -252,7 +254,7 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "sharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -297,7 +299,7 @@ func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "createSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -322,7 +324,7 @@ func DeleteSharedContact(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "deleteSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -341,7 +343,7 @@ func GetSharedContact(url string) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "getShareContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -371,7 +373,7 @@ func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "updateSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)

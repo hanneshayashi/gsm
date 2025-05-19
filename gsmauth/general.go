@@ -28,6 +28,7 @@ import (
 
 	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/skratchdot/open-golang/open"
 
 	"golang.org/x/net/context"
@@ -44,7 +45,7 @@ func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "tokenFile")
 	tok := &oauth2.Token{}
 	err = json.NewDecoder(f).Decode(tok)
 	return tok, err
@@ -56,7 +57,7 @@ func saveToken(path string, token *oauth2.Token) error {
 	if err != nil {
 		return fmt.Errorf("unable to cache OAuth token: %v", err)
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "tokenFile")
 	err = json.NewEncoder(f).Encode(token)
 	if err != nil {
 		return fmt.Errorf("unable to save OAuth token: %v", err)

@@ -46,7 +46,7 @@ var filesCreateCmd = &cobra.Command{
 			if err != nil {
 				log.Fatalf("Error opening file %s: %v", flags["localFilePath"].GetString(), err)
 			}
-			defer content.Close()
+			defer gsmhelpers.CloseLog(content, "fileContent")
 			if f.Name == "" {
 				f.Name = filepath.Base(content.Name())
 			}

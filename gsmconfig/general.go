@@ -275,7 +275,7 @@ func ListConfigs() ([]*GSMConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "configFile")
 	files, err := f.Readdir(-1)
 	if err != nil {
 		return nil, err

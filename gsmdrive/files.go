@@ -168,7 +168,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("result unknown")
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "exportFileBody")
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
 		return "", err
@@ -185,7 +185,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer fileLocal.Close()
+	defer gsmhelpers.CloseLog(fileLocal, "fileLocal")
 	_, err = io.Copy(fileLocal, r.Body)
 	return fileName, err
 }
@@ -228,7 +228,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 	if !ok {
 		return "", fmt.Errorf("result unknown")
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "downloadFileBody")
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
 		return "", err
@@ -241,7 +241,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 	if err != nil {
 		return "", err
 	}
-	defer fileLocal.Close()
+	defer gsmhelpers.CloseLog(fileLocal, "fileLocal")
 	_, err = io.Copy(fileLocal, r.Body)
 	return fileName, err
 }
