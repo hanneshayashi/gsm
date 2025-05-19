@@ -29,7 +29,7 @@ import (
 // userInvitationsCmd represents the userInvitations command
 var userInvitationsCmd = &cobra.Command{
 	Use:               "userInvitations",
-	Short:             "Manage user invitations for unmanaged accounts (Part of Cloud Identity Beta API)",
+	Short:             "Manage user invitations for unmanaged accounts (Part of Cloud Identity API)",
 	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
