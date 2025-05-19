@@ -1,6 +1,6 @@
 module github.com/hanneshayashi/gsm
 
-go 1.23.0
+go 1.24
 
 require (
 	cloud.google.com/go/compute/metadata v0.7.0
