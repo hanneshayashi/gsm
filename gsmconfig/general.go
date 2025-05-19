@@ -76,7 +76,7 @@ func GetDefaultScopes() []string {
 		gmail.GmailModifyScope,
 		ci.CloudIdentityGroupsScope,
 		"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-		"https://www.googleapis.com/auth/cloud-identity.inboundsso",
+		ci.CloudIdentityInboundssoScope,
 		ci.CloudIdentityDevicesScope,
 		ci.CloudIdentityDevicesLookupScope,
 		"https://www.googleapis.com/auth/cloud-identity.orgunits",
