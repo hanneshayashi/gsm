@@ -123,7 +123,7 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 // GetClientADC returns a client to be used for API services
 func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client, err error) {
 	if serviceAccountEmail == "" {
-		serviceAccountEmail, err = metadata.Email("")
+		serviceAccountEmail, err = metadata.EmailWithContext(context.Background(), "")
 		if err != nil {
 			return nil, fmt.Errorf("error getting Service Account email: %v", err)
 		}
