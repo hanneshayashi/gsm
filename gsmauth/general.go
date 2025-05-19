@@ -93,7 +93,10 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Fprintf(w, "You can close this window now")
+			_, err = fmt.Fprintf(w, "You can close this window now")
+			if err != nil {
+				log.Fatal(err)
+			}
 			done <- true
 			close(done)
 		})

@@ -30,7 +30,7 @@ import (
 // sharedContactsDeleteCmd represents the delete command
 var sharedContactsDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete a shared contact by referencing its id url",
+	Short: "Delete a shared contact by referencing its id url (must begin with https://)",
 	Long:  "",
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
@@ -42,7 +42,7 @@ var sharedContactsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting shared contact: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), string(result))
+		fmt.Println(string(result))
 	},
 }
 
