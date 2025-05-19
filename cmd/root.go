@@ -234,7 +234,7 @@ func auth() {
 	if mode == "dwd" || mode == "user" {
 		credentials, err = os.ReadFile(viper.GetString("credentialsFile"))
 		if err != nil {
-			fmt.Printf("Error reading service account credentials file: %v", err)
+			log.Fatalf("Error reading credentials file: %v", err)
 		}
 	}
 	switch mode {
