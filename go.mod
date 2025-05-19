@@ -1,6 +1,6 @@
 module github.com/hanneshayashi/gsm
 
-go 1.21
+go 1.23.0
 
 require (
 	cloud.google.com/go/compute/metadata v0.2.3
@@ -11,7 +11,7 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.17.0
-	golang.org/x/net v0.23.0
+	golang.org/x/net v0.38.0
 	golang.org/x/oauth2 v0.13.0
 	google.golang.org/api v0.148.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -38,10 +38,10 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	google.golang.org/grpc v1.59.0 // indirect
