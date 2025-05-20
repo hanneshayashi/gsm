@@ -116,6 +116,11 @@ This restriction may be overridden by other sharing policies controlled outside 
 		Type:         "bool",
 		Description:  "Whether access to items inside this shared drive is restricted to its members",
 	},
+	"sharingFoldersRequiresOrganizerPermission": {
+		AvailableFor: []string{"update"},
+		Type:         "bool",
+		Description:  "If true, only users with the organizer role can share folders. If false, users with either the organizer role or the file organizer role can share folders.",
+	},
 	"q": {
 		AvailableFor: []string{"list"},
 		Type:         "string",
@@ -201,6 +206,7 @@ func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 	copyRequiresWriterPermissionSet := flags["copyRequiresWriterPermission"].IsSet()
 	domainUsersOnlySet := flags["domainUsersOnly"].IsSet()
 	driveMembersOnlySet := flags["driveMembersOnly"].IsSet()
+	sharingFoldersRequiresOrganizerPermissionSet := flags["sharingFoldersRequiresOrganizerPermission"].IsSet()
 	if adminManagedRestrictionsSet || copyRequiresWriterPermissionSet || domainUsersOnlySet || driveMembersOnlySet {
 		d.Restrictions = &drive.DriveRestrictions{}
 		if adminManagedRestrictionsSet {
@@ -225,6 +231,12 @@ func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 			d.Restrictions.DriveMembersOnly = flags["driveMembersOnly"].GetBool()
 			if !d.Restrictions.DriveMembersOnly {
 				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "DriveMembersOnly")
+			}
+		}
+		if sharingFoldersRequiresOrganizerPermissionSet {
+			d.Restrictions.SharingFoldersRequiresOrganizerPermission = flags["sharingFoldersRequiresOrganizerPermission"].GetBool()
+			if !d.Restrictions.SharingFoldersRequiresOrganizerPermission {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "SharingFoldersRequiresOrganizerPermission")
 			}
 		}
 	}
