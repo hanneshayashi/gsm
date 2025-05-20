@@ -78,7 +78,7 @@ func GetDefaultScopes() []string {
 		ci.CloudIdentityGroupsScope,
 		"https://www.googleapis.com/auth/cloud-identity.userinvitations",
 		ci.CloudIdentityInboundssoScope,
-		ci.CloudIdentityDevicesScope,
+		// ci.CloudIdentityDevicesScope,
 		ci.CloudIdentityDevicesLookupScope,
 		cibeta.CloudIdentityOrgunitsScope,
 		groupssettings.AppsGroupsSettingsScope,
