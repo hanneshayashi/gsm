@@ -177,7 +177,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			return "", fmt.Errorf("serviceAccount is not used with %s mode", config.Mode)
 		}
 	}
-	if (config.Mode == "dwd" || config.Mode == "adc") && config.Subject == "" {
+	if config.Mode == "dwd" && config.Subject == "" {
 		return "", fmt.Errorf("subject is required with %s mode", config.Mode)
 	}
 	if config.Mode == "user" && config.Subject != "" {

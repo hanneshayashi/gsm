@@ -62,7 +62,8 @@ Can be relative to the binary or fully qualified.`,
 	"serviceAccount": {
 		AvailableFor: []string{"new", "update"},
 		Type:         "string",
-		Description:  `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.`,
+		Description: `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.
+If you are using '--mode adc' but are NOT using GSM on Google Cloud (i.e. locally), you need to specify this.`,
 	},
 	"mode": {
 		AvailableFor: []string{"new"},
