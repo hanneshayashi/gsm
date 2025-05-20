@@ -19,7 +19,7 @@ package cmd
 
 import (
 	"log"
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmsheets"
@@ -157,7 +157,7 @@ func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sh
 				sheetID, ok := sheetMap[m["title"]]
 				if !ok {
 					r := &sheets.Request{}
-					sheetID = int64(rand.Int31())
+					sheetID = rand.Int64()
 					r.AddSheet = &sheets.AddSheetRequest{}
 					r.AddSheet.Properties = &sheets.SheetProperties{
 						Title:   m["title"],

@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math/rand"
+	"math/rand/v2"
 	"os"
 	"strings"
 	"time"
@@ -365,7 +365,7 @@ func FormatErrorKey(s ...string) string {
 
 // Sleep sleeps for standardDelay ms plus a random jitter between 0 and 50
 func Sleep() {
-	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.Intn(50))*time.Millisecond)
+	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.IntN(50))*time.Millisecond)
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called
