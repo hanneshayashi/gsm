@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2024 Hannes Hayashi
+Copyright © 2020-2023 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -134,7 +134,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
 	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
-Copyright © 2020-2024 Hannes Hayashi.
+Copyright © 2020-2023 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
