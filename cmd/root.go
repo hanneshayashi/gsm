@@ -176,11 +176,14 @@ func init() {
 func initConfig() {
 	var err error
 	gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
-	if _, err = os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
+	_, err = os.Stat(gsmconfig.CfgDir)
+	if os.IsNotExist(err) {
 		err = os.MkdirAll(gsmconfig.CfgDir, 0777)
 		if err != nil {
 			log.Fatalf("Config dir %s could not be found and could not be created: %v", gsmconfig.CfgDir, err)
 		}
+	} else if err != nil {
+		log.Fatalln(err)
 	}
 	// Search config in home directory with name ".gsm" (without extension).
 	viper.AddConfigPath(gsmconfig.CfgDir)
@@ -192,8 +195,9 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err = viper.ReadInConfig(); err != nil && gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
-		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
+	err = viper.ReadInConfig()
+	if err != nil && !gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
+		log.Fatalf(`Error loading config file: %s. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`, err)
 	}
 	if rootCmd.Flags().Changed("delay") {
 		standardDelay, err = rootCmd.Flags().GetInt("delay")
