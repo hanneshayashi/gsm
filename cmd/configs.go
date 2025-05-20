@@ -101,6 +101,11 @@ Can be relative to the binary or fully qualified.`,
 		Type:         "string",
 		Description:  `Path of the log file.`,
 	},
+	"errorOutput": {
+		AvailableFor: []string{"new", "update"},
+		Type:         "string",
+		Description:  `The destination where errors should be output to. Can be 'stderr', 'log' or 'both'`,
+	},
 }
 
 func init() {
@@ -129,6 +134,9 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	}
 	if flags["logFile"].IsSet() {
 		config.LogFile = flags["logFile"].GetString()
+	}
+	if flags["errorOutput"].IsSet() {
+		config.ErrorOutput = flags["errorOutput"].GetString()
 	}
 	if flags["standardDelay"].IsSet() {
 		config.StandardDelay = flags["standardDelay"].GetInt()

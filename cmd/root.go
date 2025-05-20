@@ -20,6 +20,7 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -55,6 +56,7 @@ var (
 	cfgFile        string
 	dwdSubject     string
 	logFile        string
+	errorOutput    string
 	home           string
 	standardDelay  int
 	maxInterval    int
@@ -167,6 +169,7 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&redirectPort, "redirectPort", 8081, "This is the TCP port on which GSM will create web server if you authenticate with a user account for the first time. This is necessary for the OAuth flow. See https://developers.google.com/identity/protocols/oauth2/native-app#redirect-uri_loopback")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
+	rootCmd.PersistentFlags().StringVar(&errorOutput, "errorOutput", "both", "Sets the output where errors should be directed to. Can be 'stderr', 'log' or 'both' (default)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -264,15 +267,32 @@ func auth() {
 }
 
 func initLog() {
-	if logFile == "" {
-		logFile = viper.GetString("logFile")
+	if errorOutput == "" {
+		errorOutput = viper.GetString("errorOutput")
+	}
+	if errorOutput == "stderr" {
+		log.SetOutput(os.Stderr)
+		return
+	}
+	if errorOutput == "log" || errorOutput == "both" {
 		if logFile == "" {
-			logFile = fmt.Sprintf("%s/gsm.log", home)
+			logFile = viper.GetString("logFile")
+			if logFile == "" {
+				logFile = fmt.Sprintf("%s/gsm.log", home)
+			}
 		}
+		file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if errorOutput == "both" {
+			mw := io.MultiWriter(os.Stderr, file)
+			log.SetOutput(mw)
+			return
+		} else {
+			log.SetOutput(file)
+		}
+	} else {
+		log.Fatalf("Unknown value for 'errorOutput': '%s'. Must be one of 'stderr', 'log' or 'both'", errorOutput)
 	}
-	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	log.SetOutput(file)
 }

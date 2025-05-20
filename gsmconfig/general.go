@@ -48,6 +48,7 @@ type GSMConfig struct {
 	Mode            string   `yaml:"mode,omitempty"`
 	Subject         string   `yaml:"subject,omitempty"`
 	LogFile         string   `yaml:"logFile,omitempty"`
+	ErrorOutput     string   `yaml:"errorOutput,omitempty"`
 	Scopes          []string `yaml:"scopes,omitempty"`
 	Threads         int      `yaml:"threads,omitempty"`
 	StandardDelay   int      `yaml:"standardDelay,omitempty"`
@@ -126,6 +127,9 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 	if config.LogFile != "" {
 		configOld.LogFile = config.LogFile
 	}
+	if config.ErrorOutput != "" {
+		configOld.ErrorOutput = config.ErrorOutput
+	}
 	if config.Name != "" {
 		_, err = GetConfig(config.Name)
 		if err == nil {
@@ -191,6 +195,9 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			return "", err
 		}
 		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
+	}
+	if config.ErrorOutput == "" {
+		config.ErrorOutput = "both"
 	}
 	if config.Scopes == nil {
 		config.Scopes = GetDefaultScopes()
