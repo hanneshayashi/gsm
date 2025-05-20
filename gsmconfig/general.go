@@ -28,6 +28,7 @@ import (
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
+	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/drivelabels/v2"
 	"google.golang.org/api/gmail/v1"
@@ -79,7 +80,7 @@ func GetDefaultScopes() []string {
 		ci.CloudIdentityInboundssoScope,
 		ci.CloudIdentityDevicesScope,
 		ci.CloudIdentityDevicesLookupScope,
-		"https://www.googleapis.com/auth/cloud-identity.orgunits",
+		cibeta.CloudIdentityOrgunitsScope,
 		groupssettings.AppsGroupsSettingsScope,
 		calendar.CalendarScope,
 		licensing.AppsLicensingScope,
