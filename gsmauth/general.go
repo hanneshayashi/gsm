@@ -29,7 +29,7 @@ import (
 	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"github.com/skratchdot/open-golang/open"
+	"github.com/pkg/browser"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -100,7 +100,7 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 			done <- true
 			close(done)
 		})
-		err = open.Run(authURL)
+		err = browser.OpenURL(authURL)
 		if err != nil {
 			log.Fatal(err)
 		}
