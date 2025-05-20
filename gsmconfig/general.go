@@ -24,7 +24,6 @@ import (
 	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"github.com/mitchellh/go-homedir"
 	admin "google.golang.org/api/admin/directory/v1"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
@@ -190,7 +189,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 		config.StandardDelay = 500
 	}
 	if config.LogFile == "" {
-		home, err := homedir.Dir()
+		home, err := os.UserHomeDir()
 		if err != nil {
 			return "", err
 		}
