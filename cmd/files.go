@@ -173,6 +173,11 @@ Not populated for items in shared drives.`,
 		Description: `Whether users with only writer permission can modify the file's permissions.
 Not populated for items in shared drives.`,
 	},
+	"inheritedPermissionsDisabled": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "bool",
+		Description:  `Whether this file has inherited permissions disabled. Inherited permissions are enabled by default.`,
+	},
 	"indexableText": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "string",
@@ -480,6 +485,12 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 		file.Trashed = flags["trashed"].GetBool()
 		if !file.Trashed {
 			file.ForceSendFields = append(file.ForceSendFields, "Trashed")
+		}
+	}
+	if flags["inheritedPermissionsDisabled"].IsSet() {
+		file.InheritedPermissionsDisabled = flags["inheritedPermissionsDisabled"].GetBool()
+		if !file.InheritedPermissionsDisabled {
+			file.ForceSendFields = append(file.ForceSendFields, "InheritedPermissionsDisabled")
 		}
 	}
 	if flags["parent"].IsSet() {
