@@ -176,7 +176,8 @@ Not populated for items in shared drives.`,
 	"inheritedPermissionsDisabled": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "bool",
-		Description:  `Whether this file has inherited permissions disabled. Inherited permissions are enabled by default.`,
+		Description: `Whether this file has inherited permissions disabled. Inherited permissions are enabled by default.
+See https://developers.google.com/workspace/drive/api/guides/limited-expansive-access for details`,
 	},
 	"indexableText": {
 		AvailableFor: []string{"create", "update"},
