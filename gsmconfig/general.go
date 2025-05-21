@@ -71,6 +71,7 @@ func GetDefaultScopes() []string {
 		admin.AdminDirectoryUserschemaScope,
 		"https://www.google.com/m8/feeds/contacts/",
 		drive.DriveScope,
+		drive.DriveAppsReadonlyScope,
 		gmail.MailGoogleComScope,
 		gmail.GmailSettingsSharingScope,
 		gmail.GmailSettingsBasicScope,

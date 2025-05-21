@@ -38,6 +38,7 @@ var (
 	commentsService    *drive.CommentsService
 	repliesService     *drive.RepliesService
 	revisionsService   *drive.RevisionsService
+	appsService        *drive.AppsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -113,4 +114,11 @@ func getRevisionsService() *drive.RevisionsService {
 		revisionsService = drive.NewRevisionsService(getDriveService())
 	}
 	return revisionsService
+}
+
+func getAppsService() *drive.AppsService {
+	if appsService == nil {
+		appsService = drive.NewAppsService(getDriveService())
+	}
+	return appsService
 }
