@@ -28,17 +28,18 @@ import (
 )
 
 var (
-	client             *http.Client
-	driveService       *drive.Service
-	filesService       *drive.FilesService
-	permissionsService *drive.PermissionsService
-	drivesService      *drive.DrivesService
-	aboutService       *drive.AboutService
-	changesService     *drive.ChangesService
-	commentsService    *drive.CommentsService
-	repliesService     *drive.RepliesService
-	revisionsService   *drive.RevisionsService
-	appsService        *drive.AppsService
+	client                 *http.Client
+	driveService           *drive.Service
+	filesService           *drive.FilesService
+	permissionsService     *drive.PermissionsService
+	drivesService          *drive.DrivesService
+	aboutService           *drive.AboutService
+	changesService         *drive.ChangesService
+	commentsService        *drive.CommentsService
+	repliesService         *drive.RepliesService
+	revisionsService       *drive.RevisionsService
+	appsService            *drive.AppsService
+	accessProposalsService *drive.AccessproposalsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -121,4 +122,11 @@ func getAppsService() *drive.AppsService {
 		appsService = drive.NewAppsService(getDriveService())
 	}
 	return appsService
+}
+
+func getAccessProposalsService() *drive.AccessproposalsService {
+	if accessProposalsService == nil {
+		accessProposalsService = drive.NewAccessproposalsService(getDriveService())
+	}
+	return accessProposalsService
 }
