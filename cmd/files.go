@@ -170,8 +170,7 @@ Not populated for items in shared drives.`,
 	"useContentAsIndexableText": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "bool",
-		Description: `Whether users with only writer permission can modify the file's permissions.
-Not populated for items in shared drives.`,
+		Description:  `Whether to use the uploaded content as indexable text.`,
 	},
 	"inheritedPermissionsDisabled": {
 		AvailableFor: []string{"create", "update"},
