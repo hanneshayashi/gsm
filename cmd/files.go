@@ -99,6 +99,12 @@ Entries with null values are cleared in update and copy requests.`,
 		Description: `Whether the content of the file is read-only.
 If a file is read-only, a new revision of the file may not be added, comments may not be added or modified, and the title of the file may not be modified.`,
 	},
+	"ownerRestricted": {
+		AvailableFor: []string{"copy", "create", "update"},
+		Type:         "bool",
+		Description: `Whether the content restriction can only be modified or removed by a user who owns the file.
+For files in shared drives, any user with organizer capabilities can modify or remove this content restriction.`,
+	},
 	"readOnlyReason": {
 		AvailableFor: []string{"copy", "create", "update"},
 		Type:         "string",
@@ -377,7 +383,7 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 			}
 		}
 	}
-	if flags["readOnly"].IsSet() || flags["readOnlyReason"].IsSet() {
+	if flags["readOnly"].IsSet() || flags["readOnlyReason"].IsSet() || flags["ownerRestricted"].IsSet() {
 		file.ContentRestrictions = []*drive.ContentRestriction{}
 		file.ContentRestrictions = append(file.ContentRestrictions, &drive.ContentRestriction{})
 		if flags["readOnly"].IsSet() {
@@ -390,6 +396,12 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 			file.ContentRestrictions[0].Reason = flags["readOnlyReason"].GetString()
 			if file.ContentRestrictions[0].Reason == "" {
 				file.ContentRestrictions[0].ForceSendFields = append(file.ContentRestrictions[0].ForceSendFields, "Reason")
+			}
+		}
+		if flags["ownerRestricted"].IsSet() {
+			file.ContentRestrictions[0].OwnerRestricted = flags["ownerRestricted"].GetBool()
+			if !file.ContentRestrictions[0].OwnerRestricted {
+				file.ContentRestrictions[0].ForceSendFields = append(file.ContentRestrictions[0].ForceSendFields, "OwnerRestricted")
 			}
 		}
 	}
