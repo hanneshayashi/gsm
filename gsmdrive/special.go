@@ -56,7 +56,7 @@ func createFolder(parent, name string) (*drive.File, error) {
 }
 
 // CopyFoldersAndReturnFilesWithNewParents creates copy of each folder in the supplied channel,
-// adds the new ID to the parents propertie of the files in the source folder and returns the files in a channel.
+// adds the new ID to the parents property of the files in the source folder and returns the files in a channel.
 func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, results chan *drive.File, excludeFolders []string, threads int) (<-chan *drive.File, error) {
 	root, err := GetFolder(folderID)
 	if err != nil {
@@ -91,7 +91,7 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 	return files, nil
 }
 
-// ListFilesRecursive lists all files and foldes in a parent folder recursively
+// ListFilesRecursive lists all files and folders in a parent folder recursively
 func ListFilesRecursive(id, fields string, excludeFolders []string, includeRoot bool, threads int) <-chan *drive.File {
 	wg := &sync.WaitGroup{}
 	folders := make(chan string, threads)

@@ -31,7 +31,7 @@ import (
 // licenseAssignmentsInsertBatchCmd represents the batch command
 var licenseAssignmentsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch inserts user license asignments using a CSV file as input.",
+	Short: "Batch inserts user license assignments using a CSV file as input.",
 	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",

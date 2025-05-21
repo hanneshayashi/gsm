@@ -60,7 +60,7 @@ You can also set up multiple configurations using [gsm configs](https://gsm.haya
 
 ## Output
 
-GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to ommit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parseable JSON or XML (mostly what the API returns).
+GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to omit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parsable JSON or XML (mostly what the API returns).
 
 If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output. Depending on the tools you use and how you want to build your workflow, you may also want to consider using the `--streamOutput` flag, which will cause GSM to stream single objects directly to stdout. This may be significantly faster and use a lot less memory, but keep in mind that not all applications can properly utilize a stream of JSON objects.
 
@@ -80,7 +80,7 @@ Note that this module is created with [Crescendo](https://github.com/PowerShell/
 
 As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
 You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--log` flag when running a command.
-You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
+You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, without having to manually open it.
 
 ## License and Copyright
 

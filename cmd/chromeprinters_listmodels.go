@@ -64,7 +64,7 @@ var chromePrintersListModelsCmd = &cobra.Command{
 		}
 		e := <-err
 		if e != nil {
-			log.Fatalf("Error listmodelsing Chrome printer models: %v", e)
+			log.Fatalf("Error listing Chrome printer models: %v", e)
 		}
 	},
 }

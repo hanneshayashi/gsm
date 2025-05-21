@@ -107,7 +107,7 @@ eventChange        - Notification sent when an event is changed.
 eventCancellation  - Notification sent when an event is cancelled.
 eventResponse      - Notification sent when an attendee responds to the event invitation.
 agenda             - An agenda with the events of the day (sent out in the morning).
-Note that all notifications are sent via email ("method" is always set to "email" atomatically)`,
+Note that all notifications are sent via email ("method" is always set to "email" automatically)`,
 	},
 	"selected": {
 		AvailableFor: []string{"insert", "patch"},

@@ -53,7 +53,7 @@ If you don't specify the "orgUnits/" prefix, GSM will automatically prepend it t
 	"name": {
 		AvailableFor: []string{"move"},
 		Type:         "string",
-		Description: `Use "driveId" instead if you just want to specifify the driveId!
+		Description: `Use "driveId" instead if you just want to specify the driveId!
 The resource name of the OrgMembership.
 Format: orgUnits/{$orgUnitId}/memberships/{$membership}
 The $orgUnitId is the orgUnitId from the Admin SDK OrgUnit resource. To manage a Membership without specifying source orgUnitId, this API also supports the wildcard character '-' for $orgUnitId per https://google.aip.dev/159.
@@ -64,7 +64,7 @@ The $membership shall be of the form {$entityType};{$memberId}, where $entityTyp
 		AvailableFor: []string{"move"},
 		Type:         "string",
 		Description: `The driveId of the Shared Drive to be moved.
-Use this instead of the name, if you just want to specifiy the driveId.
+Use this instead of the name, if you just want to specify the driveId.
 GSM will construct the following "name" for you:
 orgUnits/-/memberships/shared_drive;{$driveId}`,
 		ExcludeFromAll: true,

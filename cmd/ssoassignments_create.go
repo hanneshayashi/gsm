@@ -40,7 +40,7 @@ var ssoAssignmentsCreateCmd = &cobra.Command{
 		}
 		result, err := gsmci.CreateSsoAssignment(flags["fields"].GetString(), r)
 		if err != nil {
-			log.Fatalf("Error createing inbound SAML SSO assignment: %v", err)
+			log.Fatalf("Error creating inbound SAML SSO assignment: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

@@ -59,10 +59,3 @@ func getSpreadsheetsService() *sheets.SpreadsheetsService {
 	}
 	return spreadsheetsService
 }
-
-// func getSpreadsheetsSheetsService() (spreadsheetssheetsService *sheets.SpreadsheetsSheetsService) {
-// 	if spreadsheetssheetsService == nil {
-// 		spreadsheetssheetsService = sheets.NewSpreadsheetsSheetsService(getSheetsService())
-// 	}
-// 	return
-// }

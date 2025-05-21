@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// spreadsheetsBatchUpdateCmd represents the batchupdate command
+// spreadsheetsBatchUpdateCmd represents the batchUpdate command
 var spreadsheetsBatchUpdateCmd = &cobra.Command{
 	Use:               "batchUpdate",
 	Short:             "Applies one or more updates to the spreadsheet.",

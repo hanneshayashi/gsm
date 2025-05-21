@@ -113,7 +113,7 @@ When updating an event, this can be used to only update the participant's respon
 		Type:         "stringSlice",
 		Description: `Must be given in the following format: "--attendees "email=some.address@domain.com;resource=[true|false];optional=[true|false];responseStatus=accepted""
 Can be used multiple times to invite more than one attendee.
-If you batchPatch an event, rememder to specify ALL attendees (not just new ones)!`,
+If you batchPatch an event, remember to specify ALL attendees (not just new ones)!`,
 	},
 	"colorId": {
 		AvailableFor: []string{"insert", "patch"},

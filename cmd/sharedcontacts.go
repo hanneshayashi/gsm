@@ -113,7 +113,7 @@ Must be in the form of "name=Some Name;Value=Some Value;Realm=Some Realm"`,
 	"structuredPostalAddress": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "stringSlice",
-		Description: `Structed Postal Address
+		Description: `Structured Postal Address
 Must be in the form of "mailClass=...;label=...;usage=...;primary=[true|false];agent=...;housename=...;street=...;pobox=...neighborhood=...;city=...;subregion=...;region=...;postcode=...;country=...;formattedAddress=..."`,
 	},
 	"url": {

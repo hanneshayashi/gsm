@@ -90,7 +90,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 	"email": {
 		AvailableFor: []string{"create"},
 		Type:         "string",
-		Description: `Specifies the email address for a user or group pricinpal.
+		Description: `Specifies the email address for a user or group principal.
 Not populated for audience principals.
 User and Group permissions may only be inserted using email address.
 On update requests, if email address is specified, no principal should be specified.`,

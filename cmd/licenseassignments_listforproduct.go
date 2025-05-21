@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// licenseAssignmentsListForProductCmd represents the listForproduct command
+// licenseAssignmentsListForProductCmd represents the listForProduct command
 var licenseAssignmentsListForProductCmd = &cobra.Command{
 	Use:               "listForProduct",
 	Short:             "List all users assigned licenses for a specific product SKU.",

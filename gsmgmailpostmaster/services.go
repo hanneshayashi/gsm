@@ -41,7 +41,7 @@ func SetClient(c *http.Client) {
 
 func getGmailPostmasterService() *gmailpostmastertools.Service {
 	if client == nil {
-		log.Fatalf("gsmgmailpostmastertools.client is not set. Set with gsmgmailpostmastertools.SetClient(client)")
+		log.Fatalf("gsmgmailpostmaster.client is not set. Set with gsmgmailpostmaster.SetClient(client)")
 	}
 	if gmailPostmasterService == nil {
 		var err error

@@ -109,7 +109,7 @@ func ListSsoAssignment(filter, fields string, cap int) (<-chan *ci.InboundSsoAss
 	return ch, err
 }
 
-// PatchSsoAssignment patchs an InboundSsoAssignment for users and devices in a Customer under a given Group or OrgUnit.
+// PatchSsoAssignment patches an InboundSsoAssignment for users and devices in a Customer under a given Group or OrgUnit.
 func PatchSsoAssignment(name, updateMask, fields string, assignment *ci.InboundSsoAssignment) (*googleapi.RawMessage, error) {
 	srv := getInboundSsoAssignmentsService()
 	c := srv.Patch(name, assignment).UpdateMask(updateMask)

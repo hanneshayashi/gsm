@@ -36,7 +36,7 @@ var threadsModifyCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ModifyThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabelIds"].GetStringSlice(), flags["removeLabelIds"].GetStringSlice())
 		if err != nil {
-			log.Fatalf("Error modifiyng thread %s: %v", flags["id"].GetString(), err)
+			log.Fatalf("Error modifying thread %s: %v", flags["id"].GetString(), err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

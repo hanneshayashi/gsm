@@ -222,7 +222,6 @@ type Entry struct {
 	PhoneNumber             []PhoneNumber             `xml:"phoneNumber"`
 }
 
-// Feed was generated 2020-10-11 05:44:12 by hannes_siefert_gmail_com on code-server.
 type Feed struct {
 	XMLName      xml.Name  `xml:"feed"`
 	Text         string    `xml:",chardata"`

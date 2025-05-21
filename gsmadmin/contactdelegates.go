@@ -93,10 +93,10 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	type listDelegateRespone struct {
+	type listDelegateResponse struct {
 		Delegates []*ContactDelegate
 	}
-	delegations := &listDelegateRespone{}
+	delegations := &listDelegateResponse{}
 	err = json.Unmarshal(responseBody, delegations)
 	if err != nil {
 		return nil, err

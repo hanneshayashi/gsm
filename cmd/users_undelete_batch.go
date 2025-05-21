@@ -54,7 +54,7 @@ var usersUndeleteBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						userKey := m["userKey"].GetString()
-						result, err := gsmadmin.UndeletUser(userKey, m["orgUnitPath"].GetString())
+						result, err := gsmadmin.UndeleteUser(userKey, m["orgUnitPath"].GetString())
 						if err != nil {
 							log.Println(err)
 						}

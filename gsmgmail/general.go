@@ -49,10 +49,10 @@ func AccessWindowIsValid(accessWindow string) bool {
 	return false
 }
 
-// ExpungeBehaviourIsValid checks if the given ExpungeBehaviour is valid
+// ExpungeBehaviorIsValid checks if the given ExpungeBehavior is valid
 // see: https://developers.google.com/gmail/api/reference/rest/v1/ImapSettings#expungebehavior
-func ExpungeBehaviourIsValid(expungebehaviour string) bool {
-	switch expungebehaviour {
+func ExpungeBehaviorIsValid(expungeBehavior string) bool {
+	switch expungeBehavior {
 	case "ARCHIVE", "TRASH", "DELETE_FOREVER":
 		return true
 	}

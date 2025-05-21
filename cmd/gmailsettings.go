@@ -205,7 +205,7 @@ func mapToImapSettings(flags map[string]*gsmhelpers.Value) (*gmail.ImapSettings,
 	}
 	if flags["expungeBehavior"].IsSet() {
 		imapSettings.ExpungeBehavior = flags["expungeBehavior"].GetString()
-		if !gsmgmail.ExpungeBehaviourIsValid(imapSettings.ExpungeBehavior) {
+		if !gsmgmail.ExpungeBehaviorIsValid(imapSettings.ExpungeBehavior) {
 			return nil, fmt.Errorf("%s is not a valid value for expunge behavior", imapSettings.ExpungeBehavior)
 		}
 		if imapSettings.ExpungeBehavior == "" {
