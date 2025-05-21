@@ -60,7 +60,7 @@ var permissionsDeleteBatchCmd = &cobra.Command{
 							continue
 						}
 						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.DeletePermission(fileID, permissionID, m["useDomainAdminAccess"].GetBool())
+						result, err := gsmdrive.DeletePermission(fileID, permissionID, m["useDomainAdminAccess"].GetBool(), m["enforceExpansiveAccess"].GetBool())
 						if err != nil {
 							log.Println(err)
 						}

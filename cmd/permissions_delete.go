@@ -34,7 +34,7 @@ var permissionsDeleteCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.DeletePermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["useDomainAdminAccess"].GetBool())
+		result, err := gsmdrive.DeletePermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["enforceExpansiveAccess"].GetBool())
 		if err != nil {
 			log.Fatalf("Error deleting permission: %v", err)
 		}

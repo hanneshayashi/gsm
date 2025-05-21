@@ -54,6 +54,7 @@ var permissionsUpdateRecursiveCmd = &cobra.Command{
 		var wg sync.WaitGroup
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
 		removeExpiration := flags["removeExpiration"].GetBool()
+		enforceExpansiveAccess := flags["enforceExpansiveAccess"].GetBool()
 		fields := flags["fields"].GetString()
 		p, err := mapToPermission(flags)
 		if err != nil {
@@ -68,7 +69,7 @@ var permissionsUpdateRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for file := range files {
-						r, err := gsmdrive.UpdatePermission(file.Id, permissionID, fields, useDomainAdminAccess, removeExpiration, p)
+						r, err := gsmdrive.UpdatePermission(file.Id, permissionID, fields, useDomainAdminAccess, removeExpiration, enforceExpansiveAccess, p)
 						if err != nil {
 							log.Println(err)
 						} else {

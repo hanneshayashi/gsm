@@ -65,7 +65,7 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 							continue
 						}
 						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.UpdatePermission(fileID, permissionID, m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), p)
+						result, err := gsmdrive.UpdatePermission(fileID, permissionID, m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), m["enforceExpansiveAccess"].GetBool(), p)
 						if err != nil {
 							log.Println(err)
 						} else {

@@ -121,6 +121,12 @@ While new values may be supported in the future, the following are currently all
 		Description:  "Issue the request as a domain administrator; if set to true, then the requester will be granted access if the file ID parameter refers to a shared drive and the requester is an administrator of the domain to which the shared drive belongs.",
 		Recursive:    []string{"create", "delete", "list", "update"},
 	},
+	"enforceExpansiveAccess": {
+		AvailableFor: []string{"delete", "update"},
+		Type:         "bool",
+		Description:  "Whether the request should enforce expansive access rules. See also https://developers.google.com/workspace/drive/api/guides/limited-expansive-access",
+		Recursive:    []string{"delete", "update"},
+	},
 	"sendNotificationEmail": {
 		AvailableFor: []string{"create"},
 		Type:         "bool",

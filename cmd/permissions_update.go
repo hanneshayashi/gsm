@@ -42,7 +42,7 @@ var permissionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Unable to determine permissionId: %v", err)
 		}
-		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), p)
+		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), flags["enforceExpansiveAccess"].GetBool(), p)
 		if err != nil {
 			log.Fatalf("Error updating permission: %v", err)
 		}
