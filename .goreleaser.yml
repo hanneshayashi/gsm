@@ -35,7 +35,7 @@ release:
   # If you want to manually examine the release before its live, uncomment this line:
   draft: true
 changelog:
-  skip: true
+  disable: true
 announce:
   skip: true
 universal_binaries:
