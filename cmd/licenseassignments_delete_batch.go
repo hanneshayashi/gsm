@@ -31,7 +31,7 @@ import (
 var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes user license assignments using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

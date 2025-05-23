@@ -31,7 +31,7 @@ import (
 var groupsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieve all groups of a domain or of a user given a userKey (paginated).",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/groups/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -30,7 +30,7 @@ import (
 var revisionsCmd = &cobra.Command{
 	Use:               "revisions",
 	Short:             "Manage revisions of non-Google files (Part of Drive API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/revisions",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

@@ -31,7 +31,7 @@ import (
 var membersHasMemberBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch checks whether users are members of groups using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/members/hasMember",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/members/hasMember",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

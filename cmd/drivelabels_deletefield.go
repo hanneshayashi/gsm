@@ -30,7 +30,7 @@ import (
 var driveLabelsDeleteFieldCmd = &cobra.Command{
 	Use:               "deleteField",
 	Short:             `Deletes a field from an existing label`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#DeleteFieldRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#DeleteFieldRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

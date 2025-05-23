@@ -32,7 +32,7 @@ import (
 var schemasPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches schemas using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas/patch",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/schemas/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

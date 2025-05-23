@@ -30,7 +30,7 @@ import (
 var rolesPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Updates a role. This method supports patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roles/patch",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/roles/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

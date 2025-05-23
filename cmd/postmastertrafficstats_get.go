@@ -31,7 +31,7 @@ var postmasterTrafficStatsGetCmd = &cobra.Command{
 	Use: "get",
 	Short: `Get traffic statistics for a domain on a specific date.
 Returns PERMISSION_DENIED if user does not have permission to access TrafficStats for the domain.`,
-	Long:              "Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var usersMakeAdminBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch makes users admins using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/makeAdmin",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/makeAdmin",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ var driveLabelPermissionsBatchDeleteCmd = &cobra.Command{
 	Use: "batchDelete",
 	Short: `Deletes Label permissions.
 Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.permissions/batchDelete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.permissions/batchDelete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

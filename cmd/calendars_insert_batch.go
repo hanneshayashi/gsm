@@ -32,7 +32,7 @@ import (
 var calendarsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts secondary calendars using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendars/insert",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/calendars/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

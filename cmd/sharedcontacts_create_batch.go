@@ -31,7 +31,7 @@ import (
 var sharedContactsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch create Domain Shared Contacts",
-	Long:  `Implements the API documented at https://developers.google.com/admin-sdk/domain-shared-contacts`,
+	Long:  `Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/create-shared-contacts`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

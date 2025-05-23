@@ -30,7 +30,7 @@ import (
 var usersUndeleteCmd = &cobra.Command{
 	Use:               "undelete",
 	Short:             "Undeletes a deleted user.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/undelete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/undelete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

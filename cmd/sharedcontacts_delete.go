@@ -31,7 +31,7 @@ import (
 var sharedContactsDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete a shared contact by referencing its id url (must begin with https://)",
-	Long:  "",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/update-delete-shared-contacts#delete_shared_contacts",
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
 	},

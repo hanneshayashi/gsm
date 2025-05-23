@@ -29,8 +29,8 @@ import (
 // customersPatchCmd represents the patch command
 var customersPatchCmd = &cobra.Command{
 	Use:               "patch",
-	Short:             "Updates a customer. This method supports patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/customers/patch",
+	Short:             "Patches a customer.",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/customers/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

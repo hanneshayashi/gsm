@@ -30,7 +30,7 @@ import (
 var permissionsCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates a permission for a file or shared drive.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/create",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

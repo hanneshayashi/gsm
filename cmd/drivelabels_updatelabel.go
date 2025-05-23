@@ -30,7 +30,7 @@ import (
 var driveLabelsUpdateLabelCmd = &cobra.Command{
 	Use:               "updateLabel",
 	Short:             `Updates basic properties of a Label.`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#UpdateLabelPropertiesRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#UpdateLabelPropertiesRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

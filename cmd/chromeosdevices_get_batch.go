@@ -32,7 +32,7 @@ import (
 var chromeOsDevicesGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves Chrome OS devices's properties using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/chromeosdevices/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/chromeosdevices/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

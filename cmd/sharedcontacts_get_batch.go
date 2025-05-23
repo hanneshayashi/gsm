@@ -31,7 +31,7 @@ import (
 var sharedContactsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets Domain Shared Contacts via URL / ID using a CSV file as input",
-	Long:  "",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/get-shared-contacts#get_a_single_shared_contact",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var smimeInfoListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists S/MIME configs for the specified send-as alias.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

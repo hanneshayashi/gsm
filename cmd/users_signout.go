@@ -31,7 +31,7 @@ var usersSignOutCmd = &cobra.Command{
 	Use: "signOut",
 	Short: `Sign a user out of all web and device sessions and reset their sign-in cookies.
 User will have to sign in by authenticating again.`,
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/signOut",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/signOut",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

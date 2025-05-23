@@ -30,7 +30,7 @@ import (
 var driveLabelsUpdateFieldTypeCmd = &cobra.Command{
 	Use:   "updateFieldType",
 	Short: `Updates a field for an existing label`,
-	Long: `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#UpdateFieldTypeRequest
+	Long: `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#UpdateFieldTypeRequest
 Warning: Updating selection choices via this command will overwrite the existing choices and create new ones!
 Use the following commands for more granular control over selection choices:
 gsm driveLabels createSelectionChoice

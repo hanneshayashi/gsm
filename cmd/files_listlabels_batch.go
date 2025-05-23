@@ -32,7 +32,7 @@ import (
 var filesListLabelsBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch list the labels on files using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/listLabels",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

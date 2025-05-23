@@ -29,7 +29,7 @@ import (
 var driveLabelUsersCmd = &cobra.Command{
 	Use:               "driveLabelUsers",
 	Short:             "Manages Drive Label Users (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/users",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/users",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

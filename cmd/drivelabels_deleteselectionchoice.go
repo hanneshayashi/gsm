@@ -30,7 +30,7 @@ import (
 var driveLabelsDeleteSelectionChoiceCmd = &cobra.Command{
 	Use:               "deleteSelectionChoice",
 	Short:             `Deletes a choice for an existing label selection field on a label`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#DeleteSelectionChoiceRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#DeleteSelectionChoiceRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var usersSignOutBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch signs out users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/signOut",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/signOut",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ import (
 var filesListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively list files in a folder",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/list",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

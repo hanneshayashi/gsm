@@ -32,7 +32,7 @@ import (
 var chromeOsCommandsGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets commands issued to Chrome OS devices using a CSV file as input",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

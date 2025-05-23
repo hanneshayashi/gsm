@@ -33,7 +33,7 @@ import (
 var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Get users' licenses by product SKU by referencing one or more organizational units and/or groups.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

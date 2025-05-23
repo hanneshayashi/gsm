@@ -30,7 +30,7 @@ import (
 var chromeOsCommandsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets command data a specific command issued to the device.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/customer.devices.chromeos.commands/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

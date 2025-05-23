@@ -30,7 +30,7 @@ import (
 var tokensListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns the set of tokens specified user has issued to 3rd party applications.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/tokens/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/tokens/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

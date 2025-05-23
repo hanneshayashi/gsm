@@ -32,7 +32,7 @@ import (
 var delegatesCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch adds delegates using a CSV file as input.",
-	Long:  `Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create`,
+	Long:  `Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates/create`,
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

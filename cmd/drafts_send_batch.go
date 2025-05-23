@@ -32,7 +32,7 @@ import (
 var draftsSendBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch sends drafts using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/send",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/send",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

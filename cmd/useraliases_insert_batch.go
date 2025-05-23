@@ -32,7 +32,7 @@ import (
 var userAliasesInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch insert user aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.aliases/insert",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users.aliases/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

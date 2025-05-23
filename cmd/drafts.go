@@ -26,6 +26,20 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
+// draftsCmd represents the drafts command
+var draftsCmd = &cobra.Command{
+	Use:               "drafts",
+	Short:             "Manage Drafts (Part of Gmail API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts",
+	DisableAutoGenTag: true,
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	},
+}
+
 var draftFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "send", "update"},
@@ -107,20 +121,6 @@ See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more
 	},
 }
 var draftFlagsALL = gsmhelpers.GetAllFlags(draftFlags)
-
-// draftsCmd represents the drafts command
-var draftsCmd = &cobra.Command{
-	Use:               "drafts",
-	Short:             "Manage Drafts (Part of Gmail API)",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts",
-	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, _ []string) {
-		err := cmd.Help()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	},
-}
 
 func init() {
 	rootCmd.AddCommand(draftsCmd)

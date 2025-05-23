@@ -30,7 +30,7 @@ import (
 var labelsCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates a new label.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/create",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

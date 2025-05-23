@@ -28,8 +28,8 @@ import (
 // contactDelegatesCmd represents the contactDelegates command
 var contactDelegatesCmd = &cobra.Command{
 	Use:               "contactDelegates",
-	Short:             "Manage users' contact contact delegations (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/contact-delegation/guides",
+	Short:             "Manage users' contact contact delegations (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/contact-delegation/guides",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

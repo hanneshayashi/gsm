@@ -30,7 +30,7 @@ import (
 var driveLabelLimitsGetLabelCmd = &cobra.Command{
 	Use:               "getLabel",
 	Short:             "Get the constraints on the structure of a Label; such as, the maximum number of Fields allowed and maximum length of the label title.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/limits/getLabel",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/limits/getLabel",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

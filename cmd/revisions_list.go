@@ -31,7 +31,7 @@ import (
 var revisionsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists a file's revisions.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/revisions/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

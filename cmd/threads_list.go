@@ -31,7 +31,7 @@ import (
 var threadsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the threads in the user's mailbox.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

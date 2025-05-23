@@ -30,7 +30,7 @@ import (
 var messagesGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Gets the specified message.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

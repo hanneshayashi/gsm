@@ -29,7 +29,7 @@ import (
 var driveLabelLocksCmd = &cobra.Command{
 	Use:               "driveLabelLocks",
 	Short:             "Manages Drive Label Locks (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.locks",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.locks",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

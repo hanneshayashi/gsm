@@ -30,7 +30,7 @@ import (
 var driveLabelsCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates a new Label.",
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/create`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -36,7 +36,7 @@ If there is a draft revision, a new disabled draft revision will be created base
 Older draft revisions will be deleted.
 
 Once disabled, a label may be deleted with "gsm driveLabels delete".
-Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/disable`,
+Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/disable`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

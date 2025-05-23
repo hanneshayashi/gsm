@@ -31,7 +31,7 @@ import (
 var tokensDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch delete access tokens issued by a user using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/tokens/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/tokens/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

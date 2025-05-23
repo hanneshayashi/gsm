@@ -29,8 +29,8 @@ import (
 // domainAliasesCmd represents the domainAliases command
 var domainAliasesCmd = &cobra.Command{
 	Use:               "domainAliases",
-	Short:             "Manage Domain Aliases (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/domainAliases",
+	Short:             "Manage Domain Aliases (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/domainAliases",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

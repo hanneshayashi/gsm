@@ -30,7 +30,7 @@ import (
 var forwardingAddressesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes the specified forwarding address and revokes any verification that may have been required.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

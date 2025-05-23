@@ -32,7 +32,7 @@ import (
 var smimeInfoGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch gets the specified S/MIME config for the specified send-as aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ import (
 var twoStepVerificationTurnOffRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Turns off two step verification for users by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/twoStepVerification/turnOff",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

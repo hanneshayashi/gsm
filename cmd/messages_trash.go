@@ -30,7 +30,7 @@ import (
 var messagesTrashCmd = &cobra.Command{
 	Use:               "trash",
 	Short:             "Moves the specified message to the trash.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/trash",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/trash",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

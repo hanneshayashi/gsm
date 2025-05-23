@@ -30,7 +30,7 @@ import (
 var contactDelegatesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the delegates of a given user.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

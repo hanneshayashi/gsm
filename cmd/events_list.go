@@ -31,7 +31,7 @@ import (
 var eventsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns events on the specified calendar.",
-	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/events/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

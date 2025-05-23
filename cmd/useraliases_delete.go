@@ -30,7 +30,7 @@ import (
 var userAliasesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Removes an alias.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.aliases/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users.aliases/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

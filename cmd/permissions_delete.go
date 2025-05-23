@@ -30,7 +30,7 @@ import (
 var permissionsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a permission.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

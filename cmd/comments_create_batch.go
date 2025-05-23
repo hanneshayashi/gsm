@@ -32,7 +32,7 @@ import (
 var commentsCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates new comments on a file using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/comments/create",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

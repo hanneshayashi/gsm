@@ -30,7 +30,7 @@ import (
 var driveLabelsDisableSelectionChoiceCmd = &cobra.Command{
 	Use:               "disableSelectionChoice",
 	Short:             `Disables a choice for an existing label selection field on a label`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#DisableSelectionChoiceRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#DisableSelectionChoiceRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

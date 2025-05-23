@@ -31,7 +31,7 @@ var filesCopyCmd = &cobra.Command{
 	Use: "copy",
 	Short: `Creates a copy of a file and applies any requested updates with patch semantics.
 Use "files copy recursive" to copy folders.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/copy",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/copy",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

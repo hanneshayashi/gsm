@@ -31,7 +31,7 @@ import (
 var verificationCodesInvalidateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch invalidates backup verification codes for users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/verificationCodes/invalidate",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/verificationCodes/invalidate",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var driveLabelsCreateFieldCmd = &cobra.Command{
 	Use:               "createField",
 	Short:             `Creates a new field for an existing label`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#CreateFieldRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#CreateFieldRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -25,6 +25,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// usersCmd represents the users command
+var twoStepVerificationCmd = &cobra.Command{
+	Use:               "twoStepVerification",
+	Short:             "Manage Two Step Verification for users (Park of Admin SDK)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/twoStepVerification",
+	DisableAutoGenTag: true,
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	},
+}
+
 var twoStepVerificationFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"turnOff"},
@@ -36,20 +50,6 @@ The value can be the user's primary email address, alias email address, or uniqu
 	},
 }
 var twoStepVerificationFlagsALL = gsmhelpers.GetAllFlags(userFlags)
-
-// usersCmd represents the users command
-var twoStepVerificationCmd = &cobra.Command{
-	Use:               "twoStepVerification",
-	Short:             "Manage Two Step Verification for users (Park of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
-	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, _ []string) {
-		err := cmd.Help()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	},
-}
 
 func init() {
 	rootCmd.AddCommand(twoStepVerificationCmd)

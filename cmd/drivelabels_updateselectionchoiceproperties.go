@@ -30,7 +30,7 @@ import (
 var driveLabelsUpdateSelectionChoicePropertiesCmd = &cobra.Command{
 	Use:               "updateSelectionChoiceProperties",
 	Short:             `Updates the properties of a choice for an existing selection field on a label`,
-	Long:              `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/delta#UpdateSelectionChoicePropertiesRequest`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/delta#UpdateSelectionChoicePropertiesRequest`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

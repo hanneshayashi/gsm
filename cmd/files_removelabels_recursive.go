@@ -32,7 +32,7 @@ import (
 var filesRemoveLabelsRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively removes the specified labels on a folder and all of its children.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/modifyLabels",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/modifyLabels",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

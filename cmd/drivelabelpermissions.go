@@ -31,7 +31,7 @@ import (
 var driveLabelPermissionsCmd = &cobra.Command{
 	Use:   "driveLabelPermissions",
 	Short: "Manages Drive Label Permissions (Part of Drive Labels API)",
-	Long: `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.permissions
+	Long: `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.permissions
 Use ONE of the following to specify the target label:
 name
 email

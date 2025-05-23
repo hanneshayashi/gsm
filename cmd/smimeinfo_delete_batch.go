@@ -31,7 +31,7 @@ import (
 var smimeInfoDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified S/MIME configs for the specified send-as aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

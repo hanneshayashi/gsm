@@ -32,7 +32,7 @@ import (
 var groupsInsertBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch inserts groups using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/groups/insert",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/groups/insert",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

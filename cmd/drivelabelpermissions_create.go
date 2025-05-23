@@ -32,7 +32,7 @@ var driveLabelPermissionsCreateCmd = &cobra.Command{
 	Short: `Updates a Label's permissions.
 If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated.
 Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.permissions/create",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.permissions/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

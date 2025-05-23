@@ -30,7 +30,7 @@ import (
 var contactDelegatesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a delegate from a given user.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/contact-delegation/reference/rest/v1/admin.contacts.v1.users.delegates/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

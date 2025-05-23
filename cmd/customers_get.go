@@ -30,7 +30,7 @@ import (
 var customersGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a customer using an ID or retrieve your own customer without knowing your ID.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/customers/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/customers/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

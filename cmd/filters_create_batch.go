@@ -32,7 +32,7 @@ import (
 var filtersCreateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch creates filters using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters/create",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var forwardingAddressesCmd = &cobra.Command{
 	Use:               "forwardingAddresses",
 	Short:             "Manage users' forwarding addresses (Part of Gmail API)",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.forwardingAddresses",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

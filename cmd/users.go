@@ -26,6 +26,20 @@ import (
 	admin "google.golang.org/api/admin/directory/v1"
 )
 
+// usersCmd represents the users command
+var usersCmd = &cobra.Command{
+	Use:               "users",
+	Short:             "Manage Users (Park of Admin SDK)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users",
+	DisableAutoGenTag: true,
+	Run: func(cmd *cobra.Command, _ []string) {
+		err := cmd.Help()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	},
+}
+
 var userFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "makeAdmin", "update", "signOut", "undelete"},
@@ -573,18 +587,8 @@ DESCENDING  - Descending order.`,
 }
 var userFlagsALL = gsmhelpers.GetAllFlags(userFlags)
 
-// usersCmd represents the users command
-var usersCmd = &cobra.Command{
-	Use:               "users",
-	Short:             "Manage Users (Park of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users",
-	DisableAutoGenTag: true,
-	Run: func(cmd *cobra.Command, _ []string) {
-		err := cmd.Help()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	},
+func init() {
+	rootCmd.AddCommand(usersCmd)
 }
 
 func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
@@ -810,8 +814,4 @@ func mapToUser(flags map[string]*gsmhelpers.Value) (*admin.User, error) {
 		}
 	}
 	return user, nil
-}
-
-func init() {
-	rootCmd.AddCommand(usersCmd)
 }

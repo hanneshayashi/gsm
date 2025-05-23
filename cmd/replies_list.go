@@ -31,7 +31,7 @@ import (
 var repliesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists a comment's replies.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

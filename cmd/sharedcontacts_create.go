@@ -30,7 +30,7 @@ import (
 var sharedContactsCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a Domain Shared Contact",
-	Long: `Implements the API documented at https://developers.google.com/admin-sdk/domain-shared-contacts
+	Long: `Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/create-shared-contacts
 Example: gsm sharedContacts create --domain "example.org" --givenName "Jane" --familyName "Doe" --email "displayName=Jane Doe;address=jane@doe.net;primary=false" --email "displayName=Jane Doe;address=jane.doe@somedomain.net;primary=true" --phoneNumber "phoneNumber=+49 127 12381;primary=true;label=Work" --phoneNumber "phoneNumber=+49 21891238;primary=false;label=Home" --organization "orgName=Some Company;orgDepartment=Some Department;orgTitle=Some Title"`,
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",

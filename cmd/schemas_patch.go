@@ -30,7 +30,7 @@ import (
 var schemasPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Patches a custom schema",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas/patch",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/schemas/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

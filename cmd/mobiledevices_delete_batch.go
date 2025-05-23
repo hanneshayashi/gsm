@@ -31,7 +31,7 @@ import (
 var mobileDevicesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes mobile devices using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/mobiledevices/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/mobiledevices/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

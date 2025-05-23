@@ -32,7 +32,7 @@ import (
 var licenseAssignmentsDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Removes licenses from users by referencing one or more organizational units and/or groups.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

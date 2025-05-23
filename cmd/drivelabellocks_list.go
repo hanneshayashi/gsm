@@ -31,7 +31,7 @@ import (
 var driveLabelLocksListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the LabelLocks on a Label.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.locks/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.locks/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

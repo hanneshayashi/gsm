@@ -30,7 +30,7 @@ import (
 var sendAsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes the specified send-as alias. Revokes any verification that may have been required for using it.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

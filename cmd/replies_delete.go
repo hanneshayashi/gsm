@@ -30,7 +30,7 @@ import (
 var repliesDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a reply.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

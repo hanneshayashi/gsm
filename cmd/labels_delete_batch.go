@@ -31,7 +31,7 @@ import (
 var labelsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes the specified labels using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

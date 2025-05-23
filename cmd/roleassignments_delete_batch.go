@@ -31,7 +31,7 @@ import (
 var roleAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes role assignments using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roleAssignments/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/roleAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

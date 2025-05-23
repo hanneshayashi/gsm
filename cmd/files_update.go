@@ -33,7 +33,7 @@ import (
 var filesUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Updates a file's metadata and/or content. This method supports patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/update",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

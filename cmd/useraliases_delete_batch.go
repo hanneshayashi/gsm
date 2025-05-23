@@ -31,7 +31,7 @@ import (
 var userAliasesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes user aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.aliases/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users.aliases/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

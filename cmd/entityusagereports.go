@@ -29,8 +29,8 @@ import (
 // entityUsageReportsCmd represents the entityUsageReports command
 var entityUsageReportsCmd = &cobra.Command{
 	Use:               "entityUsageReports",
-	Short:             "Manage (get) Entity Usage Reports (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/entityUsageReports",
+	Short:             "Manage (get) Entity Usage Reports (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/entityUsageReports",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

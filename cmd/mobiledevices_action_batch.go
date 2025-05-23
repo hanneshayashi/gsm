@@ -31,7 +31,7 @@ import (
 var mobileDevicesActionBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch applies actions on mobile devices using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/mobiledevices/action",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/mobiledevices/action",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

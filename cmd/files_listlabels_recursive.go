@@ -32,7 +32,7 @@ import (
 var filesListLabelsRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively lists labels on a folder and all of its children.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/listLabels",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

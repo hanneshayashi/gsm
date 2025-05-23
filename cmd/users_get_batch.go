@@ -32,7 +32,7 @@ import (
 var usersGetBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch retrieves users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

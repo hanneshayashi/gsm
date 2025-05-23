@@ -30,7 +30,7 @@ import (
 var commentsUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Updates a comment with patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/comments/update",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

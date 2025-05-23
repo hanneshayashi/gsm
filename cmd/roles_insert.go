@@ -30,7 +30,7 @@ import (
 var rolesInsertCmd = &cobra.Command{
 	Use:               "insert",
 	Short:             "Creates a role.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/roles/insert",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/roles/insert",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -30,7 +30,7 @@ import (
 var schemasGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieve a custom schema.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/schemas/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

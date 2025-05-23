@@ -31,7 +31,7 @@ import (
 var sendAsVerifyBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch sends verification emails for send-as aliases using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/verify",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/verify",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

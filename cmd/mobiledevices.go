@@ -29,8 +29,8 @@ import (
 // mobileDevicesCmd represents the mobileDevices command
 var mobileDevicesCmd = &cobra.Command{
 	Use:               "mobileDevices",
-	Short:             "Manage Mobile Devices (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/mobiledevices",
+	Short:             "Manage Mobile Devices (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/mobiledevices",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

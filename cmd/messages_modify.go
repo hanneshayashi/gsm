@@ -30,7 +30,7 @@ import (
 var messagesModifyCmd = &cobra.Command{
 	Use:               "modify",
 	Short:             "Modifies the labels on the specified message.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/modify",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/modify",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

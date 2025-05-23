@@ -31,7 +31,7 @@ import (
 var usersDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -31,7 +31,7 @@ import (
 var draftsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the drafts in the user's mailbox.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

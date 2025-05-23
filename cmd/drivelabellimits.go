@@ -29,7 +29,7 @@ import (
 var driveLabelLimitsCmd = &cobra.Command{
 	Use:               "driveLabelLimits",
 	Short:             "Manages Drive Label Limits (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/limits",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/limits",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

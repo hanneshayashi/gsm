@@ -32,7 +32,7 @@ import (
 var calendarResourcesPatchBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch patches calendar resources using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/resources.calendars/patch",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/resources.calendars/patch",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

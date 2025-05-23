@@ -32,7 +32,7 @@ import (
 var messagesModifyBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch modifies messages using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.messages/modify",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/modify",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

@@ -30,7 +30,7 @@ import (
 var filesModifyLabelsCmd = &cobra.Command{
 	Use:               "modifyLabels",
 	Short:             "Modifies the set of labels on a file.",
-	Long:              "Implements the API documented athttps://developers.google.com/drive/api/v3/reference/files/modifyLabels",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/modifyLabels",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

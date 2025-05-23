@@ -32,7 +32,7 @@ var gmailSettingsUpdateLanguageCmd = &cobra.Command{
 	Short: "Updates language settings.",
 	Long: `If successful, the return object contains the displayLanguage that was saved for the user, which may differ from the value passed into the request.
 This is because the requested displayLanguage may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.
-Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings/updateLanguage`,
+Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updateLanguage`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

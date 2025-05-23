@@ -31,7 +31,7 @@ import (
 var drivesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Lists the user's shared drives.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

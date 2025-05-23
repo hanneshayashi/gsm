@@ -34,7 +34,7 @@ var driveLabelsEnableCmd = &cobra.Command{
 This will result in a new published revision based on the current disabled published revision.
 If there is an existing disabled draft revision, a new revision will be created based on that draft and will be enabled.
 
-Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/enable`,
+Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/enable`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

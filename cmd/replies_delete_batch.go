@@ -31,7 +31,7 @@ import (
 var repliesDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes replies by ID using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/replies/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

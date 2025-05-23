@@ -30,7 +30,7 @@ import (
 var chromeOsDevicesGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Retrieves a Chrome OS device's properties.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/chromeosdevices/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/chromeosdevices/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

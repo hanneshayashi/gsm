@@ -31,7 +31,7 @@ import (
 var sharedContactsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes Domain Shared Contacts via URL / ID using a CSV file as input",
-	Long:  "",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/update-delete-shared-contacts#delete_shared_contacts",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

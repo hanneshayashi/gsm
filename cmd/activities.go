@@ -28,8 +28,8 @@ import (
 // activitiesCmd represents the activities command
 var activitiesCmd = &cobra.Command{
 	Use:               "activities",
-	Short:             "Manage (list) activities (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities",
+	Short:             "Manage (list) activities (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/activities",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

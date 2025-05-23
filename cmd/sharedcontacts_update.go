@@ -31,7 +31,9 @@ var sharedContactsUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update a shared contact",
 	Long: `Only supplied values will be updated, but multi-value fields must be supplied with ALL values.
-Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;label=Mobile" --url https://www.google.com/m8/feeds/contacts/example.org/base/a1034b28e4f62f3`,
+Example: sharedContacts update --phoneNumber "phoneNumber=+12348;primary=false;label=Mobile" --url https://www.google.com/m8/feeds/contacts/example.org/base/a1034b28e4f62f3
+
+Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/update-delete-shared-contacts#update_a_shared_contact`,
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",
 	},

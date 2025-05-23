@@ -31,7 +31,7 @@ import (
 var filesListLabelsCmd = &cobra.Command{
 	Use:               "listLabels",
 	Short:             "Lists the labels on a file.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/listLabels",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/listLabels",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

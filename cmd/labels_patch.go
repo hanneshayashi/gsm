@@ -30,7 +30,7 @@ import (
 var labelsPatchCmd = &cobra.Command{
 	Use:               "patch",
 	Short:             "Patch the specified label.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.labels/patch",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/patch",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

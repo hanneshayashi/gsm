@@ -30,7 +30,7 @@ import (
 var spreadsheetsCreateCmd = &cobra.Command{
 	Use:               "create",
 	Short:             "Creates a spreadsheet, returning the newly created spreadsheet.",
-	Long:              "Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/create",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -31,7 +31,7 @@ import (
 var twoStepVerificationTurnOffBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch turns off two step verification for users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/twoStepVerification/turnOff",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/twoStepVerification/turnOff",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

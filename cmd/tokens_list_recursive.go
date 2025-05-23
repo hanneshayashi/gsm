@@ -32,7 +32,7 @@ import (
 var tokensListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Returns a list of tokens issued to 3rd party applications by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/tokens/list",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/tokens/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

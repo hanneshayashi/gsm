@@ -30,7 +30,7 @@ import (
 var drivesUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Updates the metadata for a shared drive.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives/update",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

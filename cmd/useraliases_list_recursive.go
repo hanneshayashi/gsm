@@ -31,7 +31,7 @@ import (
 var userAliasesListRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: `Lists user aliases by referencing one or more organizational units and/or groups.`,
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.aliases/list",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users.aliases/list",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

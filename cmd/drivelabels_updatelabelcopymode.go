@@ -32,7 +32,7 @@ var driveLabelsUpdateLabelCopyModeCmd = &cobra.Command{
 	Short: `Updates a Label's CopyMode`,
 	Long: `Changes to this policy are not revisioned, do not require publishing, and take effect immediately.
 
-Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/updateLabelCopyMode`,
+Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/updateLabelCopyMode`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
