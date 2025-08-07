@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,10 +59,3 @@ func getSpreadsheetsService() *sheets.SpreadsheetsService {
 	}
 	return spreadsheetsService
 }
-
-// func getSpreadsheetsSheetsService() (spreadsheetssheetsService *sheets.SpreadsheetsSheetsService) {
-// 	if spreadsheetssheetsService == nil {
-// 		spreadsheetssheetsService = sheets.NewSpreadsheetsSheetsService(getSheetsService())
-// 	}
-// 	return
-// }

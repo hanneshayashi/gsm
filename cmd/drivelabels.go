@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import (
 var driveLabelsCmd = &cobra.Command{
 	Use:               "driveLabels",
 	Short:             "Managed driveLabels (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -358,7 +358,7 @@ func mapToDriveLabelField(m map[string]string) (*drivelabels.GoogleAppsDriveLabe
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", m["valueType"])
+		return nil, fmt.Errorf("unknown valueType: %s", m["valueType"])
 	}
 	return field, nil
 }
@@ -533,7 +533,7 @@ func mapToUpdateDriveLabelFieldTypeRequest(flags map[string]*gsmhelpers.Value) (
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", valueType)
+		return nil, fmt.Errorf("unknown valueType: %s", valueType)
 	}
 	return request, nil
 }
@@ -684,7 +684,7 @@ func mapToCreateDriveLabelFieldRequest(flags map[string]*gsmhelpers.Value) (*dri
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Unknown valueType: %s", valueType)
+		return nil, fmt.Errorf("unknown valueType: %s", valueType)
 	}
 	return request, nil
 }

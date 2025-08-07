@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 var driveLabelLocksCmd = &cobra.Command{
 	Use:               "driveLabelLocks",
 	Short:             "Manages Drive Label Locks (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.locks",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.locks",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -54,6 +54,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var labelLockFlagsALL = gsmhelpers.GetAllFlags(driveLabelLockFlags)
 
 func init() {

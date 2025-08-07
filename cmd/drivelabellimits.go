@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 var driveLabelLimitsCmd = &cobra.Command{
 	Use:               "driveLabelLimits",
 	Short:             "Manages Drive Label Limits (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/limits",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/limits",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -54,6 +54,7 @@ However, only an empty string seems to work currently, so leave empty, if you ge
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var labelLimitFlagsALL = gsmhelpers.GetAllFlags(driveLabelLimitFlags)
 
 func init() {

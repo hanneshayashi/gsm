@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ func BatchDeleteLabelPermissions(parent string, request *drivelabels.GoogleAppsD
 	return result, err
 }
 
-// BatchDeleteLabelPermissions updatess Label permissions.
+// BatchDeleteLabelPermissions updates Label permissions.
 // If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated.
 // Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.
 func BatchUpdateLabelPermissions(parent, fields string, request *drivelabels.GoogleAppsDriveLabelsV2BatchUpdateLabelPermissionsRequest) (*drivelabels.GoogleAppsDriveLabelsV2BatchUpdateLabelPermissionsResponse, error) {

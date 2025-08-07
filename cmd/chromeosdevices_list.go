@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var chromeOsDevicesListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Retrieves a paginated list of Chrome OS devices within an account.",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/chromeosdevices/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/chromeosdevices/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

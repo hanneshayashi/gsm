@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var sharedContactsCmd = &cobra.Command{
 	Use:               "sharedContacts",
 	Short:             "Manage Domain Shared Contacts (Part of Shared Contacts API - not Admin SDK!)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/domain-shared-contacts",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/overview",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -44,7 +44,7 @@ var sharedContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag
 	"domain": {
 		AvailableFor: []string{"create", "delete", "get", "list"},
 		Type:         "string",
-		Description:  "DNS domain the contact should be created in",
+		Description:  "DNS domain of the shared contact",
 		Required:     []string{"create", "delete", "get", "list"},
 	},
 	"givenName": {
@@ -113,7 +113,7 @@ Must be in the form of "name=Some Name;Value=Some Value;Realm=Some Realm"`,
 	"structuredPostalAddress": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "stringSlice",
-		Description: `Structed Postal Address
+		Description: `Structured Postal Address
 Must be in the form of "mailClass=...;label=...;usage=...;primary=[true|false];agent=...;housename=...;street=...;pobox=...neighborhood=...;city=...;subregion=...;region=...;postcode=...;country=...;formattedAddress=..."`,
 	},
 	"url": {

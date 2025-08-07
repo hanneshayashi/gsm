@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 var permissionsUpdateBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch updates permissions for a file or shared drive using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/update",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/update",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -65,7 +65,7 @@ var permissionsUpdateBatchCmd = &cobra.Command{
 							continue
 						}
 						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.UpdatePermission(fileID, permissionID, m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), p)
+						result, err := gsmdrive.UpdatePermission(fileID, permissionID, m["fields"].GetString(), m["useDomainAdminAccess"].GetBool(), m["removeExpiration"].GetBool(), m["enforceExpansiveAccess"].GetBool(), p)
 						if err != nil {
 							log.Println(err)
 						} else {

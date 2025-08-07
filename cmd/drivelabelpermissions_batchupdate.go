@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ var driveLabelPermissionsBatchUpdateCmd = &cobra.Command{
 	Short: `Updates Label permissions.
 If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated.
 Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.permissions/batchUpdate",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.permissions/batchUpdate",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -42,7 +42,7 @@ Permissions affect the Label resource as a whole, are not revisioned, and do not
 		}
 		result, err := gsmdrivelabels.BatchUpdateLabelPermissions(gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "labels/"), flags["fields"].GetString(), request)
 		if err != nil {
-			log.Fatalf("Error batch updatig Drive Label permission: %v", err)
+			log.Fatalf("Error batch updating Drive Label permission: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

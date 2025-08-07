@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var usersUndeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch undeletes users using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/undelete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users/undelete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -54,7 +54,7 @@ var usersUndeleteBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						userKey := m["userKey"].GetString()
-						result, err := gsmadmin.UndeletUser(userKey, m["orgUnitPath"].GetString())
+						result, err := gsmadmin.UndeleteUser(userKey, m["orgUnitPath"].GetString())
 						if err != nil {
 							log.Println(err)
 						}

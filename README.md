@@ -52,7 +52,7 @@ You can use GSM in one of three modes
         Note that you will only have access to the resources and APIs your account can access!
 - dwd:  DWD (Domain Wide Delegation) allows you to utilize a GCP service account to impersonate user accounts in a Workspace domain.\
  You need to add the service account and the appropriate scopes in the Admin Console of your Workspace domain to us this mode.
-- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize Application Default Credentials, such as the implicit credentials of a Compute Engine instance's Service Account or the "application-default" credentials of the Google Cloud SDK (gcloud), to impersonate a Service Account. This means you don't have to manage Service Account key files.
+- adc:  ADC ("Application Default Credentials") mode works like DWD mode, but it allows you to utilize Application Default Credentials, such as the implicit credentials of a Compute Engine instance's Service Account or the "application-default" credentials of the Google Cloud SDK (gcloud), to impersonate a Service Account. This means you don't have to manage Service Account key files. You can also use this mode to use a Service Account directly for API access without specifying a subject to impersonate. Please note that most APIs will not work this way. Only very few Google Workspace APIs support direct access by a Service Account but the option is there if you want to try!
 
 See [Setup](https://gsm.hayashi-ke.online/setup) on how to set up GSM in these modes.
 
@@ -60,11 +60,9 @@ You can also set up multiple configurations using [gsm configs](https://gsm.haya
 
 ## Output
 
-GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. To that end, I made the decision to ommit the implementation of "interesting" output that tells you what GSM is doing, because, while it may be neat to watch, it doesn't serve a purpose when you want to create a script that actually uses the output and I hate the idea of parsing unformatted text to make decisions. Therefore, all* of GSM's console output is parseable JSON or XML (mostly what the API returns).
+GSM is a CLI for the official Google API. It is designed to be easily usable in scripts and workflows. By default, GSM will output errors to `stderr` *and* the log file in your home directory (see [Logging](#logging)). You can change this with the `--errorOutput` flag either when creating your config or when running individual commands. Output of commands will always be sent to `stdout`. Most commands output in JSON format by default in the same way the API would respond.
 
-If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output. Depending on the tools you use and how you want to build your workflow, you may also want to consider using the `--streamOutput` flag, which will cause GSM to stream single objects directly to stdout. This may be significantly faster and use a lot less memory, but keep in mind that not all applications can properly utilize a stream of JSON objects.
-
-*the [configs](https://gsm.hayashi-ke.online/gsm/configs) command is a notable exception.
+If you want to use GSM's output in scripts, you may want to consider using the `--compressOutput` flag, to keep GSM from unnecessarily "prettying up" the output. Depending on the tools you use and how you want to build your workflow, you may also want to consider using the `--streamOutput` flag, which will cause GSM to **stream** single objects directly to `stdout`. In many cases, this is significantly faster and uses a lot less memory because GSM does not need to wait for a command to return all objects to build the return object in memory. However, not all application may properly work with a stream of objects.
 
 ### Scripting examples
 
@@ -78,14 +76,14 @@ Note that this module is created with [Crescendo](https://github.com/PowerShell/
 
 ### Logging
 
-As useful as the above may be, sometimes you need to understand what is happening or need to know why something didn't work as expected. For those times, GSM creates a log file in your home directory called "gsm.log" that contains error messages.\
+GSM creates a log file in your home directory called `gsm.log` that contains error messages.\
 You can configure the location and name of the log file, either in your config file (see [configs](https://gsm.hayashi-ke.online/gsm/configs)) or by using the `--log` flag when running a command.
-You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, wthout having to manually open it.
+You can also use the [log command](https://gsm.hayashi-ke.online/gsm/log) to view or clear the log, without having to manually open it.
 
 ## License and Copyright
 
 GoSpace Manager (GSM) is licensed under the [GPLv3](https://gsm.hayashi-ke.online/license) as free software.\
-Copyright © 2020-2023 Hannes Hayashi.
+Copyright © 2020 Hannes Hayashi.
 
 ## Third Party Libraries
 

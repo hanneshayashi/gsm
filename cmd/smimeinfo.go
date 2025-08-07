@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import (
 var smimeInfoCmd = &cobra.Command{
 	Use:               "smimeInfo",
 	Short:             "Manage users' S/MIME configs for send-as aliases",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

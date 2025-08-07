@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@ import (
 // userUsageReportsCmd represents the userUsageReports command
 var userUsageReportsCmd = &cobra.Command{
 	Use:               "userUsageReports",
-	Short:             "Manage (get) User Usage Reports (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/userUsageReport",
+	Short:             "Manage (get) User Usage Reports (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/userUsageReport",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

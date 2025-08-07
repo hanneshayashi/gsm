@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@ import (
 	"strings"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"github.com/mitchellh/go-homedir"
 	admin "google.golang.org/api/admin/directory/v1"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/calendar/v3"
 	ci "google.golang.org/api/cloudidentity/v1"
+	cibeta "google.golang.org/api/cloudidentity/v1beta1"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/drivelabels/v2"
 	"google.golang.org/api/gmail/v1"
@@ -48,6 +48,7 @@ type GSMConfig struct {
 	Mode            string   `yaml:"mode,omitempty"`
 	Subject         string   `yaml:"subject,omitempty"`
 	LogFile         string   `yaml:"logFile,omitempty"`
+	ErrorOutput     string   `yaml:"errorOutput,omitempty"`
 	Scopes          []string `yaml:"scopes,omitempty"`
 	Threads         int      `yaml:"threads,omitempty"`
 	StandardDelay   int      `yaml:"standardDelay,omitempty"`
@@ -70,16 +71,17 @@ func GetDefaultScopes() []string {
 		admin.AdminDirectoryUserschemaScope,
 		"https://www.google.com/m8/feeds/contacts/",
 		drive.DriveScope,
+		drive.DriveAppsReadonlyScope,
 		gmail.MailGoogleComScope,
 		gmail.GmailSettingsSharingScope,
 		gmail.GmailSettingsBasicScope,
 		gmail.GmailModifyScope,
 		ci.CloudIdentityGroupsScope,
 		"https://www.googleapis.com/auth/cloud-identity.userinvitations",
-		"https://www.googleapis.com/auth/cloud-identity.inboundsso",
-		ci.CloudIdentityDevicesScope,
+		ci.CloudIdentityInboundssoScope,
+		// ci.CloudIdentityDevicesScope,
 		ci.CloudIdentityDevicesLookupScope,
-		"https://www.googleapis.com/auth/cloud-identity.orgunits",
+		cibeta.CloudIdentityOrgunitsScope,
 		groupssettings.AppsGroupsSettingsScope,
 		calendar.CalendarScope,
 		licensing.AppsLicensingScope,
@@ -125,6 +127,9 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 	}
 	if config.LogFile != "" {
 		configOld.LogFile = config.LogFile
+	}
+	if config.ErrorOutput != "" {
+		configOld.ErrorOutput = config.ErrorOutput
 	}
 	if config.Name != "" {
 		_, err = GetConfig(config.Name)
@@ -173,7 +178,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 			return "", fmt.Errorf("serviceAccount is not used with %s mode", config.Mode)
 		}
 	}
-	if (config.Mode == "dwd" || config.Mode == "adc") && config.Subject == "" {
+	if config.Mode == "dwd" && config.Subject == "" {
 		return "", fmt.Errorf("subject is required with %s mode", config.Mode)
 	}
 	if config.Mode == "user" && config.Subject != "" {
@@ -186,11 +191,14 @@ func CreateConfig(config *GSMConfig) (string, error) {
 		config.StandardDelay = 500
 	}
 	if config.LogFile == "" {
-		home, err := homedir.Dir()
+		home, err := os.UserHomeDir()
 		if err != nil {
 			return "", err
 		}
 		config.LogFile = fmt.Sprintf("%s/gsm.log", home)
+	}
+	if config.ErrorOutput == "" {
+		config.ErrorOutput = "both"
 	}
 	if config.Scopes == nil {
 		config.Scopes = GetDefaultScopes()
@@ -275,7 +283,7 @@ func ListConfigs() ([]*GSMConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "configFile")
 	files, err := f.Readdir(-1)
 	if err != nil {
 		return nil, err

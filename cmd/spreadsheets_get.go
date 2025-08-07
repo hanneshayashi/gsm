@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var spreadsheetsGetCmd = &cobra.Command{
 	Use:               "get",
 	Short:             "Returns the spreadsheet at the given ID.",
-	Long:              "Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

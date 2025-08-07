@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ var driveLabelPermissionsUpdateCmd = &cobra.Command{
 	Short: `Updates a Label's permissions.
 The permission must exist and be referenced with the "name" parameter.
 Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels/updatePermissions",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels/updatePermissions",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

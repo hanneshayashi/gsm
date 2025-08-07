@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// spreadsheetsBatchUpdateCmd represents the batchupdate command
+// spreadsheetsBatchUpdateCmd represents the batchUpdate command
 var spreadsheetsBatchUpdateCmd = &cobra.Command{
 	Use:               "batchUpdate",
 	Short:             "Applies one or more updates to the spreadsheet.",
-	Long:              "Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/batchUpdate",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/batchUpdate",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

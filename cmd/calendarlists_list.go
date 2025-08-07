@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var calendarListsListCmd = &cobra.Command{
 	Use:               "list",
 	Short:             "Returns the calendars on the user's calendar list.",
-	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendarList/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/calendarList/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -181,8 +181,8 @@ func SignOutUser(userKey string) (bool, error) {
 	return result, err
 }
 
-// UndeletUser undeletes a deleted user.
-func UndeletUser(userKey, orgUnitPath string) (bool, error) {
+// UndeleteUser undeletes a deleted user.
+func UndeleteUser(userKey, orgUnitPath string) (bool, error) {
 	srv := getUsersService()
 	c := srv.Undelete(userKey, &admin.UserUndelete{OrgUnitPath: orgUnitPath})
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {

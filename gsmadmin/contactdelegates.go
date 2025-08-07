@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const contactDelegateURL = `https://www.googleapis.com/admin/contacts/v1/users/%s/delegates`
@@ -47,7 +49,7 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "createContactDelegateBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
@@ -86,15 +88,15 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "listContactDelegatesBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
-	type listDelegateRespone struct {
+	type listDelegateResponse struct {
 		Delegates []*ContactDelegate
 	}
-	delegations := &listDelegateRespone{}
+	delegations := &listDelegateResponse{}
 	err = json.Unmarshal(responseBody, delegations)
 	if err != nil {
 		return nil, err

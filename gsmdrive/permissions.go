@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,9 +51,9 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 }
 
 // DeletePermission deletes a permission.
-func DeletePermission(fileID, permissionID string, useDomainAdminAccess bool) (bool, error) {
+func DeletePermission(fileID, permissionID string, useDomainAdminAccess bool, enforceExpansiveAccess bool) (bool, error) {
 	srv := getPermissionsService()
-	c := srv.Delete(fileID, permissionID).UseDomainAdminAccess(useDomainAdminAccess).SupportsAllDrives(true)
+	c := srv.Delete(fileID, permissionID).UseDomainAdminAccess(useDomainAdminAccess).EnforceExpansiveAccess(enforceExpansiveAccess).SupportsAllDrives(true)
 	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() error {
 		return c.Do()
 	})
@@ -110,11 +110,11 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 }
 
 // UpdatePermission updates a permission with patch semantics.
-func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess, removeExpiration bool, permission *drive.Permission) (*drive.Permission, error) {
+func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess, removeExpiration, enforceExpansiveAccess bool, permission *drive.Permission) (*drive.Permission, error) {
 	srv := getPermissionsService()
 	permission.EmailAddress = ""
 	permission.Domain = ""
-	c := srv.Update(fileID, permissionID, permission).SupportsAllDrives(true).UseDomainAdminAccess(useDomainAdminAccess).RemoveExpiration(removeExpiration)
+	c := srv.Update(fileID, permissionID, permission).SupportsAllDrives(true).UseDomainAdminAccess(useDomainAdminAccess).RemoveExpiration(removeExpiration).EnforceExpansiveAccess(enforceExpansiveAccess)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}

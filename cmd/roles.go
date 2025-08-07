@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@ import (
 // rolesCmd represents the roles command
 var rolesCmd = &cobra.Command{
 	Use:               "roles",
-	Short:             "Manage roles (Part of Admin SDK)",
-	Long:              "Implements the API documented at http://developers.google.com/admin-sdk/directory/v1/reference/roles",
+	Short:             "Manage roles (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/roles",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

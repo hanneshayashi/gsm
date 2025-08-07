@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ var postmasterTrafficStatsGetCmd = &cobra.Command{
 	Use: "get",
 	Short: `Get traffic statistics for a domain on a specific date.
 Returns PERMISSION_DENIED if user does not have permission to access TrafficStats for the domain.`,
-	Long:              "Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/postmaster/reference/rest/v1/domains.trafficStats/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

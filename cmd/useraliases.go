@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var userAliasesCmd = &cobra.Command{
 	Use:               "userAliases",
 	Short:             "Manage user aliases, which are alternative email addresses (Part of Admin SDK - not Gmail API!)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/users.aliases",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/users.aliases",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

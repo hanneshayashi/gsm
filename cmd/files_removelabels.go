@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var filesRemoveLabelsCmd = &cobra.Command{
 	Use:               "removeLabels",
 	Short:             "Removes labels from a file.",
-	Long:              "Implements the API documented athttps://developers.google.com/drive/api/v3/reference/files/modifyLabels",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/modifyLabels",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

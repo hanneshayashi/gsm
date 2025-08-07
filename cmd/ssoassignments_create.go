@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ var ssoAssignmentsCreateCmd = &cobra.Command{
 		}
 		result, err := gsmci.CreateSsoAssignment(flags["fields"].GetString(), r)
 		if err != nil {
-			log.Fatalf("Error createing inbound SAML SSO assignment: %v", err)
+			log.Fatalf("Error creating inbound SAML SSO assignment: %v", err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

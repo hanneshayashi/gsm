@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const feedURL = `https://www.google.com/m8/feeds/contacts/%s/full?v=3.0`
@@ -220,7 +222,6 @@ type Entry struct {
 	PhoneNumber             []PhoneNumber             `xml:"phoneNumber"`
 }
 
-// Feed was generated 2020-10-11 05:44:12 by hannes_siefert_gmail_com on code-server.
 type Feed struct {
 	XMLName      xml.Name  `xml:"feed"`
 	Text         string    `xml:",chardata"`
@@ -252,7 +253,7 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "sharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -297,7 +298,7 @@ func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "createSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -322,7 +323,7 @@ func DeleteSharedContact(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "deleteSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -341,7 +342,7 @@ func GetSharedContact(url string) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "getShareContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -371,7 +372,7 @@ func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer r.Body.Close()
+	defer gsmhelpers.CloseLog(r.Body, "updateSharedContactBody")
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)

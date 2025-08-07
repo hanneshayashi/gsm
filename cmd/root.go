@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -47,7 +48,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -55,6 +55,7 @@ var (
 	cfgFile        string
 	dwdSubject     string
 	logFile        string
+	errorOutput    string
 	home           string
 	standardDelay  int
 	maxInterval    int
@@ -133,7 +134,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gsm",
 	Short: "GoSpace Manager - Manage Google Workspace resources using a developer-friendly CLI written in Go",
 	Long: `GSM is free software licensed under the GPLv3 (https://gsm.hayashi-ke.online/license).
-Copyright © 2020-2023 Hannes Hayashi.
+Copyright © 2020 Hannes Hayashi.
 For documentation see https://gsm.hayashi-ke.online.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -141,7 +142,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 			log.Fatalln(err)
 		}
 	},
-	Version: "v0.11.0",
+	Version: "v0.12.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -167,17 +168,21 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&redirectPort, "redirectPort", 8081, "This is the TCP port on which GSM will create web server if you authenticate with a user account for the first time. This is necessary for the OAuth flow. See https://developers.google.com/identity/protocols/oauth2/native-app#redirect-uri_loopback")
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
+	rootCmd.PersistentFlags().StringVar(&errorOutput, "errorOutput", "both", "Sets the output where errors should be directed to. Can be 'stderr', 'log' or 'both' (default)")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	var err error
 	gsmconfig.CfgDir = fmt.Sprintf("%s/.config/gsm", home)
-	if _, err = os.Stat(gsmconfig.CfgDir); os.IsNotExist(err) {
+	_, err = os.Stat(gsmconfig.CfgDir)
+	if os.IsNotExist(err) {
 		err = os.MkdirAll(gsmconfig.CfgDir, 0777)
 		if err != nil {
 			log.Fatalf("Config dir %s could not be found and could not be created: %v", gsmconfig.CfgDir, err)
 		}
+	} else if err != nil {
+		log.Fatalln(err)
 	}
 	// Search config in home directory with name ".gsm" (without extension).
 	viper.AddConfigPath(gsmconfig.CfgDir)
@@ -189,8 +194,9 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err = viper.ReadInConfig(); err != nil && gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
-		fmt.Println(`Error loading config file. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`)
+	err = viper.ReadInConfig()
+	if err != nil && !gsmhelpers.IsCommandOrChild(configsCmd, logCmd) {
+		log.Fatalf(`Error loading config file: %s. Please run "gsm configs new" to create a new config and load it with "gsm configs load --name"`, err)
 	}
 	if rootCmd.Flags().Changed("delay") {
 		standardDelay, err = rootCmd.Flags().GetInt("delay")
@@ -208,7 +214,7 @@ func initConfig() {
 
 func setHomeDir() {
 	var err error
-	home, err = homedir.Dir()
+	home, err = os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -234,7 +240,7 @@ func auth() {
 	if mode == "dwd" || mode == "user" {
 		credentials, err = os.ReadFile(viper.GetString("credentialsFile"))
 		if err != nil {
-			fmt.Printf("Error reading service account credentials file: %v", err)
+			log.Fatalf("Error reading credentials file: %v", err)
 		}
 	}
 	switch mode {
@@ -264,15 +270,32 @@ func auth() {
 }
 
 func initLog() {
-	if logFile == "" {
-		logFile = viper.GetString("logFile")
+	if errorOutput == "" {
+		errorOutput = viper.GetString("errorOutput")
+	}
+	if errorOutput == "stderr" {
+		log.SetOutput(os.Stderr)
+		return
+	}
+	if errorOutput == "log" || errorOutput == "both" {
 		if logFile == "" {
-			logFile = fmt.Sprintf("%s/gsm.log", home)
+			logFile = viper.GetString("logFile")
+			if logFile == "" {
+				logFile = fmt.Sprintf("%s/gsm.log", home)
+			}
 		}
+		file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if errorOutput == "both" {
+			mw := io.MultiWriter(os.Stderr, file)
+			log.SetOutput(mw)
+			return
+		} else {
+			log.SetOutput(file)
+		}
+	} else {
+		log.Fatalf("Unknown value for 'errorOutput': '%s'. Must be one of 'stderr', 'log' or 'both'", errorOutput)
 	}
-	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	log.SetOutput(file)
 }

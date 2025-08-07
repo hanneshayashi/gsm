@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 // userInvitationsCmd represents the userInvitations command
 var userInvitationsCmd = &cobra.Command{
 	Use:               "userInvitations",
-	Short:             "Manage user invitations for unmanaged accounts (Part of Cloud Identity Beta API)",
+	Short:             "Manage user invitations for unmanaged accounts (Part of Cloud Identity API)",
 	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/customers.userinvitations",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {

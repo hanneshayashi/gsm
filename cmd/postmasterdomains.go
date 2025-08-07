@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ var postmasterDomainsCmd = &cobra.Command{
 	Use:   "postmasterDomains",
 	Short: "Use Gmail Postmaster Tools to manage domain (Part of Gmail Postmaster API)",
 	Long: `You need to set up your domain(s) at https://postmaster.google.com/u/1/managedomains first.
-Implements the API documented at https://developers.google.com/gmail/postmaster/reference/rest/v1/domains`,
+Implements the API documented at https://developers.google.com/workspace/gmail/postmaster/reference/rest/v1/domains`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

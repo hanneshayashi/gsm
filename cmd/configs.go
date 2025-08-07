@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -62,7 +62,8 @@ Can be relative to the binary or fully qualified.`,
 	"serviceAccount": {
 		AvailableFor: []string{"new", "update"},
 		Type:         "string",
-		Description:  `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.`,
+		Description: `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.
+If you are using '--mode adc' but are NOT using GSM on Google Cloud (i.e. locally), you need to specify this.`,
 	},
 	"mode": {
 		AvailableFor: []string{"new"},
@@ -101,6 +102,11 @@ Can be relative to the binary or fully qualified.`,
 		Type:         "string",
 		Description:  `Path of the log file.`,
 	},
+	"errorOutput": {
+		AvailableFor: []string{"new", "update"},
+		Type:         "string",
+		Description:  `The destination where errors should be output to. Can be 'stderr', 'log' or 'both'`,
+	},
 }
 
 func init() {
@@ -129,6 +135,9 @@ func mapToConfig(flags map[string]*gsmhelpers.Value) (*gsmconfig.GSMConfig, erro
 	}
 	if flags["logFile"].IsSet() {
 		config.LogFile = flags["logFile"].GetString()
+	}
+	if flags["errorOutput"].IsSet() {
+		config.ErrorOutput = flags["errorOutput"].GetString()
 	}
 	if flags["standardDelay"].IsSet() {
 		config.StandardDelay = flags["standardDelay"].GetInt()

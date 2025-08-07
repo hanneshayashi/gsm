@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ var sendAsCreateCmd = &cobra.Command{
 If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to pending;
 otherwise, the resource will be created with verification status set to accepted.
 If a signature is provided, Gmail will sanitize the HTML before saving it with the alias.
-Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.sendAs/create`,
+Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/create`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

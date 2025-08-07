@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -185,7 +185,7 @@ func UnhideDrive(driveID, fields string) (*drive.Drive, error) {
 	return r, nil
 }
 
-// UpdateDrive updates the metadate for a shared drive.
+// UpdateDrive updates the metadata for a shared drive.
 func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, d *drive.Drive) (*drive.Drive, error) {
 	srv := getDrivesService()
 	c := srv.Update(driveID, d).UseDomainAdminAccess(useDomainAdminAccess)

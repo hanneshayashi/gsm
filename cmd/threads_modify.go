@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,13 +30,13 @@ import (
 var threadsModifyCmd = &cobra.Command{
 	Use:               "modify",
 	Short:             "Modifies the labels applied to the thread. This applies to all messages in the thread.",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/modify",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/modify",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmgmail.ModifyThread(flags["userId"].GetString(), flags["id"].GetString(), flags["fields"].GetString(), flags["addLabelIds"].GetStringSlice(), flags["removeLabelIds"].GetStringSlice())
 		if err != nil {
-			log.Fatalf("Error modifiyng thread %s: %v", flags["id"].GetString(), err)
+			log.Fatalf("Error modifying thread %s: %v", flags["id"].GetString(), err)
 		}
 		err = gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {

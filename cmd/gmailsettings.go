@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 var gmailSettingsCmd = &cobra.Command{
 	Use:               "gmailSettings",
 	Short:             "Manage Gmail settings for users (Part of Gmail API)",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -205,7 +205,7 @@ func mapToImapSettings(flags map[string]*gsmhelpers.Value) (*gmail.ImapSettings,
 	}
 	if flags["expungeBehavior"].IsSet() {
 		imapSettings.ExpungeBehavior = flags["expungeBehavior"].GetString()
-		if !gsmgmail.ExpungeBehaviourIsValid(imapSettings.ExpungeBehavior) {
+		if !gsmgmail.ExpungeBehaviorIsValid(imapSettings.ExpungeBehavior) {
 			return nil, fmt.Errorf("%s is not a valid value for expunge behavior", imapSettings.ExpungeBehavior)
 		}
 		if imapSettings.ExpungeBehavior == "" {

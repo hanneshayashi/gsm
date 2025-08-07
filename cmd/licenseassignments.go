@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var licenseAssignmentsCmd = &cobra.Command{
 	Use:               "licenseAssignments",
 	Short:             "Manage user license assignments (Part of Enterprise License Manager API)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

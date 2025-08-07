@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 var permissionsCreateRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively grant a permissions to a folder and all of its children.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/create",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/create",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

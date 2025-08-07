@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 var filesCopyBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch copies files using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/copy",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/copy",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

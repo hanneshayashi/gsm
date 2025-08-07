@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package cmd
 
 import (
 	"log"
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmsheets"
@@ -32,7 +32,7 @@ import (
 var spreadsheetsCmd = &cobra.Command{
 	Use:               "spreadsheets",
 	Short:             "Manage Google Sheets spreadsheets (Part of Sheets API)",
-	Long:              `Implements the API documented at https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets`,
+	Long:              `Implements the API documented at https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -157,7 +157,7 @@ func mapToBatchUpdateSpreadsheetRequest(flags map[string]*gsmhelpers.Value) (*sh
 				sheetID, ok := sheetMap[m["title"]]
 				if !ok {
 					r := &sheets.Request{}
-					sheetID = int64(rand.Int31())
+					sheetID = rand.Int64()
 					r.AddSheet = &sheets.AddSheetRequest{}
 					r.AddSheet.Properties = &sheets.SheetProperties{
 						Title:   m["title"],

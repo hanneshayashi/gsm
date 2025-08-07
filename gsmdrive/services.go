@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,16 +28,18 @@ import (
 )
 
 var (
-	client             *http.Client
-	driveService       *drive.Service
-	filesService       *drive.FilesService
-	permissionsService *drive.PermissionsService
-	drivesService      *drive.DrivesService
-	aboutService       *drive.AboutService
-	changesService     *drive.ChangesService
-	commentsService    *drive.CommentsService
-	repliesService     *drive.RepliesService
-	revisionsService   *drive.RevisionsService
+	client                 *http.Client
+	driveService           *drive.Service
+	filesService           *drive.FilesService
+	permissionsService     *drive.PermissionsService
+	drivesService          *drive.DrivesService
+	aboutService           *drive.AboutService
+	changesService         *drive.ChangesService
+	commentsService        *drive.CommentsService
+	repliesService         *drive.RepliesService
+	revisionsService       *drive.RevisionsService
+	appsService            *drive.AppsService
+	accessProposalsService *drive.AccessproposalsService
 )
 
 // SetClient is used to inject a *http.Client into the package
@@ -113,4 +115,18 @@ func getRevisionsService() *drive.RevisionsService {
 		revisionsService = drive.NewRevisionsService(getDriveService())
 	}
 	return revisionsService
+}
+
+func getAppsService() *drive.AppsService {
+	if appsService == nil {
+		appsService = drive.NewAppsService(getDriveService())
+	}
+	return appsService
+}
+
+func getAccessProposalsService() *drive.AccessproposalsService {
+	if accessProposalsService == nil {
+		accessProposalsService = drive.NewAccessproposalsService(getDriveService())
+	}
+	return accessProposalsService
 }

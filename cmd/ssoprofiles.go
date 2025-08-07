@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,6 +107,7 @@ Must use HTTPS.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var ssoProfileFlagsALL = gsmhelpers.GetAllFlags(ssoProfileFlags)
 
 func init() {

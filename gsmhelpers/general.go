@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math/rand"
+	"math/rand/v2"
 	"os"
 	"strings"
 	"time"
@@ -365,7 +365,7 @@ func FormatErrorKey(s ...string) string {
 
 // Sleep sleeps for standardDelay ms plus a random jitter between 0 and 50
 func Sleep() {
-	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.Intn(50))*time.Millisecond)
+	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.IntN(50))*time.Millisecond)
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called
@@ -390,4 +390,12 @@ func EnsurePrefix(s, p string) string {
 		return p + s
 	}
 	return s
+}
+
+// CloseLog is used when deferring Close() because we also want to check for the error of the Close()
+func CloseLog(closer io.Closer, resource string) {
+	err := closer.Close()
+	if err != nil {
+		log.Printf("Error while closing resource %q: %+v", resource, err)
+	}
 }

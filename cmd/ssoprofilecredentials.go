@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ Format: inboundSamlSsoProfiles/{sso_profile_id}/idpCredentials/{idp_credential_i
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var ssoProfileCredentialFlagsALL = gsmhelpers.GetAllFlags(ssoProfileCredentialFlags)
 
 func init() {

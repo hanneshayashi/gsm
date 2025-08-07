@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ var calendarsClearCmd = &cobra.Command{
 	Use: "clear",
 	Short: `Clears a primary calendar.
 This operation deletes all events associated with the primary calendar of an account.`,
-	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendars/clear",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/calendars/clear",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

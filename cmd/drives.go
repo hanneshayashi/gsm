@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var drivesCmd = &cobra.Command{
 	Use:               "drives",
 	Short:             "Manage Shared Drives (Part of Drive API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/drives",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/drives",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -116,6 +116,11 @@ This restriction may be overridden by other sharing policies controlled outside 
 		Type:         "bool",
 		Description:  "Whether access to items inside this shared drive is restricted to its members",
 	},
+	"sharingFoldersRequiresOrganizerPermission": {
+		AvailableFor: []string{"update"},
+		Type:         "bool",
+		Description:  "If true, only users with the organizer role can share folders. If false, users with either the organizer role or the file organizer role can share folders.",
+	},
 	"q": {
 		AvailableFor: []string{"list"},
 		Type:         "string",
@@ -131,7 +136,7 @@ See the https://developers.google.com/drive/api/v3/search-shareddrives for suppo
 		AvailableFor: []string{"create"},
 		Type:         "bool",
 		Description: `The Google Drive API returns the drive after creation immediately, but usually before it can be used in subsequent requests.
-Setting this flag will cause GSM to try and do the follwing on the newly created drive to make sure that it is available before returning it:
+Setting this flag will cause GSM to try and do the following on the newly created drive to make sure that it is available before returning it:
 1. Get the Drive by its driveId
 2. Get the user's permissionId from the about method
 3. Get the user's permission on the newly created Drive using the Drive's driveId and the user's permissionId
@@ -201,6 +206,7 @@ func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 	copyRequiresWriterPermissionSet := flags["copyRequiresWriterPermission"].IsSet()
 	domainUsersOnlySet := flags["domainUsersOnly"].IsSet()
 	driveMembersOnlySet := flags["driveMembersOnly"].IsSet()
+	sharingFoldersRequiresOrganizerPermissionSet := flags["sharingFoldersRequiresOrganizerPermission"].IsSet()
 	if adminManagedRestrictionsSet || copyRequiresWriterPermissionSet || domainUsersOnlySet || driveMembersOnlySet {
 		d.Restrictions = &drive.DriveRestrictions{}
 		if adminManagedRestrictionsSet {
@@ -225,6 +231,12 @@ func mapToDrive(flags map[string]*gsmhelpers.Value) (*drive.Drive, error) {
 			d.Restrictions.DriveMembersOnly = flags["driveMembersOnly"].GetBool()
 			if !d.Restrictions.DriveMembersOnly {
 				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "DriveMembersOnly")
+			}
+		}
+		if sharingFoldersRequiresOrganizerPermissionSet {
+			d.Restrictions.SharingFoldersRequiresOrganizerPermission = flags["sharingFoldersRequiresOrganizerPermission"].GetBool()
+			if !d.Restrictions.SharingFoldersRequiresOrganizerPermission {
+				d.Restrictions.ForceSendFields = append(d.Restrictions.ForceSendFields, "SharingFoldersRequiresOrganizerPermission")
 			}
 		}
 	}

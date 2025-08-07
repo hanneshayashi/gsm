@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ var revisionsDeleteCmd = &cobra.Command{
 	Short: "Permanently deletes a file version.",
 	Long: `You can only delete revisions for files with binary content in Google Drive, like images or videos.
 Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted.
-Implements the API documented at https://developers.google.com/drive/api/v3/reference/revisions/delete`,
+Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/delete`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

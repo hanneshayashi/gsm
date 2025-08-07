@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import (
 // sharedContactsDeleteCmd represents the delete command
 var sharedContactsDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete a shared contact by referencing its id url",
-	Long:  "",
+	Short: "Delete a shared contact by referencing its id url (must begin with https://)",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/update-delete-shared-contacts#delete_shared_contacts",
 	Annotations: map[string]string{
 		"crescendoOutput": "$args[0]",
 	},
@@ -42,7 +42,7 @@ var sharedContactsDeleteCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error deleting shared contact: %v", err)
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), string(result))
+		fmt.Println(string(result))
 	},
 }
 

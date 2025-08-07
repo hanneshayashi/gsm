@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ var customerUsageReportsGetCmd = &cobra.Command{
 	Short: `Retrieves a report which is a collection of properties and statistics for a specific customer's account.
 For more information, see the Customers Usage Report guide.
 For more information about the customer report's parameters, see the Customers Usage parameters reference guides.`,
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/customerUsageReports/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/customerUsageReports/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

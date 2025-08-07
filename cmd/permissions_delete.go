@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,11 +30,11 @@ import (
 var permissionsDeleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Deletes a permission.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.DeletePermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["useDomainAdminAccess"].GetBool())
+		result, err := gsmdrive.DeletePermission(flags["fileId"].GetString(), flags["permissionId"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["enforceExpansiveAccess"].GetBool())
 		if err != nil {
 			log.Fatalf("Error deleting permission: %v", err)
 		}

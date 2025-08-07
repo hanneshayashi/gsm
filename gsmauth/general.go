@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ import (
 
 	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
-	"github.com/skratchdot/open-golang/open"
+	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"github.com/pkg/browser"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -44,7 +45,7 @@ func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "tokenFile")
 	tok := &oauth2.Token{}
 	err = json.NewDecoder(f).Decode(tok)
 	return tok, err
@@ -54,12 +55,12 @@ func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
 func saveToken(path string, token *oauth2.Token) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
-		return fmt.Errorf("Unable to cache OAuth token: %v", err)
+		return fmt.Errorf("unable to cache OAuth token: %v", err)
 	}
-	defer f.Close()
+	defer gsmhelpers.CloseLog(f, "tokenFile")
 	err = json.NewEncoder(f).Encode(token)
 	if err != nil {
-		return fmt.Errorf("Unable to save OAuth token: %v", err)
+		return fmt.Errorf("unable to save OAuth token: %v", err)
 	}
 	return nil
 }
@@ -92,11 +93,14 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Fprintf(w, "You can close this window now")
+			_, err = fmt.Fprintf(w, "You can close this window now")
+			if err != nil {
+				log.Fatal(err)
+			}
 			done <- true
 			close(done)
 		})
-		err = open.Run(authURL)
+		err = browser.OpenURL(authURL)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -119,9 +123,9 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 // GetClientADC returns a client to be used for API services
 func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client, err error) {
 	if serviceAccountEmail == "" {
-		serviceAccountEmail, err = metadata.Email("")
+		serviceAccountEmail, err = metadata.EmailWithContext(context.Background(), "")
 		if err != nil {
-			return nil, fmt.Errorf("Error getting Service Account email: %v", err)
+			return nil, fmt.Errorf("error getting Service Account email: %v", err)
 		}
 	}
 	ts, err := impersonate.CredentialsTokenSource(ctx, impersonate.CredentialsConfig{
@@ -130,7 +134,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 		Subject:         subject,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Error getting token source: %v", err)
+		return nil, fmt.Errorf("error getting token source: %v", err)
 	}
 	client = oauth2.NewClient(ctx, ts)
 	return
@@ -140,7 +144,7 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client, err error) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing Service Account credential file to config: %v", err)
+		return nil, fmt.Errorf("error parsing Service Account credential file to config: %v", err)
 	}
 	config.Subject = subject
 	return config.Client(ctx), nil

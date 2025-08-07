@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@ import (
 // aspsCmd represents the asps command
 var aspsCmd = &cobra.Command{
 	Use:   "asps",
-	Short: "Manage ASPs (application-specific password) for a user (Part of Admin SDK)",
+	Short: "Manage ASPs (application-specific password) for a user (Part of Admin SDK API)",
 	Long: `An application-specific password (ASP) is used with applications
 that do not accept a verification code when logging into the application on
 certain devices. The ASP access code is used instead of the login and password
 you commonly use when accessing an application through a browser. For more
 information about ASPs and how to create one, see https://support.google.com/a/answer/2537800#asp.
 
-Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/asps`,
+Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/asps`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

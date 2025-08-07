@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var calendarListsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
 	Short: "Batch deletes calendars from the user's calendar list using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/calendarList/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/calendarList/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

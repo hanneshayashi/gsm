@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ var eventsImportCmd = &cobra.Command{
 	Use: "import",
 	Short: `Imports an event.
 This operation is used to add a private copy of an existing event to a calendar.`,
-	Long:              "Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events/import",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/events/import",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

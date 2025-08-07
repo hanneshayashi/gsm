@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 var driveLabelUsersCmd = &cobra.Command{
 	Use:               "driveLabelUsers",
 	Short:             "Manages Drive Label Users (Part of Drive Labels API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/users",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/users",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -60,6 +60,7 @@ If unset, will return settings within the current customer.`,
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var labelUserFlagsALL = gsmhelpers.GetAllFlags(driveLabelUserFlags)
 
 func init() {

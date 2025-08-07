@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var driveLabelPermissionsCmd = &cobra.Command{
 	Use:   "driveLabelPermissions",
 	Short: "Manages Drive Label Permissions (Part of Drive Labels API)",
-	Long: `Implements the API documented at https://developers.google.com/drive/labels/reference/rest/v2/labels.permissions
+	Long: `Implements the API documented at https://developers.google.com/workspace/drive/labels/reference/rest/v2/labels.permissions
 Use ONE of the following to specify the target label:
 name
 email
@@ -90,7 +90,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 	"email": {
 		AvailableFor: []string{"create"},
 		Type:         "string",
-		Description: `Specifies the email address for a user or group pricinpal.
+		Description: `Specifies the email address for a user or group principal.
 Not populated for audience principals.
 User and Group permissions may only be inserted using email address.
 On update requests, if email address is specified, no principal should be specified.`,
@@ -125,6 +125,7 @@ The server verifies that the user is an admin for the label before allowing acce
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 }
+
 // var labelPermissionFlagsALL = gsmhelpers.GetAllFlags(driveLabelPermissionFlags)
 
 func init() {

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var filtersCmd = &cobra.Command{
 	Use:               "filters",
 	Short:             "Manage users' Gmail message filters (Part of Gmail API)",
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.settings.filters",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

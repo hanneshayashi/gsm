@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-// GetUserProfile Ggts the specified user's Gmail profile.
+// GetUserProfile gets the specified user's Gmail profile.
 func GetUserProfile(userID, fields string) (*gmail.Profile, error) {
 	srv := getUsersService()
 	c := srv.GetProfile(userID)

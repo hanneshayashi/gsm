@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ var threadsDeleteCmd = &cobra.Command{
 	Use: "delete",
 	Short: `Immediately and permanently deletes the specified thread.
 This operation cannot be undone. Prefer threads trash instead.`,
-	Long:              "Implements the API documented at https://developers.google.com/gmail/api/reference/rest/v1/users.threads/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ func ListSsoAssignment(filter, fields string, cap int) (<-chan *ci.InboundSsoAss
 	return ch, err
 }
 
-// PatchSsoAssignment patchs an InboundSsoAssignment for users and devices in a Customer under a given Group or OrgUnit.
+// PatchSsoAssignment patches an InboundSsoAssignment for users and devices in a Customer under a given Group or OrgUnit.
 func PatchSsoAssignment(name, updateMask, fields string, assignment *ci.InboundSsoAssignment) (*googleapi.RawMessage, error) {
 	srv := getInboundSsoAssignmentsService()
 	c := srv.Patch(name, assignment).UpdateMask(updateMask)

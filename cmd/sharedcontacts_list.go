@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,9 @@ import (
 var sharedContactsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all shared contacts in your domain",
-	Long:  `Example: gsm sharedContacts list --domain "example.org"`,
+	Long: `Example: gsm sharedContacts list --domain "example.org"
+
+Long:  "Implements the API documented at https://developers.google.com/workspace/admin/domain-shared-contacts/get-shared-contacts#get_all_shared_contacts",`,
 	Annotations: map[string]string{
 		"crescendoFlags": "--json",
 	},

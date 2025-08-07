@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ var eventsCmd = &cobra.Command{
 	Short: "Manage events in users' calendars (Part of Calendar API)",
 	Long: `This API only works in the user's context. Set the subject to the user's
 email address to use this API!
-Implements the API documented at https://developers.google.com/calendar/api/v3/reference/events`,
+Implements the API documented at https://developers.google.com/workspace/calendar/api/v3/reference/events`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -113,7 +113,7 @@ When updating an event, this can be used to only update the participant's respon
 		Type:         "stringSlice",
 		Description: `Must be given in the following format: "--attendees "email=some.address@domain.com;resource=[true|false];optional=[true|false];responseStatus=accepted""
 Can be used multiple times to invite more than one attendee.
-If you batchPatch an event, rememder to specify ALL attendees (not just new ones)!`,
+If you batchPatch an event, remember to specify ALL attendees (not just new ones)!`,
 	},
 	"colorId": {
 		AvailableFor: []string{"insert", "patch"},

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,9 +28,10 @@ import (
 
 // devicesCmd represents the devices command
 var devicesCmd = &cobra.Command{
-	Use:               "devices",
-	Short:             "Manage Devices (Part of Cloud Identity API)",
-	Long:              "Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices",
+	Use:   "devices",
+	Short: "Manage Devices (Part of Cloud Identity API)",
+	Long: `Implements the API documented at https://cloud.google.com/identity/docs/reference/rest/v1/devices.
+Note that this command requires manually adding the 'https://www.googleapis.com/auth/cloud-identity.devices' scope to your configuration.`,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -104,7 +105,7 @@ Default order is ascending.`,
 Possible values are:
 COMPANY_INVENTORY      This view contains all devices imported by the company admin.
                        Each device in the response contains all information specified by the company admin when importing the device (i.e. asset tags).
-                       This includes devices that may be unaassigned or assigned to users.
+                       This includes devices that may be unassigned or assigned to users.
 USER_ASSIGNED_DEVICES  This view contains all devices with at least one user registered on the device.
                        Each device in the response contains all device information, except for asset tags.`,
 	},

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import (
 // schemasCmd represents the schemas command
 var schemasCmd = &cobra.Command{
 	Use:               "schemas",
-	Short:             "Manage custom schemas for user accounts (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/directory/reference/rest/v1/schemas",
+	Short:             "Manage custom schemas for user accounts (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/directory/reference/rest/v1/schemas",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

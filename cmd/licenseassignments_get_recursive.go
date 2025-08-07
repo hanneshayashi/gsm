@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import (
 var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Get users' licenses by product SKU by referencing one or more organizational units and/or groups.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/get",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments/get",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

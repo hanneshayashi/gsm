@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import (
 var filesUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Updates a file's metadata and/or content. This method supports patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/update",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -57,7 +57,7 @@ var filesUpdateCmd = &cobra.Command{
 			if err != nil {
 				log.Fatalf("Error opening file %s: %v", flags["localFilePath"].GetString(), err)
 			}
-			defer content.Close()
+			defer gsmhelpers.CloseLog(content, "fileContent")
 		}
 		result, err := gsmdrive.UpdateFile(flags["fileId"].GetString(), flags["parent"].GetString(), removeParents, flags["includePermissionsForView"].GetString(), flags["ocrLanguage"].GetString(), flags["fields"].GetString(), f, content, flags["keepRevisionForever"].GetBool(), flags["useContentAsIndexableText"].GetBool())
 		if err != nil {

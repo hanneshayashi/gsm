@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 var permissionsUpdateCmd = &cobra.Command{
 	Use:               "update",
 	Short:             "Updates a permission with patch semantics.",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/update",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/update",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
@@ -42,7 +42,7 @@ var permissionsUpdateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Unable to determine permissionId: %v", err)
 		}
-		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), p)
+		result, err := gsmdrive.UpdatePermission(flags["fileId"].GetString(), permissionID, flags["fields"].GetString(), flags["useDomainAdminAccess"].GetBool(), flags["removeExpiration"].GetBool(), flags["enforceExpansiveAccess"].GetBool(), p)
 		if err != nil {
 			log.Fatalf("Error updating permission: %v", err)
 		}

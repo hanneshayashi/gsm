@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ var activitiesListCmd = &cobra.Command{
 	Short: `Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 For more information, see the guides for administrator and Google Drive activity reports.
 For more information about the activity report's parameters, see the activity parameters reference guides.`,
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/activities/list",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/activities/list",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

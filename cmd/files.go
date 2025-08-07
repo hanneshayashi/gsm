@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 var filesCmd = &cobra.Command{
 	Use:               "files",
 	Short:             "Managed files (Part of Drive API)",
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()
@@ -98,6 +98,12 @@ Entries with null values are cleared in update and copy requests.`,
 		Type:         "bool",
 		Description: `Whether the content of the file is read-only.
 If a file is read-only, a new revision of the file may not be added, comments may not be added or modified, and the title of the file may not be modified.`,
+	},
+	"ownerRestricted": {
+		AvailableFor: []string{"copy", "create", "update"},
+		Type:         "bool",
+		Description: `Whether the content restriction can only be modified or removed by a user who owns the file.
+For files in shared drives, any user with organizer capabilities can modify or remove this content restriction.`,
 	},
 	"readOnlyReason": {
 		AvailableFor: []string{"copy", "create", "update"},
@@ -170,8 +176,13 @@ Not populated for items in shared drives.`,
 	"useContentAsIndexableText": {
 		AvailableFor: []string{"create", "update"},
 		Type:         "bool",
-		Description: `Whether users with only writer permission can modify the file's permissions.
-Not populated for items in shared drives.`,
+		Description:  `Whether to use the uploaded content as indexable text.`,
+	},
+	"inheritedPermissionsDisabled": {
+		AvailableFor: []string{"create", "update"},
+		Type:         "bool",
+		Description: `Whether this file has inherited permissions disabled. Inherited permissions are enabled by default.
+See https://developers.google.com/workspace/drive/api/guides/limited-expansive-access for details`,
 	},
 	"indexableText": {
 		AvailableFor: []string{"create", "update"},
@@ -372,7 +383,7 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 			}
 		}
 	}
-	if flags["readOnly"].IsSet() || flags["readOnlyReason"].IsSet() {
+	if flags["readOnly"].IsSet() || flags["readOnlyReason"].IsSet() || flags["ownerRestricted"].IsSet() {
 		file.ContentRestrictions = []*drive.ContentRestriction{}
 		file.ContentRestrictions = append(file.ContentRestrictions, &drive.ContentRestriction{})
 		if flags["readOnly"].IsSet() {
@@ -385,6 +396,12 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 			file.ContentRestrictions[0].Reason = flags["readOnlyReason"].GetString()
 			if file.ContentRestrictions[0].Reason == "" {
 				file.ContentRestrictions[0].ForceSendFields = append(file.ContentRestrictions[0].ForceSendFields, "Reason")
+			}
+		}
+		if flags["ownerRestricted"].IsSet() {
+			file.ContentRestrictions[0].OwnerRestricted = flags["ownerRestricted"].GetBool()
+			if !file.ContentRestrictions[0].OwnerRestricted {
+				file.ContentRestrictions[0].ForceSendFields = append(file.ContentRestrictions[0].ForceSendFields, "OwnerRestricted")
 			}
 		}
 	}
@@ -480,6 +497,12 @@ func mapToFile(flags map[string]*gsmhelpers.Value) (*drive.File, error) {
 		file.Trashed = flags["trashed"].GetBool()
 		if !file.Trashed {
 			file.ForceSendFields = append(file.ForceSendFields, "Trashed")
+		}
+	}
+	if flags["inheritedPermissionsDisabled"].IsSet() {
+		file.InheritedPermissionsDisabled = flags["inheritedPermissionsDisabled"].GetBool()
+		if !file.InheritedPermissionsDisabled {
+			file.ForceSendFields = append(file.ForceSendFields, "InheritedPermissionsDisabled")
 		}
 	}
 	if flags["parent"].IsSet() {

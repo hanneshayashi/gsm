@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ var entityUsageReportsGetCmd = &cobra.Command{
 	Short: `Retrieves a report which is a collection of properties and statistics for entities used by users within the account.
 For more information, see the Entities Usage Report guide.
 For more information about the entities report's parameters, see the Entities Usage parameters reference guides.`,
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/reports/reference/rest/v1/entityUsageReports/get",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/reports/reference/rest/v1/entityUsageReports/get",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())

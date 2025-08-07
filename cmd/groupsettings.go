@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@ import (
 // groupSettingsCmd represents the groupSettings command
 var groupSettingsCmd = &cobra.Command{
 	Use:               "groupSettings",
-	Short:             "Manage Group Settings (Part of Admin SDK)",
-	Long:              "Implements the API documented at https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups",
+	Short:             "Manage Group Settings (Part of Admin SDK API)",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/admin/groups-settings/v1/reference/groups",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		err := cmd.Help()

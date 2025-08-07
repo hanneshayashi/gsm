@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import (
 // licenseAssignmentsDeleteBatchCmd represents the batch command
 var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 	Use:   "batch",
-	Short: "Batch deletes user license asignments using a CSV file as input.",
-	Long:  "Implements the API documented at https://developers.google.com/admin-sdk/licensing/reference/rest/v1/licenseAssignments/delete",
+	Short: "Batch deletes user license assignments using a CSV file as input.",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/admin/licensing/reference/rest/v1/licenseAssignments/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},

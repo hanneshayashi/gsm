@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 var permissionsDeleteRecursiveCmd = &cobra.Command{
 	Use:   "recursive",
 	Short: "Recursively deletes a permission from a folder and all of its children.",
-	Long:  "Implements the API documented at https://developers.google.com/drive/api/v3/reference/permissions/delete",
+	Long:  "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/delete",
 	Annotations: map[string]string{
 		"crescendoAttachToParent": "true",
 	},
@@ -52,6 +52,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 		results := make(chan resultStruct, threads)
 		var wg sync.WaitGroup
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
+		enforceExpansiveAccess := flags["enforceExpansiveAccess"].GetBool()
 		permissionID, err := gsmdrive.GetPermissionID(flags)
 		if err != nil {
 			log.Fatalf("Unable to determine permissionId: %v", err)
@@ -61,7 +62,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for file := range files {
-						r, err := gsmdrive.DeletePermission(file.Id, permissionID, useDomainAdminAccess)
+						r, err := gsmdrive.DeletePermission(file.Id, permissionID, useDomainAdminAccess, enforceExpansiveAccess)
 						if err != nil {
 							log.Println(err)
 						} else {

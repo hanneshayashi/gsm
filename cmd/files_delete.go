@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2023 Hannes Hayashi
+Copyright © 2020 Hannes Hayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ var filesDeleteCmd = &cobra.Command{
 	Short: `Permanently deletes a file owned by the user without moving it to the trash.
 If the file belongs to a shared drive the user must be an organizer on the parent.
 If the target is a folder, all descendants owned by the user are also deleted.`,
-	Long:              "Implements the API documented at https://developers.google.com/drive/api/v3/reference/files/delete",
+	Long:              "Implements the API documented at https://developers.google.com/workspace/drive/api/reference/rest/v3/files/delete",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
