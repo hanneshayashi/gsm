@@ -142,7 +142,7 @@ For documentation see https://gsm.hayashi-ke.online.`,
 			log.Fatalln(err)
 		}
 	},
-	Version: "v0.11.0",
+	Version: "v0.12.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
