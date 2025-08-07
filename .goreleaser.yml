@@ -9,11 +9,11 @@ builds:
       - amd64
       - arm64
 archives:
-  - format: tar.gz
+  - formats: tar.gz
     name_template: '{{ .ProjectName }}-{{ .Version }}_{{- if eq .Os "windows" }}win{{- else }}{{ .Os }}{{ end }}-{{ .Arch }}'
     format_overrides:
       - goos: windows
-        format: zip
+        formats: zip
     files:
       - LICENSE
 checksum:
