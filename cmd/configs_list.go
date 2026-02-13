@@ -40,7 +40,7 @@ var configsListCmd = &cobra.Command{
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		result, err := gsmconfig.ListConfigs()
 		defaultPresent := false
-		for i := 0; i < len(result); i++ {
+		for i := range result {
 			if result[i].Default {
 				defaultPresent = true
 			}
@@ -59,7 +59,7 @@ var configsListCmd = &cobra.Command{
 				log.Fatalln(err)
 			}
 		} else {
-			for i := 0; i < len(result); i++ {
+			for i := range result {
 				if result[i].Default {
 					fmt.Println(result[i].Name, "(Default)")
 				} else {

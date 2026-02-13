@@ -65,8 +65,7 @@ var membersSetRecursiveCmd = &cobra.Command{
 		fields := flags["fields"].GetString()
 		go func() {
 			for i := 0; i < threads/2; i++ {
-				wgResults.Add(1)
-				go func() {
+				wgResults.Go(func() {
 					for uk := range membersToAdd {
 						m, er := mapToMember(flags)
 						if er != nil {
@@ -81,16 +80,14 @@ var membersSetRecursiveCmd = &cobra.Command{
 							addedMembers <- result
 						}
 					}
-					wgResults.Done()
-				}()
+				})
 			}
 			wgResults.Wait()
 			close(addedMembers)
 		}()
 		go func() {
 			for i := 0; i < threads/2; i++ {
-				wgResults.Add(1)
-				go func() {
+				wgResults.Go(func() {
 					for uk := range membersToRemove {
 						result, er := gsmadmin.DeleteMember(groupKey, uk)
 						if err != nil {
@@ -98,8 +95,7 @@ var membersSetRecursiveCmd = &cobra.Command{
 						}
 						removedMembers <- removed{Email: uk, Result: result}
 					}
-					wgResults.Done()
-				}()
+				})
 			}
 			wgResults.Wait()
 			close(removedMembers)

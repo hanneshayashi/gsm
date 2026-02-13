@@ -51,9 +51,8 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						productID := m["productId"].GetString()
 						skuID := m["skuId"].GetString()
@@ -64,8 +63,7 @@ var licenseAssignmentsDeleteBatchCmd = &cobra.Command{
 						}
 						results <- resultStruct{ProductID: productID, SkuID: skuID, UserID: userID, Result: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

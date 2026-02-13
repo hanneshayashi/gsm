@@ -45,9 +45,8 @@ var filesDownloadBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan string, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmdrive.DownloadFile(m["fileId"].GetString(), m["localFilePath"].GetString(), m["acknowledgeAbuse"].GetBool())
 						if err != nil {
@@ -56,8 +55,7 @@ var filesDownloadBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

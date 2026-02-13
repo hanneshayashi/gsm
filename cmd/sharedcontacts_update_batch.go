@@ -45,9 +45,8 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *gsmadmin.Entry, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						url := m["url"].GetString()
 						s, err := gsmadmin.GetSharedContact(url)
@@ -67,8 +66,7 @@ var sharedContactsUpdateBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

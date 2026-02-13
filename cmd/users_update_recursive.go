@@ -49,9 +49,8 @@ var usersUpdateRecursiveCmd = &cobra.Command{
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.UpdateUser(uk, fields, u)
 						if err != nil {
@@ -60,8 +59,7 @@ var usersUpdateRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

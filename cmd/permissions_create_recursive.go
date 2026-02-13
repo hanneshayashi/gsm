@@ -63,9 +63,8 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 		transferOwnership := flags["transferOwnership"].GetBool()
 		moveToNewOwnersRoot := flags["moveToNewOwnersRoot"].GetBool()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for file := range files {
 						var move bool
 						if moveToNewOwnersRoot && file.Id == folderID {
@@ -80,8 +79,7 @@ var permissionsCreateRecursiveCmd = &cobra.Command{
 							results <- resultStruct{FileID: file.Id, Permissions: r}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

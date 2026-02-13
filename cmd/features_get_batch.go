@@ -46,9 +46,8 @@ var featuresGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *admin.Feature, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmadmin.GetFeature(m["customer"].GetString(), m["featureKey"].GetString(), m["fields"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var featuresGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

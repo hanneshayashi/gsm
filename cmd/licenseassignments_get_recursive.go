@@ -48,9 +48,8 @@ var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 		skuID := flags["skuId"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmlicensing.GetLicenseAssignment(productID, skuID, uk, fields)
 						if err != nil {
@@ -59,8 +58,7 @@ var licenseAssignmentsGetRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

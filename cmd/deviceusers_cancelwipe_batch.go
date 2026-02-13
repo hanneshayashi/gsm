@@ -51,9 +51,8 @@ var deviceUsersCancelWipeBatchCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						name := m["name"].GetString()
 						cancelWipeRequest, err := mapToCancelWipeDeviceUserRequest(m)
@@ -67,8 +66,7 @@ var deviceUsersCancelWipeBatchCmd = &cobra.Command{
 							results <- resultStruct{Name: name, Customer: cancelWipeRequest.Customer, Result: result}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

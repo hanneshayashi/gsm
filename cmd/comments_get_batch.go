@@ -46,9 +46,8 @@ var commentsGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *drive.Comment, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmdrive.GetComment(m["fileId"].GetString(), m["commentId"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool())
 						if err != nil {
@@ -57,8 +56,7 @@ var commentsGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

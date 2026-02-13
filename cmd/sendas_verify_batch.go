@@ -50,9 +50,8 @@ var sendAsVerifyBatchCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						userID := m["userId"].GetString()
 						sendAsEmail := m["sendAsEmail"].GetString()
@@ -62,8 +61,7 @@ var sendAsVerifyBatchCmd = &cobra.Command{
 						}
 						results <- resultStruct{SendAsEmail: sendAsEmail, UserID: userID, Result: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

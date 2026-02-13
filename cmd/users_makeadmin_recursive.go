@@ -48,9 +48,8 @@ var usersMakeAdminRecursiveCmd = &cobra.Command{
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		status := !flags["unmake"].GetBool()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.MakeAdmin(uk, status)
 						if err != nil {
@@ -58,8 +57,7 @@ var usersMakeAdminRecursiveCmd = &cobra.Command{
 						}
 						results <- resultStruct{UserKey: uk, Result: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

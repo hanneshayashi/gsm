@@ -46,9 +46,8 @@ var messagesTrashBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *gmail.Message, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmgmail.TrashMessage(m["userId"].GetString(), m["id"].GetString(), m["fields"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var messagesTrashBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

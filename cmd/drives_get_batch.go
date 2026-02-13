@@ -46,9 +46,8 @@ var drivesGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *drive.Drive, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmdrive.GetDrive(m["driveId"].GetString(), m["fields"].GetString(), m["useDomainAdminAccess"].GetBool())
 						if err != nil {
@@ -57,8 +56,7 @@ var drivesGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

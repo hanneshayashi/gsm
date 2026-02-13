@@ -46,9 +46,8 @@ var membersGetRecursiveCmd = &cobra.Command{
 		groupKey := flags["groupKey"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.GetMember(groupKey, uk, fields)
 						if err != nil {
@@ -57,8 +56,7 @@ var membersGetRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

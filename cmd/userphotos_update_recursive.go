@@ -53,9 +53,8 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 		}
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.UpdateUserPhoto(uk, fields, p)
 						if err != nil {
@@ -63,8 +62,7 @@ var userPhotosUpdateRecursiveCmd = &cobra.Command{
 						}
 						results <- resultStruct{UserKey: uk, UserPhoto: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

@@ -46,9 +46,8 @@ var roleAssignmentsGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *admin.RoleAssignment, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmadmin.GetRoleAssignment(m["customer"].GetString(), m["roleAssignmentId"].GetString(), m["fields"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var roleAssignmentsGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

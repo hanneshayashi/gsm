@@ -46,9 +46,8 @@ var eventsQuickAddBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *calendar.Event, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmcalendar.QuickAddEvent(m["calendarId"].GetString(), m["text"].GetString(), m["sendUpdates"].GetString(), m["fields"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var eventsQuickAddBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

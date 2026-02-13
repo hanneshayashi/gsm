@@ -46,9 +46,8 @@ var eventsMoveBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *calendar.Event, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmcalendar.MoveEvent(m["calendarId"].GetString(), m["eventId"].GetString(), m["destination"].GetString(), m["sendUpdates"].GetString(), m["fields"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var eventsMoveBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

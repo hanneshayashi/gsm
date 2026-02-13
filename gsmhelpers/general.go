@@ -27,6 +27,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -103,12 +104,7 @@ func WrapClientWithRetry(client *http.Client) *http.Client {
 
 // Contains checks if a value is inside a slice
 func Contains[T comparable](value T, slice []T) bool {
-	for i := range slice {
-		if value == slice[i] {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, value)
 }
 
 // MaxThreads returns the maximum number of threads (goroutines) that should be spawned

@@ -46,9 +46,8 @@ var filtersCreateBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *gmail.Filter, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						f, err := mapToFilter(m)
 						if err != nil {
@@ -62,8 +61,7 @@ var filtersCreateBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

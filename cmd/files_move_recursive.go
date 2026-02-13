@@ -51,9 +51,8 @@ The original folders will be preserved at the source!`,
 		}
 		var wg sync.WaitGroup
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for f := range files {
 						u, err := gsmdrive.UpdateFile(f.Id, f.Parents[1], f.Parents[0], "", "", "id", nil, nil, false, false)
 						if err != nil {
@@ -62,8 +61,7 @@ The original folders will be preserved at the source!`,
 							results <- u
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

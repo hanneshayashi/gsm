@@ -50,9 +50,8 @@ var licenseAssignmentsDeleteRecursiveCmd = &cobra.Command{
 		productID := flags["productId"].GetString()
 		skuID := flags["skuId"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmlicensing.DeleteLicenseAssignment(productID, skuID, uk)
 						if err != nil {
@@ -61,8 +60,7 @@ var licenseAssignmentsDeleteRecursiveCmd = &cobra.Command{
 							results <- resultStruct{UserID: uk, Result: result}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

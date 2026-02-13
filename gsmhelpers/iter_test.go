@@ -211,7 +211,7 @@ func TestChanToIter_WithError(t *testing.T) {
 
 func TestChanToIter_EarlyTermination(t *testing.T) {
 	ch := make(chan int, 100)
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		ch <- i
 	}
 	close(ch)

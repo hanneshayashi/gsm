@@ -50,9 +50,8 @@ var chromeOsIssueCommandBatchCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						i, err := mapToDirectoryChromeosdevicesIssueCommandRequest(m)
 						if err != nil {
@@ -67,8 +66,7 @@ var chromeOsIssueCommandBatchCmd = &cobra.Command{
 							results <- resultStruct{DeviceID: deviceID, CommandID: result, CommandType: i.CommandType}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

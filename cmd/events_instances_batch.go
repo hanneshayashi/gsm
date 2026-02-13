@@ -46,9 +46,8 @@ var eventsInstancesBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan []*calendar.Event, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						var iterErr error
 						r := []*calendar.Event{}
@@ -65,8 +64,7 @@ var eventsInstancesBatchCmd = &cobra.Command{
 							results <- r
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

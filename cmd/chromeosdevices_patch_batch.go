@@ -46,9 +46,8 @@ var chromeOsDevicesPatchBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *admin.ChromeOsDevice, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						c, err := mapToChromeOsDevice(m)
 						if err != nil {
@@ -62,8 +61,7 @@ var chromeOsDevicesPatchBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

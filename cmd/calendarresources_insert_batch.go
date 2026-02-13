@@ -46,9 +46,8 @@ var calendarResourcesInsertBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *admin.CalendarResource, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						c, err := mapToCalendarResource(m)
 						if err != nil {
@@ -62,8 +61,7 @@ var calendarResourcesInsertBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

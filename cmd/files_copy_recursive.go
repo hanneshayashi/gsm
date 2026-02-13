@@ -51,9 +51,8 @@ var filesCopyRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error creating new folder structure: %v", err)
 		}
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for f := range files {
 						c, err := gsmdrive.CopyFile(f.Id, "", "", "id,name,mimeType,parents", &drive.File{Parents: []string{f.Parents[1]}, Name: f.Name}, false, false)
 						if err != nil {
@@ -62,8 +61,7 @@ var filesCopyRecursiveCmd = &cobra.Command{
 							results <- c
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

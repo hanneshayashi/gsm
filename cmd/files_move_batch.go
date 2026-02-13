@@ -47,9 +47,8 @@ Use "files move recursive" instead!`,
 		cap := cap(maps)
 		results := make(chan *drive.File, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						f, err := gsmdrive.GetFile(m["fileId"].GetString(), "id,parents", "")
 						if err != nil {
@@ -63,8 +62,7 @@ Use "files move recursive" instead!`,
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

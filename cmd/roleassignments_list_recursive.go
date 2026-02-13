@@ -50,9 +50,8 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 		customer := flags["customer"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						r := resultStruct{UserKey: uk}
 						var iterErr error
@@ -69,8 +68,7 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 							results <- r
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

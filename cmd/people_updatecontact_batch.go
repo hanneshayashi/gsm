@@ -46,9 +46,8 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *people.Person, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						resourceName := m["resourceName"].GetString()
 						personFields := m["personFields"].GetString()
@@ -70,8 +69,7 @@ var peopleUpdateContactBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

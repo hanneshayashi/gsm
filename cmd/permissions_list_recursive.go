@@ -52,9 +52,8 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 		fields := flags["fields"].GetString()
 		useDomainAdminAccess := flags["useDomainAdminAccess"].GetBool()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for file := range files {
 						var iterErr error
 						r := resultStruct{FileID: file.Id}
@@ -71,8 +70,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 							results <- r
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

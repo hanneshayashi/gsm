@@ -58,9 +58,8 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 			log.Fatalf("Unable to determine permissionId: %v", err)
 		}
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for file := range files {
 						r, err := gsmdrive.DeletePermission(file.Id, permissionID, useDomainAdminAccess, enforceExpansiveAccess)
 						if err != nil {
@@ -69,8 +68,7 @@ var permissionsDeleteRecursiveCmd = &cobra.Command{
 							results <- resultStruct{FileID: file.Id, Result: r}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

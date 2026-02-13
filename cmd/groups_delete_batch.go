@@ -49,9 +49,8 @@ var groupsDeleteBatchCmd = &cobra.Command{
 		}
 		results := make(chan resultStruct, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						groupKey := m["groupKey"].GetString()
 						result, err := gsmadmin.DeleteGroup(groupKey)
@@ -60,8 +59,7 @@ var groupsDeleteBatchCmd = &cobra.Command{
 						}
 						results <- resultStruct{GroupKey: groupKey, Result: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

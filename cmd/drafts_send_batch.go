@@ -46,9 +46,8 @@ var draftsSendBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *gmail.Message, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						userID := m["userId"].GetString()
 						draft, err := gsmgmail.GetDraft(userID, m["id"].GetString(), "FULL", "*")
@@ -63,8 +62,7 @@ var draftsSendBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

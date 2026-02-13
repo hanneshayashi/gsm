@@ -23,6 +23,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -85,12 +86,7 @@ func (t *RetryTransport) isRetryableStatusCode(statusCode int, body []byte) bool
 			}
 		}
 	}
-	for _, code := range t.RetryOn {
-		if statusCode == code {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(t.RetryOn, statusCode)
 }
 
 // RoundTrip implements http.RoundTripper with retry logic.

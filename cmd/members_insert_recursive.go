@@ -46,9 +46,8 @@ var membersInsertRecursiveCmd = &cobra.Command{
 		groupKey := flags["groupKey"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						m, err := mapToMember(flags)
 						if err != nil {
@@ -63,8 +62,7 @@ var membersInsertRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

@@ -34,8 +34,7 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	userKeysUnique := make(chan string, threads)
 	done := make(map[string]struct{})
 	errChan := make(chan error, 2)
-	wgOrgUnits.Add(1)
-	go func() {
+	wgOrgUnits.Go(func() {
 		for i := range orgUnits {
 			var iterErr error
 			for u, err := range ListUsers(false, fmt.Sprintf("orgUnitPath=%s", orgUnits[i]), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "") {
@@ -50,10 +49,8 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 				break
 			}
 		}
-		wgOrgUnits.Done()
-	}()
-	wgGroups.Add(1)
-	go func() {
+	})
+	wgGroups.Go(func() {
 		for i := range groupEmails {
 			var iterErr error
 			for m, err := range ListMembers(groupEmails[i], "", "members(email,type),nextPageToken", true) {
@@ -70,18 +67,15 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 				break
 			}
 		}
-		wgGroups.Done()
-	}()
-	wgUnique.Add(1)
-	go func() {
+	})
+	wgUnique.Go(func() {
 		for uk := range userKeys {
 			if _, found := done[uk]; !found {
 				userKeysUnique <- uk
 				done[uk] = struct{}{}
 			}
 		}
-		wgUnique.Done()
-	}()
+	})
 	go func() {
 		wgGroups.Wait()
 		wgOrgUnits.Wait()

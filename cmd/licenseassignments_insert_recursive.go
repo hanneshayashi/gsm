@@ -48,9 +48,8 @@ var licenseAssignmentsInsertRecursiveCmd = &cobra.Command{
 		skuID := flags["skuId"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						l, err := mapToLicenseAssignmentInsert(flags)
 						if err != nil {
@@ -64,8 +63,7 @@ var licenseAssignmentsInsertRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

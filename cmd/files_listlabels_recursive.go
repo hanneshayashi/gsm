@@ -49,9 +49,8 @@ var filesListLabelsRecursiveCmd = &cobra.Command{
 		wg := &sync.WaitGroup{}
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for file := range files {
 						var iterErr error
 						r := resultStruct{FileID: file.Id}
@@ -68,8 +67,7 @@ var filesListLabelsRecursiveCmd = &cobra.Command{
 							results <- r
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

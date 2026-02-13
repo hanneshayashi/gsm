@@ -46,9 +46,8 @@ var chromeOsDevicesGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *admin.ChromeOsDevice, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmadmin.GetChromeOsDevice(m["customerId"].GetString(), m["deviceId"].GetString(), m["fields"].GetString(), m["projection"].GetString())
 						if err != nil {
@@ -57,8 +56,7 @@ var chromeOsDevicesGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

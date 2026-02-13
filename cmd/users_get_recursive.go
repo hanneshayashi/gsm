@@ -48,9 +48,8 @@ var usersGetRecursiveCmd = &cobra.Command{
 		customFieldMask := flags["customFieldMask"].GetString()
 		viewType := flags["viewType"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.GetUser(uk, fields, projection, customFieldMask, viewType)
 						if err != nil {
@@ -58,8 +57,7 @@ var usersGetRecursiveCmd = &cobra.Command{
 						}
 						results <- result
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

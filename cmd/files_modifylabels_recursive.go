@@ -53,9 +53,8 @@ var filesModifyLabelsRecursiveCmd = &cobra.Command{
 			log.Fatalf("Error building modify labels request: %v", err)
 		}
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for file := range files {
 						r := resultStruct{FileID: file.Id}
 						result, err := gsmdrive.ModifyLabels(file.Id, fields, req)
@@ -66,8 +65,7 @@ var filesModifyLabelsRecursiveCmd = &cobra.Command{
 						}
 						results <- r
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

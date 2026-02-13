@@ -48,9 +48,8 @@ var licenseAssignmentsPatchRecursiveCmd = &cobra.Command{
 		skuID := flags["skuId"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						l, err := mapToLicenseAssignment(flags)
 						if err != nil {
@@ -63,8 +62,7 @@ var licenseAssignmentsPatchRecursiveCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

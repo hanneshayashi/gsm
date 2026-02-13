@@ -48,9 +48,8 @@ var userAliasesListRecursiveCmd = &cobra.Command{
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.ListUserAliases(uk, fields)
 						if err != nil {
@@ -58,8 +57,7 @@ var userAliasesListRecursiveCmd = &cobra.Command{
 						}
 						results <- resultStruct{UserKey: uk, UserAliases: result}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

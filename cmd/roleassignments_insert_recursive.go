@@ -52,9 +52,8 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 		customer := flags["customer"].GetString()
 		fields := flags["fields"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wgUserIds.Add(1)
-				go func() {
+			for range threads {
+				wgUserIds.Go(func() {
 					for uk := range userKeysUnique {
 						u, err := gsmadmin.GetUser(uk, "id", "", "", "")
 						if err != nil {
@@ -63,16 +62,14 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 							userIdsUnique <- u.Id
 						}
 					}
-					wgUserIds.Done()
-				}()
+				})
 			}
 			wgUserIds.Wait()
 			close(userIdsUnique)
 		}()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uid := range userIdsUnique {
 						r, err := mapToRoleAssignment(flags)
 						if err != nil {
@@ -86,8 +83,7 @@ var roleAssignmentsInsertRecursiveCmd = &cobra.Command{
 							results <- resultStruct{UserKey: uid, RoleAssignment: result}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

@@ -48,9 +48,8 @@ var membersDeleteRecursiveCmd = &cobra.Command{
 		userKeysUnique, _ := gsmadmin.GetUniqueUsersChannelRecursive(flags["orgUnit"].GetStringSlice(), flags["groupEmail"].GetStringSlice(), threads)
 		groupKey := flags["groupKey"].GetString()
 		go func() {
-			for i := 0; i < threads; i++ {
-				wg.Add(1)
-				go func() {
+			for range threads {
+				wg.Go(func() {
 					for uk := range userKeysUnique {
 						result, err := gsmadmin.DeleteMember(groupKey, uk)
 						if err != nil {
@@ -59,8 +58,7 @@ var membersDeleteRecursiveCmd = &cobra.Command{
 							results <- resultStruct{MemberKey: uk, Result: result}
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

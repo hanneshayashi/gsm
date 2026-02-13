@@ -46,9 +46,8 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *people.ContactGroup, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						result, err := gsmpeople.GetContactGroup(m["resourceName"].GetString(), m["fields"].GetString(), m["maxMembers"].GetInt64())
 						if err != nil {
@@ -57,8 +56,7 @@ var contactGroupsGetBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

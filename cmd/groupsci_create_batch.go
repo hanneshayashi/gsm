@@ -52,9 +52,8 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 		}
 		parent := "customers/" + customerID
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						g, err := mapToGroupCi(m)
 						if g.Parent == "" {
@@ -76,8 +75,7 @@ var groupsCiCreateBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)

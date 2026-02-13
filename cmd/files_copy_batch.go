@@ -46,9 +46,8 @@ var filesCopyBatchCmd = &cobra.Command{
 		cap := cap(maps)
 		results := make(chan *drive.File, cap)
 		go func() {
-			for i := 0; i < cap; i++ {
-				wg.Add(1)
-				go func() {
+			for range cap {
+				wg.Go(func() {
 					for m := range maps {
 						f, err := mapToFile(m)
 						if err != nil {
@@ -62,8 +61,7 @@ var filesCopyBatchCmd = &cobra.Command{
 							results <- result
 						}
 					}
-					wg.Done()
-				}()
+				})
 			}
 			wg.Wait()
 			close(results)
