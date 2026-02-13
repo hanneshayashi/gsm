@@ -21,8 +21,8 @@ import "github.com/hanneshayashi/gsm/gsmhelpers"
 
 // SecurityModeIsValid checks if the given SecurityMode is valid
 // see: https://developers.google.com/gmail/api/reference/rest/v1/PopSettings#securitymode
-func SecurityModeIsValid(SecurityMode string) bool {
-	switch SecurityMode {
+func SecurityModeIsValid(securityMode string) bool {
+	switch securityMode {
 	case "NONE", "SSL", "STARTTLS":
 		return true
 	}

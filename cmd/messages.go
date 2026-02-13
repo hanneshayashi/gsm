@@ -46,7 +46,7 @@ var messagesCmd = &cobra.Command{
 	},
 }
 
-var messageFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{ //TODO
+var messageFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{ // TODO
 	"userId": {
 		AvailableFor: []string{"delete", "modify", "get", "import", "insert", "list", "send", "trash", "untrash"},
 		Type:         gsmhelpers.FlagString,

@@ -56,11 +56,11 @@ func TestStreamOrCollect_Stream(t *testing.T) {
 
 	StreamOrCollect(seq, true, false)
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 	output := buf.String()
 
 	// NDJSON: each line is a separate JSON object
@@ -100,11 +100,11 @@ func TestStreamOrCollect_Collect(t *testing.T) {
 
 	StreamOrCollect(seq, false, false)
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 
 	var got []testItem
 	if err := json.Unmarshal(buf.Bytes(), &got); err != nil {
@@ -139,11 +139,11 @@ func TestStreamOrCollect_ErrorHandling(t *testing.T) {
 
 	StreamOrCollect(seq, true, false)
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 	output := buf.String()
 
 	// Should have 2 lines (alice and bob), error is logged but not output
@@ -244,11 +244,11 @@ func TestStreamOrCollectJSON(t *testing.T) {
 
 	StreamOrCollectJSON(ch, nil, true, false)
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 	lines := strings.Split(strings.TrimSpace(buf.String()), "\n")
 	if len(lines) != 2 {
 		t.Fatalf("expected 2 lines, got %d", len(lines))
@@ -268,11 +268,11 @@ func TestStreamOrCollect_EmptyIterator(t *testing.T) {
 
 	StreamOrCollect(iter.Seq2[testItem, error](empty), false, false)
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 
 	// Should produce "null\n" since []testItem(nil) encodes as null
 	// or "[]" - either is acceptable

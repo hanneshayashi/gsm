@@ -18,8 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
-	"errors"
 	"context"
+	"errors"
 	"fmt"
 	"iter"
 
@@ -102,9 +102,9 @@ func ListGroups(filter, userKey, domain, customer, fields string) iter.Seq2[*adm
 }
 
 // PatchGroup updates a group's properties. This method supports patch semantics.
-func PatchGroup(groupKey, fields string, Group *admin.Group) (*admin.Group, error) {
+func PatchGroup(groupKey, fields string, group *admin.Group) (*admin.Group, error) {
 	srv := getGroupsService()
-	c := srv.Patch(groupKey, Group)
+	c := srv.Patch(groupKey, group)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}

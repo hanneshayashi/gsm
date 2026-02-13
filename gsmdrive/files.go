@@ -18,15 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
-	"errors"
 	"context"
+	"errors"
 	"fmt"
 	"io"
+	"iter"
 	"mime"
 	"os"
 	"path/filepath"
 	"strings"
-	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -111,7 +111,8 @@ func EmptyTrash() (bool, error) {
 func getLocalFilePaths(localFilePath string) (folder string, fileName string, err error) {
 	if localFilePath != "" {
 		stats, err := os.Stat(localFilePath)
-		if os.IsNotExist(err) {
+		switch {
+		case os.IsNotExist(err):
 			if strings.HasSuffix(localFilePath, string(filepath.Separator)) {
 				err = os.MkdirAll(localFilePath, 0777)
 				if err != nil {
@@ -125,12 +126,12 @@ func getLocalFilePaths(localFilePath string) (folder string, fileName string, er
 				return "", "", err
 			}
 			return dir + string(filepath.Separator), filepath.Base(localFilePath), nil
-		} else if err != nil {
+		case err != nil:
 			return "", "", err
-		} else {
+		default:
 			if stats.IsDir() {
 				if !strings.HasSuffix(localFilePath, string(filepath.Separator)) {
-					localFilePath = localFilePath + string(filepath.Separator)
+					localFilePath += string(filepath.Separator)
 				}
 				return localFilePath, "", nil
 			}
@@ -149,7 +150,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 		return "", err
 	}
 	c := srv.Export(fileID, mimeType)
-	r, err := c.Download()
+	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
@@ -162,7 +163,7 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 		fileName = file.Name
 		extensions, er := mime.ExtensionsByType(mimeType)
 		if er == nil && len(extensions) > 0 {
-			fileName = fileName + extensions[0]
+			fileName += extensions[0]
 		}
 	}
 	fileName = folder + fileName
@@ -197,7 +198,7 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 		return "", err
 	}
 	c := srv.Get(fileID).SupportsAllDrives(true).AcknowledgeAbuse(acknowledgeAbuse)
-	r, err := c.Download()
+	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}

@@ -45,7 +45,7 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, err := client.Do(req)
+	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return nil, err
 	}
@@ -68,10 +68,11 @@ func DeleteContactDelegate(parent, email string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, err := client.Do(req)
+	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return false, err
 	}
+	defer gsmhelpers.CloseLog(r.Body, "deleteContactDelegateBody")
 	if r.StatusCode != 200 {
 		return false, nil
 	}
@@ -84,7 +85,7 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, err := client.Do(req)
+	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return nil, err
 	}

@@ -52,15 +52,15 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 }
 
 // InsertOrgUnit adds an organizational unit.
-func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.OrgUnit, error) {
+func InsertOrgUnit(customerID, fields string, orgUnit *admin.OrgUnit) (*admin.OrgUnit, error) {
 	srv := getOrgunitsService()
-	c := srv.Insert(customerID, OrgUnit)
+	c := srv.Insert(customerID, orgUnit)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
 	r, err := c.Do()
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), err)
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, orgUnit.Name), err)
 	}
 	return r, nil
 }
@@ -86,9 +86,9 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 }
 
 // PatchOrgUnit updates an organizational unit. This method supports patch semantics.
-func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit) (*admin.OrgUnit, error) {
+func PatchOrgUnit(customerID, orgUnitPath, fields string, orgUnit *admin.OrgUnit) (*admin.OrgUnit, error) {
 	srv := getOrgunitsService()
-	c := srv.Patch(customerID, orgUnitPath, OrgUnit)
+	c := srv.Patch(customerID, orgUnitPath, orgUnit)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}

@@ -66,7 +66,7 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 		return "", err
 	}
 	c := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse)
-	r, err := c.Download()
+	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
 	}

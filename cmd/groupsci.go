@@ -253,13 +253,13 @@ func mapToGroupCi(flags map[string]*gsmhelpers.Value) (*ci.Group, error) {
 		if flags["id"].IsSet() {
 			group.GroupKey.Id = flags["id"].GetString()
 			if group.GroupKey.Id == "" {
-				group.GroupKey.ForceSendFields = append(group.ForceSendFields, "Id")
+				group.GroupKey.ForceSendFields = append(group.GroupKey.ForceSendFields, "Id")
 			}
 		}
 		if flags["namespace"].IsSet() {
 			group.GroupKey.Namespace = flags["namespace"].GetString()
 			if group.GroupKey.Namespace == "" {
-				group.GroupKey.ForceSendFields = append(group.ForceSendFields, "Namespace")
+				group.GroupKey.ForceSendFields = append(group.GroupKey.ForceSendFields, "Namespace")
 			}
 		}
 	}
