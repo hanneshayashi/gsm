@@ -30,10 +30,11 @@ import (
 func DeleteDomain(customerID, domainName string) (bool, error) {
 	srv := getDomainsService()
 	c := srv.Delete(customerID, domainName)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domainName), err)
+	}
+	return true, nil
 }
 
 // GetDomain retrieves a domain of the customer.
@@ -43,15 +44,9 @@ func GetDomain(customerID, domainName, fields string) (*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Domains)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domainName), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func InsertDomain(customerID, fields string, domain *admin.Domains) (*admin.Doma
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domain.DomainName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Domains)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domain.DomainName), err)
 	}
 	return r, nil
 }
@@ -83,15 +72,9 @@ func ListDomains(customerID, fields string) ([]*admin.Domains, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Domains2)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r.Domains, nil
 }

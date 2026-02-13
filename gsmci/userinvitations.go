@@ -31,15 +31,9 @@ import (
 func CancelInvitation(name string, cancelUserInvitationRequest *ci.CancelUserInvitationRequest) (*googleapi.RawMessage, error) {
 	srv := getCustomersUserinvitationsService()
 	c := srv.Cancel(name, cancelUserInvitationRequest)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return &r.Response, nil
 }
@@ -51,15 +45,9 @@ func GetInvitation(name, fields string) (*ci.UserInvitation, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.UserInvitation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -73,15 +61,9 @@ func GetInvitation(name, fields string) (*ci.UserInvitation, error) {
 func IsInvitableUser(name string) (bool, error) {
 	srv := getCustomersUserinvitationsService()
 	c := srv.IsInvitableUser(name)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return false, err
-	}
-	r, ok := result.(*ci.IsInvitableUserResponse)
-	if !ok {
-		return false, fmt.Errorf("result unknown")
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r.IsInvitableUser, nil
 }
@@ -126,15 +108,9 @@ func SendInvitation(name, fields string, sendUserInvitationRequest *ci.SendUserI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return &r.Response, nil
 }

@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"io"
 	"mime"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,15 +45,9 @@ func CopyFile(fileID, includePermissionsForView, ocrLanguage, fields string, fil
 	if ocrLanguage != "" {
 		c = c.OcrLanguage(ocrLanguage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.File)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r, nil
 }
@@ -82,15 +75,9 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 	if ocrLanguage != "" {
 		c = c.OcrLanguage(ocrLanguage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(file.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.File)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(file.Name), err)
 	}
 	return r, nil
 }
@@ -101,20 +88,22 @@ func CreateFile(file *drive.File, content *os.File, ignoreDefaultVisibility, kee
 func DeleteFile(fileID string) (bool, error) {
 	srv := getFilesService()
 	c := srv.Delete(fileID).SupportsAllDrives(true)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
+	}
+	return true, nil
 }
 
 // EmptyTrash permanently deletes all of the user's trashed files.
 func EmptyTrash() (bool, error) {
 	srv := getFilesService()
 	c := srv.EmptyTrash()
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey("Empty Trash"), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey("Empty Trash"), err)
+	}
+	return true, nil
 }
 
 func getLocalFilePaths(localFilePath string) (folder string, fileName string, err error) {
@@ -158,15 +147,9 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 		return "", err
 	}
 	c := srv.Export(fileID, mimeType)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Download()
-	})
+	r, err := c.Download()
 	if err != nil {
-		return "", err
-	}
-	r, ok := result.(*http.Response)
-	if !ok {
-		return "", fmt.Errorf("result unknown")
+		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	defer gsmhelpers.CloseLog(r.Body, "exportFileBody")
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -197,15 +180,9 @@ func GenerateFileIDs(count int64, space string) ([]string, error) {
 	if space != "" {
 		c = c.Space(space)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Generate File Ids"), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.GeneratedIds)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey("Generate File Ids"), err)
 	}
 	return r.Ids, nil
 }
@@ -218,15 +195,9 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 		return "", err
 	}
 	c := srv.Get(fileID).SupportsAllDrives(true).AcknowledgeAbuse(acknowledgeAbuse)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Download()
-	})
+	r, err := c.Download()
 	if err != nil {
-		return "", err
-	}
-	r, ok := result.(*http.Response)
-	if !ok {
-		return "", fmt.Errorf("result unknown")
+		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	defer gsmhelpers.CloseLog(r.Body, "downloadFileBody")
 	folder, fileName, err := getLocalFilePaths(localFilePath)
@@ -247,41 +218,6 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 }
 
 // RandomFile gets a file's metadata or content by ID.
-// func RandomFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
-// 	c := func() (interface{}, error) {
-// 		r := &drive.File{
-// 			Id: fileID,
-// 		}
-// 		err := &googleapi.Error{}
-// 		random := rand.Intn(100)
-// 		if random%99 == 0 {
-// 			foo := []string{
-// 				"Rate limit reached",
-// 				"Quota exceeded",
-// 				"Forbidden",
-// 			}
-// 			rand2 := rand.Intn(3)
-// 			err.Message = foo[rand2]
-// 			err.Code = 403
-// 			return nil, err
-// 		}
-// 		if random%3 == 20 {
-// 			err.Message = "File not found"
-// 			err.Code = 404
-// 			return nil, err
-// 		}
-// 		return r, nil
-// 	}
-// 	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), c)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	r, ok := result.(*drive.File)
-// if !ok {
-// 	return nil, fmt.Errorf("result unknown")
-// }
-// 	return r, nil
-// }
 
 // GetFile gets a file's metadata or content by ID.
 func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, error) {
@@ -293,15 +229,9 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.File)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r, nil
 }
@@ -371,15 +301,9 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.File)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r, nil
 }
@@ -417,15 +341,9 @@ func ModifyLabels(fileID, fields string, modifyLabelsRequest *drive.ModifyLabels
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.ModifyLabelsResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r.ModifiedLabels, nil
 }

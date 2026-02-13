@@ -258,6 +258,7 @@ func auth() {
 	if err != nil {
 		log.Fatalf("Unable to get client: %v", err)
 	}
+	client = gsmhelpers.WrapClientWithRetry(client)
 	gsmadmin.SetClient(client)
 	gsmgmail.SetClient(client)
 	gsmci.SetClient(client)

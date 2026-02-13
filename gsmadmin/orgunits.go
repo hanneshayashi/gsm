@@ -30,10 +30,11 @@ import (
 func DeleteOrgUnit(customerID, orgUnitPath string) (bool, error) {
 	srv := getOrgunitsService()
 	c := srv.Delete(customerID, orgUnitPath)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, orgUnitPath), err)
+	}
+	return true, nil
 }
 
 // GetOrgUnit retrieves an organizational unit.
@@ -43,15 +44,9 @@ func GetOrgUnit(customerID, orgUnitPath, fields string) (*admin.OrgUnit, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.OrgUnit)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, orgUnitPath), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func InsertOrgUnit(customerID, fields string, OrgUnit *admin.OrgUnit) (*admin.Or
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.OrgUnit)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, OrgUnit.Name), err)
 	}
 	return r, nil
 }
@@ -89,15 +78,9 @@ func ListOrgUnits(customerID, t, orgUnitPath, fields string) ([]*admin.OrgUnit, 
 	if t != "" {
 		c = c.Type(t)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.OrgUnits)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r.OrganizationUnits, nil
 }
@@ -109,15 +92,9 @@ func PatchOrgUnit(customerID, orgUnitPath, fields string, OrgUnit *admin.OrgUnit
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, orgUnitPath), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.OrgUnit)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, orgUnitPath), err)
 	}
 	return r, nil
 }

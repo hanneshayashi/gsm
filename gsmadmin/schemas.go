@@ -30,10 +30,11 @@ import (
 func DeleteSchema(customerID, schemaKey string) (bool, error) {
 	srv := getSchemasService()
 	c := srv.Delete(customerID, schemaKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
+	}
+	return true, nil
 }
 
 // GetSchema retrieves a custom schema.
@@ -43,15 +44,9 @@ func GetSchema(customerID, schemaKey, fields string) (*admin.Schema, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Schema)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func InsertSchema(customerID, fields string, schema *admin.Schema) (*admin.Schem
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Schema)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r, nil
 }
@@ -83,15 +72,9 @@ func ListSchema(customerID, fields string) ([]*admin.Schema, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Schemas)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r.Schemas, nil
 }
@@ -103,15 +86,9 @@ func PatchSchema(customerID, schemaKey, fields string, schema *admin.Schema) (*a
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Schema)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
 	}
 	return r, nil
 }

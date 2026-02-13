@@ -31,20 +31,22 @@ import (
 func BatchDeleteMessages(userID string, ids []string) (bool, error) {
 	srv := getUsersMessagesService()
 	c := srv.BatchDelete(userID, &gmail.BatchDeleteMessagesRequest{Ids: ids})
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
+	}
+	return true, nil
 }
 
 // BatchModifyMessages modifies the labels on the specified messages.
 func BatchModifyMessages(userID string, ids, addLabelIds, removeLabelIds []string) (bool, error) {
 	srv := getUsersMessagesService()
 	c := srv.BatchModify(userID, &gmail.BatchModifyMessagesRequest{Ids: ids, AddLabelIds: addLabelIds, RemoveLabelIds: removeLabelIds})
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
+	}
+	return true, nil
 }
 
 // DeleteMessage immediately and permanently deletes the specified message.
@@ -52,10 +54,11 @@ func BatchModifyMessages(userID string, ids, addLabelIds, removeLabelIds []strin
 func DeleteMessage(userID, id string) (bool, error) {
 	srv := getUsersMessagesService()
 	c := srv.Delete(userID, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
+	}
+	return true, nil
 }
 
 // GetMessage gets the specified message.
@@ -71,15 +74,9 @@ func GetMessage(userID, id, format, metadataHeaders, fields string) (*gmail.Mess
 			c = c.MetadataHeaders(metadataHeaders)
 		}
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -92,15 +89,9 @@ func ImportMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, message.Id), err)
 	}
 	return r, nil
 }
@@ -113,15 +104,9 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, message.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, message.Id), err)
 	}
 	return r, nil
 }
@@ -165,15 +150,9 @@ func ModifyMessage(userID, id, fields string, addLabelIds, removeLabelIds []stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -185,15 +164,9 @@ func SendMessage(userID, fields string, message *gmail.Message) (*gmail.Message,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r, nil
 }
@@ -205,15 +178,9 @@ func TrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -225,15 +192,9 @@ func UntrashMessage(userID, id, fields string) (*gmail.Message, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }

@@ -30,10 +30,11 @@ import (
 func DeleteSmimeInfo(userID, sendAsEmail, id string) (bool, error) {
 	srv := getUsersSettingsSendAsSmimeInfoService()
 	c := srv.Delete(userID, sendAsEmail, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), err)
+	}
+	return true, nil
 }
 
 // GetSmimeInfo gets the specified S/MIME config for the specified send-as alias.
@@ -43,15 +44,9 @@ func GetSmimeInfo(userID, sendAsEmail, id, fields string) (*gmail.SmimeInfo, err
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.SmimeInfo)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertSmimeInfo(userID, sendAsEmail, fields string, smimeInfo *gmail.SmimeI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.SmimeInfo)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
 	}
 	return r, nil
 }
@@ -84,15 +73,9 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListSmimeInfoResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
 	}
 	return r.SmimeInfo, nil
 }
@@ -101,8 +84,9 @@ func ListSmimeInfo(userID, sendAsEmail, fields string) ([]*gmail.SmimeInfo, erro
 func SetDefaultSmimeInfo(userID, sendAsEmail, id string) (bool, error) {
 	srv := getUsersSettingsSendAsSmimeInfoService()
 	c := srv.SetDefault(userID, sendAsEmail, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail, id), err)
+	}
+	return true, nil
 }

@@ -32,10 +32,11 @@ import (
 func DeleteThread(userID, id string) (bool, error) {
 	srv := getUsersThreadsService()
 	c := srv.Delete(userID, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
+	}
+	return true, nil
 }
 
 // GetThread gets the specified thread.
@@ -51,15 +52,9 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 			c = c.MetadataHeaders(metadataHeaders)
 		}
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Thread)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -103,15 +98,9 @@ func ModifyThread(userID, id, fields string, addLabelIds, removeLabelIds []strin
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Thread)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -123,15 +112,9 @@ func TrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Thread)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -143,15 +126,9 @@ func UntrashThread(userID, id, fields string) (*gmail.Thread, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Thread)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }

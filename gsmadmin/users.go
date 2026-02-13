@@ -31,10 +31,11 @@ import (
 func DeleteUser(userKey string) (bool, error) {
 	srv := getUsersService()
 	c := srv.Delete(userKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // GetUser retrieves a user.
@@ -53,15 +54,9 @@ func GetUser(userKey, fields, projection, customFieldMask, viewType string) (*ad
 	if viewType != "" {
 		c.ViewType(viewType)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.User)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r, nil
 }
@@ -73,15 +68,9 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(user.PrimaryEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.User)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(user.PrimaryEmail), err)
 	}
 	return r, nil
 }
@@ -144,10 +133,11 @@ func MakeAdmin(userKey string, status bool) (bool, error) {
 		makeAdmin.ForceSendFields = append(makeAdmin.ForceSendFields, "Status")
 	}
 	c := srv.MakeAdmin(userKey, makeAdmin)
-	result, err := gsmhelpers.ActionRetry(userKey, func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", userKey, err)
+	}
+	return true, nil
 }
 
 // UpdateUser updates a user using patch semantics.
@@ -157,15 +147,9 @@ func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.User)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r, nil
 }
@@ -175,20 +159,22 @@ func UpdateUser(userKey, fields string, user *admin.User) (*admin.User, error) {
 func SignOutUser(userKey string) (bool, error) {
 	srv := getUsersService()
 	c := srv.SignOut(userKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // UndeleteUser undeletes a deleted user.
 func UndeleteUser(userKey, orgUnitPath string) (bool, error) {
 	srv := getUsersService()
 	c := srv.Undelete(userKey, &admin.UserUndelete{OrgUnitPath: orgUnitPath})
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // func hashPW(password string) string {

@@ -31,10 +31,11 @@ import (
 func DeleteBuilding(customer, buildingID string) (bool, error) {
 	srv := getResourcesBuildingsService()
 	c := srv.Delete(customer, buildingID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, buildingID), err)
+	}
+	return true, nil
 }
 
 // GetBuilding retrieves a building.
@@ -44,15 +45,9 @@ func GetBuilding(customer, buildingID, fields string) (*admin.Building, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Building)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, buildingID), err)
 	}
 	return r, nil
 }
@@ -67,15 +62,9 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, building.BuildingName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Building)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, building.BuildingName), err)
 	}
 	return r, nil
 }
@@ -115,15 +104,9 @@ func PatchBuilding(customer, buildingID, coordinatesSource, fields string, build
 	if coordinatesSource != "" {
 		c = c.CoordinatesSource(coordinatesSource)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, buildingID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Building)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, buildingID), err)
 	}
 	return r, nil
 }

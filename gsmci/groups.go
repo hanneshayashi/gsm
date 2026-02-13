@@ -34,15 +34,9 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (*googleapi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(group.GroupKey.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(group.GroupKey.Id), err)
 	}
 	return &r.Response, nil
 }
@@ -51,11 +45,9 @@ func CreateGroup(group *ci.Group, initialGroupConfig, fields string) (*googleapi
 func DeleteGroup(name string) (bool, error) {
 	srv := getGroupsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return true, nil
 }
@@ -67,15 +59,9 @@ func PatchGroup(name, updateMask, fields string, group *ci.Group) (*googleapi.Ra
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return &r.Response, nil
 }
@@ -87,15 +73,9 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Group)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -104,15 +84,9 @@ func GetGroup(name, fields string) (*ci.Group, error) {
 func LookupGroup(email string) (string, error) {
 	srv := getGroupsService()
 	c := srv.Lookup().GroupKeyId(email)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(email), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return "", err
-	}
-	r, ok := result.(*ci.LookupGroupNameResponse)
-	if !ok {
-		return "", fmt.Errorf("result unknown")
+		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(email), err)
 	}
 	return r.Name, nil
 }
@@ -185,15 +159,9 @@ func GetSecuritySettings(name, readMask, fields string) (*ci.SecuritySettings, e
 	if readMask != "" {
 		c.ReadMask(readMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.SecuritySettings)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -208,15 +176,9 @@ func UpdateSecuritySettings(name, updateMask, fields string, securitysettings *c
 	if updateMask != "" {
 		c.UpdateMask(updateMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return &r.Response, nil
 }

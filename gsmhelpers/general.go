@@ -26,23 +26,15 @@ import (
 	"io"
 	"log"
 	"math/rand/v2"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/cenkalti/backoff/v4"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"google.golang.org/api/googleapi"
 	"gopkg.in/yaml.v3"
 )
-
-// standardRetrier is a retrier object that should be used by every function that calls a Google API
-var standardRetrier *backoff.ExponentialBackOff
-
-// RetryOn defines the HTTP error codes that should be retried on.
-// Note that GSM will always attempt to retry on a 403 error code with a message that indicates a quota / rate limit error
-var RetryOn []int
 
 // GetFileContentAsString returns the content of a file as a string
 func GetFileContentAsString(path string) (string, error) {
@@ -75,49 +67,39 @@ func GetCSVContent(path string, delimiter rune, skipHeader bool) ([][]string, er
 	return csv, nil
 }
 
-// formatError adds an errKey prefix to an error message
-func formatError(err error, errKey string) error {
-	return fmt.Errorf("%s: %v", errKey, err)
+// retryConfig stores the retry configuration set by SetStandardRetrier.
+var retryConfig struct {
+	InitialInterval time.Duration
+	MaxInterval     time.Duration
+	MaxElapsedTime  time.Duration
+	Multiplier      float64
 }
 
-// logError returns a retryable error, indicating that the operation should be reattempted or nil if no error occurred or if the error is not retryable
-func logError(err error, d time.Duration) {
-	if err != nil {
-		log.Printf("%v - Retrying after %s...", err, d)
-	}
-}
+// RetryOn defines the HTTP error codes that should be retried on.
+// Note that GSM will always attempt to retry on a 429 and a 403 error code
+// with a message that indicates a quota / rate limit error.
+var RetryOn []int
 
-// errorIsRetryable checks if a Google API response returned a retryable error
-func errorIsRetryable(err error) bool {
-	gerr, ok := err.(*googleapi.Error)
-	if !ok {
-		return false
-	}
-	keyWords := []string{
-		"quota",
-		"limit",
-		"rate",
-	}
-	if gerr.Code == 403 {
-		msg := strings.ToLower(gerr.Message)
-		for i := range keyWords {
-			if strings.Contains(msg, keyWords[i]) {
-				return true
-			}
-		}
-	} else if Contains(gerr.Code, RetryOn) {
-		return true
-	}
-	return false
-}
-
-// SetStandardRetrier sets the standard retrier
+// SetStandardRetrier sets the standard retry configuration.
 func SetStandardRetrier(standardDelay, maxInterval, maxElapsedTime time.Duration) {
-	standardRetrier = backoff.NewExponentialBackOff()
-	standardRetrier.InitialInterval = standardDelay
-	standardRetrier.MaxInterval = maxInterval
-	standardRetrier.MaxElapsedTime = maxElapsedTime
-	standardRetrier.Multiplier = 2
+	retryConfig.InitialInterval = standardDelay
+	retryConfig.MaxInterval = maxInterval
+	retryConfig.MaxElapsedTime = maxElapsedTime
+	retryConfig.Multiplier = 2
+}
+
+// WrapClientWithRetry wraps an *http.Client with the retry transport,
+// adding automatic retry for transient Google API errors.
+func WrapClientWithRetry(client *http.Client) *http.Client {
+	client.Transport = &RetryTransport{
+		Base:            client.Transport,
+		InitialInterval: retryConfig.InitialInterval,
+		MaxInterval:     retryConfig.MaxInterval,
+		MaxElapsedTime:  retryConfig.MaxElapsedTime,
+		Multiplier:      retryConfig.Multiplier,
+		RetryOn:         RetryOn,
+	}
+	return client
 }
 
 // Contains checks if a value is inside a slice
@@ -317,55 +299,15 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 	return maps, nil
 }
 
-// GetObjectRetry performs an action that returns an object, retrying on failure when appropriate
-func GetObjectRetry(errKey string, c func() (any, error)) (any, error) {
-	result, err := backoff.RetryNotifyWithData(func() (any, error) {
-		defer Sleep()
-		result, err := c()
-		if err != nil {
-			ferr := formatError(err, errKey)
-			if errorIsRetryable(err) {
-				return nil, ferr
-			}
-			return nil, backoff.Permanent(ferr)
-		}
-		return result, nil
-	}, standardRetrier, logError)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-// ActionRetry performs an action that does not return an object, retrying on failure when appropriate
-func ActionRetry(errKey string, c func() error) (bool, error) {
-	err := backoff.RetryNotify(func() error {
-		defer Sleep()
-		err := c()
-		if err != nil {
-			ferr := formatError(err, errKey)
-			if errorIsRetryable(err) {
-				return ferr
-			}
-			return backoff.Permanent(ferr)
-		}
-		return nil
-	}, standardRetrier, logError)
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 // FormatErrorKey formats an error key.
 // Error keys are used on error messages to make it easier to debug where an error occurred
 func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
 }
 
-// Sleep sleeps for standardDelay ms plus a random jitter between 0 and 50
+// Sleep sleeps for the configured initial interval plus a random jitter between 0 and 50ms
 func Sleep() {
-	time.Sleep(standardRetrier.InitialInterval + time.Duration(rand.IntN(50))*time.Millisecond)
+	time.Sleep(retryConfig.InitialInterval + time.Duration(rand.IntN(50))*time.Millisecond)
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called

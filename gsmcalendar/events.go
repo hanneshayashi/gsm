@@ -31,10 +31,11 @@ import (
 func DeleteEvent(calendarID, eventID, sendUpdates string) (bool, error) {
 	srv := getEventsService()
 	c := srv.Delete(calendarID, eventID).SendUpdates(sendUpdates)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, eventID), err)
+	}
+	return true, nil
 }
 
 // GetEvent returns an event.
@@ -50,15 +51,9 @@ func GetEvent(calendarID, eventID, timeZone, fields string, maxAttendees int64) 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, eventID), err)
 	}
 	return r, nil
 }
@@ -70,15 +65,9 @@ func ImportEvent(calendarID, fields string, event *calendar.Event, conferenceDat
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, event.Id), err)
 	}
 	return r, nil
 }
@@ -93,15 +82,9 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, event.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, event.Id), err)
 	}
 	return r, nil
 }
@@ -210,15 +193,9 @@ func MoveEvent(calendarID, eventID, destination, sendUpdates, fields string) (*c
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID, destination), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, eventID, destination), err)
 	}
 	return r, nil
 }
@@ -235,15 +212,9 @@ func PatchEvent(calendarID, eventID, sendUpdates, fields string, event *calendar
 	if maxAttendees != 0 {
 		c = c.MaxAttendees(maxAttendees)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, eventID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, eventID), err)
 	}
 	return r, nil
 }
@@ -255,15 +226,9 @@ func QuickAddEvent(calendarID, text, sendUpdates, fields string) (*calendar.Even
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Event)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
 	}
 	return r, nil
 }

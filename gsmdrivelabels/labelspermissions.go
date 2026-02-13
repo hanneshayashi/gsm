@@ -62,15 +62,9 @@ func CreateLabelPermission(parent, fields string, useAdminAccess bool, permissio
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2LabelPermission)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	return r, nil
 }
@@ -80,11 +74,11 @@ func CreateLabelPermission(parent, fields string, useAdminAccess bool, permissio
 func DeleteLabelPermission(name string, useAdminAccess bool) (bool, error) {
 	srv := getLabelsPermissionsService()
 	c := srv.Delete(name).UseAdminAccess(useAdminAccess)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(name), func() error {
-		_, err := c.Do()
-		return err
-	})
-	return result, err
+	_, err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
+	}
+	return true, nil
 }
 
 // DeleteLabelPermission deletes a principal's permission on a Label.
@@ -92,11 +86,11 @@ func DeleteLabelPermission(name string, useAdminAccess bool) (bool, error) {
 func BatchDeleteLabelPermissions(parent string, request *drivelabels.GoogleAppsDriveLabelsV2BatchDeleteLabelPermissionsRequest) (bool, error) {
 	srv := getLabelsPermissionsService()
 	c := srv.BatchDelete(parent, request)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(parent), func() error {
-		_, err := c.Do()
-		return err
-	})
-	return result, err
+	_, err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
+	}
+	return true, nil
 }
 
 // BatchDeleteLabelPermissions updates Label permissions.
@@ -108,15 +102,9 @@ func BatchUpdateLabelPermissions(parent, fields string, request *drivelabels.Goo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2BatchUpdateLabelPermissionsResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	return r, nil
 }

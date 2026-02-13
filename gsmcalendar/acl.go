@@ -31,10 +31,11 @@ import (
 func DeleteACL(calendarID, ruleID string) (bool, error) {
 	srv := getACLService()
 	c := srv.Delete(calendarID, ruleID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, ruleID), err)
+	}
+	return true, nil
 }
 
 // GetACL returns an access control rule.
@@ -44,15 +45,9 @@ func GetACL(calendarID, ruleID, fields string) (*calendar.AclRule, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.AclRule)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, ruleID), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, acl.Scope.Value), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.AclRule)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, acl.Scope.Value), err)
 	}
 	return r, nil
 }
@@ -110,15 +99,9 @@ func PatchACL(calendarID, ruleID, fields string, aclRule *calendar.AclRule, send
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID, ruleID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.AclRule)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID, ruleID), err)
 	}
 	return r, nil
 }

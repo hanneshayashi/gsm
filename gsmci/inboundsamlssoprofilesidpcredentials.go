@@ -35,15 +35,9 @@ func AddSsoProfileIdpCredential(parent, fields string, request *ci.AddIdpCredent
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	return &r.Response, nil
 }
@@ -52,11 +46,9 @@ func AddSsoProfileIdpCredential(parent, fields string, request *ci.AddIdpCredent
 func DeleteSsoProfileIdpCredential(name string) (bool, error) {
 	srv := getInboundSamlSsoProfilesIdpCredentialsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return true, nil
 }
@@ -68,15 +60,9 @@ func GetSsoProfileIdpCredential(parent, fields string) (*ci.IdpCredential, error
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.IdpCredential)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	return r, nil
 }

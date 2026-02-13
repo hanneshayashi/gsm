@@ -31,10 +31,11 @@ import (
 func DeleteCalendarResource(customer, calendarResourceID string) (bool, error) {
 	srv := getResourcesCalendarsService()
 	c := srv.Delete(customer, calendarResourceID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, calendarResourceID), err)
+	}
+	return true, nil
 }
 
 // GetCalendarResource retrieves a calendar resource.
@@ -44,15 +45,9 @@ func GetCalendarResource(customer, calendarResourceID, fields string) (*admin.Ca
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.CalendarResource)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, calendarResourceID), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResource.ResourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.CalendarResource)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, calendarResource.ResourceName), err)
 	}
 	return r, nil
 }
@@ -116,15 +105,9 @@ func PatchCalendarResource(customer, calendarResourceID, fields string, calendar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, calendarResourceID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.CalendarResource)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, calendarResourceID), err)
 	}
 	return r, nil
 }

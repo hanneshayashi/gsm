@@ -30,10 +30,11 @@ import (
 func DeleteGroupAlias(groupKey, alias string) (bool, error) {
 	srv := getGroupsAliasesService()
 	c := srv.Delete(groupKey, alias)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(groupKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey), err)
+	}
+	return true, nil
 }
 
 // InsertGroupAlias adds an alias for the group.
@@ -43,15 +44,9 @@ func InsertGroupAlias(groupKey, fields string, alias *admin.Alias) (*admin.Alias
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, alias.Alias), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Alias)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, alias.Alias), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func ListGroupAliases(groupKey, fields string) ([]any, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Aliases)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey), err)
 	}
 	return r.Aliases, nil
 }

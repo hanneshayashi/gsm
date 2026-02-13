@@ -31,10 +31,11 @@ import (
 func ClearCalendar(calendarID string) (bool, error) {
 	srv := getCalendarsService()
 	c := srv.Clear(calendarID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
+	}
+	return true, nil
 }
 
 // DeleteCalendar deletes a secondary calendar.
@@ -42,10 +43,11 @@ func ClearCalendar(calendarID string) (bool, error) {
 func DeleteCalendar(calendarID string) (bool, error) {
 	srv := getCalendarsService()
 	c := srv.Delete(calendarID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
+	}
+	return true, nil
 }
 
 // GetCalendar returns metadata for a calendar.
@@ -55,15 +57,9 @@ func GetCalendar(calendarID, fields string) (*calendar.Calendar, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Calendar)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
 	}
 	return r, nil
 }
@@ -75,15 +71,9 @@ func InsertCalendar(cal *calendar.Calendar, fields string) (*calendar.Calendar, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cal.Summary), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Calendar)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(cal.Summary), err)
 	}
 	return r, nil
 }
@@ -96,15 +86,9 @@ func PatchCalendar(calendarID, fields string, cal *calendar.Calendar) (*calendar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.Calendar)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
 	}
 	return r, nil
 }

@@ -33,15 +33,9 @@ func BatchUpdateSpreadsheet(spreadsheetID, fields string, batchUpdateSpreadsheet
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheetID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*sheets.BatchUpdateSpreadsheetResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(spreadsheetID), err)
 	}
 	return r, nil
 }
@@ -53,15 +47,9 @@ func CreateSpreadsheet(spreadsheet *sheets.Spreadsheet, fields string) (*sheets.
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheet.Properties.Title), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*sheets.Spreadsheet)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(spreadsheet.Properties.Title), err)
 	}
 	return r, nil
 }
@@ -76,15 +64,9 @@ func GetSpreadsheet(spreadsheetID, fields string, ranges []string, includeGridDa
 	if ranges != nil {
 		c.Ranges(ranges...)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(spreadsheetID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*sheets.Spreadsheet)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(spreadsheetID), err)
 	}
 	return r, nil
 }

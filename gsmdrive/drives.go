@@ -38,15 +38,9 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(d.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Drive)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(d.Name), err)
 	}
 	if returnWhenReady {
 		d, err := GetDrive(r.Id, "", false)
@@ -88,10 +82,11 @@ func CreateDrive(d *drive.Drive, fields string, returnWhenReady bool) (*drive.Dr
 func DeleteDrive(driveID string, useDomainAdminAccess bool) (bool, error) {
 	srv := getDrivesService()
 	c := srv.Delete(driveID).UseDomainAdminAccess(useDomainAdminAccess)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(driveID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(driveID), err)
+	}
+	return true, nil
 }
 
 // GetDrive gets a shared drive's metadata by ID.
@@ -101,15 +96,9 @@ func GetDrive(driveID, fields string, useDomainAdminAccess bool) (*drive.Drive, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Drive)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(driveID), err)
 	}
 	return r, nil
 }
@@ -121,15 +110,9 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Drive)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(driveID), err)
 	}
 	return r, nil
 }
@@ -172,15 +155,9 @@ func UnhideDrive(driveID, fields string) (*drive.Drive, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Drive)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(driveID), err)
 	}
 	return r, nil
 }
@@ -192,15 +169,9 @@ func UpdateDrive(driveID, fields string, useDomainAdminAccess bool, d *drive.Dri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(driveID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Drive)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(driveID), err)
 	}
 	return r, nil
 }

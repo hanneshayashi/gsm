@@ -31,10 +31,11 @@ import (
 func DeleteRole(customer, roleID string) (bool, error) {
 	srv := getRolesService()
 	c := srv.Delete(customer, roleID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, roleID), err)
+	}
+	return true, nil
 }
 
 // GetRole retrieves a role.
@@ -44,15 +45,9 @@ func GetRole(customer, roleID, fields string) (*admin.Role, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Role)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, roleID), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertRole(customer, fields string, role *admin.Role) (*admin.Role, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, role.RoleName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Role)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, role.RoleName), err)
 	}
 	return r, nil
 }
@@ -110,15 +99,9 @@ func PatchRole(customer, roleID, fields string, role *admin.Role) (*admin.Role, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Role)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, roleID), err)
 	}
 	return r, nil
 }

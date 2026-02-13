@@ -31,10 +31,11 @@ import (
 func DeleteAsp(userKey string, codeID int64) (bool, error) {
 	srv := getAspsService()
 	c := srv.Delete(userKey, codeID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // GetAsp gets information about an ASP issued by a user.
@@ -44,15 +45,9 @@ func GetAsp(userKey, fields string, codeID int64) (*admin.Asp, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, strconv.FormatInt(codeID, 10)), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Asp)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey, strconv.FormatInt(codeID, 10)), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func ListAsps(userKey, fields string) ([]*admin.Asp, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Asps)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r.Items, nil
 }

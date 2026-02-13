@@ -31,10 +31,11 @@ import (
 func TakeActionOnChromeOsDevice(customerID, deviceID string, action *admin.ChromeOsDeviceAction) (bool, error) {
 	srv := getChromeosdevicesService()
 	c := srv.Action(customerID, deviceID, action)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, deviceID), err)
+	}
+	return true, nil
 }
 
 // GetChromeOsDevice retrieves a Chrome OS device's properties.
@@ -47,15 +48,9 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.ChromeOsDevice)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, deviceID), err)
 	}
 	return r, nil
 }
@@ -99,10 +94,11 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 func MoveChromeOSDevicesToOU(customerID, orgUnitPath string, devicesToMove *admin.ChromeOsMoveDevicesToOu) (bool, error) {
 	srv := getChromeosdevicesService()
 	c := srv.MoveDevicesToOu(customerID, orgUnitPath, devicesToMove)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID), err)
+	}
+	return true, nil
 }
 
 // PatchChromeOsDevice updates a device's updatable properties, such as annotatedUser, annotatedLocation, notes, orgUnitPath, or annotatedAssetId. This method supports patch semantics.
@@ -115,15 +111,9 @@ func PatchChromeOsDevice(customerID, deviceID, fields, projection string, chrome
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.ChromeOsDevice)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, deviceID), err)
 	}
 	return r, nil
 }

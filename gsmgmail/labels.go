@@ -33,15 +33,9 @@ func CreateLabel(userID, fields string, label *gmail.Label) (*gmail.Label, error
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r, nil
 }
@@ -50,10 +44,11 @@ func CreateLabel(userID, fields string, label *gmail.Label) (*gmail.Label, error
 func DeleteLabel(userID, id string) (bool, error) {
 	srv := getUsersLabelsService()
 	c := srv.Delete(userID, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
+	}
+	return true, nil
 }
 
 // GetLabel gets the specified label.
@@ -63,15 +58,9 @@ func GetLabel(userID, id, fields string) (*gmail.Label, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -83,15 +72,9 @@ func ListLabels(userID, fields string) ([]*gmail.Label, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListLabelsResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r.Labels, nil
 }
@@ -103,15 +86,9 @@ func PatchLabel(userID, id, fields string, label *gmail.Label) (*gmail.Label, er
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }

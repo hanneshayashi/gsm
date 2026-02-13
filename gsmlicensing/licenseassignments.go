@@ -31,11 +31,9 @@ import (
 func DeleteLicenseAssignment(productID, skuID, userID string) (bool, error) {
 	srv := getLicenseAssignmentsService()
 	c := srv.Delete(productID, skuID, userID)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(productID, skuID, userID), err)
 	}
 	return true, nil
 }
@@ -47,15 +45,9 @@ func GetLicenseAssignment(productID, skuID, userID, fields string) (*licensing.L
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*licensing.LicenseAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(productID, skuID, userID), err)
 	}
 	return r, nil
 }
@@ -67,15 +59,9 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, licenseAssignmentInsert.UserId), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*licensing.LicenseAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(productID, skuID, licenseAssignmentInsert.UserId), err)
 	}
 	return r, nil
 }
@@ -139,15 +125,9 @@ func PatchLicenseAssignment(productID, skuID, userID, fields string, licenseAssi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(productID, skuID, userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*licensing.LicenseAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(productID, skuID, userID), err)
 	}
 	return r, nil
 }

@@ -37,15 +37,9 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1ClientState)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, name), err)
 	}
 	return r, nil
 }
@@ -98,15 +92,9 @@ func PatchClientState(name, customer, updateMask, fields string, clientState *ci
 	if updateMask != "" {
 		c.UpdateMask(updateMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, name), err)
 	}
 	return &r.Response, nil
 }

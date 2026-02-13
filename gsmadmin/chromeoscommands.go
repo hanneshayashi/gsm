@@ -34,15 +34,9 @@ func GetCommand(customerID, deviceID, fields string, commandID int64) (*admin.Di
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID, strconv.FormatInt(commandID, 10)), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.DirectoryChromeosdevicesCommand)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, deviceID, strconv.FormatInt(commandID, 10)), err)
 	}
 	return r, nil
 }

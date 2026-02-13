@@ -31,10 +31,11 @@ import (
 func DeleteMember(groupKey, memberKey string) (bool, error) {
 	srv := getMembersService()
 	c := srv.Delete(groupKey, memberKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, memberKey), err)
+	}
+	return true, nil
 }
 
 // GetMember retrieves a group member's properties.
@@ -44,15 +45,9 @@ func GetMember(groupKey, memberKey, fields string) (*admin.Member, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Member)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, memberKey), err)
 	}
 	return r, nil
 }
@@ -61,15 +56,9 @@ func GetMember(groupKey, memberKey, fields string) (*admin.Member, error) {
 func HasMember(groupKey, memberKey string) (bool, error) {
 	srv := getMembersService()
 	c := srv.HasMember(groupKey, memberKey)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return false, err
-	}
-	r, ok := result.(*admin.MembersHasMember)
-	if !ok {
-		return false, fmt.Errorf("result unknown")
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, memberKey), err)
 	}
 	return r.IsMember, nil
 }
@@ -81,15 +70,9 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, member.Email), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Member)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, member.Email), err)
 	}
 	return r, nil
 }
@@ -130,15 +113,9 @@ func PatchMember(groupKey, memberKey, fields string, member *admin.Member) (*adm
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(groupKey, memberKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Member)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(groupKey, memberKey), err)
 	}
 	return r, nil
 }

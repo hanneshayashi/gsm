@@ -34,15 +34,9 @@ func ApproveDeviceUser(name, fields string, approveDeviceRequest *ci.GoogleAppsC
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(approveDeviceRequest.Customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(approveDeviceRequest.Customer, name), err)
 	}
 	return &r.Response, nil
 }
@@ -54,15 +48,9 @@ func BlockDeviceUser(name, fields string, blockDeviceRequest *ci.GoogleAppsCloud
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(blockDeviceRequest.Customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(blockDeviceRequest.Customer, name), err)
 	}
 	return &r.Response, nil
 }
@@ -75,15 +63,9 @@ func CancelDeviceUserWipe(name, fields string, cancelWipeRequest *ci.GoogleAppsC
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(cancelWipeRequest.Customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(cancelWipeRequest.Customer, name), err)
 	}
 	return &r.Response, nil
 }
@@ -96,15 +78,9 @@ func DeleteDeviceUser(name, customer string) (*googleapi.RawMessage, error) {
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, name), err)
 	}
 	return &r.Response, nil
 }
@@ -119,15 +95,9 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 	if customer != "" {
 		c.Customer(customer)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.GoogleAppsCloudidentityDevicesV1DeviceUser)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, name), err)
 	}
 	return r, nil
 }
@@ -219,15 +189,9 @@ func WipeDeviceUser(name, fields string, wipeRequest *ci.GoogleAppsCloudidentity
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(wipeRequest.Customer, name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(wipeRequest.Customer, name), err)
 	}
 	return &r.Response, nil
 }

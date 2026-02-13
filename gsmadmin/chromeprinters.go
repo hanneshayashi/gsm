@@ -41,15 +41,9 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.BatchCreatePrintersResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	response := &PrinterResults{
 		Failures: r.Failures,
@@ -62,15 +56,9 @@ func BatchCreatePrinters(parent, fields string, batchCreatePrintersRequest *admi
 func BatchDeletePrinters(parent string, batchDeletePrintersRequest *admin.BatchDeletePrintersRequest) (*PrinterResults, error) {
 	srv := getCustomersChromePrintersService()
 	c := srv.BatchDeletePrinters(parent, batchDeletePrintersRequest)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.BatchDeletePrintersResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	response := &PrinterResults{
 		Failures:   r.FailedPrinters,
@@ -86,15 +74,9 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Printer)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent), err)
 	}
 	return r, nil
 }
@@ -103,11 +85,9 @@ func CreatePrinter(parent, fields string, printer *admin.Printer) (*admin.Printe
 func DeletePrinter(name string) (bool, error) {
 	srv := getCustomersChromePrintersService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return true, nil
 }
@@ -119,15 +99,9 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Printer)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -202,15 +176,9 @@ func PatchPrinter(name, updateMask, clearMask, fields string, printer *admin.Pri
 	if clearMask != "" {
 		c.ClearMask(clearMask)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Printer)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }

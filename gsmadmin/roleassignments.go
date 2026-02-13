@@ -32,10 +32,11 @@ import (
 func DeleteRoleAssignment(customer, roleAssignmentID string) (bool, error) {
 	srv := getRoleAssignmentsService()
 	c := srv.Delete(customer, roleAssignmentID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, roleAssignmentID), err)
+	}
+	return true, nil
 }
 
 // GetRoleAssignment retrieve a role assignment.
@@ -45,15 +46,9 @@ func GetRoleAssignment(customer, roleAssignmentID, fields string) (*admin.RoleAs
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, roleAssignmentID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.RoleAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, roleAssignmentID), err)
 	}
 	return r, nil
 }
@@ -65,15 +60,9 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, strconv.FormatInt(roleAssignment.RoleId, 10), roleAssignment.AssignedTo), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.RoleAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, strconv.FormatInt(roleAssignment.RoleId, 10), roleAssignment.AssignedTo), err)
 	}
 	return r, nil
 }

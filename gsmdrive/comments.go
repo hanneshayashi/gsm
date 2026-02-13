@@ -34,15 +34,9 @@ func CreateComment(fileID, fields string, comment *drive.Comment) (*drive.Commen
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Comment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r, nil
 }
@@ -51,10 +45,11 @@ func CreateComment(fileID, fields string, comment *drive.Comment) (*drive.Commen
 func DeleteComment(fileID, commentID string) (bool, error) {
 	srv := getCommentsService()
 	c := srv.Delete(fileID, commentID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID), err)
+	}
+	return true, nil
 }
 
 // GetComment gets a comment by ID.
@@ -64,15 +59,9 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Comment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID), err)
 	}
 	return r, nil
 }
@@ -113,15 +102,9 @@ func UpdateComment(fileID, commentID, fields string, comment *drive.Comment) (*d
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Comment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID), err)
 	}
 	return r, nil
 }

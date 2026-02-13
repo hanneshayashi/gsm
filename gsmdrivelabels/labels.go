@@ -37,15 +37,9 @@ func CreateLabel(label *drivelabels.GoogleAppsDriveLabelsV2Label, languageCode, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(label.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(label.Name), err)
 	}
 	return r, nil
 }
@@ -59,11 +53,11 @@ func DeleteLabel(name, requiredRevisionId string, useAdminAccess bool) (bool, er
 	if requiredRevisionId != "" {
 		c.WriteControlRequiredRevisionId(requiredRevisionId)
 	}
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(name), func() error {
-		_, err := c.Do()
-		return err
-	})
-	return result, err
+	_, err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
+	}
+	return true, nil
 }
 
 // Delta updates a single Label by applying a set of update requests resulting in a new draft revision.
@@ -75,15 +69,9 @@ func Delta(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Delt
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2DeltaUpdateLabelResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -98,15 +86,9 @@ func Disable(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Di
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -120,15 +102,9 @@ func Enable(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Ena
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -147,15 +123,9 @@ func Publish(name, fields string, request *drivelabels.GoogleAppsDriveLabelsV2Pu
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -174,15 +144,9 @@ func UpdateLabelCopyMode(name, fields string, request *drivelabels.GoogleAppsDri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -196,15 +160,9 @@ func UpdatePermissions(name, fields string, useAdminAccess bool, request *drivel
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2LabelPermission)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -226,15 +184,9 @@ func GetLabel(name, languageCode, view, fields string, useAdminAccess bool) (*dr
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drivelabels.GoogleAppsDriveLabelsV2Label)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }

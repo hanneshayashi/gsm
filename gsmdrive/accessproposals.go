@@ -34,15 +34,9 @@ func GetAccessProposal(filedId, proposalId, fields string) (*drive.AccessProposa
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(filedId, proposalId), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.AccessProposal)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(filedId, proposalId), err)
 	}
 	return r, nil
 }
@@ -78,8 +72,9 @@ func ListAccessProposals(fileId, fields string, cap int) (<-chan *drive.AccessPr
 func ResolveAccessProposal(filedId, proposalId string, request *drive.ResolveAccessProposalRequest) (bool, error) {
 	srv := getAccessProposalsService()
 	c := srv.Resolve(filedId, proposalId, request)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(filedId, proposalId), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(filedId, proposalId), err)
+	}
+	return true, nil
 }

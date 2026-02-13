@@ -60,15 +60,9 @@ func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <
 func CheckTransitiveMembership(parent, query string) (bool, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.CheckTransitiveMembership(parent).Query(query)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return false, err
-	}
-	r, ok := result.(*ci.CheckTransitiveMembershipResponse)
-	if !ok {
-		return false, fmt.Errorf("result unknown")
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent, query), err)
 	}
 	return r.HasMembership, nil
 }
@@ -80,15 +74,9 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (*google
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, membership.PreferredMemberKey.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent, membership.PreferredMemberKey.Id), err)
 	}
 	return &r.Response, nil
 }
@@ -97,11 +85,9 @@ func CreateMembership(parent, fields string, membership *ci.Membership) (*google
 func DeleteMembership(name string) (bool, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return true, nil
 }
@@ -113,15 +99,9 @@ func GetMembership(name, fields string) (*ci.Membership, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Membership)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -135,15 +115,9 @@ func GetMembershipGraph(parent, query, fields string) (*googleapi.RawMessage, er
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, query), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent, query), err)
 	}
 	return &r.Response, nil
 }
@@ -152,15 +126,9 @@ func GetMembershipGraph(parent, query, fields string) (*googleapi.RawMessage, er
 func LookupMembership(parent, memberKeyID, memberKeyNamespace string) (string, error) {
 	srv := getGroupsMembershipsService()
 	c := srv.Lookup(parent).MemberKeyId(memberKeyID).MemberKeyNamespace(memberKeyNamespace)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(parent, memberKeyID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return "", err
-	}
-	r, ok := result.(*ci.LookupMembershipNameResponse)
-	if !ok {
-		return "", fmt.Errorf("result unknown")
+		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(parent, memberKeyID), err)
 	}
 	return r.Name, nil
 }
@@ -172,15 +140,9 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.ModifyMembershipRolesResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r.Membership, nil
 }

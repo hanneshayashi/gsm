@@ -31,10 +31,11 @@ import (
 func DeleteFeature(customer, featureKey string) (bool, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Delete(customer, featureKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, featureKey), err)
+	}
+	return true, nil
 }
 
 // GetFeature retrieves a feature.
@@ -44,15 +45,9 @@ func GetFeature(customer, featureKey, fields string) (*admin.Feature, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Feature)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, featureKey), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, feature.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Feature)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, feature.Name), err)
 	}
 	return r, nil
 }
@@ -110,15 +99,9 @@ func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customer, featureKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Feature)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, featureKey), err)
 	}
 	return r, nil
 }
@@ -127,8 +110,9 @@ func PatchFeature(customer, featureKey, fields string, feature *admin.Feature) (
 func RenameFeature(customer, oldName string, featureRename *admin.FeatureRename) (bool, error) {
 	srv := getResourcesFeaturesService()
 	c := srv.Rename(customer, oldName, featureRename)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customer, oldName), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customer, oldName), err)
+	}
+	return true, nil
 }

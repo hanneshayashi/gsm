@@ -33,15 +33,9 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Filter)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r, nil
 }
@@ -50,10 +44,11 @@ func CreateFilter(userID, fields string, settingsfilter *gmail.Filter) (*gmail.F
 func DeleteFilter(userID, id string) (bool, error) {
 	srv := getUsersSettingsFiltersService()
 	c := srv.Delete(userID, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
+	}
+	return true, nil
 }
 
 // GetFilter gets a filter.
@@ -63,15 +58,9 @@ func GetFilter(userID, id, fields string) (*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Filter)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -83,15 +72,9 @@ func ListFilters(userID, fields string) ([]*gmail.Filter, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListFiltersResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r.Filter, nil
 }

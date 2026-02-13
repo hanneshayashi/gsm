@@ -37,15 +37,9 @@ func BatchGetContactGroups(resourceNames []string, maxMembers int64, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.BatchGetContactGroupsResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceNames...), err)
 	}
 	return r, nil
 }
@@ -57,15 +51,9 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(createContactGroupRequest.ContactGroup.Name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.ContactGroup)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(createContactGroupRequest.ContactGroup.Name), err)
 	}
 	return r, nil
 }
@@ -74,11 +62,9 @@ func CreateContactGroup(createContactGroupRequest *people.CreateContactGroupRequ
 func DeleteContactGroup(resourceName string, deleteContacts bool) (bool, error) {
 	srv := getContactGroupsService()
 	c := srv.Delete(resourceName).DeleteContacts(deleteContacts)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return true, nil
 }
@@ -93,15 +79,9 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.ContactGroup)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return r, nil
 }
@@ -140,15 +120,9 @@ func UpdateContactGroup(resourceName, fields string, updateContactGroupRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.ContactGroup)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return r, nil
 }

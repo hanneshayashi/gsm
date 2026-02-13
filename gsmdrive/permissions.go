@@ -37,15 +37,9 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 	if emailMessage != "" {
 		c = c.EmailMessage(emailMessage)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Permission)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
 	return r, nil
 }
@@ -54,10 +48,11 @@ func CreatePermission(fileID, emailMessage, fields string, useDomainAdminAccess,
 func DeletePermission(fileID, permissionID string, useDomainAdminAccess bool, enforceExpansiveAccess bool) (bool, error) {
 	srv := getPermissionsService()
 	c := srv.Delete(fileID, permissionID).UseDomainAdminAccess(useDomainAdminAccess).EnforceExpansiveAccess(enforceExpansiveAccess).SupportsAllDrives(true)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, permissionID), err)
+	}
+	return true, nil
 }
 
 // GetPermission gets a permission by ID.
@@ -67,15 +62,9 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Permission)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, permissionID), err)
 	}
 	return r, nil
 }
@@ -121,15 +110,9 @@ func UpdatePermission(fileID, permissionID, fields string, useDomainAdminAccess,
 	if permission.Role == "owner" {
 		c.TransferOwnership(true)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, permissionID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Permission)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, permissionID), err)
 	}
 	return r, nil
 }

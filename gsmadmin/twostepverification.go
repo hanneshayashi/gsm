@@ -18,6 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"fmt"
+
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
@@ -25,8 +27,9 @@ import (
 func TurnOffTwoStepVerification(userKey string) (bool, error) {
 	srv := getTwoStepVerificationService()
 	c := srv.TurnOff(userKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }

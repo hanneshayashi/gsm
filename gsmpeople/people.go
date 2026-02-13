@@ -37,15 +37,9 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey("Create Contact"), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.Person)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey("Create Contact"), err)
 	}
 	return r, nil
 }
@@ -54,11 +48,9 @@ func CreateContact(person *people.Person, personFields, sources, fields string) 
 func DeleteContact(resourceName string) (bool, error) {
 	srv := getpService()
 	c := srv.DeleteContact(resourceName)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return true, nil
 }
@@ -76,11 +68,9 @@ func DeleteContactPhoto(resourceName, personFields, sources, fields string) (boo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return true, nil
 }
@@ -99,15 +89,9 @@ func GetContact(resourceName, personFields, sources, fields string) (*people.Per
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.Person)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return r, nil
 }
@@ -123,15 +107,9 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceNames...), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.GetPeopleResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceNames...), err)
 	}
 	return r, nil
 }
@@ -207,15 +185,9 @@ func UpdateContact(resourceName, updatePersonFields, personFields, sources, fiel
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.Person)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return r, nil
 }
@@ -227,15 +199,9 @@ func UpdateContactPhoto(resourceName, fields string, updateContactPhotoRequest *
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(resourceName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*people.UpdateContactPhotoResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(resourceName), err)
 	}
 	return r.Person, nil
 }

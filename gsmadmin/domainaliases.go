@@ -30,10 +30,11 @@ import (
 func DeleteDomainAlias(customerID, domainAliasName string) (bool, error) {
 	srv := getDomainAliasesService()
 	c := srv.Delete(customerID, domainAliasName)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domainAliasName), err)
+	}
+	return true, nil
 }
 
 // GetDomainAlias retrieves a domain alias of the customer.
@@ -43,15 +44,9 @@ func GetDomainAlias(customerID, domainAliasName, fields string) (*admin.DomainAl
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAliasName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.DomainAlias)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domainAliasName), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func InsertDomainAlias(customerID, fields string, domainAlias *admin.DomainAlias
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, domainAlias.DomainAliasName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.DomainAlias)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, domainAlias.DomainAliasName), err)
 	}
 	return r, nil
 }
@@ -86,15 +75,9 @@ func ListDomainAliases(customerID, parentDomainName, fields string) ([]*admin.Do
 	if parentDomainName != "" {
 		c = c.ParentDomainName(parentDomainName)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, parentDomainName), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.DomainAliases)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, parentDomainName), err)
 	}
 	return r.DomainAliases, nil
 }

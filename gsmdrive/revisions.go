@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
@@ -36,10 +35,11 @@ import (
 func DeleteRevision(fileID, revisionID string) (bool, error) {
 	srv := getRevisionsService()
 	c := srv.Delete(fileID, revisionID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
+	}
+	return true, nil
 }
 
 // GetRevision gets a revision's metadata or content by ID.
@@ -49,15 +49,9 @@ func GetRevision(fileID, revisionID, fields string) (*drive.Revision, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Revision)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
 	}
 	return r, nil
 }
@@ -70,15 +64,9 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 		return "", err
 	}
 	c := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
-		return c.Download()
-	})
+	r, err := c.Download()
 	if err != nil {
-		return "", err
-	}
-	r, ok := result.(*http.Response)
-	if !ok {
-		return "", fmt.Errorf("result unknown")
+		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
 	}
 	defer gsmhelpers.CloseLog(r.Body, "downloadRevisionBody")
 	fileLocal, err := os.Create(file.OriginalFilename)
@@ -123,15 +111,9 @@ func UpdateRevision(fileID, revisionID, fields string, revision *drive.Revision)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, revisionID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Revision)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
 	}
 	return r, nil
 }

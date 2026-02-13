@@ -34,15 +34,9 @@ func CreateSsoAssignment(fields string, assignment *ci.InboundSsoAssignment) (*g
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(assignment.TargetGroup, assignment.TargetOrgUnit, assignment.SamlSsoInfo.InboundSamlSsoProfile), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(assignment.TargetGroup, assignment.TargetOrgUnit, assignment.SamlSsoInfo.InboundSamlSsoProfile), err)
 	}
 	return &r.Response, nil
 }
@@ -51,11 +45,9 @@ func CreateSsoAssignment(fields string, assignment *ci.InboundSsoAssignment) (*g
 func DeleteSsoAssignment(name string) (bool, error) {
 	srv := getInboundSsoAssignmentsService()
 	c := srv.Delete(name)
-	_, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	_, err := c.Do()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return true, nil
 }
@@ -67,15 +59,9 @@ func GetSsoAssignment(name, fields string) (*ci.InboundSsoAssignment, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.InboundSsoAssignment)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return r, nil
 }
@@ -116,15 +102,9 @@ func PatchSsoAssignment(name, updateMask, fields string, assignment *ci.InboundS
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(name), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*ci.Operation)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(name), err)
 	}
 	return &r.Response, nil
 }

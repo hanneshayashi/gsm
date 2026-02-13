@@ -35,15 +35,9 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, delegateEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Delegate)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, delegateEmail), err)
 	}
 	return r, nil
 }
@@ -54,10 +48,11 @@ func GetDelegate(userID, delegateEmail, fields string) (*gmail.Delegate, error) 
 func DeleteDelegate(userID, delegateEmail string) (bool, error) {
 	srv := getUsersSettingsDelegatesService()
 	c := srv.Delete(userID, delegateEmail)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, delegateEmail), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, delegateEmail), err)
+	}
+	return true, nil
 }
 
 // ListDelegates lists the delegates for the specified account.
@@ -68,15 +63,9 @@ func ListDelegates(userID, fields string) ([]*gmail.Delegate, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListDelegatesResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r.Delegates, nil
 }
@@ -94,15 +83,9 @@ func CreateDelegate(userID, fields string, delegate *gmail.Delegate) (*gmail.Del
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, delegate.DelegateEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Delegate)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, delegate.DelegateEmail), err)
 	}
 	return r, nil
 }

@@ -38,15 +38,9 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 	for i := range media {
 		c = c.Media(media[i])
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Draft)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r, nil
 }
@@ -55,10 +49,11 @@ func CreateDraft(userID, fields string, draft *gmail.Draft, media ...io.Reader) 
 func DeleteDraft(userID, id string) (bool, error) {
 	srv := getUsersDraftsService()
 	c := srv.Delete(userID, id)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, id), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
+	}
+	return true, nil
 }
 
 // GetDraft gets the specified draft.
@@ -71,15 +66,9 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 	if format != "" {
 		c = c.Format(format)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Draft)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }
@@ -120,15 +109,9 @@ func SendDraft(userID string, draft *gmail.Draft, media ...io.Reader) (*gmail.Me
 	for i := range media {
 		c = c.Media(media[i])
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Message)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r, nil
 }
@@ -143,15 +126,9 @@ func UpdateDraft(userID, id, fields string, draft *gmail.Draft, media ...io.Read
 	for i := range media {
 		c = c.Media(media[i])
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.Draft)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, id), err)
 	}
 	return r, nil
 }

@@ -30,10 +30,11 @@ import (
 func DeleteUserAlias(userKey, alias string) (bool, error) {
 	srv := getUsersAliasesService()
 	c := srv.Delete(userKey, alias)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey, alias), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey, alias), err)
+	}
+	return true, nil
 }
 
 // InsertUserAlias adds an alias.
@@ -43,15 +44,9 @@ func InsertUserAlias(userKey, fields string, alias *admin.Alias) (*admin.Alias, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, alias.Alias), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Alias)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey, alias.Alias), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func ListUserAliases(userKey, fields string) ([]any, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Aliases)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r.Aliases, nil
 }

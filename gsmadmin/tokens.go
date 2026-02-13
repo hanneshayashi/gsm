@@ -30,10 +30,11 @@ import (
 func DeleteToken(userKey, clientID string) (bool, error) {
 	srv := getTokensService()
 	c := srv.Delete(userKey, clientID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey, clientID), err)
+	}
+	return true, nil
 }
 
 // GetToken gets information about an access token issued by a user.rolesPatchCmd
@@ -43,15 +44,9 @@ func GetToken(userKey, clientID, fields string) (*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey, clientID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Token)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey, clientID), err)
 	}
 	return r, nil
 }
@@ -63,15 +58,9 @@ func ListTokens(userKey, fields string) ([]*admin.Token, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.Tokens)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r.Items, nil
 }

@@ -34,15 +34,9 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Reply)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID), err)
 	}
 	return r, nil
 }
@@ -51,10 +45,11 @@ func CreateReply(fileID, commentID, fields string, reply *drive.Reply) (*drive.R
 func DeleteReply(fileID, commentID, replyID string) (bool, error) {
 	srv := getRepliesService()
 	c := srv.Delete(fileID, commentID, replyID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID, replyID), err)
+	}
+	return true, nil
 }
 
 // GetReply gets a reply by ID.
@@ -64,15 +59,9 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Reply)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID, replyID), err)
 	}
 	return r, nil
 }
@@ -110,15 +99,9 @@ func UpdateReply(fileID, commentID, replyID, fields string, reply *drive.Reply) 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(fileID, commentID, replyID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*drive.Reply)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, commentID, replyID), err)
 	}
 	return r, nil
 }

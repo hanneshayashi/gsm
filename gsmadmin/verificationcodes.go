@@ -30,20 +30,22 @@ import (
 func GenerateVerificationCodes(userKey string) (bool, error) {
 	srv := getVerificationCodesService()
 	c := srv.Generate(userKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // InvalidateVerificationCodes invalidates the current backup verification codes for the user.
 func InvalidateVerificationCodes(userKey string) (bool, error) {
 	srv := getVerificationCodesService()
 	c := srv.Invalidate(userKey)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userKey), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
+	}
+	return true, nil
 }
 
 // ListVerificationCodes returns the current set of valid backup verification codes for the specified user.
@@ -53,15 +55,9 @@ func ListVerificationCodes(userKey, fields string) ([]*admin.VerificationCode, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userKey), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.VerificationCodes)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userKey), err)
 	}
 	return r.Items, nil
 }

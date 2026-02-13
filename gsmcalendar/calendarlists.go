@@ -31,10 +31,11 @@ import (
 func DeleteCalendarListEntry(calendarID string) (bool, error) {
 	srv := getCalendarListService()
 	c := srv.Delete(calendarID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(calendarID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
+	}
+	return true, nil
 }
 
 // GetCalendarListEntry returns a calendar from the user's calendar list.
@@ -44,15 +45,9 @@ func GetCalendarListEntry(calendarID, fields string) (*calendar.CalendarListEntr
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.CalendarListEntry)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
 	}
 	return r, nil
 }
@@ -64,15 +59,9 @@ func InsertCalendarListEntry(calendarListEntry *calendar.CalendarListEntry, colo
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarListEntry.Id), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.CalendarListEntry)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarListEntry.Id), err)
 	}
 	return r, nil
 }
@@ -113,15 +102,9 @@ func PatchCalendarListEntry(calendarID, fields string, calendarListEntry *calend
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(calendarID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*calendar.CalendarListEntry)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(calendarID), err)
 	}
 	return r, nil
 }

@@ -29,15 +29,9 @@ import (
 func IssueCommand(customerID, deviceID string, issueCommandRequest *admin.DirectoryChromeosdevicesIssueCommandRequest) (int64, error) {
 	srv := getCustomerDevicesChromeosService()
 	c := srv.IssueCommand(customerID, deviceID, issueCommandRequest)
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, deviceID, issueCommandRequest.CommandType, issueCommandRequest.Payload), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return 0, err
-	}
-	r, ok := result.(*admin.DirectoryChromeosdevicesIssueCommandResponse)
-	if !ok {
-		return 0, fmt.Errorf("result unknown")
+		return 0, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, deviceID, issueCommandRequest.CommandType, issueCommandRequest.Payload), err)
 	}
 	return r.CommandId, nil
 }

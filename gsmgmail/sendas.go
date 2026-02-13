@@ -37,15 +37,9 @@ func CreateSendAs(userID, fields string, sendAs *gmail.SendAs) (*gmail.SendAs, e
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAs.SendAsEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.SendAs)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAs.SendAsEmail), err)
 	}
 	return r, nil
 }
@@ -55,10 +49,11 @@ func CreateSendAs(userID, fields string, sendAs *gmail.SendAs) (*gmail.SendAs, e
 func DeleteSendAs(userID, sendAsEmail string) (bool, error) {
 	srv := getUsersSettingsSendAsService()
 	c := srv.Delete(userID, sendAsEmail)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
+	}
+	return true, nil
 }
 
 // GetSendAs gets the specified send-as alias.
@@ -69,15 +64,9 @@ func GetSendAs(userID, sendAsEmail, fields string) (*gmail.SendAs, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.SendAs)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
 	}
 	return r, nil
 }
@@ -90,15 +79,9 @@ func ListSendAs(userID, fields string) ([]*gmail.SendAs, error) {
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListSendAsResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r.SendAs, nil
 }
@@ -110,15 +93,9 @@ func PatchSendAs(userID, sendAsEmail, fields string, sendAs *gmail.SendAs) (*gma
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.SendAs)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
 	}
 	return r, nil
 }
@@ -128,8 +105,9 @@ func PatchSendAs(userID, sendAsEmail, fields string, sendAs *gmail.SendAs) (*gma
 func VerifySendAs(userID, sendAsEmail string) (bool, error) {
 	srv := getUsersSettingsSendAsService()
 	c := srv.Verify(userID, sendAsEmail)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, sendAsEmail), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, sendAsEmail), err)
+	}
+	return true, nil
 }

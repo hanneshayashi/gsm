@@ -31,20 +31,22 @@ import (
 func TakeActionOnMobileDevice(customerID, resourceID string, action *admin.MobileDeviceAction) (bool, error) {
 	srv := getMobiledevicesService()
 	c := srv.Action(customerID, resourceID, action)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, resourceID), err)
+	}
+	return true, nil
 }
 
 // DeleteMobileDevice removes a mobile device.
 func DeleteMobileDevice(customerID, resourceID string) (bool, error) {
 	srv := getMobiledevicesService()
 	c := srv.Delete(customerID, resourceID)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, resourceID), err)
+	}
+	return true, nil
 }
 
 // GetMobileDevice retrieves a mobile device's properties.
@@ -57,15 +59,9 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 	if projection != "" {
 		c.Projection(projection)
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(customerID, resourceID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*admin.MobileDevice)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(customerID, resourceID), err)
 	}
 	return r, nil
 }

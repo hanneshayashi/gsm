@@ -35,15 +35,9 @@ func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.For
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingAddress.ForwardingEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ForwardingAddress)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, forwardingAddress.ForwardingEmail), err)
 	}
 	return r, nil
 }
@@ -52,10 +46,11 @@ func CreateForwardingAddress(userID, fields string, forwardingAddress *gmail.For
 func DeleteForwardingAddress(userID, forwardingEmail string) (bool, error) {
 	srv := getUsersSettingsForwardingAddressesService()
 	c := srv.Delete(userID, forwardingEmail)
-	result, err := gsmhelpers.ActionRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() error {
-		return c.Do()
-	})
-	return result, err
+	err := c.Do()
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, forwardingEmail), err)
+	}
+	return true, nil
 }
 
 // GetForwardingAddress gets the specified forwarding address.
@@ -65,15 +60,9 @@ func GetForwardingAddress(userID, forwardingEmail, fields string) (*gmail.Forwar
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID, forwardingEmail), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ForwardingAddress)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID, forwardingEmail), err)
 	}
 	return r, nil
 }
@@ -85,15 +74,9 @@ func ListForwardingAddresses(userID, fields string) ([]*gmail.ForwardingAddress,
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	result, err := gsmhelpers.GetObjectRetry(gsmhelpers.FormatErrorKey(userID), func() (any, error) {
-		return c.Do()
-	})
+	r, err := c.Do()
 	if err != nil {
-		return nil, err
-	}
-	r, ok := result.(*gmail.ListForwardingAddressesResponse)
-	if !ok {
-		return nil, fmt.Errorf("result unknown")
+		return nil, fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(userID), err)
 	}
 	return r.ForwardingAddresses, nil
 }
