@@ -237,7 +237,7 @@ func auth() {
 			subject = dwdSubject
 		}
 	}
-	if mode == "dwd" || mode == "user" {
+	if mode == "dwd" || mode == "user" || mode == "sa" {
 		credentials, err = os.ReadFile(viper.GetString("credentialsFile"))
 		if err != nil {
 			log.Fatalf("Error reading credentials file: %v", err)
@@ -250,6 +250,10 @@ func auth() {
 		client, err = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), redirectPort, viper.GetStringSlice("scopes")...)
 	case "adc":
 		client, err = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
+	case "sa":
+		client, err = gsmauth.GetClientSA(credentials, viper.GetStringSlice("scopes")...)
+	case "adc-direct":
+		client, err = gsmauth.GetClientADCDirect(viper.GetStringSlice("scopes")...)
 	}
 	if err != nil {
 		log.Fatalf("Unable to get client: %v", err)

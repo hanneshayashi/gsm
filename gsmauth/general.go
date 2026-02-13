@@ -19,9 +19,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmauth
 
 import (
+	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -31,13 +33,10 @@ import (
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/pkg/browser"
 
-	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/impersonate"
 )
-
-var ctx context.Context
 
 // Retrieves a token from a local file.
 func tokenFromFile(tokenPath string) (*oauth2.Token, error) {
@@ -65,65 +64,89 @@ func saveToken(path string, token *oauth2.Token) error {
 	return nil
 }
 
+// randomState generates a random state token for OAuth CSRF protection.
+func randomState() (string, error) {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate random state: %v", err)
+	}
+	return hex.EncodeToString(b), nil
+}
+
 // GetClientUser does user-based authentication via OAuth and returns an *http.Client
 func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope ...string) (client *http.Client, err error) {
-	// If modifying these scopes, delete your previously saved token.json.
+	ctx := context.Background()
 	config, err := google.ConfigFromJSON(credentials, scope...)
-	config.RedirectURL = fmt.Sprintf("http://127.0.0.1:%d/oauth/callback", redirectPort)
 	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
+		return nil, fmt.Errorf("unable to parse client secret file to config: %v", err)
 	}
+	config.RedirectURL = fmt.Sprintf("http://127.0.0.1:%d/oauth/callback", redirectPort)
 	tokenPath := fmt.Sprintf("%s/%s", gsmconfig.CfgDir, tokenName)
-	// The file token.json stores the user's access and refresh tokens, and is
-	// created automatically when the authorization flow completes for the first
-	// time.
 	tok, err := tokenFromFile(tokenPath)
 	if err != nil {
-		authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
-		srv := &http.Server{Addr: fmt.Sprintf(":%d", redirectPort)}
+		state, err := randomState()
+		if err != nil {
+			return nil, err
+		}
+		authURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
+		mux := http.NewServeMux()
+		srv := &http.Server{Addr: fmt.Sprintf(":%d", redirectPort), Handler: mux}
 		done := make(chan bool, 1)
-		http.HandleFunc("/oauth/callback", func(w http.ResponseWriter, r *http.Request) {
+		var callbackErr error
+		mux.HandleFunc("/oauth/callback", func(w http.ResponseWriter, r *http.Request) {
 			queryParts, _ := url.ParseQuery(r.URL.RawQuery)
+			if queryParts.Get("state") != state {
+				http.Error(w, "Invalid state parameter", http.StatusBadRequest)
+				callbackErr = fmt.Errorf("OAuth callback: invalid state parameter (possible CSRF)")
+				done <- true
+				close(done)
+				return
+			}
 			code := queryParts["code"][0]
-			tok, err = config.Exchange(ctx, code)
-			if err != nil {
-				log.Fatal(err)
+			tok, callbackErr = config.Exchange(ctx, code)
+			if callbackErr != nil {
+				http.Error(w, "Token exchange failed", http.StatusInternalServerError)
+				done <- true
+				close(done)
+				return
 			}
-			err = saveToken(tokenPath, tok)
-			if err != nil {
-				log.Fatal(err)
+			callbackErr = saveToken(tokenPath, tok)
+			if callbackErr != nil {
+				http.Error(w, "Failed to save token", http.StatusInternalServerError)
+				done <- true
+				close(done)
+				return
 			}
-			_, err = fmt.Fprintf(w, "You can close this window now")
-			if err != nil {
-				log.Fatal(err)
-			}
+			_, _ = fmt.Fprintf(w, "You can close this window now")
 			done <- true
 			close(done)
 		})
 		err = browser.OpenURL(authURL)
 		if err != nil {
-			log.Fatal(err)
+			return nil, fmt.Errorf("unable to open browser for OAuth: %v", err)
 		}
 		go func() {
 			if <-done {
-				errShutdown := srv.Shutdown(ctx)
-				if errShutdown != nil {
-					log.Fatal(errShutdown)
-				}
+				_ = srv.Shutdown(ctx)
 			}
 		}()
-		err = srv.ListenAndServe()
-		if err != nil {
-			log.Fatal(err)
+		if srvErr := srv.ListenAndServe(); srvErr != http.ErrServerClosed {
+			return nil, fmt.Errorf("OAuth callback server error: %v", srvErr)
+		}
+		if callbackErr != nil {
+			return nil, callbackErr
 		}
 	}
 	return config.Client(ctx, tok), nil
 }
 
-// GetClientADC returns a client to be used for API services
+// GetClientADC returns a client using Application Default Credentials with impersonation.
+// This is the original "adc" mode - it always impersonates a service account.
 func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client *http.Client, err error) {
+	ctx := context.Background()
 	if serviceAccountEmail == "" {
-		serviceAccountEmail, err = metadata.EmailWithContext(context.Background(), "")
+		serviceAccountEmail, err = metadata.EmailWithContext(ctx, "")
 		if err != nil {
 			return nil, fmt.Errorf("error getting Service Account email: %v", err)
 		}
@@ -140,16 +163,36 @@ func GetClientADC(subject, serviceAccountEmail string, scope ...string) (client 
 	return
 }
 
-// GetClient returns a client to be used for API services
+// GetClient returns a client using a service account key with domain-wide delegation.
+// The subject parameter specifies the user to impersonate.
 func GetClient(subject string, credentials []byte, scope ...string) (client *http.Client, err error) {
 	config, err := google.JWTConfigFromJSON(credentials, scope...)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing Service Account credential file to config: %v", err)
 	}
 	config.Subject = subject
-	return config.Client(ctx), nil
+	return config.Client(context.Background()), nil
 }
 
-func init() {
-	ctx = context.Background()
+// GetClientSA returns a client using a service account key without domain-wide delegation.
+// This authenticates as the service account itself, useful for accessing resources
+// shared directly with the SA (e.g., shared drives, calendars).
+func GetClientSA(credentials []byte, scope ...string) (*http.Client, error) {
+	config, err := google.JWTConfigFromJSON(credentials, scope...)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing Service Account credential file to config: %v", err)
+	}
+	return config.Client(context.Background()), nil
+}
+
+// GetClientADCDirect returns a client using Application Default Credentials directly,
+// without impersonation. This supports Workload Identity Federation, Cloud Run,
+// GCE, and local development with `gcloud auth application-default login`.
+func GetClientADCDirect(scope ...string) (*http.Client, error) {
+	ctx := context.Background()
+	client, err := google.DefaultClient(ctx, scope...)
+	if err != nil {
+		return nil, fmt.Errorf("error getting default client from ADC: %v", err)
+	}
+	return client, nil
 }

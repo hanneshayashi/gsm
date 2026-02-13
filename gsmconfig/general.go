@@ -164,13 +164,13 @@ func UpdateConfig(config *GSMConfig, name string) (*GSMConfig, error) {
 
 // CreateConfig creates a new config
 func CreateConfig(config *GSMConfig) (string, error) {
-	if !gsmhelpers.Contains(config.Mode, []string{"dwd", "user", "adc"}) {
+	if !gsmhelpers.Contains(config.Mode, []string{"dwd", "user", "adc", "sa", "adc-direct"}) {
 		return "", fmt.Errorf("%s is not a valid mode", config.Mode)
 	}
-	if config.Mode == "adc" && config.CredentialsFile != "" {
+	if (config.Mode == "adc" || config.Mode == "adc-direct") && config.CredentialsFile != "" {
 		return "", fmt.Errorf("credentialsFile is not used with %s mode", config.Mode)
 	}
-	if config.Mode == "dwd" || config.Mode == "user" {
+	if config.Mode == "dwd" || config.Mode == "user" || config.Mode == "sa" {
 		if config.CredentialsFile == "" {
 			return "", fmt.Errorf("credentialsFile is required with %s mode", config.Mode)
 		}
@@ -181,7 +181,7 @@ func CreateConfig(config *GSMConfig) (string, error) {
 	if config.Mode == "dwd" && config.Subject == "" {
 		return "", fmt.Errorf("subject is required with %s mode", config.Mode)
 	}
-	if config.Mode == "user" && config.Subject != "" {
+	if (config.Mode == "user" || config.Mode == "sa" || config.Mode == "adc-direct") && config.Subject != "" {
 		return "", fmt.Errorf("subject is not used with %s", config.Mode)
 	}
 	if config.Threads == 0 {
