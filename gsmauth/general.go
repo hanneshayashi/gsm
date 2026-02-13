@@ -27,6 +27,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"cloud.google.com/go/compute/metadata"
 	"github.com/hanneshayashi/gsm/gsmconfig"
@@ -74,8 +75,9 @@ func randomState() (string, error) {
 	return hex.EncodeToString(b), nil
 }
 
-// GetClientUser does user-based authentication via OAuth and returns an *http.Client
-func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope ...string) (client *http.Client, err error) {
+// GetClientUser does user-based authentication via OAuth and returns an *http.Client.
+// If noBrowser is true, the auth URL is printed but the browser is not opened automatically.
+func GetClientUser(credentials []byte, tokenName string, redirectPort int, noBrowser bool, scope ...string) (client *http.Client, err error) {
 	ctx := context.Background()
 	config, err := google.ConfigFromJSON(credentials, scope...)
 	if err != nil {
@@ -122,13 +124,15 @@ func GetClientUser(credentials []byte, tokenName string, redirectPort int, scope
 			done <- true
 			close(done)
 		})
-		err = browser.OpenURL(authURL)
-		if err != nil {
-			return nil, fmt.Errorf("unable to open browser for OAuth: %v", err)
+		fmt.Fprintf(os.Stderr, "\nOpen this URL in your browser to authenticate:\n\n  %s\n\nWaiting for callback on http://127.0.0.1:%d ...\n", authURL, redirectPort)
+		if !noBrowser {
+			_ = browser.OpenURL(authURL) // best-effort; URL is printed above
 		}
 		go func() {
 			if <-done {
-				_ = srv.Shutdown(ctx)
+				shutdownCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+				defer cancel()
+				_ = srv.Shutdown(shutdownCtx)
 			}
 		}()
 		if srvErr := srv.ListenAndServe(); srvErr != http.ErrServerClosed {

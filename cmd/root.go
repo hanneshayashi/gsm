@@ -63,6 +63,7 @@ var (
 	redirectPort   int
 	compressOutput bool
 	streamOutput   bool
+	noBrowser      bool
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
@@ -169,6 +170,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&logFile, "log", "", "Set the path of the log file. Default is either ~/gsm.log or defined in your config file")
 	rootCmd.PersistentFlags().IntSliceVar(&gsmhelpers.RetryOn, "retryOn", nil, "Specify the HTTP error code(s) that GSM should retry on. Note that GSM will always retry on HTTP 403 errors that indicate a quota / rate limit error")
 	rootCmd.PersistentFlags().StringVar(&errorOutput, "errorOutput", "both", "Sets the output where errors should be directed to. Can be 'stderr', 'log' or 'both' (default)")
+	rootCmd.PersistentFlags().BoolVar(&noBrowser, "noBrowser", false, "When authenticating with a user account, don't open the browser automatically. The auth URL will be printed to stderr instead.")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -247,7 +249,7 @@ func auth() {
 	case "dwd":
 		client, err = gsmauth.GetClient(subject, credentials, viper.GetStringSlice("scopes")...)
 	case "user":
-		client, err = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), redirectPort, viper.GetStringSlice("scopes")...)
+		client, err = gsmauth.GetClientUser(credentials, fmt.Sprintf("%s_token.json", viper.GetString("name")), redirectPort, noBrowser, viper.GetStringSlice("scopes")...)
 	case "adc":
 		client, err = gsmauth.GetClientADC(subject, viper.GetString("serviceAccount"), viper.GetStringSlice("scopes")...)
 	case "sa":
