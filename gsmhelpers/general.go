@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math/rand/v2"
 	"net/http"
 	"os"
 	"strings"
@@ -303,11 +302,6 @@ func GetBatchMaps(cmd *cobra.Command, cmdFlags map[string]*Flag) (<-chan map[str
 // Error keys are used on error messages to make it easier to debug where an error occurred
 func FormatErrorKey(s ...string) string {
 	return strings.Join(s, " - ")
-}
-
-// Sleep sleeps for the configured initial interval plus a random jitter between 0 and 50ms
-func Sleep() {
-	time.Sleep(retryConfig.InitialInterval + time.Duration(rand.IntN(50))*time.Millisecond)
 }
 
 // IsCommandOrChild returns true if the provided command or one of its children was called

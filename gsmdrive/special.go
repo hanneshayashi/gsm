@@ -92,49 +92,76 @@ func CopyFoldersAndReturnFilesWithNewParents(folderID, destination string, resul
 	return files, nil
 }
 
-// ListFilesRecursive lists all files and folders in a parent folder recursively
+// ListFilesRecursive lists all files and folders in a parent folder recursively.
+//
+// The implementation uses a mutex-protected folder queue (instead of a channel)
+// to avoid deadlocks that occur when workers block on a bounded folders channel
+// while the files channel is also full.
 func ListFilesRecursive(id, fields string, excludeFolders []string, includeRoot bool, threads int) <-chan *drive.File {
-	wg := &sync.WaitGroup{}
-	folders := make(chan string, threads)
 	files := make(chan *drive.File, threads)
-	wg.Add(1)
-	folders <- id
-	if includeRoot {
-		root, err := GetFile(id, "*", "")
-		if err != nil {
-			log.Println(err)
-		} else {
-			files <- root
-		}
-	}
+
 	go func() {
-		for i := 0; i < threads; i++ {
-			go func() {
-				for id := range folders {
-					for f, err := range ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true) {
+		defer close(files)
+
+		if includeRoot {
+			root, err := GetFile(id, "*", "")
+			if err != nil {
+				log.Println(err)
+			} else {
+				files <- root
+			}
+		}
+
+		// Mutex-protected folder queue — no bounded channel, no deadlock.
+		var mu sync.Mutex
+		queue := []string{id}
+
+		sem := make(chan struct{}, threads) // semaphore for bounded parallelism
+
+		// BFS level-by-level: dispatch all current folders, wait for workers to
+		// finish, then check if new folders were discovered. This avoids the race
+		// where the queue appears empty while workers are still in flight.
+		for len(queue) > 0 {
+			// Snapshot current queue and reset it—workers will append to it.
+			mu.Lock()
+			batch := queue
+			queue = nil
+			mu.Unlock()
+
+			var wg sync.WaitGroup
+			for _, folderID := range batch {
+				wg.Add(1)
+				sem <- struct{}{} // acquire semaphore slot
+
+				go func(fid string) {
+					defer func() {
+						<-sem // release semaphore slot
+						wg.Done()
+					}()
+					var discovered []string
+					for f, err := range ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", fid), "", "allDrives", "", "", "", fields, true) {
 						if err != nil {
 							log.Println(err)
 							continue
 						}
 						if isFolder(f) {
 							if !gsmhelpers.Contains(f.Id, excludeFolders) {
-								wg.Add(1)
 								files <- f
-								folders <- f.Id
+								discovered = append(discovered, f.Id)
 							}
 						} else {
 							files <- f
 						}
 					}
-					wg.Done()
-				}
-			}()
+					if len(discovered) > 0 {
+						mu.Lock()
+						queue = append(queue, discovered...)
+						mu.Unlock()
+					}
+				}(folderID)
+			}
+			wg.Wait()
 		}
-	}()
-	go func() {
-		wg.Wait()
-		close(folders)
-		close(files)
 	}()
 	return files
 }
