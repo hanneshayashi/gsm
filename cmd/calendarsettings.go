@@ -42,14 +42,14 @@ var calendarSettingsCmd = &cobra.Command{
 var calendarSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"setting": {
 		AvailableFor:   []string{"get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The id of the user setting.`,
 		Required:       []string{"get"},
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

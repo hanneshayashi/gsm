@@ -43,57 +43,57 @@ var roleAssignmentsCmd = &cobra.Command{
 var roleAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Immutable ID of the Workspace account.`,
-		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer")},
 		Recursive:    []string{"insert", "list"},
 	},
 	"roleAssignmentId": {
 		AvailableFor:   []string{"delete", "get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Immutable ID of the role assignment.`,
 		Required:       []string{"delete", "get"},
 		ExcludeFromAll: true,
 	},
 	"assignedTo": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID of the user this role is assigned to.`,
 		Required:     []string{"insert"},
 	},
 	"orgUnitId": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `If the role is restricted to an organization unit, this contains the ID for the organization unit the exercise of this role is restricted to.`,
 		Recursive:    []string{"insert"},
 	},
 	"roleId": {
 		AvailableFor: []string{"insert", "list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `The ID of the role that is assigned.`,
 		Required:     []string{"insert"},
 		Recursive:    []string{"insert"},
 	},
 	"scopeType": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The scope in which this role is assigned.
 Acceptable values are:
 CUSTOMER
 ORG_UNIT`,
-		Defaults:  map[string]any{"insert": "CUSTOMER"},
+		Defaults:  map[string]gsmhelpers.FlagValue{"insert": gsmhelpers.StringVal("CUSTOMER")},
 		Recursive: []string{"insert"},
 	},
 	"userKey": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's primary email address, alias email address, or unique user ID.
 If included in the request, returns role assignments only for this user.`,
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"insert", "list"},

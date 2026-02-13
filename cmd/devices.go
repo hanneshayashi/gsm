@@ -44,35 +44,35 @@ Note that this command requires manually adding the 'https://www.googleapis.com/
 var deviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor:   []string{"cancelWipe", "delete", "get", "wipe"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "Resource name of the Device in format: devices/{device_id}, where device_id is the unique ID assigned to the Device.",
 		Required:       []string{"cancelWipe", "delete", "get", "wipe"},
 		ExcludeFromAll: true,
 	},
 	"customer": {
 		AvailableFor: []string{"cancelWipe", "create", "delete", "get", "list", "wipe"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Resource name of the customer.
 If you're using this API for your own organization, use customers/my_customer.
 If you're using this API to manage another organization, use customers/{customer_id}, where customer_id is the customer to whom the device belongs.`,
-		Defaults: map[string]any{"cancelWipe": "customers/my_customer", "create": "customers/my_customer", "delete": "customers/my_customer", "get": "customers/my_customer", "list": "customers/my_customer", "wipe": "customers/my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"cancelWipe": gsmhelpers.StringVal("customers/my_customer"), "create": gsmhelpers.StringVal("customers/my_customer"), "delete": gsmhelpers.StringVal("customers/my_customer"), "get": gsmhelpers.StringVal("customers/my_customer"), "list": gsmhelpers.StringVal("customers/my_customer"), "wipe": gsmhelpers.StringVal("customers/my_customer")},
 	},
 	"serialNumber": {
 		AvailableFor:   []string{"create"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Serial Number of device. Example: HT82V1A01076.`,
 		Required:       []string{"create"},
 		ExcludeFromAll: true,
 	},
 	"assetTag": {
 		AvailableFor:   []string{"create"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Asset tag of the device.`,
 		ExcludeFromAll: true,
 	},
 	"deviceType": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Type of device:
 ANDROID      Device is an Android device
 IOS          Device is an iOS device
@@ -85,14 +85,14 @@ CHROME_OS    Device is a ChromeOS device.`,
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Additional restrictions when fetching list of devices.
 For a list of search fields, refer to https://developers.google.com/admin-sdk/directory/v1/search-operators.
 Multiple search fields are separated by the space character.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Order specification for devices in the response.
 Only one of the following field names may be used to specify the order: createTime, lastSyncTime, model, osVersion, deviceType and serialNumber.
 desc may be specified optionally at the end to specify results to be sorted in descending order.
@@ -100,7 +100,7 @@ Default order is ascending.`,
 	},
 	"view": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The view to use for the List request.
 Possible values are:
 COMPANY_INVENTORY      This view contains all devices imported by the company admin.
@@ -111,7 +111,7 @@ USER_ASSIGNED_DEVICES  This view contains all devices with at least one user reg
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

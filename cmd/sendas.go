@@ -47,80 +47,80 @@ Implements the API documented at https://developers.google.com/workspace/gmail/a
 var sendAsFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "patch", "verify"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me", "patch": "me", "verify": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("me"), "delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me"), "patch": gsmhelpers.StringVal("me"), "verify": gsmhelpers.StringVal("me")},
 	},
 	"sendAsEmail": {
 		AvailableFor: []string{"create", "delete", "get", "patch", "verify"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The email address that appears in the "From:" header for mail sent using this alias.`,
 		Required:     []string{"create", "delete", "patch", "verify"},
 	},
 	"displayName": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A name that appears in the "From:" header for mail sent using this alias.
 For custom "from" addresses, when this is empty, Gmail will populate the "From:" header with the name that is used for the primary address associated with the account.
 If the admin has disabled the ability for users to update their name format, requests to update this field for the primary login will silently fail.`,
 	},
 	"replyToAddress": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `An optional email address that is included in a "Reply-To:" header for mail sent using this alias.
 If this is empty, Gmail will not generate a "Reply-To:" header.`,
 	},
 	"signature": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "An optional HTML signature that is included in messages composed with this alias in the Gmail web UI.",
 	},
 	"isDefault": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether this address is selected as the default "From:" address in situations such as composing a new message or sending a vacation auto-reply.
 Every Gmail account has exactly one default send-as address, so the only legal value that clients may write to this field is true.
 Changing this from false to true for an address will result in this field becoming false for the other previous default address.`,
 	},
 	"treatAsAlias": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether Gmail should treat this address as an alias for the user's primary email address.
 This setting only applies to custom "from" aliases. See https://support.google.com/a/answer/1710338`,
 	},
 	"host": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The hostname of the SMTP service. Required for SMTP.",
 	},
 	"port": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  "The port of the SMTP service. Required for SMTP.",
 	},
 	"username": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The username that will be used for authentication with the SMTP service.",
 	},
 	"password": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The password that will be used for authentication with the SMTP service.",
 	},
 	"securityMode": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The protocol that will be used to secure communication with the SMTP service. Required for SMTP.
 [NONE|SSL|STARTTLS]
 NONE      - Communication with the remote SMTP service is unsecured. Requires port 25.
 SSL       - Communication with the remote SMTP service is secured using SSL.
 STARTTLS  - Communication with the remote SMTP service is secured using STARTTLS.`,
-		Defaults: map[string]any{"create": "NONE", "patch": "NONE"},
+		Defaults: map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("NONE"), "patch": gsmhelpers.StringVal("NONE")},
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

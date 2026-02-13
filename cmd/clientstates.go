@@ -44,7 +44,7 @@ var clientStatesCmd = &cobra.Command{
 var clientStateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Resource name of the ClientState in format: devices/{device_id}/deviceUsers/{device_user_id}/clientStates/{partner_id},
 where device_id is the unique ID assigned to the Device, device_user_id is the unique ID assigned to the User and partner_id identifies the partner storing the data.
 To get the client state for devices belonging to your own organization, the partnerId is in the format: customerId-*anystring*.
@@ -57,15 +57,15 @@ You may specify - in place of the {device_id}, so the ClientState resource name 
 	},
 	"customer": {
 		AvailableFor: []string{"get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Resource name of the customer.
 If you're using this API for your own organization, use customers/my_customer.
 If you're using this API to manage another organization, use customers/{customer_id}, where customer_id is the customer to whom the device belongs.`,
-		Defaults: map[string]any{"get": "customers/my_customer", "list": "customers/my_customer", "patch": "customers/my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("customers/my_customer"), "list": gsmhelpers.StringVal("customers/my_customer"), "patch": gsmhelpers.StringVal("customers/my_customer")},
 	},
 	"parent": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `To list all ClientStates, set this to "devices/-/deviceUsers/-".
 To list all ClientStates owned by a DeviceUser, set this to the resource name of the DeviceUser.
 Format: devices/{device}/deviceUsers/{deviceUser}`,
@@ -73,38 +73,38 @@ Format: devices/{device}/deviceUsers/{deviceUser}`,
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Additional restrictions when fetching list of client states.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Order specification for client states in the response.`,
 	},
 	"etag": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The token that needs to be passed back for concurrency control in updates.
 Token needs to be passed back in UpdateRequest`,
 		Required: []string{"patch"},
 	},
 	"customId": {
 		AvailableFor:   []string{"patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `This field may be used to store a unique identifier for the API resource within which these CustomAttributes are a field.`,
 		Required:       []string{"patch"},
 		ExcludeFromAll: true,
 	},
 	"assetTags": {
 		AvailableFor:   []string{"patch"},
-		Type:           "stringSlice",
+		Type:           gsmhelpers.FlagStringSlice,
 		Description:    `The caller can specify asset tags for this resource`,
 		Required:       []string{"patch"},
 		ExcludeFromAll: true,
 	},
 	"keyValuePairs": {
 		AvailableFor: []string{"patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The map of key-value attributes stored by callers specific to a device.
 The total serialized length of this map may not exceed 10KB.
 No limit is placed on the number of attributes in a map.
@@ -118,7 +118,7 @@ number`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

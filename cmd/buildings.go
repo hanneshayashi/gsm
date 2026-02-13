@@ -43,20 +43,20 @@ var buildingsCmd = &cobra.Command{
 var buildingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"buildingId": {
 		AvailableFor:   []string{"delete", "get", "insert", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the file.`,
 		Required:       []string{"delete", "get", "insert", "patch"},
 		ExcludeFromAll: true,
 	},
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID for the customer's Workspace account. As an account administrator, you can also use the my_customer alias to represent your account's customer ID.`,
-		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 	},
 	"coordinatesSource": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Source from which Building.coordinates are derived.
 
 Acceptable values are:
@@ -66,67 +66,67 @@ SOURCE_UNSPECIFIED     - Defaults to RESOLVED_FROM_ADDRESS if postal address is 
 	},
 	"addressLines": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `Unstructured address lines describing the lower levels of an address.`,
 	},
 	"administrativeArea": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Optional. Highest administrative subdivision which is used for postal addresses of a country or region.`,
 	},
 	"languageCode": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Optional. BCP-47 language code of the contents of this address (if known).`,
 	},
 	"locality": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Optional. Generally refers to the city/town portion of the address.
 Examples: US city, IT comune, UK post town.
 In regions of the world where localities are not well defined or do not fit into this structure well, leave locality empty and use addressLines.`,
 	},
 	"postalCode": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Optional. Postal code of the address.`,
 	},
 	"regionCode": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Required. CLDR region code of the country/region of the address.`,
 		Required:     []string{"insert"},
 	},
 	"sublocality": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Optional. Sublocality of the address.`,
 	},
 	"buildingName": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The building name as seen by users in Calendar.
 Must be unique for the customer. For example, "NYC-CHEL".
 The maximum length is 100 characters.`,
 	},
 	"latitude": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `Latitude in decimal degrees.`,
 	},
 	"longitude": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `Longitude in decimal degrees.`,
 	},
 	"description": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A brief description of the building. For example, "Chelsea Market".`,
 	},
 	"floorNames": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The display names for all floors in this building.
 The floors are expected to be sorted in ascending order, from lowest floor to highest floor.
 For example, ["B2", "B1", "L", "1", "2", "2M", "3", "PH"] Must contain at least one entry.`,
@@ -134,7 +134,7 @@ For example, ["B2", "B1", "L", "1", "2", "2M", "3", "PH"] Must contain at least 
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

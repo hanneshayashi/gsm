@@ -42,14 +42,14 @@ var driveLabelLocksCmd = &cobra.Command{
 var driveLabelLockFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Label on which Locks are applied. Format: labels/{label}.
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
 		Required: []string{"list"},
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

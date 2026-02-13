@@ -47,64 +47,64 @@ You can always explicitly specify a config file with the --config flag.`,
 var configFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"get", "getScopes", "new", "update", "load", "remove"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Name of the configuration.
 This (plus ".yaml") will be used as the file name.`,
 		Required: []string{"new", "load", "remove"},
-		Defaults: map[string]any{"get": ".gsm", "getScopes": ".gsm"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal(".gsm"), "getScopes": gsmhelpers.StringVal(".gsm")},
 	},
 	"credentialsFile": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Path to the credential file.
 Can be relative to the binary or fully qualified.`,
 	},
 	"serviceAccount": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The Service Account that should be impersonated when using ADC (Application Default Credentials) mode.
 If you are using '--mode adc' but are NOT using GSM on Google Cloud (i.e. locally), you need to specify this.`,
 	},
 	"mode": {
 		AvailableFor: []string{"new"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The mode to operate in. Can be:
 [dwd|user|adc]`,
 		Required: []string{"new"},
 	},
 	"subject": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The user who should be impersonated with DWD.`,
 	},
 	"scopes": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `OAuth Scopes to use.`,
 	},
 	"details": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `List detailed information about configs.`,
 	},
 	"threads": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "int",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `The maximum number of threads to use.`,
 	},
 	"standardDelay": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "int",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `Delay in ms to wait after each API call`,
 	},
 	"logFile": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Path of the log file.`,
 	},
 	"errorOutput": {
 		AvailableFor: []string{"new", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The destination where errors should be output to. Can be 'stderr', 'log' or 'both'`,
 	},
 }

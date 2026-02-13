@@ -48,7 +48,7 @@ var peopleCmd = &cobra.Command{
 var peopleFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"personFields": {
 		AvailableFor: []string{"createContact", "deleteContactPhoto", "get", "getBatchGet", "updateContact", "updateContactPhoto"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields on each person are returned.
 Multiple fields can be specified by separating them with commas.
 Defaults to all fields if not set.
@@ -86,7 +86,7 @@ userDefined`,
 	},
 	"sources": {
 		AvailableFor: []string{"createContact", "deleteContactPhoto", "get", "getBatchGet", "listDirectoryPeople", "searchDirectoryPeople", "updateContact", "updateContactPhoto"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A mask of what source types to return.
 DIRECTORY_SOURCE_TYPE_DOMAIN_CONTACT  - Workspace domain shared contact.
 DIRECTORY_SOURCE_TYPE_DOMAIN_PROFILE  - Workspace domain profile.
@@ -97,14 +97,14 @@ READ_SOURCE_TYPE_DOMAIN_CONTACT       - Returns SourceType.DOMAIN_CONTACT.`,
 	},
 	"resourceName": {
 		AvailableFor:   []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The resource name of the contact-`,
 		Required:       []string{"deleteContact", "deleteContactPhoto", "get", "updateContact", "updateContactPhoto"},
 		ExcludeFromAll: true,
 	},
 	"resourceNames": {
 		AvailableFor: []string{"getBatchGet"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The resource names of the people to provide information about.
 It's repeatable. The URL query parameter should be
 
@@ -119,7 +119,7 @@ You can include up to 50 resource names in one request.`,
 	},
 	"readMask": {
 		AvailableFor: []string{"listDirectoryPeople", "searchDirectoryPeople"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields on each person are returned.
 Multiple fields can be specified by separating them with commas.
 Valid values are:
@@ -156,19 +156,19 @@ userDefined`,
 	},
 	"mergeSources": {
 		AvailableFor: []string{"listDirectoryPeople", "searchDirectoryPeople"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `Additional data to merge into the directory sources if they are connected through verified join keys such as email addresses or phone numbers.`,
 	},
 	"query": {
 		AvailableFor: []string{"searchDirectoryPeople"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Prefix query that matches fields in the person.
 Does NOT use the readMask for determining what fields to match.`,
 		Required: []string{"searchDirectoryPeople"},
 	},
 	"updatePersonFields": {
 		AvailableFor: []string{"updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields on the person are updated.
 Multiple fields can be specified by separating them with commas.
 All updated fields will be replaced.
@@ -201,13 +201,13 @@ userDefined`,
 	},
 	"photo": {
 		AvailableFor: []string{"updateContactPhoto"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Path to a photo file.`,
 		Required:     []string{"updateContactPhoto"},
 	},
 	"addresses": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A person's physical address.
 May be a P.O. box or street address.
 All fields are optional.
@@ -232,12 +232,12 @@ countryCode	     - The ISO 3166-1 alpha-2 country code of the address.`,
 	},
 	"biographyValue": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The short biography.`,
 	},
 	"biographyContentType": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The content type of the biography.
 CONTENT_TYPE_UNSPECIFIED  - Unspecified.
 TEXT_PLAIN                - Plain text.
@@ -245,30 +245,30 @@ TEXT_HTML                 - HTML text.`,
 	},
 	"birthdayYear": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Year of date.
 Must be from 1 to 9999, or 0 if specifying a date without a year.`,
 	},
 	"birthdayMonth": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Month of year.
 Must be from 1 to 12, or 0 if specifying a year without a month and day.`,
 	},
 	"birthdayDay": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Day of month.
 Must be from 1 to 31 and valid for the year and month, or 0 if specifying a year by itself or a year and month where the day is not significant.`,
 	},
 	"birthdayText": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A free-form string representing the user's birthday.`,
 	},
 	"calendarUrls": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's calendar URLs.
 Can be used multiple times in the form of "url=...,type=...", etc.
 You may use the following fields:
@@ -282,7 +282,7 @@ type     - The type of the calendar URL.
 	},
 	"clientData": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's client data.
 Arbitrary client data that is populated by clients. Duplicate keys and values are allowed.
 Can be used multiple times in the form of "key=...,value=...", etc.
@@ -293,7 +293,7 @@ value    - The client specified value of the client data.`,
 	},
 	"emailAddresses": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's email addresses.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -308,7 +308,7 @@ displayName  - The display name of the email.`,
 	},
 	"events": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's events.
 Can be used multiple times in the form of "year=...,month=...", etc.
 You may use the following fields:
@@ -326,7 +326,7 @@ type     - The type of the event.
 	},
 	"externalIds": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's external IDs.
 Can be used multiple times in the form of "value=...,type=...", etc.
 You may use the following fields:
@@ -342,7 +342,7 @@ type     - The type of the external ID.
 	},
 	"fileAses": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's file-ases.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -351,7 +351,7 @@ value    - The file-as value`,
 	},
 	"genderValue": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The gender for the person.
 The gender can be custom or one of these predefined values:
   - male
@@ -360,7 +360,7 @@ The gender can be custom or one of these predefined values:
 	},
 	"addressMeAs": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The type of pronouns that should be used to address the person.
 The value can be custom or one of these predefined values:
   - male
@@ -369,7 +369,7 @@ The value can be custom or one of these predefined values:
 	},
 	"imClients": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's instant messaging clients.
 Can be used multiple times in the form of "primary=...,username=...", etc.
 You may use the following fields:
@@ -394,7 +394,7 @@ protocol  - The protocol of the IM client.
 	},
 	"interests": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's interests.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -403,7 +403,7 @@ value    - The interest; for example, stargazing.`,
 	},
 	"locales": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's locale preferences.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -412,7 +412,7 @@ value    - The well-formed IETF BCP 47 language tag representing the locale.`,
 	},
 	"locations": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's locations.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -430,7 +430,7 @@ deskCode      - The individual desk location.`,
 	},
 	"memberships": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's group memberships.
 Can be used multiple times in the form of "primary=...,contactGroupResourceName=...", etc.
 You may use the following fields:
@@ -443,7 +443,7 @@ contactGroupResourceName         - The resource name for the contact group, assi
 	},
 	"miscKeywords": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's miscellaneous keywords.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -466,67 +466,67 @@ type     - The miscellaneous keyword type.
 	},
 	"unstructuredName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The free form name value.`,
 	},
 	"familyName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The family name.`,
 	},
 	"givenName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The given name.`,
 	},
 	"middleName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The middle name(s).`,
 	},
 	"honorificPrefix": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The honorific prefixes, such as Mrs. or Dr.`,
 	},
 	"honorificSuffix": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The honorific suffixes, such as Jr.`,
 	},
 	"phoneticFullName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The full name spelled as it sounds.`,
 	},
 	"phoneticFamilyName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The family name spelled as it sounds.`,
 	},
 	"phoneticGivenName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The given name spelled as it sounds.`,
 	},
 	"phoneticMiddleName": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The middle name(s) spelled as they sound.`,
 	},
 	"phoneticHonorificPrefix": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The honorific prefixes spelled as they sound.`,
 	},
 	"phoneticHonorificSuffix": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The honorific suffixes spelled as they sound.`,
 	},
 	"nicknames": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's nicknames.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -539,7 +539,7 @@ type     - The type of a nickname.
 	},
 	"occupations": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's occupations.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -548,7 +548,7 @@ value    - The occupation; for example, carpenter.`,
 	},
 	"organizations": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's past or current organizations.
 Can be used multiple times in the form of "primary=...,type=...", etc.
 You may use the following fields:
@@ -581,7 +581,7 @@ location        - The location of the organization office the person works at.`,
 	},
 	"phoneNumbers": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's phone numbers.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -604,7 +604,7 @@ type     - The type of the phone number.
 	},
 	"relations": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's relations.
 Can be used multiple times in the form of "primary=...,person=...", etc.
 You may use the following fields:
@@ -629,7 +629,7 @@ type     - The person's relation to the other person.
 	},
 	"sipAddresses": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's SIP addresses.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -644,7 +644,7 @@ type     - The type of the SIP address.
 	},
 	"skills": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's skills.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -653,7 +653,7 @@ value    - The skill; for example, underwater basket weaving.`,
 	},
 	"urls": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's associated URLs.
 Can be used multiple times in the form of "primary=...,value=...", etc.
 You may use the following fields:
@@ -673,7 +673,7 @@ type     - The type of the URL.
 	},
 	"userDefined": {
 		AvailableFor: []string{"createContact", "updateContact"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The person's user defined data.
 Can be used multiple times in the form of "primary=...,type=...", etc.
 You may use the following fields:
@@ -683,7 +683,7 @@ value    - The end user specified value of the user defined data.`,
 	},
 	"fields": {
 		AvailableFor: []string{"createContact", "deleteContactPhoto", "get", "getBatchGet", "listDirectoryPeople", "searchDirectoryPeople", "updateContact", "updateContactPhoto"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

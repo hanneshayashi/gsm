@@ -44,16 +44,16 @@ var chromeOsDevicesCmd = &cobra.Command{
 var chromeOsDeviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"action", "get", "list", "moveToOU", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]any{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"action": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "moveToOU": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 		Required: []string{"moveToOU"},
 	},
 	"resourceId": {
 		AvailableFor: []string{"action"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID of the device.
 The resourceIds are returned in the response from the chromeosdevices.list method.`,
 		Required:       []string{"action"},
@@ -61,7 +61,7 @@ The resourceIds are returned in the response from the chromeosdevices.list metho
 	},
 	"action": {
 		AvailableFor: []string{"action"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Action to be taken on the Chrome OS device
 
 Acceptable values are:
@@ -75,7 +75,7 @@ disable      - If you believe a device in your organization has been lost or sto
 	},
 	"deprovisionReason": {
 		AvailableFor: []string{"action"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only used when the action is deprovision. With the deprovision action, this field is required.
 
 Note: The deprovision reason is audited because it might have implications on licenses for perpetual subscription customers.
@@ -89,16 +89,16 @@ upgrade_transfer             - Use if you're replacing your Cloud Ready devices 
 	},
 	"deviceId": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID of the device.
 The deviceIds are returned in the response from the chromeosdevices.list method.`,
-		Defaults:       map[string]any{"action": "my_customer", "get": "my_customer", "list": "my_customer", "moveToOU": "my_customer", "patch": "my_customer"},
+		Defaults:       map[string]gsmhelpers.FlagValue{"action": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "moveToOU": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 		Required:       []string{"get", "patch"},
 		ExcludeFromAll: true,
 	},
 	"projection": {
 		AvailableFor: []string{"get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Determines whether the response contains the full list of properties or only a subset.
 
 Acceptable values are:
@@ -107,7 +107,7 @@ FULL   - Includes all metadata fields.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Device property to use for sorting results.
 
 Acceptable values are:
@@ -121,19 +121,19 @@ supportEndDate     - Chrome device support end date. This is applicable only for
 	},
 	"orgUnitPath": {
 		AvailableFor: []string{"list", "moveToOU", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The full path of the organizational unit or its unique ID.`,
 		Required:     []string{"moveToOU"},
 	},
 	"query": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Search string in the format provided by List query operators
 (https://developers.google.com/admin-sdk/directory/v1/list-query-operators).`,
 	},
 	"sortOrder": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Whether to return results in ascending or descending order. Must be used with the orderBy parameter.
 
 Acceptable values are:
@@ -142,37 +142,37 @@ DESCENDING  - Descending order.`,
 	},
 	"deviceIds": {
 		AvailableFor: []string{"moveToOU"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `Chrome OS devices to be moved to OU`,
 		Required:     []string{"moveToOU"},
 	},
 	"annotatedAssetId": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The asset identifier as noted by an administrator or specified during enrollment.`,
 	},
 	"annotatedLocation": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The address or location of the device as noted by the administrator.
 Maximum length is 200 characters. Empty values are allowed.`,
 	},
 	"annotatedUser": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user of the device as noted by the administrator.
 Maximum length is 100 characters. Empty values are allowed.`,
 	},
 	"notes": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Notes about this device added by the administrator.
 This property can be searched with the list method's query parameter.
 Maximum length is 500 characters. Empty values are allowed.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

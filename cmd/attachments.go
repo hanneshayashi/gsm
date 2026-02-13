@@ -42,27 +42,27 @@ var attachmentsCmd = &cobra.Command{
 var attachmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's email address.
 The special value me can be used to indicate the authenticated user.`,
-		Defaults: map[string]any{"get": "me"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("me")},
 	},
 	"messageId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The ID of the message containing the attachment.",
 		Required:     []string{"get"},
 	},
 	"id": {
 		AvailableFor:   []string{"get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "The ID of the attachment.",
 		Required:       []string{"get"},
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

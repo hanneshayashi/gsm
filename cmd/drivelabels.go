@@ -46,7 +46,7 @@ var driveLabelsCmd = &cobra.Command{
 var driveLabelFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"get", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Label resource name.
 May be any of:
   - labels/{id} (equivalent to labels/{id}@latest)
@@ -59,25 +59,25 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 	},
 	"useAdminAccess": {
 		AvailableFor: []string{"get", "list", "create", "delete", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
 	},
 	"requiredRevisionId": {
 		AvailableFor: []string{"delete", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The [revisionId][google.apps.drive.labels.v1.Label.revision_id] of the label that the write request will be applied to.
 If this is not the latest revision of the label, the request will not be processed and will return a 400 Bad Request error.`,
 	},
 	"languageCode": {
 		AvailableFor: []string{"get", "list", "create", "disable", "enable", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish", "updateLabelCopyMode"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The BCP-47 language code to use for evaluating localized field labels.
 When not specified, values in the default configured language are used.`,
 	},
 	"view": {
 		AvailableFor: []string{"get", "list", "createField", "createSelectionChoice", "deleteField", "deleteSelectionChoice", "disableField", "disableSelectionChoice", "enableField", "enableSelectionChoice", "updateField", "updateFieldType", "updateLabel", "updateSelectionChoiceProperties", "publish", "updateLabelCopyMode"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `When specified, only certain fields belonging to the indicated view are returned.
 [LABEL_VIEW_BASIC|LABEL_VIEW_FULL]
 LABEL_VIEW_BASIC - Implies the field mask: name,id,revisionId,labelType,properties.*
@@ -85,7 +85,7 @@ LABEL_VIEW_FULL  - All possible fields.`,
 	},
 	"publishedOnly": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to include only published labels in the results.
 
 When true, only the current published label revisions are returned.
@@ -97,7 +97,7 @@ Returned label resource names don't reference a specific revision (labels/{id}).
 	},
 	"minimumRole": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies the level of access the user must have on the returned Labels.
 The minimum role a user must have on a label.
 Defaults to READER.
@@ -109,107 +109,107 @@ EDITOR     - Editors can make any update including deleting the label which also
 	},
 	"labelType": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The type of this label.
 Defaults to SHARED.
 [SHARED|ADMIN]
 SHARED  - Shared labels may be shared with users to apply to Drive items.
 ADMIN   - Admin-owned label. Only creatable and editable by admins. Supports some additional admin-only features.`,
-		Defaults: map[string]any{"create": "SHARED"},
+		Defaults: map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("SHARED")},
 	},
 	"title": {
 		AvailableFor: []string{"create", "updateLabel"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Title of the label.`,
 		Required:     []string{"create"},
 	},
 	"description": {
 		AvailableFor: []string{"create", "updateLabel"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The description of the label.`,
 		Required:     []string{"create"},
 	},
 	"fieldId": {
 		AvailableFor: []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the field.`,
 		Required:     []string{"updateField", "updateFieldType", "disableField", "enableField", "deleteField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
 	},
 	"choiceId": {
 		AvailableFor: []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the choice.`,
 		Required:     []string{"updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice"},
 	},
 	"hideInSearch": {
 		AvailableFor: []string{"disableField", "disableSelectionChoice", "disable"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to hide this disabled object in the search menu for Drive items.
 When false, the object is generally shown in the UI as disabled but it appears in the search results when searching for Drive items.
 When true, the object is generally hidden in the UI when searching for Drive items.`,
 	},
 	"showInApply": {
 		AvailableFor: []string{"disableField", "disableSelectionChoice", "disable"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to show this disabled object in the apply menu on Drive items.
 When true, the object is generally shown in the UI as disabled and is unselectable.
 When false, the object is generally hidden in the UI.`,
 	},
 	"displayName": {
 		AvailableFor: []string{"createField", "updateField", "createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The display text to show in the UI identifying this item.`,
 		Required:     []string{"createField", "createSelectionChoice"},
 	},
 	"insertBeforeField": {
 		AvailableFor: []string{"createField", "updateField"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Input only.
 Insert or move this field before the indicated field.
 If empty, the field is placed at the end of the list.`,
 	},
 	"insertBeforeChoice": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Input only.
 Insert or move this choice before the indicated choice.
 If empty, the choice is placed at the end of the list.`,
 	},
 	"choice": {
 		AvailableFor: []string{"createField", "updateFieldType"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A choice for a selection field.
 Can be used multiple times to create multiple choices that will be set in the order specified.`,
 	},
 	"priorityOverride": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Override the default global priority of this badge.
 When set to 0, the default priority heuristic is used.`,
 	},
 	"red": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `The red value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
 	},
 	"green": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `The green value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
 	},
 	"blue": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `The blue value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
 	},
 	"alpha": {
 		AvailableFor: []string{"createSelectionChoice", "updateSelectionChoiceProperties"},
-		Type:         "float64",
+		Type:         gsmhelpers.FlagFloat64,
 		Description:  `The alpha value for the badge color as a float (number between 1 and 0 - e.g. "0.5")`,
 	},
 	"field": {
 		AvailableFor: []string{"create"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Defines a field that has a display name, data type, and other configuration options.
 This field defines the kind of metadata that may be set on a Drive item.
 
@@ -234,12 +234,12 @@ The following options are available:
 	},
 	"learnMoreUri": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Custom URL to present to users to allow them to learn more about this label and how it should be used.`,
 	},
 	"dateFormatType": {
 		AvailableFor: []string{"updateFieldType"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Localized date format options.
 May be one of the following:
 LONG_DATE   - Includes full month name. For example, January 12, 1999 (MMMM d, y)
@@ -247,12 +247,12 @@ SHORT_DATE  - Short, numeric, representation. For example, 12/13/99 (M/d/yy)`,
 	},
 	"required": {
 		AvailableFor: []string{"createField", "updateField"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the field should be marked as required.`,
 	},
 	"copyMode": {
 		AvailableFor: []string{"updateLabelCopyMode"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Indicates how the applied label and field values should be copied when a Drive item is copied.
 May be one of the following:
 - DO_NOT_COPY     - The applied label and field values are not copied by default when the Drive item it's applied to is copied.
@@ -262,7 +262,7 @@ May be one of the following:
 	},
 	"valueType": {
 		AvailableFor: []string{"createField", "updateFieldType"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The type of the field
 May be one of the following:
 - dateString  - A date field
@@ -273,13 +273,13 @@ May be one of the following:
 	},
 	"maxEntries": {
 		AvailableFor: []string{"updateFieldType"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The maximum number of entries for the field as a whole number.
 Can be used with "user" or "selection type fields`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "create", "updateLabel", "createField", "deleteField", "disableField", "updateField", "updateFieldType", "enableField", "createSelectionChoice", "updateSelectionChoiceProperties", "disableSelectionChoice", "enableSelectionChoice", "deleteSelectionChoice", "disable", "enable", "publish", "updateLabelCopyMode"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

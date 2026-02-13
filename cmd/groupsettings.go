@@ -74,14 +74,14 @@ func ignoreDeprecatedGroupSettings(groupSettings *groupssettings.Groups) *groups
 var groupSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"groupUniqueId": {
 		AvailableFor:   []string{"get", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The group's email address.`,
 		Required:       []string{"get", "patch"},
 		ExcludeFromAll: true,
 	},
 	"whoCanJoin": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Permission to join group.
 [ANYONE_CAN_JOIN|ALL_IN_DOMAIN_CAN_JOIN|INVITED_CAN_JOIN|CAN_REQUEST_TO_JOIN]
 ANYONE_CAN_JOIN         - Any Internet user, both inside and outside your domain, can join the group.
@@ -91,7 +91,7 @@ CAN_REQUEST_TO_JOIN     - Non members can request an invitation to join.`,
 	},
 	"whoCanViewMembership": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Permissions to view membership.
 [ALL_IN_DOMAIN_CAN_VIEW|ALL_MEMBERS_CAN_VIEW|ALL_MANAGERS_CAN_VIEW]
 ALL_IN_DOMAIN_CAN_VIEW  - Anyone in the account can view the group members list.
@@ -101,7 +101,7 @@ ALL_MANAGERS_CAN_VIEW   - The group managers can view group members list.`,
 	},
 	"whoCanViewGroup": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Permissions to view group messages.
 [ANYONE_CAN_VIEW|ALL_IN_DOMAIN_CAN_VIEW|ALL_MEMBERS_CAN_VIEW|ALL_OWNERS_CAN_VIEW]
 ANYONE_CAN_VIEW         - Any Internet user can view the group's messages.
@@ -112,14 +112,14 @@ ALL_OWNERS_CAN_VIEW     - Any group owner can view this group's messages.`,
 	},
 	"allowExternalMembers": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies whether members external to your organization can join the group.
 true   - Workspace users external to your organization can become members of this group.
 false  - Users not belonging to the organization are not allowed to become members of this group.`,
 	},
 	"whoCanPostMessage": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Permissions to post messages.
 [NONE_CAN_POST|ALL_MANAGERS_CAN_POST|ALL_MEMBERS_CAN_POST|ALL_OWNERS_CAN_POST|ALL_IN_DOMAIN_CAN_POST|ANYONE_CAN_POST]
 NONE_CAN_POST           - The group is disabled and archived. No one can post a message to this group.
@@ -133,20 +133,20 @@ ANYONE_CAN_POST         - Any Internet user who outside your account can access 
 	},
 	"allowWebPosting": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Allows posting from web.
 true   - Allows any member to post to the group forum.
 false  - Members only use Gmail to communicate with the group.`,
 	},
 	"primaryLanguage": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The primary language for group.
 For a group's primary language use the language tags from the Workspace languages found at Workspace Email Settings API Email Language Tags.`,
 	},
 	"isArchived": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Allows the Group contents to be archived.
 true   - Archive messages sent to the group.
 false  - Do not keep an archive of messages sent to this group.
@@ -154,7 +154,7 @@ false  - Do not keep an archive of messages sent to this group.
 	},
 	"archiveOnly": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Allows the group to be archived only.
 true   - Group is archived and the group is inactive. New messages to this group are rejected. The older archived messages are browseable and searchable.
            - If true, the whoCanPostMessage property is set to NONE_CAN_POST.
@@ -164,7 +164,7 @@ false  - The group is active and can receive messages.
 	},
 	"messageModerationLevel": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Moderation level of incoming messages.
 [MODERATE_ALL_MESSAGES|MODERATE_NON_MEMBERS|MODERATE_NEW_MEMBERS|MODERATE_NONE]
 MODERATE_ALL_MESSAGES  - All messages are sent to the group owner's email address for approval. If approved, the message is sent to the group.
@@ -174,7 +174,7 @@ MODERATE_NONE          - No moderator approval is required. Messages are deliver
 	},
 	"spamModerationLevel": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies moderation levels for messages detected as spam.
 [ALLOW|MODERATE|SILENTLY_MODERATE|REJECT]
 ALLOW              - Post the message to the group.
@@ -184,7 +184,7 @@ REJECT             - Immediately reject the message.`,
 	},
 	"replyTo": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who the default reply should go to.
 [REPLY_TO_CUSTOM|REPLY_TO_SENDER|REPLY_TO_LIST|REPLY_TO_OWNER|REPLY_TO_IGNORE|REPLY_TO_MANAGERS]
 REPLY_TO_CUSTOM    - For replies to messages, use the group's custom email address.
@@ -200,7 +200,7 @@ REPLY_TO_MANAGERS  - This reply message is sent to the group's managers, which i
 	},
 	"customReplyTo": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `An email address used when replying to a message if the replyTo property is set to REPLY_TO_CUSTOM.
 This address is defined by an account administrator.
 When the group's ReplyTo property is set to REPLY_TO_CUSTOM, the customReplyTo property holds a custom email address used when replying to a message.
@@ -208,18 +208,18 @@ If the group's ReplyTo property is set to REPLY_TO_CUSTOM, the customReplyTo pro
 	},
 	"includeCustomFooter": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Whether to include custom footer.`,
 	},
 	"customFooterText": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Set the content of custom footer text.
 The maximum number of characters is 1000.`,
 	},
 	"sendMessageDenyNotification": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Allows a member to be notified if the member's message to the group is denied by the group owner.
 true   - When a message is rejected, send the deny message notification to the message author.
          The defaultMessageDenyNotificationText property is dependent on the sendMessageDenyNotification property being true.
@@ -228,14 +228,14 @@ false  - When a message is rejected, no notification is sent.`,
 	},
 	"defaultMessageDenyNotificationText": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `When a message is rejected, this is text for the rejection notification sent to the message's author.
 By default, this property is empty and has no value in the API's response body.
 The maximum notification text size is 10,000 characters.`,
 	},
 	"membersCanPostAsTheGroup": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Enables members to post messages as the group.
 true   - Group member can post messages using the group's email address instead of their own email address.
          Message appear to originate from the group itself.
@@ -244,84 +244,84 @@ false  - Members can not post in behalf of the group's email address.`,
 	},
 	"includeInGlobalAddressList": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Enables the group to be included in the Global Address List. For more information, see the help center.
 true   - Group is included in the Global Address List.
 false  - Group is not included in the Global Address List.`,
 	},
 	"whoCanLeaveGroup": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can leave the group.
 [ALL_MANAGERS_CAN_LEAVE|ALL_MEMBERS_CAN_LEAVE|NONE_CAN_LEAVE]`,
 	},
 	"whoCanContactOwner": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can contact the group owner.
 [ALL_IN_DOMAIN_CAN_CONTACT|ALL_MANAGERS_CAN_CONTACT|ALL_MEMBERS_CAN_CONTACT|ANYONE_CAN_CONTACT]`,
 	},
 	"favoriteRepliesOnTop": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Indicates if favorite replies should be displayed above other replies.
 true   - Favorite replies will be displayed above other replies.
 false  - Favorite replies will not be displayed above other replies.`,
 	},
 	"whoCanModerateMembers": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can manage members.
 [ALL_MEMBERS|OWNERS_AND_MANAGERS|OWNERS_ONLY|NONE]`,
 	},
 	"whoCanModerateContent": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can moderate content.
 [ALL_MEMBERS|OWNERS_AND_MANAGERS|OWNERS_ONLY|NONE]`,
 	},
 	"whoCanAssistContent": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can moderate metadata.
 [ALL_MEMBERS|OWNERS_AND_MANAGERS|OWNERS_ONLY|NONE]`,
 	},
 	"enableCollaborativeInbox": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Specifies whether a collaborative inbox will remain turned on for the group.`,
 	},
 	"whoCanDiscoverGroup": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies the set of users for whom this group is discoverable.
 [ANYONE_CAN_DISCOVER|ALL_IN_DOMAIN_CAN_DISCOVER|ALL_MEMBERS_CAN_DISCOVER]`,
 	},
 	"whoCanApproveMembers": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can approve members who ask to join groups.
 This permission will be deprecated once it is merged into the new whoCanModerateMembers setting.
 [ALL_MEMBERS_CAN_APPROVE]ALL_MANAGERS_CAN_APPROVE]ALL_OWNERS_CAN_APPROVE|NONE_CAN_APPROVE]`,
 	},
 	"whoCanBanUsers": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies who can deny membership to users.
 This permission will be deprecated once it is merged into the new whoCanModerateMembers setting.
 [ALL_MEMBERS|OWNERS_AND_MANAGERS|OWNERS_ONLY|NONE]`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 	"ignoreDeprecated": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Ignore deprecated fields.`,
-		Defaults:     map[string]any{"get": true, "patch": true},
+		Defaults:     map[string]gsmhelpers.FlagValue{"get": gsmhelpers.BoolVal(true), "patch": gsmhelpers.BoolVal(true)},
 	},
 }
 var groupSettingFlagsALL = gsmhelpers.GetAllFlags(groupSettingFlags)

@@ -43,7 +43,7 @@ var orgUnitsMembershipsCmd = &cobra.Command{
 var orgUnitsMembershipFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `OrgUnit which is queried for a list of memberships.
 Format: orgUnits/{$orgUnitId}
 where $orgUnitId is the orgUnitId from the Admin SDK OrgUnit resource.
@@ -52,7 +52,7 @@ If you don't specify the "orgUnits/" prefix, GSM will automatically prepend it t
 	},
 	"name": {
 		AvailableFor: []string{"move"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Use "driveId" instead if you just want to specify the driveId!
 The resource name of the OrgMembership.
 Format: orgUnits/{$orgUnitId}/memberships/{$membership}
@@ -62,7 +62,7 @@ The $membership shall be of the form {$entityType};{$memberId}, where $entityTyp
 	},
 	"driveId": {
 		AvailableFor: []string{"move"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The driveId of the Shared Drive to be moved.
 Use this instead of the name, if you just want to specify the driveId.
 GSM will construct the following "name" for you:
@@ -71,7 +71,7 @@ orgUnits/-/memberships/shared_drive;{$driveId}`,
 	},
 	"destinationOrgUnit": {
 		AvailableFor: []string{"move"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `OrgUnit where the membership will be moved to.
 Format: orgUnits/{$orgUnitId}
 where $orgUnitId is the orgUnitId from the Admin SDK OrgUnit resource.
@@ -80,24 +80,24 @@ If you don't specify the "orgUnits/" prefix, GSM will automatically prepend it t
 	},
 	"customer": {
 		AvailableFor: []string{"list", "move"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Customer that this OrgMembership belongs to.
 All authorization will happen on the role assignments of this customer.
 Format: customers/{$customerId}
 where $customerId is the id from the Admin SDK Customer resource.
 You may also use customers/my_customer to specify your own organization.`,
-		Defaults: map[string]any{"list": "customers/my_customer", "move": "customers/my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("customers/my_customer"), "move": gsmhelpers.StringVal("customers/my_customer")},
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The search query.
 Must be specified in Common Expression Language.
 May only contain equality operators on the type (e.g., type == 'shared_drive').`,
 	},
 	"fields": {
 		AvailableFor: []string{"list", "move"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

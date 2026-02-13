@@ -42,51 +42,51 @@ var changesCmd = &cobra.Command{
 var changeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"driveId": {
 		AvailableFor: []string{"getStartPageToken", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the shared drive`,
 	},
 	"pageToken": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The token for continuing a previous list request on the next page.
 This should be set to the value of 'nextPageToken' from the previous response or to the response from the getStartPageToken method.`,
 		Required: []string{"list"},
 	},
 	"includeCorpusRemovals": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether changes should include the file resource if the file is still accessible by the user at the time of the request, even when a file was removed from the list of changes and there will be no further change entries for this file.`,
 	},
 	"includeItemsFromAllDrives": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether both My Drive and shared drive items should be included in results.`,
 	},
 	"includePermissionsForView": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies which additional view's permissions to include in the response.
 Only 'published' is supported.`,
 	},
 	"includeRemoved": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to include changes indicating that items have been removed from the list of changes, for example by deletion or loss of access.`,
 	},
 	"restrictToMyDrive": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to restrict the results to changes inside the My Drive hierarchy.
 This omits changes to files such as those in the Application Data folder or shared files which have not been added to My Drive.`,
 	},
 	"spaces": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A comma-separated list of spaces to query within the user corpus. Supported values are 'drive', 'appDataFolder' and 'photos'.`,
 	},
 	"fields": {
 		AvailableFor: []string{"getStartPageToken", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

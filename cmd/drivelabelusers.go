@@ -42,20 +42,20 @@ var driveLabelUsersCmd = &cobra.Command{
 var driveLabelUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"getCapabilities"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the user.
 Only "users/me/capabilities" is supported. (Default)`,
-		Defaults: map[string]any{"getCapabilities": "users/me/capabilities"},
+		Defaults: map[string]gsmhelpers.FlagValue{"getCapabilities": gsmhelpers.StringVal("users/me/capabilities")},
 	},
 	"customer": {
 		AvailableFor: []string{"getCapabilities"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer to scope this request to. For example: "customers/abcd1234".
 If unset, will return settings within the current customer.`,
 	},
 	"fields": {
 		AvailableFor: []string{"getCapabilities"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

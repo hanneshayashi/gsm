@@ -41,7 +41,7 @@ var colorsCmd = &cobra.Command{
 var colorFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

@@ -43,25 +43,25 @@ var customersCmd = &cobra.Command{
 var customerFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerKey": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Id of the customer.`,
-		Defaults:     map[string]any{"get": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 	},
 	"alternateEmail": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer's secondary contact email address.
 This email address cannot be on the same domain as the customerDomain`,
 	},
 	"customerDomain": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer's primary domain name string.
 Do not include the www prefix when creating a new customer.`,
 	},
 	"language": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer's ISO 639-2 language code.
 See the Language Codes page for the list of supported codes.
 Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior.
@@ -69,62 +69,62 @@ The default value is en.`,
 	},
 	"phoneNumber": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The customer's contact phone number in E.164 format.`,
 	},
 	"addressLine1": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A customer's physical address.
 The address can be composed of one to three lines.`,
 	},
 	"addressLine2": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Address line 2 of the address.`,
 	},
 	"addressLine3": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Address line 3 of the address.`,
 	},
 	"contactName": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The customer contact's name.`,
 	},
 	"countryCode": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `This is a required property.
 For countryCode information see the ISO 3166 country code elements.(http://www.iso.org/iso/country_codes.htm)`,
 	},
 	"locality": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Name of the locality.
 An example of a locality value is the city of San Francisco.`,
 	},
 	"organizationName": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The company or company division name.`,
 	},
 	"postalCode": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The postal code. A postalCode example is a postal zip code such as 10009.
 This is in accordance with - http://portablecontacts.net/draft-spec.html#address_element.`,
 	},
 	"region": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Name of the region.
 An example of a region value is NY for the state of New York.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

@@ -44,7 +44,7 @@ var ssoProfilesCmd = &cobra.Command{
 var ssoProfileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the InboundSamlSsoProfile to delete.
 Format: inboundSamlSsoProfiles/{sso_profile_id}.
 If you don't specify the "inboundSamlSsoProfiles/" prefix, GSM will automatically prepend it for you.`,
@@ -52,32 +52,32 @@ If you don't specify the "inboundSamlSsoProfiles/" prefix, GSM will automaticall
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A Common Expression Language expression to filter the results.
 The only supported filter is filtering by customer. For example: customer=="customers/C0123abc".
 Omitting the filter or specifying a filter of customer=="customers/my_customer" will return the profiles for the customer that the caller (authenticated user) belongs to.`,
 	},
 	"customer": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer.
 For example: customers/C0123abc.`,
-		Defaults: map[string]any{"create": "customers/my_customer", "patch": "customers/my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("customers/my_customer"), "patch": gsmhelpers.StringVal("customers/my_customer")},
 	},
 	"displayName": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Human-readable name of the SAML SSO profile.`,
 	},
 	"entityId": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The SAML Entity ID of the identity provider.`,
 		Required:     []string{"create"},
 	},
 	"singleSignOnServiceUri": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The SingleSignOnService endpoint location (sign-in page URL) of the identity provider.
 This is the URL where the AuthnRequest will be sent.
 Must use HTTPS.
@@ -86,7 +86,7 @@ Assumed to accept the HTTP-Redirect binding.`,
 	},
 	"logoutRedirectUri": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The Logout Redirect URL (sign-out page URL) of the identity provider.
 When a user clicks the sign-out link on a Google page, they will be redirected to this URL.
 This is a pure redirect with no attached SAML LogoutRequest i.e. SAML single logout is not supported.
@@ -94,7 +94,7 @@ Must use HTTPS.`,
 	},
 	"changePasswordUri": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The Change Password URL of the identity provider.
 Users will be sent to this URL when changing their passwords at myaccount.google.com.
 This takes precedence over the change password URL configured at customer-level.
@@ -102,7 +102,7 @@ Must use HTTPS.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

@@ -50,21 +50,21 @@ group`,
 var driveLabelPermissionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"list", "create", "batchDelete", "update", "batchUpdate"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The parent Label resource name. Format: labels/{label}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
 		Required: []string{"list", "create", "batchDelete", "update", "batchUpdate"},
 	},
 	"name": {
 		AvailableFor: []string{"delete", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Resource name of this permission. Format: labels/{label}
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
 		Required: []string{"delete", "update"},
 	},
 	"permissionName": {
 		AvailableFor: []string{"batchDelete"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Label Permission resource name. Format: labels/{label}
 May be used multiple times to delete multiple permissions at once.
 If you don't specify the "labels/" prefix, GSM will automatically prepend it to the request.`,
@@ -72,7 +72,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 	},
 	"permission": {
 		AvailableFor: []string{"batchUpdate"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A permission.
 In order to update an existing permission use the following format:
 "name=...;role=..."
@@ -89,7 +89,7 @@ If you don't specify the "labels/" prefix, GSM will automatically prepend it to 
 	},
 	"email": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies the email address for a user or group principal.
 Not populated for audience principals.
 User and Group permissions may only be inserted using email address.
@@ -97,7 +97,7 @@ On update requests, if email address is specified, no principal should be specif
 	},
 	"role": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The role the principal should have.
 "[READER|APPLIER|ORGANIZER|EDITOR].
 READER     - A reader can read the label and associated metadata applied to Drive items.
@@ -108,19 +108,19 @@ EDITOR     - Editors can make any update including deleting the label which also
 	},
 	"audience": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Audience to grant a role to.
 The magic value of audiences/default may be used to apply the role to the default audience in the context of the organization that owns the Label.`,
 	},
 	"useAdminAccess": {
 		AvailableFor: []string{"list", "create", "delete", "update", "batchDelete", "batchUpdate"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Set to true in order to use the user's admin credentials.
 The server verifies that the user is an admin for the label before allowing access.`,
 	},
 	"fields": {
 		AvailableFor: []string{"list", "create", "update", "batchUpdate"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

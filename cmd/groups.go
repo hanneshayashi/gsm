@@ -43,7 +43,7 @@ var groupsCmd = &cobra.Command{
 var groupFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"groupKey": {
 		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
 		Required:       []string{"delete", "get", "patch"},
@@ -51,7 +51,7 @@ The value can be the group's email address, group alias, or the unique group ID.
 	},
 	"email": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
 		Required:       []string{"insert"},
@@ -59,48 +59,48 @@ The value can be the group's email address, group alias, or the unique group ID.
 	},
 	"description": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `An extended description to help users determine the purpose of a group.
 For example, you can include information about who should join the group, the types of messages to send to the group, links to FAQs about the group, or related groups.
 Maximum length is 4,096 characters.`,
 	},
 	"name": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The group's display name.`,
 	},
 	"customer": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]any{"list": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("my_customer")},
 	},
 	"domain": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The domain name.
 Use this field to get fields from only one domain.
 To return all domains for a customer account, use the customer query parameter instead.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Column to use for sorting results
 Acceptable values are:
 email  - Email of the group.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Query string search. Should be of the form "".
 Complete documentation is at https://developers.google.com/admin-sdk/directory/v1/guides/search-groups`,
 	},
 	"sortOrder": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Whether to return results in ascending or descending order. Only of use when orderBy is also used
 Acceptable values are:
 ASCENDING   - Ascending order.
@@ -108,13 +108,13 @@ DESCENDING  - Descending order.`,
 	},
 	"userKey": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Email or immutable ID of the user if only those groups are to be listed, the given user is a member of.
 If it's an ID, it should match with the ID of the user object.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

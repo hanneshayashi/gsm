@@ -44,14 +44,14 @@ var drivesCmd = &cobra.Command{
 var driveFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"driveId": {
 		AvailableFor:   []string{"delete", "get", "hide", "unhide", "update", "getSize"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "The ID of the shared drive",
 		Required:       []string{"delete", "get", "hide", "unhide", "update", "getSize"},
 		ExcludeFromAll: true,
 	},
 	"themeId": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The ID of the theme from which the background image and color will be set.
 The set of possible driveThemes can be retrieved from a drive.about.get response.
 When not specified on a drive.drives.create request, a random theme is chosen from which the background image and color are set.
@@ -59,18 +59,18 @@ This is a write-only field; it can only be set on requests that don't set colorR
 	},
 	"name": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The name of this shared drive",
 	},
 	"colorRgb": {
 		AvailableFor: []string{"update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The color of this shared drive as an RGB hex string.
 It can only be set on a drive.drives.update request that does not set themeId.`,
 	},
 	"backgroundImageFile": {
 		AvailableFor: []string{"update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `An image file and cropping parameters from which a background image for this shared drive is set.
 This is a write only field; it can only be set on drive.drives.update requests that don't set themeId.
 When specified, all fields of the backgroundImageFile must be set.
@@ -91,50 +91,50 @@ yCoordinate:  The Y coordinate of the upper left corner of the cropping area in 
 	},
 	"useDomainAdminAccess": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update", "delete"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Issue the request as a domain administrator",
 	},
 	"adminManagedRestrictions": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Whether administrative privileges on this shared drive are required to modify restrictions",
 	},
 	"copyRequiresWriterPermission": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether the options to copy, print, or download files inside this shared drive, should be disabled for readers and commenters.
 When this restriction is set to true, it will override the similarly named field to true for any file inside this shared drive`,
 	},
 	"domainUsersOnly": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether access to this shared drive and items inside this shared drive is restricted to users of the domain to which this shared drive belongs.
 This restriction may be overridden by other sharing policies controlled outside of this shared drive`,
 	},
 	"driveMembersOnly": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Whether access to items inside this shared drive is restricted to its members",
 	},
 	"sharingFoldersRequiresOrganizerPermission": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "If true, only users with the organizer role can share folders. If false, users with either the organizer role or the file organizer role can share folders.",
 	},
 	"q": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Query string for searching shared drives.
 See the https://developers.google.com/drive/api/v3/search-shareddrives for supported syntax.`,
 	},
 	"includeTrash": {
 		AvailableFor: []string{"getSize"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to include trashed items.`,
 	},
 	"returnWhenReady": {
 		AvailableFor: []string{"create"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `The Google Drive API returns the drive after creation immediately, but usually before it can be used in subsequent requests.
 Setting this flag will cause GSM to try and do the following on the newly created drive to make sure that it is available before returning it:
 1. Get the Drive by its driveId
@@ -147,7 +147,7 @@ The API requests are made with useDomainAdminAccess set to 'false'`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "hide", "list", "unhide", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

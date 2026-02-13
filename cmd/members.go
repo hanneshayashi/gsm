@@ -43,7 +43,7 @@ var membersCmd = &cobra.Command{
 var memberFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"groupKey": {
 		AvailableFor: []string{"delete", "get", "hasMember", "insert", "list", "patch", "set"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
 		Required:  []string{"delete", "get", "hasMember", "insert", "list", "patch", "set"},
@@ -51,7 +51,7 @@ The value can be the group's email address, group alias, or the unique group ID.
 	},
 	"memberKey": {
 		AvailableFor: []string{"delete", "get", "hasMember"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the group member in the API request.
 A group member can be a user or another group.
 The value can be the member's (group or user) primary email address, alias, or unique ID.`,
@@ -59,7 +59,7 @@ The value can be the member's (group or user) primary email address, alias, or u
 	},
 	"delivery_settings": {
 		AvailableFor: []string{"insert", "patch", "set"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Defines mail delivery preferences of member.
 Acceptable values are:
 ALL_MAIL  - All messages, delivered as soon as they arrive.
@@ -71,30 +71,30 @@ NONE      - No messages.`,
 	},
 	"role": {
 		AvailableFor: []string{"insert", "patch", "set"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1. For more information about a member's role, see the administration help center.
 
 Acceptable values are:
 MANAGER  - This role is only available if the Google Groups for Business is enabled using the Admin console. A MANAGER role can do everything done by an OWNER role except make a member an OWNER or delete the group. A group can have multiple MANAGER members.
 MEMBER   - This role can subscribe to a group, view discussion archives, and view the group's membership list. For more information about member roles, see the administration help center.
 OWNER    - This role can send messages to the group, add or remove members, change member roles, change group's settings, and delete the group. An OWNER must be a member of the group. A group can have more than one OWNER.`,
-		Defaults:  map[string]any{"insert": "MEMBER", "set": "MEMBER"},
+		Defaults:  map[string]gsmhelpers.FlagValue{"insert": gsmhelpers.StringVal("MEMBER"), "set": gsmhelpers.StringVal("MEMBER")},
 		Recursive: []string{"insert", "patch", "set"},
 	},
 	"includeDerivedMembership": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to list indirect memberships.`,
 	},
 	"roles": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The roles query parameter allows you to retrieve group members by role.
 Allowed values are OWNER, MANAGER, and MEMBER.`,
 	},
 	"email": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The member's email address. A member can be a user or another group.
 This property is required when adding a member to a group.
 The email must be unique and cannot be an alias of another group.
@@ -102,14 +102,14 @@ If the email address is changed, the API automatically reflects the email addres
 	},
 	"emails": {
 		AvailableFor: []string{"set"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A member's email address.
 This flag can be used multiple times.
 If it is not set, the group will be cleared of all members!`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch", "set"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"get", "insert", "patch", "set"},

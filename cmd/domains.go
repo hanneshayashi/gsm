@@ -43,20 +43,20 @@ var domainsCmd = &cobra.Command{
 var domainFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Immutable ID of the Workspace account.",
-		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer")},
 	},
 	"domainName": {
 		AvailableFor:   []string{"delete", "get", "insert"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "Name of domain .",
 		Required:       []string{"delete", "get", "insert"},
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

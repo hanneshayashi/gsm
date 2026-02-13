@@ -43,30 +43,30 @@ var rolesCmd = &cobra.Command{
 var roleFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Immutable ID of the Workspace account.`,
-		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 	},
 	"roleId": {
 		AvailableFor:   []string{"delete", "get", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Immutable ID of the role.`,
 		ExcludeFromAll: true,
 	},
 	"roleName": {
 		AvailableFor:   []string{"insert", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Name of the role.`,
 		ExcludeFromAll: true,
 	},
 	"rolePrivileges": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The set of privileges that are granted to this role.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

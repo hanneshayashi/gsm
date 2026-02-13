@@ -66,64 +66,64 @@ var (
 	batchFlags     map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"path": {
 			AvailableFor: []string{"batch"},
-			Type:         "string",
+			Type:         gsmhelpers.FlagString,
 			Description:  "Path of the import file (CSV)",
 			Required:     []string{"batch"},
 		},
 		"delimiter": {
 			AvailableFor: []string{"batch"},
-			Type:         "string",
+			Type:         gsmhelpers.FlagString,
 			Description:  "Delimiter to use for CSV columns. Must be exactly one character. Default is ';'",
 		},
 		"skipHeader": {
 			AvailableFor: []string{"batch"},
-			Type:         "bool",
+			Type:         gsmhelpers.FlagBool,
 			Description:  "Whether to skip the first row (header)",
 		},
 		"batchThreads": {
 			AvailableFor: []string{"batch"},
-			Type:         "int",
+			Type:         gsmhelpers.FlagInt64,
 			Description:  "Specify the number of threads that should be used for batch commands (overrides value in config file. Max 16)",
 		},
 	}
 	recursiveFileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"folderId": {
 			AvailableFor: []string{"recursive"},
-			Type:         "string",
+			Type:         gsmhelpers.FlagString,
 			Description:  `File id of the folder.`,
 			Required:     []string{"recursive"},
 		},
 		"batchThreads": {
 			AvailableFor: []string{"recursive"},
-			Type:         "int",
+			Type:         gsmhelpers.FlagInt64,
 			Description:  "Specify the number of threads that should be used for recursive commands (overrides value in config file. Max 16)",
 		},
 		"excludeFolders": {
 			AvailableFor: []string{"recursive"},
-			Type:         "stringSlice",
+			Type:         gsmhelpers.FlagStringSlice,
 			Description: `Ids of folders to exclude.
 Note that due to the way permissions are automatically inherited in Drive, this may not have the desired result for permission commands!`,
 		},
 		"includeRoot": {
 			AvailableFor: []string{"recursive"},
-			Type:         "bool",
+			Type:         gsmhelpers.FlagBool,
 			Description:  `If set to true, the root (specified parent) is included in the results`,
 		},
 	}
 	recursiveUserFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 		"orgUnit": {
 			AvailableFor: []string{"recursive"},
-			Type:         "stringSlice",
+			Type:         gsmhelpers.FlagStringSlice,
 			Description:  `Path of an orgUnit. Can be used multiple times. Note that an orgUnit always includes all of its children!`,
 		},
 		"groupEmail": {
 			AvailableFor: []string{"recursive"},
-			Type:         "stringSlice",
+			Type:         gsmhelpers.FlagStringSlice,
 			Description:  `An email address of a group. Can be used multiple times. Note that a group will include recursive memberships!`,
 		},
 		"batchThreads": {
 			AvailableFor: []string{"recursive"},
-			Type:         "int",
+			Type:         gsmhelpers.FlagInt64,
 			Description:  "Specify the number of threads that should be used for recursive commands (overrides value in config file. Max 16)",
 		},
 	}

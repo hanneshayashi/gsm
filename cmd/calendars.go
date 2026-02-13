@@ -43,38 +43,38 @@ var calendarsCmd = &cobra.Command{
 var calendarFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarId": {
 		AvailableFor: []string{"clear", "delete", "get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
 		Required:       []string{"clear", "delete", "patch"},
-		Defaults:       map[string]any{"get": "primary"},
+		Defaults:       map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("primary")},
 		ExcludeFromAll: true,
 	},
 	"summary": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Title of the calendar.`,
 		Required:     []string{"insert"},
 	},
 	"description": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Description of the calendar.`,
 	},
 	"location": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Geographic location of the calendar as free-form text.`,
 	},
 	"timeZone": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The time zone of the calendar.
 (Formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich").`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

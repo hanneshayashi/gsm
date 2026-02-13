@@ -46,7 +46,7 @@ var userPhotosCmd = &cobra.Command{
 var userPhotoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required:       []string{"delete", "get", "update"},
@@ -54,7 +54,7 @@ The value can be the user's primary email address, alias email address, or uniqu
 	},
 	"photo": {
 		AvailableFor: []string{"update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Path to the photo file.
 Allowed formats are: jpeg, png, gif, bmp and tiff.`,
 		Required:  []string{"update"},
@@ -62,7 +62,7 @@ Allowed formats are: jpeg, png, gif, bmp and tiff.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"get", "update"},

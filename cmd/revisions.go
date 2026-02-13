@@ -43,26 +43,26 @@ var revisionsCmd = &cobra.Command{
 var revisionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
 		AvailableFor: []string{"delete", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the file.`,
 		Required:     []string{"delete", "get", "list", "update"},
 	},
 	"revisionId": {
 		AvailableFor:   []string{"delete", "get", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the revision.`,
 		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
 	},
 	"acknowledgeAbuse": {
 		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether the user is acknowledging the risk of downloading known malware or other abusive files.
 This is only applicable when alt=media.`,
 	},
 	"keepForever": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to keep this revision forever, even if it is no longer the head revision.
 If not set, the revision will be automatically purged 30 days after newer content is uploaded.
 This can be set on a maximum of 200 revisions for a file.
@@ -70,25 +70,25 @@ This field is only applicable to files with binary content in Drive.`,
 	},
 	"publishAuto": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether subsequent revisions will be automatically republished.
 This is only applicable to Google Docs.`,
 	},
 	"published": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether this revision is published.
 This is only applicable to Google Docs.`,
 	},
 	"publishedOutsideDomain": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether this revision is published outside the domain.
 This is only applicable to Google Docs.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

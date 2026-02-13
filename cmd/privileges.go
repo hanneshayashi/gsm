@@ -42,13 +42,13 @@ var privilegesCmd = &cobra.Command{
 var privilegeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Immutable ID of the Workspace account.",
-		Defaults:     map[string]any{"list": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("my_customer")},
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

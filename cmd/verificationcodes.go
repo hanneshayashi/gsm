@@ -42,7 +42,7 @@ var verificationCodesCmd = &cobra.Command{
 var verificationCodeFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"generate", "invalidate", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required:       []string{"generate", "invalidate", "list"},
@@ -50,7 +50,7 @@ The value can be the user's primary email address, alias email address, or uniqu
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"list"},

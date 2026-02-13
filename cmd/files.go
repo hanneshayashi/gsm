@@ -45,14 +45,14 @@ var filesCmd = &cobra.Command{
 var fileFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
 		AvailableFor:   []string{"copy", "delete", "export", "get", "move", "update", "download", "listLabels", "modifyLabels", "removeLabels"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "The ID of the file",
 		Required:       []string{"copy", "delete", "export", "get", "move", "update", "download", "listLabels", "modifyLabels", "removeLabels"},
 		ExcludeFromAll: true,
 	},
 	"ignoreDefaultVisibility": {
 		AvailableFor: []string{"copy", "create"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to ignore the domain's default visibility settings for the created file.
 Domain administrators can choose to make all uploaded files visible to the domain by default;
 this parameter bypasses that behavior for the request.
@@ -60,13 +60,13 @@ Permissions are still inherited from parent folders.`,
 	},
 	"includePermissionsForView": {
 		AvailableFor: []string{"copy", "create", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Specifies which additional view's permissions to include in the response.
 Only 'published' is supported.`,
 	},
 	"keepRevisionForever": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to set the 'keepForever' field in the new head revision.
 This is only applicable to files with binary content in Google Drive.
 Only 200 revisions for the file can be kept forever.
@@ -74,56 +74,56 @@ If the limit is reached, try deleting pinned revisions.`,
 	},
 	"ocrLanguage": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "A language hint for OCR processing during image import (ISO 639-1 code).",
 	},
 	"appProperties": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A collection of arbitrary key-value pairs which are private to the requesting app.
 Entries with null values are cleared in update and copy requests.`,
 	},
 	"thumbnailImage": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The thumbnail data encoded with URL-safe Base64 (RFC 4648 section 5).`,
 	},
 	"thumbnailMimeType": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The MIME type of the thumbnail.`,
 	},
 	"readOnly": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether the content of the file is read-only.
 If a file is read-only, a new revision of the file may not be added, comments may not be added or modified, and the title of the file may not be modified.`,
 	},
 	"ownerRestricted": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether the content restriction can only be modified or removed by a user who owns the file.
 For files in shared drives, any user with organizer capabilities can modify or remove this content restriction.`,
 	},
 	"readOnlyReason": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Reason for why the content of the file is restricted.
 This is only mutable on requests that also set readOnly=true.`,
 	},
 	"copyRequiresWriterPermission": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the options to copy, print, or download this file, should be disabled for readers and commenters.`,
 	},
 	"description": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A short description of the file.`,
 	},
 	"mimeType": {
 		AvailableFor: []string{"copy", "create", "export", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The target MIME type of the file.
 Google Drive will attempt to automatically detect an appropriate value from uploaded content if no value is provided.
 The value cannot be changed unless a new revision is uploaded.
@@ -134,106 +134,106 @@ The supported import formats are published in the About resource.`,
 	},
 	"modifiedTime": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The last time the file was modified by anyone (RFC 3339 date-time).
 Note that setting modifiedTime will also update modifiedByMeTime for the user.`,
 	},
 	"name": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The name of the file. This is not necessarily unique within a folder.
 Note that for immutable items such as the top level folders of shared drives, My Drive root folder, and Application Data folder the name is constant.`,
 	},
 	"parent": {
 		AvailableFor: []string{"copy", "create", "move", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The single parent of the file.`,
 		Required:     []string{"move"},
 		Recursive:    []string{"copy", "move"},
 	},
 	"properties": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A collection of arbitrary key-value pairs which are visible to all apps.
 Entries with null values are cleared in update and copy requests.`,
 	},
 	"starred": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the user has starred the file.`,
 	},
 	"viewedByMeTime": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The last time the file was viewed by the user (RFC 3339 date-time).`,
 	},
 	"writersCanShare": {
 		AvailableFor: []string{"copy", "create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether users with only writer permission can modify the file's permissions.
 Not populated for items in shared drives.`,
 	},
 	"useContentAsIndexableText": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to use the uploaded content as indexable text.`,
 	},
 	"inheritedPermissionsDisabled": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether this file has inherited permissions disabled. Inherited permissions are enabled by default.
 See https://developers.google.com/workspace/drive/api/guides/limited-expansive-access for details`,
 	},
 	"indexableText": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Text to be indexed for the file to improve fullText queries.
 This is limited to 128KB in length and may contain HTML elements.`,
 	},
 	"createdTime": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The time at which the file was created (RFC 3339 date-time).`,
 	},
 	"folderColorRgb": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The color for a folder as an RGB hex string.
 The supported colors are published in the folderColorPalette field of the About resource.
 If an unsupported color is specified, the closest color in the palette will be used instead.`,
 	},
 	"id": {
 		AvailableFor:   []string{"copy", "create"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the file.`,
 		ExcludeFromAll: true,
 	},
 	"originalFilename": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The original filename of the uploaded content if available, or else the original value of the name field.
 This is only available for files with binary content in Google Drive.`,
 	},
 	"targetId": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the file that this shortcut points to.`,
 	},
 	"count": {
 		AvailableFor: []string{"generateIds"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `The number of IDs to return. Acceptable values are 1 to 1000, inclusive. (Default: 10)`,
-		Defaults:     map[string]any{"generateIds": int64(10)},
+		Defaults:     map[string]gsmhelpers.FlagValue{"generateIds": gsmhelpers.Int64Val(10)},
 	},
 	"space": {
 		AvailableFor: []string{"generateIds"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The space in which the IDs can be used to create new files.
 Supported values are 'drive' and 'appDataFolder'.`,
 	},
 	"corpora": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Groupings of files to which the query applies.
 Supported groupings are:
 'user' (files created by, opened by, or shared directly with the user)
@@ -244,17 +244,17 @@ When able, use 'user' or 'drive', instead of 'allDrives', for efficiency.`,
 	},
 	"driveId": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `ID of the shared drive.`,
 	},
 	"includeItemsFromAllDrives": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether both My Drive and shared drive items should be included in results.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A comma-separated list of sort keys.
 Valid keys are 'createdTime', 'folder', 'modifiedByMeTime', 'modifiedTime', 'name', 'name_natural', 'quotaBytesUsed', 'recency', 'sharedWithMeTime', 'starred', and 'viewedByMeTime'.
 Each key sorts ascending by default, but may be reversed with the 'desc' modifier.
@@ -263,19 +263,19 @@ Please note that there is a current limitation for users with approximately one 
 	},
 	"q": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A query for filtering the file results.
 See the https://developers.google.com/drive/api/v3/search-files for the supported syntax.`,
 	},
 	"spaces": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A comma-separated list of spaces to query within the corpus.
 Supported values are 'drive', 'appDataFolder' and 'photos'.`,
 	},
 	"trashed": {
 		AvailableFor: []string{"update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether the file has been trashed, either explicitly or from a trashed parent folder.
 Only the owner may trash a file.
 The trashed item is excluded from all files.list responses returned for any user who does not own the file.
@@ -284,23 +284,23 @@ All users with access can copy, download, export, and share the file.`,
 	},
 	"localFilePath": {
 		AvailableFor: []string{"create", "update", "download", "export"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Path to a file or folder on the local disk.`,
 		Required:     []string{"download", "export"},
 	},
 	"acknowledgeAbuse": {
 		AvailableFor: []string{"download"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the user is acknowledging the risk of downloading known malware or other abusive files.`,
 	},
 	"folderId": {
 		AvailableFor: []string{"count"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Id of the folder.`,
 	},
 	"labelField": {
 		AvailableFor: []string{"modifyLabels"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Required:     []string{"modifyLabels"},
 		Description: `A single label field that should be updated on a file.
 Can be used multiple times in the form of "--labelField "labelId=...;fieldId=...;valueType=...,values=...", etc.
@@ -322,7 +322,7 @@ index               The index of the value if the field is multi-value`,
 	},
 	"labelId": {
 		AvailableFor: []string{"removeLabels"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Required:     []string{"removeLabels"},
 		Description: `The ID of a label that should be removed from the file
 Can be used multiple times to remove multiple labels in one request`,
@@ -330,13 +330,13 @@ Can be used multiple times to remove multiple labels in one request`,
 	},
 	"sourceMimeType": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The MIME type of the source file to upload.
 Set this to "text/csv" and "mimeType" to "application/vnd.google-apps.spreadsheet" in order to import a CSV file as a Sheet`,
 	},
 	"fields": {
 		AvailableFor: []string{"copy", "create", "get", "list", "update", "listLabels", "modifyLabels", "removeLabels"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"copy", "create", "get", "list", "update", "listLabels", "modifyLabels", "removeLabels"},

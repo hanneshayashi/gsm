@@ -43,50 +43,50 @@ var commentsCmd = &cobra.Command{
 var commentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the file.`,
 		Required:     []string{"create", "delete", "get", "list", "update"},
 	},
 	"content": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The plain text content of the comment.
 This field is used for setting the content, while htmlContent should be displayed.`,
 		Required: []string{"create", "update"},
 	},
 	"anchor": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A region of the document represented as a JSON string.
 See anchor documentation for details on how to define and interpret anchor properties.`,
 	},
 	"quotedFileContentValue": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The quoted content itself.
 This is interpreted as plain text if set through the API.`,
 	},
 	"commentId": {
 		AvailableFor:   []string{"delete", "get", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the comment.`,
 		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
 	},
 	"includeDeleted": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to return deleted comments.
 Deleted comments will not include their original content.`,
 	},
 	"startModifiedTime": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The minimum value of 'modifiedTime' for the result comments (RFC 3339 date-time).`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Required: []string{"create", "get", "list", "update"},

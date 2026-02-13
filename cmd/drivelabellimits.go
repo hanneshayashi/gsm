@@ -42,14 +42,14 @@ var driveLabelLimitsCmd = &cobra.Command{
 var driveLabelLimitFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"getLabel"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Label revision resource name.
 API docs say this must be: "limits/label".
 However, only an empty string seems to work currently, so leave empty, if you get an error.`,
 	},
 	"fields": {
 		AvailableFor: []string{"getLabel"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

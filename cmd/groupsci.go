@@ -45,16 +45,16 @@ var groupsCiCmd = &cobra.Command{
 var groupCiFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"initialGroupConfig": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Required. The initial configuration option for the Group.
 WITH_INITIAL_OWNER  - The end user making the request will be added as the initial owner of the Group.
 EMPTY               - An empty group is created without any initial owners.
                       This can only be used by admins of the domain.`,
-		Defaults: map[string]any{"create": "EMPTY"},
+		Defaults: map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("EMPTY")},
 	},
 	"labels": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: ` One or more label entries that apply to the Group. Currently supported labels contain a key with an empty value.
 
 Google Groups are the default type of group and have a label with a key of cloudidentity.googleapis.com/groups.discussion_forum and an empty value.
@@ -71,7 +71,7 @@ An object containing a list of "key": value pairs. Example: { "name": "wrench", 
 	},
 	"name": {
 		AvailableFor: []string{"get", "getSecuritySettings", "delete", "patch", "updateSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the Group.
 
 Must be of the form groups/{group_id}.`,
@@ -79,7 +79,7 @@ Must be of the form groups/{group_id}.`,
 	},
 	"email": {
 		AvailableFor: []string{"get", "getSecuritySettings", "delete", "patch", "updateSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
 Note that this will cause an additional API call.`,
@@ -87,12 +87,12 @@ Note that this will cause an additional API call.`,
 	},
 	"parent": {
 		AvailableFor: []string{"create", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Must be of the form identitysources/{identity_source_id} for external- identity-mapped groups or customers/{customer_id} for Google Groups.`,
 	},
 	"queries": {
 		AvailableFor: []string{"create"},
-		Type:         "stringArray",
+		Type:         gsmhelpers.FlagStringArray,
 		Description: `Memberships will be the union of all queries.
 Only one entry with USER resource is currently supported.
 Can be used multiple times in the form of "--queries query=...;resourceType=..."
@@ -108,7 +108,7 @@ query         - Query that determines the memberships of the dynamic group.
 	},
 	"id": {
 		AvailableFor: []string{"create", "lookup"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The ID of the entity.
 
 For Google-managed entities, the id must be the email address.
@@ -121,7 +121,7 @@ Must be unique within a namespace.`,
 	},
 	"namespace": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The namespace in which the entity exists.
 
 If not specified, the EntityKey represents a Google-managed entity such as a Google user or a Google Group.
@@ -131,31 +131,31 @@ The namespace must correspond to an identity source created in Admin Console and
 	},
 	// 	"additionalGroupKeys": {
 	// 		AvailableFor: []string{"create"},
-	// 		Type:         "stringSlice",
+	// 		Type:         gsmhelpers.FlagStringSlice,
 	// 		Description: `Additional entity key aliases for a Group.
 	// Can be used multiple times in the form of "id=...;namespace=..."`,
 	// },
 	"displayName": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The display name of the Group.`,
 	},
 	"description": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `An extended description to help users determine the purpose of a Group.
 Must not be longer than 4,096 characters.`,
 	},
 	"view": {
 		AvailableFor: []string{"list", "search"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The level of detail to be returned.
 BASIC  - Default. Only basic resource information is returned.
 FULL   - All resource information is returned.`,
 	},
 	"query": {
 		AvailableFor: []string{"search", "updateSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Must be specified in Common Expression Language.
 search:
 May only contain equality operators on the parent and inclusion operators on labels (e.g., parent == 'customers/{customer_id}' && 'cloudidentity.googleapis.com/groups.discussion_forum' in labels).
@@ -179,17 +179,17 @@ member.type == 1 || member.type == 3`,
 	},
 	"readMask": {
 		AvailableFor: []string{"getSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Field-level read mask of which fields to return. "*" returns all fields.
 
 If not specified, all fields will be returned.
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
-		Defaults: map[string]any{"updateSecuritySettings": "memberRestriction"},
+		Defaults: map[string]gsmhelpers.FlagValue{"updateSecuritySettings": gsmhelpers.StringVal("memberRestriction")},
 	},
 	"updateMask": {
 		AvailableFor: []string{"patch", "updateSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The fully-qualified names of fields to update.
 
 May only contain the following fields:
@@ -200,11 +200,11 @@ May only contain the following fields:
   - memberRestriction.query (default)
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
-		Defaults: map[string]any{"updateSecuritySettings": "memberRestriction.query"},
+		Defaults: map[string]gsmhelpers.FlagValue{"updateSecuritySettings": gsmhelpers.StringVal("memberRestriction.query")},
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "getSecuritySettings", "list", "lookup", "patch", "search", "updateSecuritySettings"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

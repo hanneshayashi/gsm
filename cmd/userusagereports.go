@@ -43,27 +43,27 @@ var userUsageReportsCmd = &cobra.Command{
 var userUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the profile ID or the user email for which the data should be filtered.
 Can be "all" for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
-		Defaults: map[string]any{"get": "all"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("all")},
 	},
 	"date": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal(time.Now().Format("2006-01-02"))},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID of the customer to retrieve data for.`,
 	},
 	"filters": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The filters query string is a comma-separated list of an application's event parameters where the parameter's value is manipulated by a relational operator.
 The filters query string includes the name of the application whose usage is returned in the report.
 The application values for the Entities usage report include accounts, docs, and gmail.
@@ -88,7 +88,7 @@ Filters can only be applied to numeric parameters.`,
 	},
 	"orgUnitId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `ID of the organizational unit to report on.
 Activity records will be shown only for users who belong to the specified organizational unit.
 
@@ -96,7 +96,7 @@ Data before Dec 17, 2018 doesn't appear in the filtered results.`,
 	},
 	"parameters": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The parameters query string is a comma-separated list of event parameters that refine a report's results.
 The parameter is associated with a specific application.
 The application values for the Entities usage report are only gplus.
@@ -110,13 +110,13 @@ An example of an invalid request parameter is one that does not belong to the ap
 	},
 	"groupIdFilter": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Comma separated group ids (obfuscated) on which user activities are filtered, i.e, the response will contain activities for only those users that are a part of at least one of the group ids mentioned here.
 Format: "id:abc123,id:xyz456"`,
 	},
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

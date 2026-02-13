@@ -47,20 +47,20 @@ func init() {
 var forwardingAddressFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"create", "delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("me"), "delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me")},
 	},
 	"forwardingEmail": {
 		AvailableFor:   []string{"create", "delete", "get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "An email address to which messages can be forwarded.",
 		Required:       []string{"create", "delete", "get"},
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

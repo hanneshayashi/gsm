@@ -42,28 +42,28 @@ var chromeOsCommandsCmd = &cobra.Command{
 var chromeOsCommandFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]any{"get": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("my_customer")},
 	},
 	"deviceId": {
 		AvailableFor:   []string{"get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Immutable ID of Chrome OS Device.`,
 		Required:       []string{"get"},
 		ExcludeFromAll: true,
 	},
 	"commandId": {
 		AvailableFor: []string{"get"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `Immutable ID of Chrome OS Device Command.`,
 		Required:     []string{"get"},
 	},
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

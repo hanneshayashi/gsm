@@ -48,21 +48,21 @@ Implements the API documented at https://developers.google.com/workspace/admin/d
 var aspFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"codeId": {
 		AvailableFor:   []string{"delete", "get"},
-		Type:           "int64",
+		Type:           gsmhelpers.FlagInt64,
 		Description:    "The unique ID of the ASP",
 		Required:       []string{"delete", "get"},
 		ExcludeFromAll: true,
 	},
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required: []string{"delete", "get", "list"},
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"list"},

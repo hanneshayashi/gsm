@@ -42,13 +42,13 @@ var contactDelegatesCmd = &cobra.Command{
 var contactDelegateFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"create", "delete", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The email address of the user whose contacts should be delegated.`,
 		Required:     []string{"create", "delete", "list"},
 	},
 	"email": {
 		AvailableFor: []string{"create", "delete"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Email of the delegate.`,
 		Required:     []string{"create", "delete"},
 	},

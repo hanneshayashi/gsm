@@ -43,13 +43,13 @@ var otherContactsCmd = &cobra.Command{
 var otherContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"resourceName": {
 		AvailableFor: []string{"copyOtherContactToMyContactsGroup"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The resource name of the "Other contact".`,
 		Required:     []string{"copyOtherContactToMyContactsGroup"},
 	},
 	"copyMask": {
 		AvailableFor: []string{"copyOtherContactToMyContactsGroup"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields are copied into the new contact.
 Valid values are:
   - emailAddresses
@@ -59,7 +59,7 @@ Valid values are:
 	},
 	"readMask": {
 		AvailableFor: []string{"copyOtherContactToMyContactsGroup", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields on the person are returned. Multiple fields can be specified by separating them with commas.
 Defaults to the copy mask with metadata and membership fields if not set.
 Valid values are:
@@ -96,7 +96,7 @@ Valid values are:
 	},
 	"sources": {
 		AvailableFor: []string{"copyOtherContactToMyContactsGroup"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A mask of what source types to return.
 READ_SOURCE_TYPE_PROFILE         - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
 READ_SOURCE_TYPE_CONTACT         - Returns SourceType.CONTACT.
@@ -104,7 +104,7 @@ READ_SOURCE_TYPE_DOMAIN_CONTACT  - Returns SourceType.DOMAIN_CONTACT.`,
 	},
 	"fields": {
 		AvailableFor: []string{"copyOtherContactToMyContactsGroup", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

@@ -43,21 +43,21 @@ var mobileDevicesCmd = &cobra.Command{
 var mobileDeviceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"action", "delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]any{"action": "my_customer", "delete": "my_customer", "get": "my_customer", "list": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"action": gsmhelpers.StringVal("my_customer"), "delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer")},
 	},
 	"resourceId": {
 		AvailableFor:   []string{"action", "delete", "get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The unique ID the API service uses to identify the mobile device.`,
 		ExcludeFromAll: true,
 	},
 	"action": {
 		AvailableFor: []string{"action"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The action to be performed on the device.
 [admin_account_wipe|admin_remote_wipe|approve|approve|block|cancel_remote_wipe_then_activate|cancel_remote_wipe_then_block]
 admin_account_wipe                - Remotely wipes only Workspace data from the device. See the administration help center for more information.
@@ -69,7 +69,7 @@ cancel_remote_wipe_then_block     - Cancels a remote wipe of the device and then
 	},
 	"projection": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Restrict information returned to a set of selected fields.
 Acceptable values are:
 BASIC  - Includes only the basic metadata fields (e.g., deviceId, model, status, type, and status)
@@ -77,7 +77,7 @@ FULL   - Includes all metadata fields`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Device property to use for sorting results.
 Acceptable values are:
 deviceId  - The serial number for a Google Sync mobile device. For Android devices, this is a software generated unique identifier.
@@ -91,13 +91,13 @@ type      - Type of the device.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Search string in the format provided by List query operators.
 See https://developers.google.com/admin-sdk/directory/v1/list-query-operators`,
 	},
 	"sortOrder": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Whether to return results in ascending or descending order. Must be used with the orderBy parameter.
 Acceptable values are:
 ASCENDING   - Ascending order.
@@ -105,7 +105,7 @@ DESCENDING  - Descending order.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

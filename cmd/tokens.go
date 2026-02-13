@@ -42,21 +42,21 @@ var tokensCmd = &cobra.Command{
 var tokenFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"clientId": {
 		AvailableFor: []string{"delete", "get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The Client ID of the application the token is issued to.`,
 		Required:     []string{"delete", "get"},
 		Recursive:    []string{"delete"},
 	},
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required: []string{"delete", "get", "list"},
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"list"},

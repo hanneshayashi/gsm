@@ -43,39 +43,39 @@ var repliesCmd = &cobra.Command{
 var replyFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fileId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The ID of the file.",
 		Required:     []string{"create", "delete", "get", "list", "update"},
 	},
 	"commentId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The ID of the comment.",
 		Required:     []string{"create", "delete", "get", "list", "update"},
 	},
 	"content": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The plain text content of the comment.
 This field is used for setting the content, while htmlContent should be displayed.`,
 		Required: []string{"update"},
 	},
 	"action": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The action the reply performed to the parent comment.
 [resolve|reopen]`,
 	},
 	"replyId": {
 		AvailableFor:   []string{"delete", "get", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the reply.`,
 		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

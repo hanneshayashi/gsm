@@ -42,20 +42,20 @@ var threadsCmd = &cobra.Command{
 var threadFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"delete", "get", "list", "modify", "trash", "untrash"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"delete": "me", "get": "me", "list": "me", "modify": "me", "trash": "me", "untrash": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me"), "modify": gsmhelpers.StringVal("me"), "trash": gsmhelpers.StringVal("me"), "untrash": gsmhelpers.StringVal("me")},
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "modify", "trash", "untrash"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "ID of the Thread.",
 		Required:       []string{"delete", "get", "modify", "trash", "untrash"},
 		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The format to return the message in.
 [MINIMAL|FULL|RAW|METADATA]
 MINIMAL   - Returns only email message ID and labels; does not return the email headers, body, or payload.
@@ -65,12 +65,12 @@ METADATA  - Returns only email message ID, labels, and email headers.`,
 	},
 	"metadataHeaders": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `When given and format is METADATA, only include headers specified.`,
 	},
 	"q": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only return threads matching the specified query.
 Supports the same query format as the Gmail search box.
 For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread".
@@ -78,27 +78,27 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 	},
 	"labelIds": {
 		AvailableFor: []string{"list"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `Only return threads with labels that match all of the specified label IDs.`,
 	},
 	"includeSpamTrash": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Include threads from SPAM and TRASH in the results.`,
 	},
 	"addLabelIds": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `A list of label IDs to add to threads.`,
 	},
 	"removeLabelIds": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `A list of label IDs to remove from threads.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "modify", "trash", "untrash"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

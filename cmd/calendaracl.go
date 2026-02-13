@@ -43,28 +43,28 @@ var calendarACLCmd = &cobra.Command{
 var calendarACLFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarId": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarAcl.acl method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Defaults: map[string]any{"delete": "primary", "get": "primary", "insert": "primary", "list": "primary", "patch": "primary"},
+		Defaults: map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("primary"), "get": gsmhelpers.StringVal("primary"), "insert": gsmhelpers.StringVal("primary"), "list": gsmhelpers.StringVal("primary"), "patch": gsmhelpers.StringVal("primary")},
 	},
 	"ruleId": {
 		AvailableFor:   []string{"delete", "get", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `ACL rule identifier.`,
 		Required:       []string{"delete", "get", "patch"},
 		ExcludeFromAll: true,
 	},
 	"sendNotifications": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to send notifications about the calendar sharing change.
 Optional. The default is True.`,
-		Defaults: map[string]any{"insert": true, "patch": true},
+		Defaults: map[string]gsmhelpers.FlagValue{"insert": gsmhelpers.BoolVal(true), "patch": gsmhelpers.BoolVal(true)},
 	},
 	"role": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The role assigned to the scope. Possible values are:
 "none" - Provides no access.
 "freeBusyReader" - Provides read access to free/busy information.
@@ -75,31 +75,31 @@ Optional. The default is True.`,
 	},
 	"scopeType": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The type of the scope. Possible values are:
 "default" - The public scope. This is the default value.
 "user" - Limits the scope to a single user.
 "group" - Limits the scope to a group.
 "domain" - Limits the scope to a domain.
 Note: The permissions granted to the "default", or public, scope apply to any user, authenticated or not.`,
-		Defaults: map[string]any{"insert": "default"},
+		Defaults: map[string]gsmhelpers.FlagValue{"insert": gsmhelpers.StringVal("default")},
 	},
 	"scopeValue": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The email address of a user or group, or the name of a domain, depending on the scope type.
 Omitted for type "default".`,
 	},
 	"showDeleted": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to include deleted ACLs in the result.
 Deleted ACLs are represented by role equal to "none".
 Deleted ACLs will always be included if syncToken is provided.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

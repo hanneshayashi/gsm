@@ -44,34 +44,34 @@ var schemasCmd = &cobra.Command{
 var schemaFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Immutable ID of the Workspace account.`,
-		Defaults:     map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 	},
 	"schemaKey": {
 		AvailableFor:   []string{"delete", "get", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Name or immutable ID of the schema.`,
 		Required:       []string{"delete", "get", "patch"},
 		ExcludeFromAll: true,
 	},
 	"schemaName": {
 		AvailableFor:   []string{"insert", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The schema's name.`,
 		Required:       []string{"insert"},
 		ExcludeFromAll: true,
 	},
 	"displayName": {
 		AvailableFor:   []string{"insert", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Display name for the schema.`,
 		Required:       []string{"insert"},
 		ExcludeFromAll: true,
 	},
 	"schemaFields": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The fields that should be present in this schema.
 Can be used multiple times in the form of: "--schemaFields "fieldName=<Some Name>;fieldType=<Type>;multValued=[true|false]...
 The following properties are available:
@@ -101,7 +101,7 @@ maxValue        - Maximum value of this field.
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

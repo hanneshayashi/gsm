@@ -43,13 +43,13 @@ var groupAliasesCmd = &cobra.Command{
 var groupAliasFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"alias": {
 		AvailableFor: []string{"delete", "insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The alias.`,
 		Required:     []string{"delete", "insert"},
 	},
 	"groupKey": {
 		AvailableFor: []string{"delete", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the group in the API request.
 The value can be the group's email address, group alias, or the unique group ID.`,
 		Required:       []string{"delete", "insert", "list"},
@@ -57,7 +57,7 @@ The value can be the group's email address, group alias, or the unique group ID.
 	},
 	"fields": {
 		AvailableFor: []string{"insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

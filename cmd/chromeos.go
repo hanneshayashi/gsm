@@ -43,22 +43,22 @@ var chromeOsCmd = &cobra.Command{
 var chromeOsFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customerId": {
 		AvailableFor: []string{"issueCommand"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.`,
-		Defaults: map[string]any{"issueCommand": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"issueCommand": gsmhelpers.StringVal("my_customer")},
 	},
 	"deviceId": {
 		AvailableFor:   []string{"issueCommand"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Immutable ID of Chrome OS Device.`,
 		Required:       []string{"issueCommand"},
 		ExcludeFromAll: true,
 	},
 	"commandType": {
 		AvailableFor: []string{"issueCommand"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The type of command.
 
 Acceptable values are:
@@ -78,7 +78,7 @@ REMOTE_POWERWASH   - Wipes the device by performing a power wash.
 	},
 	"payload": {
 		AvailableFor: []string{"issueCommand"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The payload for the command, provide it only if command supports it. The following commands support adding payload: - SET_VOLUME: Payload is a stringified JSON object in the form: { "volume": 50 }. The volume has to be an integer in the range [0,100].`,
 	},
 }

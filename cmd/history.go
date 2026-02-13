@@ -42,14 +42,14 @@ var historyCmd = &cobra.Command{
 var historyFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's email address.
 The special value me can be used to indicate the authenticated user.`,
-		Defaults: map[string]any{"list": "me"},
+		Defaults: map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("me")},
 	},
 	"startHistoryId": {
 		AvailableFor: []string{"list"},
-		Type:         "uint64",
+		Type:         gsmhelpers.FlagUint64,
 		Description: `Required. Returns history records after the specified startHistoryId.
 The supplied startHistoryId should be obtained from the historyId of a message, thread, or previous list response.
 History IDs increase chronologically but are not contiguous with random gaps in between valid IDs.`,
@@ -57,18 +57,18 @@ History IDs increase chronologically but are not contiguous with random gaps in 
 	},
 	"labelId": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Only return messages with a label matching the ID.`,
 	},
 	"historyTypes": {
 		AvailableFor: []string{"list"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `History types to be returned by the function.
 [MESSAGE_ADDED|MESSAGE_DELETED|LABEL_ADDED|LABEL_REMOVED]`,
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

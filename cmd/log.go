@@ -42,9 +42,9 @@ var logCmd = &cobra.Command{
 var logFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"lines": {
 		AvailableFor: []string{"show"},
-		Type:         "int",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  "Number of lines to return",
-		Defaults:     map[string]any{"show": 15},
+		Defaults:     map[string]gsmhelpers.FlagValue{"show": gsmhelpers.Int64Val(15)},
 	},
 }
 

@@ -48,80 +48,80 @@ var messagesCmd = &cobra.Command{
 var messageFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{ //TODO
 	"userId": {
 		AvailableFor: []string{"delete", "modify", "get", "import", "insert", "list", "send", "trash", "untrash"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The user's email address. The special value \"me\" can be used to indicate the authenticated user.`,
-		Defaults:     map[string]any{"delete": "me", "modify": "me", "get": "me", "import": "me", "insert": "me", "list": "me", "send": "me", "trash": "me", "untrash": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("me"), "modify": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "import": gsmhelpers.StringVal("me"), "insert": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me"), "send": gsmhelpers.StringVal("me"), "trash": gsmhelpers.StringVal("me"), "untrash": gsmhelpers.StringVal("me")},
 	},
 	"ids": {
 		AvailableFor:   []string{"batchDelete"},
-		Type:           "stringSlice",
+		Type:           gsmhelpers.FlagStringSlice,
 		Description:    `The IDs of the messages. There is a limit of 1000 ids per request.`,
 		Required:       []string{"batchDelete"},
 		ExcludeFromAll: true,
 	},
 	"addLabelIds": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `A list of label IDs to add to messages.`,
 	},
 	"removeLabelIds": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `A list of label IDs to remove from messages.`,
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "modify", "trash", "untrash"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the message.`,
 		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The format to return the message in.
 [MINIMAL|FULL|RAW|METADATA]
 MINIMAL   - Returns only email message ID and labels; does not return the email headers, body, or payload.
 FULL      - Returns the full email message data with body content parsed in the payload field; the raw field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 RAW       - Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 METADATA  - Returns only email message ID, labels, and email headers.`,
-		Defaults: map[string]any{"get": "MINIMAL"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("MINIMAL")},
 	},
 	"metadataHeaders": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `When given and format is METADATA, only include headers specified.`,
 	},
 	"eml": {
 		AvailableFor: []string{"insert", "import"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Path to the local .eml file`,
 		Required:     []string{"insert", "import"},
 	},
 	"internalDateSource": {
 		AvailableFor: []string{"insert", "import"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Source for Gmail's internal date of the message. [DATE_HEADER|RECEIVED_TIME]`,
-		Defaults:     map[string]any{"insert": "DATE_HEADER", "import": "DATE_HEADER"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"insert": gsmhelpers.StringVal("DATE_HEADER"), "import": gsmhelpers.StringVal("DATE_HEADER")},
 	},
 	"deleted": {
 		AvailableFor: []string{"insert", "import"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Mark the email as permanently deleted (not TRASH) and only visible in Google Vault to a Vault administrator.
 Only used for Workspace accounts.`,
 	},
 	"neverMarkSpam": {
 		AvailableFor: []string{"import"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Ignore the Gmail spam classifier decision and never mark this email as SPAM in the mailbox.`,
 	},
 	"processForCalendar": {
 		AvailableFor: []string{"import"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Process calendar invites in the email and add any extracted meetings to the Google Calendar for this user.`,
 	},
 	"q": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only return messages matching the specified query.
 Supports the same query format as the Gmail search box.
 For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread".
@@ -129,60 +129,60 @@ Parameter cannot be used when accessing the api using the gmail.metadata scope.`
 	},
 	"labelIds": {
 		AvailableFor: []string{"list"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `Only return messages with labels that match all of the specified label IDs.`,
 	},
 	"includeSpamTrash": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Include messages from SPAM and TRASH in the results.`,
 	},
 	"subject": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Subject of the (draft) message",
 	},
 	"from": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Sender of the (draft) message.
 Must be a valid sendAs address.
 If this is not set, your primary sendAs address will be used automatically.`,
 	},
 	"html": {
 		AvailableFor: []string{"send"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Send the body as HTML",
 	},
 	"to": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Recipient of the (draft) message",
 	},
 	"cc": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Copy (Cc)",
 	},
 	"bcc": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Blind Copy (Bcc)",
 	},
 	"body": {
 		AvailableFor: []string{"send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Body or content of the (draft) message",
 	},
 	"attachment": {
 		AvailableFor: []string{"send"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Path to a file that should be attached to the message.
 Can be used multiple times.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "import", "insert", "list", "modify", "send", "trash", "untrash"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

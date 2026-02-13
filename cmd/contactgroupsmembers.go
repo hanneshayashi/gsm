@@ -43,23 +43,23 @@ var contactGroupsMembersCmd = &cobra.Command{
 var contactGroupMemberFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"resourceName": {
 		AvailableFor: []string{"modify"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The resource name of the contact group to modify.`,
 		Required:     []string{"modify"},
 	},
 	"resourceNamesToAdd": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The resource names of the contact people to add in the form of people/{person_id}.`,
 	},
 	"resourceNamesToRemove": {
 		AvailableFor: []string{"modify"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The resource names of the contact people to remove in the form of people/{person_id}.`,
 	},
 	"fields": {
 		AvailableFor: []string{"modify"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

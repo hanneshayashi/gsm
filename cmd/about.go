@@ -43,10 +43,10 @@ Implements the API documented at https://developers.google.com/workspace/drive/a
 var aboutFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
-		Defaults: map[string]any{"get": "user(displayName, emailAddress, permissionId)"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("user(displayName, emailAddress, permissionId)")},
 	},
 }
 

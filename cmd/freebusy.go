@@ -43,42 +43,42 @@ var freeBusyCmd = &cobra.Command{
 var freeBusyFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"timeMin": {
 		AvailableFor: []string{"query"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The start of the interval for the query formatted as per RFC3339.`,
 		Required:     []string{"query"},
 	},
 	"timeMax": {
 		AvailableFor: []string{"query"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The end of the interval for the query formatted as per RFC3339.`,
 		Required:     []string{"query"},
 	},
 	"timeZone": {
 		AvailableFor: []string{"query"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Time zone used in the response.
 Optional. The default is UTC.`,
 	},
 	"groupExpansionMax": {
 		AvailableFor: []string{"query"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Maximal number of calendar identifiers to be provided for a single group.
 Optional. An error is returned for a group with more members than this value. Maximum value is 100.`,
 	},
 	"calendarExpansionMax": {
 		AvailableFor: []string{"query"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Maximal number of calendars for which FreeBusy information is to be provided.
 Optional. Maximum value is 50.`,
 	},
 	"id": {
 		AvailableFor: []string{"query"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The identifier of a calendar or a group.`,
 	},
 	"fields": {
 		AvailableFor: []string{"query"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

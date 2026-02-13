@@ -46,38 +46,38 @@ var smimeInfoCmd = &cobra.Command{
 var smimeInfoFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value me can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"delete": "me", "get": "me", "insert": "me", "list": "me", "setDefault": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "insert": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me"), "setDefault": gsmhelpers.StringVal("me")},
 	},
 	"sendAsEmail": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "setDefault"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The email address that appears in the "From:" header for mail sent using this alias.`,
 		Required:     []string{"delete", "get", "insert", "list", "setDefault"},
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "setDefault"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The immutable ID for the SmimeInfo.`,
 		Required:       []string{"delete", "get", "setDefault"},
 		ExcludeFromAll: true,
 	},
 	"encryptedKeyPassword": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Encrypted key password, when key is encrypted.`,
 	},
 	"pkcs12": {
 		AvailableFor: []string{"insert"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Path to a PKCS#12 format file containing a single private/public key pair and certificate chain.
 This format is only accepted from client for creating a new SmimeInfo and is never returned, because the private key is not intended to be exported.
 PKCS#12 may be encrypted, in which case encryptedKeyPassword should be set appropriately.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

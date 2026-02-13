@@ -43,7 +43,7 @@ var usersCmd = &cobra.Command{
 var userFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"delete", "get", "makeAdmin", "update", "signOut", "undelete"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required:       []string{"delete", "get", "makeAdmin", "update", "signOut", "undelete"},
@@ -51,14 +51,14 @@ The value can be the user's primary email address, alias email address, or uniqu
 	},
 	"customFieldMask": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A comma-separated list of schema names.
 All fields from these schemas are fetched. This should only be set when projection=custom`,
 		Recursive: []string{"get"},
 	},
 	"projection": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `What subset of fields to fetch for this user.
 
 Acceptable values are:
@@ -69,7 +69,7 @@ full    - Include all fields associated with this user.`,
 	},
 	"viewType": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Whether to fetch the administrator-only or domain-wide public view of the user.
 For more information, see https://developers.google.com/admin-sdk/directory/v1/guides/manage-users#retrieve_users_non_admin.
 
@@ -81,28 +81,28 @@ domain_public  - Results only include fields for the user that are publicly visi
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"get", "update"},
 	},
 	"familyName": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The user's last name. Required when creating a user account.`,
 		Required:     []string{"insert"},
 		Recursive:    []string{"update"},
 	},
 	"givenName": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The user's first name. Required when creating a user account.`,
 		Required:     []string{"insert"},
 		Recursive:    []string{"update"},
 	},
 	"password": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Stores the password for the user account.
 The user's password value is required when creating a user account.
 It is optional when updating a user and should only be provided if the user is updating their account password.
@@ -116,7 +116,7 @@ The password value is never returned in the API's response body.`,
 	},
 	"primaryEmail": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's primary email address.
 This property is required in a request to create a user account.
 The primaryEmail must be unique and cannot be an alias of another user.`,
@@ -125,7 +125,7 @@ The primaryEmail must be unique and cannot be an alias of another user.`,
 	},
 	"addresses": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Specifies addresses for the user. May be used multiple times in the form of:
 '--addresses "country=...;countryCode=..;customType=..."', etc.
 You can use the following properties:
@@ -151,20 +151,20 @@ type                - The address type.
 	},
 	"archived": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Indicates if user is archived.`,
 		Recursive:    []string{"update"},
 	},
 	"changePasswordAtNextLogin": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Indicates if the user is forced to change their password at next login.
 This setting doesn't apply when the user signs in via a third-party identity provider.`,
 		Recursive: []string{"update"},
 	},
 	"emails": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Specifies email addresses for the user. May be used multiple times in the form of:
 '--emails "address=...;customType=..;primary=..."', etc.
 You can use the following properties:
@@ -180,7 +180,7 @@ type        - The type of the email account.
 	},
 	"externalIds": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Specifies externalIds for the user. May be used multiple times in the form of:
 '--externalIds "customType=...;type=..;value=..."'
 You can use the following properties:
@@ -197,13 +197,13 @@ value       - The value of the ID.`,
 	},
 	"customGender": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Custom gender.`,
 		Recursive:    []string{"update"},
 	},
 	"genderType": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Gender.
 Acceptable values are:
 female
@@ -214,14 +214,14 @@ unknown`,
 	},
 	"hashFunction": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Stores the hash format of the password property.
 We recommend sending the password property value as a base 16 bit hexadecimal-encoded hash value.
 Set the hashFunction values as either the SHA-1, MD5, or crypt hash format.`,
 	},
 	"ims": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The user's Instant Messenger (IM) accounts.
 A user account can have multiple ims properties.
 But, only one of these ims properties can be the primary IM contact.
@@ -254,20 +254,20 @@ type            - The type of the IM account.
 	},
 	"includeInGlobalAddressList": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Indicates if the user's profile is visible in the Workspace global address list when the contact sharing feature is enabled for the domain.
 For more information about excluding user profiles, see the administration help center.`,
 		Recursive: []string{"update"},
 	},
 	"ipWhitelisted": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `If true, the user's IP address is white listed.`,
 		Recursive:    []string{"update"},
 	},
 	"keywords": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The user's keywords. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
 '--keywords "customType=...;type=..;value=..."'
@@ -287,7 +287,7 @@ value  -      Keyword.`,
 	},
 	"languages": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The user's languages. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
 '--languages "customLanguage=...;preference=..."'
@@ -309,7 +309,7 @@ preference      - Optional.
 	},
 	"locations": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The user's locations. The maximum allowed data size for this field is 10Kb.
 May be used multiple times in the form of:
 '--locations "area=...;buildingId=...;customType=..."', etc.
@@ -332,7 +332,7 @@ type          - The location type.
 	},
 	"notesContentType": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Content type of note, either plain text or HTML.
 Default is plain text. Possible values are:
 text_plain
@@ -341,13 +341,13 @@ text_html`,
 	},
 	"notesValue": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Contents of notes.`,
 		Recursive:    []string{"update"},
 	},
 	"orgUnitPath": {
 		AvailableFor: []string{"insert", "update", "undelete"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The full path of the parent organization associated with the user.
 If the parent organization is the top-level, it is represented as a forward slash (/).`,
 		Required:  []string{"undelete"},
@@ -355,7 +355,7 @@ If the parent organization is the top-level, it is represented as a forward slas
 	},
 	"organizations": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of organizations the user belongs to. The maximum allowed data size for this field is 10Kb.
 May be used multiple times in the form of:
 '--organizations "costCenter=...;customType=...;department=..."', etc.
@@ -384,7 +384,7 @@ type                - The type of organization.
 	},
 	"phones": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of the user's phone numbers. The maximum allowed data size for this field is 1Kb.
 May be used multiple times in the form of:
 '--phones "customType=...;primary=...;type=..."', etc.
@@ -421,7 +421,7 @@ value       - A human-readable phone number.
 	},
 	"posixAccounts": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of POSIX account information for the user.
 May be used multiple times in the form of:
 '--posixAccounts "accountId=...;gecos=...;gid=..."', etc.
@@ -443,13 +443,13 @@ username             - The username of the account.`,
 	},
 	"recoveryEmail": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Recovery email of the user.`,
 		Recursive:    []string{"update"},
 	},
 	"recoveryPhone": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Recovery phone of the user.
 The phone number must be in the E.164 format, starting with the plus sign (+).
 Example: +16506661212.`,
@@ -457,7 +457,7 @@ Example: +16506661212.`,
 	},
 	"relations": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of the user's relationships to other users.
 The maximum allowed data size for this field is 2Kb.
 May be used multiple times in the form of:
@@ -489,7 +489,7 @@ value       - The name of the person the user is related to.`,
 	},
 	"sshPublicKeys": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of SSH public keys.
 May be used multiple times in the form of:
 '--sshPublicKeys "expirationTimeUsec=...;key=..."'
@@ -499,13 +499,13 @@ key                 - An SSH public key.`,
 	},
 	"suspended": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Indicates if user is suspended.`,
 		Recursive:    []string{"update"},
 	},
 	"websites": {
 		AvailableFor: []string{"insert", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The user's websites.
 The maximum allowed data size for this field is 2Kb.
 May be used multiple times in the form of:
@@ -534,17 +534,17 @@ value       - The URL of the website.`,
 	},
 	"customer": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain.
 You can also use the my_customer alias to represent your account's customerId.
 The customerId is also returned as part of the Users resource.
 Either the customer or the domain parameter must be provided.`,
-		Defaults: map[string]any{"list": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("my_customer")},
 	},
 	"domain": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The domain name.
 Use this field to get fields from only one domain.
 To return all domains for a customer account, use the customer query parameter instead.
@@ -552,7 +552,7 @@ Either the customer or the domain parameter must be provided.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Property to use for sorting results.
 Acceptable values are:
 email       - Primary email of the user.
@@ -561,18 +561,18 @@ givenName   - User's given name.`,
 	},
 	"query": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Query string for searching user fields.
 For more information on constructing user queries, see https://developers.google.com/admin-sdk/directory/v1/guides/search-users`,
 	},
 	"showDeleted": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `If set to true, retrieves the list of deleted users.`,
 	},
 	"sortOrder": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Whether to return results in ascending or descending order.
 Acceptable values are:
 ASCENDING   - Ascending order.
@@ -580,7 +580,7 @@ DESCENDING  - Descending order.`,
 	},
 	"unmake": {
 		AvailableFor: []string{"makeAdmin"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Use to remove admin access.`,
 		Recursive:    []string{"makeAdmin"},
 	},

@@ -43,56 +43,56 @@ Implements the API documented at https://developers.google.com/workspace/gmail/p
 var postmasterTrafficStatFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the traffic statistics to get.
 E.g., domains/mymail.mydomain.com/trafficStats/20160807.`,
 		Required: []string{"get"},
 	},
 	"parent": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Fully qualified domain name.`,
 		Required:     []string{"list"},
 	},
 	"startDateDay": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The day of the earliest date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"startDateMonth": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The month of the earliest date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"startDateYear": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The year of the earliest date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"endDateDay": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The day of the most recent date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"endDateMonth": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The month of the most recent date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"endDateYear": {
 		AvailableFor: []string{"list"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `The year of the most recent date of the metrics to retrieve inclusive.
 If you specify one date flag, you must specify ALL (start and end)!`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

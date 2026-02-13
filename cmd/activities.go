@@ -42,13 +42,13 @@ var activitiesCmd = &cobra.Command{
 var activityFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Represents the profile ID or the user email for which the data should be filtered. Can be all for all information, or userKey for a user's unique Workspace profile ID or their primary email address.`,
-		Defaults:     map[string]any{"list": "all"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("all")},
 	},
 	"applicationName": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Application name for which the events are to be retrieved.
 The following values are accepted:
 ACCESS_TRANSPARENCY   - The Workspace Access Transparency activity reports return information about different types of Access Transparency activity events.
@@ -75,7 +75,7 @@ DATA_STUDIO           - The Data Studio activity reports return information abou
 	},
 	"actorIpAddress": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The Internet Protocol (IP) Address of host where the event was performed.
 This is an additional way to filter a report's summary using the IP address of the user whose activity is being reported.
 This IP address may or may not reflect the user's physical location.
@@ -84,12 +84,12 @@ This parameter supports both IPv4 and IPv6 address versions.`,
 	},
 	"customerId": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID of the customer to retrieve data for.`,
 	},
 	"endTime": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Sets the end of the range of time shown in the report.
 The date is in the RFC 3339 format, for example 2010-10-28T10:26:35.000Z.
 The default value is the approximate time of the API request.
@@ -104,7 +104,7 @@ An API report has three basic time concepts:
 	},
 	"eventName": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The name of the event being queried by the API.
 Each eventName is related to a specific Workspace service or feature which the API organizes into types of events.
 An example is the Google Calendar events in the Admin console application's reports.
@@ -114,7 +114,7 @@ For more information about eventName query strings and parameters, see the list 
 	},
 	"filters": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The filters query string is a comma-separated list.
 The list is composed of event parameters that are manipulated by relational operators.
 Event parameters are in the form [parameter1 name][relational operator][parameter1 value],[parameter2 name][relational operator][parameter2 value],...
@@ -146,7 +146,7 @@ If no parameters are requested, all parameters are returned.`,
 	},
 	"orgUnitId": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `ID of the organizational unit to report on.
 Activity records will be shown only for users who belong to the specified organizational unit.
 
@@ -154,7 +154,7 @@ Data before Dec 17, 2018 doesn't appear in the filtered results.`,
 	},
 	"startTime": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Sets the beginning of the range of time shown in the report.
 The date is in the RFC 3339 format, for example 2010-10-28T10:26:35.000Z.
 The report returns all activities from startTime until endTime.
@@ -162,13 +162,13 @@ The startTime must be before the endTime (if specified) and the current time whe
 	},
 	"groupIdFilter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Comma separated group ids (obfuscated) on which user activities are filtered, i.e, the response will contain activities for only those users that are a part of at least one of the group ids mentioned here.
 Format: "id:abc123,id:xyz456"`,
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

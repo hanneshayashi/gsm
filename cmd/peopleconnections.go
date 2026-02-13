@@ -42,13 +42,13 @@ var peopleConnectionsCmd = &cobra.Command{
 var peopleConnectionFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"resourceName": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The resource name to return connections for. Only people/me is valid.`,
-		Defaults:     map[string]any{"list": "people/me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"list": gsmhelpers.StringVal("people/me")},
 	},
 	"personFields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A field mask to restrict which fields on each person are returned.
 Multiple fields can be specified by separating them with commas.
 Valid values are:
@@ -85,7 +85,7 @@ Valid values are:
 	},
 	"sortOrder": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Optional. The order in which the connections should be sorted.
 Defaults to LAST_MODIFIED_ASCENDING.
 Valid values are:
@@ -96,7 +96,7 @@ LAST_NAME_ASCENDING       - Sort people by last name.`,
 	},
 	"sources": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A mask of what source types to return.
 READ_SOURCE_TYPE_PROFILE         - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
 READ_SOURCE_TYPE_CONTACT         - Returns SourceType.CONTACT.
@@ -104,7 +104,7 @@ READ_SOURCE_TYPE_DOMAIN_CONTACT  - Returns SourceType.DOMAIN_CONTACT.`,
 	},
 	"fields": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

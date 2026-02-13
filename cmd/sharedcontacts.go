@@ -43,82 +43,82 @@ var sharedContactsCmd = &cobra.Command{
 var sharedContactFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"domain": {
 		AvailableFor: []string{"create", "delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "DNS domain of the shared contact",
 		Required:     []string{"create", "delete", "get", "list"},
 	},
 	"givenName": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Person's given name.",
 	},
 	"additionalName": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Additional name of the person, eg. middle name.",
 	},
 	"familyName": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Person's family name.",
 	},
 	"namePrefix": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Honorific prefix, eg. 'Mr' or 'Mrs'.",
 	},
 	"nameSuffix": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Honorific suffix, eg. 'san' or 'III'.",
 	},
 	"fullName": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Unstructured representation of the name.",
 	},
 	"email": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Email.
 Must be in the form of "address=user@domain.com;displayName=Some Name;primary=[true|false];label=[Work|Home]".
 Can be used multiple time (although "primary" may only be used once`,
 	},
 	"phoneNumber": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Phone number.
 Must be in the form of "phoneNumber=+1 212 213181;primary=[true|false]label=[Work|Home|Mobile]".
 Can be used multiple time (although "primary" may only be used once`,
 	},
 	"im": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `IM addresses.
 Must be in the form of "protocol=http://schemas.google.com/g/2005#GOOGLE_TALK;address=some@address.com;primary=[true|false]label=[Work|Home|Mobile]".
 Can be used multiple time (although "primary" may only be used once`,
 	},
 	"organization": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Organization of the contact.
 Must be in the form of "orgName=Some Company;orgDepartment=Some Department;orgTitle=Some Title;orgJobDescription=Some Description;orgSymbol=Some Symbol"`,
 	},
 	"extendedProperty": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Extended Properties
 Must be in the form of "name=Some Name;Value=Some Value;Realm=Some Realm"`,
 	},
 	"structuredPostalAddress": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Structured Postal Address
 Must be in the form of "mailClass=...;label=...;usage=...;primary=[true|false];agent=...;housename=...;street=...;pobox=...neighborhood=...;city=...;subregion=...;region=...;postcode=...;country=...;formattedAddress=..."`,
 	},
 	"url": {
 		AvailableFor: []string{"delete", "get", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `URL of the Shared Contact (Retrieve with "list" and look for "id").
 MUST BE https://!`,
 		Required:       []string{"delete", "get", "update"},
@@ -126,7 +126,7 @@ MUST BE https://!`,
 	},
 	"json": {
 		AvailableFor: []string{"create", "get", "list", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Output as JSON"`,
 	},
 }

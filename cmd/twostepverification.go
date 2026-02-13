@@ -42,7 +42,7 @@ var twoStepVerificationCmd = &cobra.Command{
 var twoStepVerificationFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userKey": {
 		AvailableFor: []string{"turnOff"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required:       []string{"turnOff"},

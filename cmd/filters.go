@@ -44,33 +44,33 @@ var filtersCmd = &cobra.Command{
 var filterFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"create", "delete", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("me"), "delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me")},
 	},
 	"addLabelIds": {
 		AvailableFor: []string{"create"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  "A list of IDs of labels to add to this message. Can be used multiple times.",
 	},
 	"removeLabelIds": {
 		AvailableFor: []string{"create"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  "A list of IDs of labels to remove from this message. Can be used multiple times.",
 	},
 	"forward": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Email address that the message should be forwarded to.",
 	},
 	"from": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The sender's display name or email address.",
 	},
 	"to": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The recipient's display name or email address. Includes recipients in the "to", "cc", and "bcc" header fields.
 You can use simply the local part of the email address
 For example, "example" and "example@" both match "example@gmail.com".
@@ -78,41 +78,41 @@ This field is case-insensitive.`,
 	},
 	"subject": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Case-insensitive phrase found in the message's subject. Trailing and leading whitespace are be trimmed and adjacent spaces are collapsed.",
 	},
 	"query": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only return messages matching the specified query.
 Supports the same query format as the Gmail search box.
 For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread".`,
 	},
 	"negatedQuery": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only return messages not matching the specified query.
 Supports the same query format as the Gmail search box.
 For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread".`,
 	},
 	"hasAttachment": {
 		AvailableFor: []string{"create"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Whether the message has any attachment.",
 	},
 	"excludeChats": {
 		AvailableFor: []string{"create"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Whether the response should exclude chats.",
 	},
 	"size": {
 		AvailableFor: []string{"create"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  "The size of the entire RFC822 message in bytes, including all headers and attachments.",
 	},
 	"sizeComparison": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `How the message size in bytes should be in relation to the size field.
 "[SMALLER|LARGER]
 SMALLER  - Find messages smaller than the given size.
@@ -120,13 +120,13 @@ LARGER   - Find messages larger than the given size.`,
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The ID of the filter.`,
 		ExcludeFromAll: true,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

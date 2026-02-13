@@ -42,15 +42,15 @@ var licenseAssignmentsCmd = &cobra.Command{
 var licenseAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"productId": {
 		AvailableFor: []string{"delete", "get", "insert", "listForProduct", "listForProductAndSku", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A product's unique identifier.
 For more information about products in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
-		Defaults:  map[string]any{"delete": "Google-Apps", "get": "Google-Apps", "insert": "Google-Apps", "listForProduct": "Google-Apps", "listForProductAndSku": "Google-Apps", "patch": "Google-Apps"},
+		Defaults:  map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("Google-Apps"), "get": gsmhelpers.StringVal("Google-Apps"), "insert": gsmhelpers.StringVal("Google-Apps"), "listForProduct": gsmhelpers.StringVal("Google-Apps"), "listForProductAndSku": gsmhelpers.StringVal("Google-Apps"), "patch": gsmhelpers.StringVal("Google-Apps")},
 		Recursive: []string{"delete", "get", "insert", "patch"},
 	},
 	"skuId": {
 		AvailableFor: []string{"delete", "get", "insert", "listForProductAndSku", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A product SKU's unique identifier.
 For more information about available SKUs in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
 		Required:  []string{"delete", "get", "insert", "listForProductAndSku", "patch"},
@@ -58,7 +58,7 @@ For more information about available SKUs in this version of the API, see https:
 	},
 	"skuIdNew": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The product's new unique identifier.
 For more information about products in this version of the API, see https://developers.google.com/admin-sdk/licensing/v1/how-tos/products.`,
 		Required:  []string{"patch"},
@@ -66,7 +66,7 @@ For more information about products in this version of the API, see https://deve
 	},
 	"userId": {
 		AvailableFor: []string{"delete", "get", "insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's current primary email address.
 If the user's email address changes, use the new email address in your API requests.
 Since a userId is subject to change, do not use a userId value as a key for persistent data.
@@ -76,7 +76,7 @@ If the userId is suspended, the license status changes.`,
 	},
 	"customerId": {
 		AvailableFor: []string{"listForProduct", "listForProductAndSku"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's current primary email address.
 If the user's email address changes, use the new email address in your API requests.
 Since a userId is subject to change, do not use a userId value as a key for persistent data.
@@ -85,7 +85,7 @@ If the userId is suspended, the license status changes.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "listForProduct", "listForProductAndSku", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The user's current primary email address.
 If the user's email address changes, use the new email address in your API requests.
 Since a userId is subject to change, do not use a userId value as a key for persistent data.

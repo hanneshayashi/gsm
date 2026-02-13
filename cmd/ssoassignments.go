@@ -44,19 +44,19 @@ var ssoAssignmentsCmd = &cobra.Command{
 var ssoAssignmentFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"customer": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The customer.
 For example: customers/C0123abc.`,
-		Defaults: map[string]any{"create": "customers/my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("customers/my_customer")},
 	},
 	"rank": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `Must be zero (which is the default value so it can be omitted) for assignments with targetOrgUnit set and must be greater-than-or-equal-to one for assignments with targetGroup set.`,
 	},
 	"ssoMode": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Inbound SSO behaviors.
 May be one of the following:
 - SSO_OFF                      - Disable SSO for the targeted users.
@@ -67,40 +67,40 @@ May be one of the following:
 	},
 	"inboundSamlSsoProfile": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Name of the InboundSamlSsoProfile to use.
 Must be of the form inboundSamlSsoProfiles/{inboundSamlSsoProfile}.`,
 		Required: []string{"create"},
 	},
 	"targetGroup": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Must be of the form groups/{group}
 Only ONE of --targetGroup and --targetOrgUnit may be specified.`,
 	},
 	"targetOrgUnit": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Must be of the form orgUnits/{orgUnit}.
 Only ONE of --targetGroup and --targetOrgUnit may be specified.`,
 	},
 	"name": {
 		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the InboundSsoAssignment.
 Format: inboundSsoAssignments/{assignment}`,
 		Required: []string{"delete", "get", "patch"},
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A CEL expression to filter the results.
 The only supported filter is filtering by customer. For example: customer==customers/C0123abc.
 Omitting the filter or specifying a filter of customer==customers/my_customer will return the assignments for the customer that the caller (authenticated user) belongs to.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

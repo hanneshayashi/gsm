@@ -45,24 +45,24 @@ var gmailSettingsCmd = &cobra.Command{
 var gmailSettingFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"getAutoForwarding", "getImap", "getLanguage", "getPop", "getVacation", "updateAutoForwarding", "updateImap", "updateLanguage", "updatePop", "updateVacation"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"getAutoForwarding": "me", "getImap": "me", "getLanguage": "me", "getPop": "me", "getVacation": "me", "updateAutoForwarding": "me", "updateImap": "me", "updateLanguage": "me", "updatePop": "me", "updateVacation": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"getAutoForwarding": gsmhelpers.StringVal("me"), "getImap": gsmhelpers.StringVal("me"), "getLanguage": gsmhelpers.StringVal("me"), "getPop": gsmhelpers.StringVal("me"), "getVacation": gsmhelpers.StringVal("me"), "updateAutoForwarding": gsmhelpers.StringVal("me"), "updateImap": gsmhelpers.StringVal("me"), "updateLanguage": gsmhelpers.StringVal("me"), "updatePop": gsmhelpers.StringVal("me"), "updateVacation": gsmhelpers.StringVal("me")},
 	},
 	"enabled": {
 		AvailableFor: []string{"updateAutoForwarding", "updateImap"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the setting is enabled`,
 	},
 	"emailAddress": {
 		AvailableFor: []string{"updateAutoForwarding"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Email address to which all incoming messages are forwarded.
 This email address must be a verified member of the forwarding addresses.`,
 	},
 	"disposition": {
 		AvailableFor: []string{"updateAutoForwarding", "updatePop"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The state that a message should be left in after it has been forwarded.
 [LEAVE_IN_INBOX|ARCHIVE|TRASH|MARK_READ]
 LEAVE_IN_INBOX  - Leave the message in the INBOX.
@@ -72,13 +72,13 @@ MARK_READ       - Leave the message in the INBOX and mark it as read.`,
 	},
 	"autoExpunge": {
 		AvailableFor: []string{"updateAutoForwarding", "updateImap"},
-		Type:         "boolean",
+		Type:         gsmhelpers.FlagBool,
 		Description: `If this value is true, Gmail will immediately expunge a message when it is marked as deleted in IMAP.
 Otherwise, Gmail will wait for an update from the client before expunging messages marked as deleted.`,
 	},
 	"expungeBehavior": {
 		AvailableFor: []string{"updateImap"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The action that will be executed on a message when it is marked as deleted and expunged from the last visible IMAP folder.
 [ARCHIVE|TRASH|DELETE_FOREVER]
 ARCHIVE - Archive messages marked as deleted.
@@ -87,13 +87,13 @@ DELETE_FOREVER - Immediately and permanently delete messages marked as deleted. 
 	},
 	"maxFolderSize": {
 		AvailableFor: []string{"updateImap"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `An optional limit on the number of messages that an IMAP folder may contain.
 Legal values are 0, 1000, 2000, 5000 or 10000. A value of zero is interpreted to mean that there is no limit.`,
 	},
 	"displayLanguage": {
 		AvailableFor: []string{"updateLanguage"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The language to display Gmail in, formatted as an RFC 3066 Language Tag (for example en-GB, fr or ja for British English, French, or Japanese respectively).
 
 The set of languages supported by Gmail evolves over time, so please refer to the "Language" dropdown in the Gmail settings for all available options, as described in the language settings help article. A table of sample values is also provided in the Managing Language Settings guide
@@ -102,7 +102,7 @@ Not all Gmail clients can display the same set of languages. In the case that a 
 	},
 	"accessWindow": {
 		AvailableFor: []string{"updatePop"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The range of messages which are accessible via POP.
 [DISABLED|FROM_NOW_ON|ALL_MAIL]
 DISABLED     - Indicates that no messages are accessible via POP.
@@ -111,55 +111,55 @@ ALL_MAIL     - Indicates that all unfetched messages are accessible via POP.`,
 	},
 	"enableAutoReply": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Flag that controls whether Gmail automatically replies to messages.`,
 	},
 	"responseSubject": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Optional text to prepend to the subject line in vacation responses.
 In order to enable auto-replies, either the response subject or the response body must be nonempty.`,
 	},
 	"responseBodyPlainText": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Response body in plain text format.
 If both responseBodyPlainText and responseBodyHtml are specified, responseBodyHtml will be used.`,
 	},
 	"responseBodyHtml": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Response body in HTML format. Gmail will sanitize the HTML before storing it.
 If both responseBodyPlainText and responseBodyHtml are specified, responseBodyHtml will be used.`,
 	},
 	"restrictToContacts": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Flag that determines whether responses are sent to recipients who are not in the user's list of contacts.`,
 	},
 	"restrictToDomain": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Flag that determines whether responses are sent to recipients who are outside of the user's domain.
 This feature is only available for Workspace users.`,
 	},
 	"startTime": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `An optional start time for sending auto-replies (epoch ms).
 When this is specified, Gmail will automatically reply only to messages that it receives after the start time.
 If both startTime and endTime are specified, startTime must precede endTime.`,
 	},
 	"endTime": {
 		AvailableFor: []string{"updateVacation"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `An optional end time for sending auto-replies (epoch ms).
 When this is specified, Gmail will automatically reply only to messages that it receives before the end time.
 If both startTime and endTime are specified, startTime must precede endTime.`,
 	},
 	"fields": {
 		AvailableFor: []string{"getAutoForwarding", "getImap", "getLanguage", "getPop", "getVacation", "updateAutoForwarding", "updateImap", "updateLanguage", "updatePop", "updateVacation"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

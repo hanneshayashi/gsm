@@ -43,38 +43,38 @@ var contactGroupsCmd = &cobra.Command{
 var contactGroupFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"resourceNames": {
 		AvailableFor: []string{"batchGet"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The resource names of the contact groups.`,
 		Required:     []string{"batchGet"},
 	},
 	"maxMembers": {
 		AvailableFor: []string{"batchGet", "get"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description: `Specifies the maximum number of members to return for each group.
 Defaults to 0 if not set, which will return zero members.`,
 	},
 	"name": {
 		AvailableFor:   []string{"create", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The contact group name set by the group owner or a system provided name for system groups.`,
 		Required:       []string{"create"},
 		ExcludeFromAll: true,
 	},
 	"resourceName": {
 		AvailableFor:   []string{"delete", "get", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The resource name of the contact group.`,
 		Required:       []string{"delete", "get", "update"},
 		ExcludeFromAll: true,
 	},
 	"deleteContacts": {
 		AvailableFor: []string{"delete"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Set to true to also delete the contacts in the specified group.`,
 	},
 	"fields": {
 		AvailableFor: []string{"batchGet", "create", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

@@ -43,79 +43,79 @@ var draftsCmd = &cobra.Command{
 var draftFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"userId": {
 		AvailableFor: []string{"create", "delete", "get", "list", "send", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The user's email address. The special value \"me\" can be used to indicate the authenticated user.",
-		Defaults:     map[string]any{"create": "me", "delete": "me", "get": "me", "list": "me", "send": "me", "update": "me"},
+		Defaults:     map[string]gsmhelpers.FlagValue{"create": gsmhelpers.StringVal("me"), "delete": gsmhelpers.StringVal("me"), "get": gsmhelpers.StringVal("me"), "list": gsmhelpers.StringVal("me"), "send": gsmhelpers.StringVal("me"), "update": gsmhelpers.StringVal("me")},
 	},
 	"subject": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Subject of the (draft) message",
 	},
 	"html": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  "Send the body as HTML",
 	},
 	"to": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Recipient of the (draft) message",
 	},
 	"cc": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Copy (Cc)",
 	},
 	"bcc": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Blind Copy (Bcc)",
 	},
 	"body": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "Body or content of the (draft) message",
 	},
 	"id": {
 		AvailableFor:   []string{"delete", "get", "send", "update"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    "The ID of the draft.",
 		Required:       []string{"delete", "get", "send", "update"},
 		ExcludeFromAll: true,
 	},
 	"format": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The format to return the draft in.
 "[MINIMAL|FULL|RAW|METADATA].
 MINIMAL   - Returns only email message ID and labels; does not return the email headers, body, or payload.
 FULL      - Returns the full email message data with body content parsed in the payload field; the raw field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 RAW       - Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used. Format cannot be used when accessing the api using the gmail.metadata scope.
 METADATA  - Returns only email message ID, labels, and email headers.`,
-		Defaults: map[string]any{"get": "MINIMAL"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("MINIMAL")},
 	},
 	"q": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Only return draft messages matching the specified query.
 Supports the same query format as the Gmail search box.
 For example, "from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread".`,
 	},
 	"includeSpamTrash": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Include drafts from SPAM and TRASH in the results.`,
 	},
 	"attachment": {
 		AvailableFor: []string{"create", "update"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `Path to a file that should be attached to the message.
 Can be used multiple times.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "get", "list", "update"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

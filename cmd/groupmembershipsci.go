@@ -43,13 +43,13 @@ var groupMembershipsCiCmd = &cobra.Command{
 var groupMembershipCiFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"checkTransitiveMembership", "create", "getMembershipGraph", "list", "lookup", "searchTransitiveMemberships"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Resource name of the group.
 Format: groups/{group_id}, where group_id is the unique id assigned to the Group to which the Membership belongs to.`,
 	},
 	"query": {
 		AvailableFor: []string{"checkTransitiveMembership", "getMembershipGraph", "searchTransitiveGroups"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A CEL expression that MUST include:
 getMembershipGraph      - member specification AND label(s)
                           (Example query: member_key_id == 'member_key_id_value' && <label_value> in labels)
@@ -63,7 +63,7 @@ Certain groups are uniquely identified by both a 'member_key_id' and a 'member_k
 	},
 	"memberKeyId": {
 		AvailableFor: []string{"create", "lookup"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The ID of the entity.
 
 For Google-managed entities, the id must be the email address of an existing group or user.
@@ -75,7 +75,7 @@ Must be unique within a namespace.`,
 	},
 	"memberKeyNamespace": {
 		AvailableFor: []string{"create", "lookup"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The namespace in which the entity exists.
 
 If not specified, the EntityKey represents a Google-managed entity such as a Google user or a Google Group.
@@ -84,7 +84,7 @@ If specified, the EntityKey represents an external-identity-mapped group. The na
 	},
 	"roles": {
 		AvailableFor: []string{"create"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The MembershipRoles that apply to the Membership.
 
 Must not contain duplicate MembershipRoles with the same name.
@@ -101,28 +101,28 @@ expireTime    - The time at which the MembershipRole will expire.
 	},
 	"name": {
 		AvailableFor: []string{"delete", "get", "modifyMembershipRoles"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the Membership.
 Must be of the form groups/{group_id}/memberships/{membership_id}.`,
 		ExcludeFromAll: true,
 	},
 	"email": {
 		AvailableFor: []string{"checkTransitiveMembership", "create", "delete", "get", "getMembershipGraph", "list", "lookup", "searchTransitiveMemberships"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Email address of the group.
 This may be used instead of the name to do a lookup of the group resource name.
 Note that this will cause an additional API call.`,
 	},
 	"view": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The level of detail to be returned.
 BASIC  - Default. Only basic resource information is returned.
 FULL   - All resource information is returned.`,
 	},
 	"addRoles": {
 		AvailableFor: []string{"modifyMembershipRoles"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The MembershipRoles to be added.
 
 Adding or removing roles in the same request as updating roles is not supported.
@@ -139,7 +139,7 @@ expireTime  - The time at which the MembershipRole will expire.
 	},
 	"removeRoles": {
 		AvailableFor: []string{"modifyMembershipRoles"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The names of the MembershipRoles to be removed.
 
 Adding or removing roles in the same request as updating roles is not supported.
@@ -150,7 +150,7 @@ Must not contain MEMBER. Must not be set if updateRolesParams is set.`,
 	},
 	"updateRolesParams": {
 		AvailableFor: []string{"modifyMembershipRoles"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The MembershipRoles to be updated.
 
 	Updating roles in the same request as adding or removing roles is not supported.
@@ -168,7 +168,7 @@ Must not contain MEMBER. Must not be set if updateRolesParams is set.`,
 	},
 	"fields": {
 		AvailableFor: []string{"create", "list", "get", "getMembershipGraph", "modifyMembershipRoles", "searchTransitiveGroups", "searchTransitiveMemberships"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

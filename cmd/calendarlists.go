@@ -44,41 +44,41 @@ var calendarListsCmd = &cobra.Command{
 var calendarListFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarId": {
 		AvailableFor: []string{"delete", "get", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Calendar identifier. To retrieve calendar IDs call the calendarList.list method.
 If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.`,
-		Defaults:       map[string]any{"delete": "primary", "get": "primary", "list": "primary", "patch": "primary"},
+		Defaults:       map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("primary"), "get": gsmhelpers.StringVal("primary"), "list": gsmhelpers.StringVal("primary"), "patch": gsmhelpers.StringVal("primary")},
 		ExcludeFromAll: true,
 	},
 	"colorRgbFormat": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB).
 If this feature is used, the index-based colorId field will be set to the best matching option automatically.`,
 	},
 	"id": {
 		AvailableFor:   []string{"insert", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `Identifier of the calendar.`,
 		ExcludeFromAll: true,
 	},
 	"backgroundColor": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The main color of the calendar in the hexadecimal format "#0088aa".
 This property supersedes the index-based colorId property.
 To set or change this property, you need to specify colorRgbFormat=true in the parameters of the insert, update and patch methods.`,
 	},
 	"colorId": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The color of the calendar.
 This is an ID referring to an entry in the calendar section of the colors definition (see the colors endpoint).
 This property is superseded by the backgroundColor and foregroundColor properties and can be ignored when using these properties.`,
 	},
 	"defaultReminders": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The default reminders that the authenticated user has for this calendar.
 Must be given in the form of '--defaultReminders "method=[popup|email];minutes[0-40320]
 Where
@@ -87,19 +87,19 @@ popup  - Reminders are sent via a UI popup.`,
 	},
 	"foregroundColor": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The foreground color of the calendar in the hexadecimal format "#ffffff".
 This property supersedes the index-based colorId property.
 To set or change this property, you need to specify colorRgbFormat=true in the parameters of the insert, update and patch methods.`,
 	},
 	"hidden": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the calendar has been hidden from the list.`,
 	},
 	"notificationsType": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The type of notification.
 [eventCreation|eventChange|eventCancellation|eventResponse|agenda]
 eventCreation      - Notification sent when a new event is put on the calendar.
@@ -111,17 +111,17 @@ Note that all notifications are sent via email ("method" is always set to "email
 	},
 	"selected": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether the calendar content shows up in the calendar UI`,
 	},
 	"summaryOverride": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The summary that the authenticated user has set for this calendar.`,
 	},
 	"minAccessRole": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The minimum access role for the user in the returned entries.
 Optional. The default is no restriction.
 [freeBusyReader|owner|reader|writer]
@@ -132,17 +132,17 @@ writer          - The user can read and modify events.`,
 	},
 	"showDeleted": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to include deleted calendar list entries in the result.`,
 	},
 	"showHidden": {
 		AvailableFor: []string{"list"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to show hidden entries.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

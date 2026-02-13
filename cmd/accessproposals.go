@@ -47,38 +47,38 @@ Implements the API documented at https://developers.google.com/workspace/drive/a
 var accessProposalsFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 	"fileId": {
 		AvailableFor: []string{"get", "list", "resolve"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The id of the item the request is on.`,
 		Required:     []string{"get", "list", "resolve"},
 	},
 	"proposalId": {
 		AvailableFor: []string{"get", "resolve"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The id of the access proposal.`,
 		Required:     []string{"get", "resolve"},
 	},
 	"role": {
 		AvailableFor: []string{"resolve"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `The roles the approver has allowed, if any. Note: This field is required for the ACCEPT action.
 This flag can be used multiple times.`,
 	},
 	"view": {
 		AvailableFor: []string{"resolve"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Indicates the view for this access proposal.
 This should only be set when the proposal belongs to a view.
 'published' is the only supported value.`,
 	},
 	"action": {
 		AvailableFor: []string{"resolve"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The action to take on the AccessProposal.
 Must be one of the following:
 ACCEPT  The user accepts the proposal. Note: If this action is used, the role field must have at least one value.
@@ -87,7 +87,7 @@ DENY    The user denies the proposal`,
 	},
 	"sendNotification": {
 		AvailableFor: []string{"resolve"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Whether to send an email to the requester when the AccessProposal is denied or accepted.`,
 	},
 }

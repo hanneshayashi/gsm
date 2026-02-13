@@ -43,38 +43,38 @@ var entityUsageReportsCmd = &cobra.Command{
 var entityUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"entityType": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the type of entity for the report.
 Accepted values are:
 GPLUS_COMMUNITIES  - Returns a report on Google+ communities.`,
-		Defaults: map[string]any{"get": "GPLUS_COMMUNITIES"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("GPLUS_COMMUNITIES")},
 	},
 	"entityKey": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the key of the object to filter the data with.
 Accepted values are:
 ALL         - Returns activity events for all users.
 ENTITY_KEY  - Represents an app-specific identifier for the entity.
               For details on how to obtain the entityKey for a particular entityType, see the https://developers.google.com/admin-sdk/reports/v1/reference/usage-ref-appendix-a/entities`,
-		Defaults: map[string]any{"get": "ALL"},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal("ALL")},
 	},
 	"date": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal(time.Now().Format("2006-01-02"))},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID of the customer to retrieve data for.`,
 	},
 	"filters": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The filters query string is a comma-separated list of an application's event parameters where the parameter's value is manipulated by a relational operator.
 The filters query string includes the name of the application whose usage is returned in the report.
 The application values for the Entities usage report include accounts, docs, and gmail.
@@ -99,7 +99,7 @@ Filters can only be applied to numeric parameters.`,
 	},
 	"parameters": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The parameters query string is a comma-separated list of event parameters that refine a report's results.
 The parameter is associated with a specific application.
 The application values for the Entities usage report are only gplus.
@@ -113,7 +113,7 @@ An example of an invalid request parameter is one that does not belong to the ap
 	},
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

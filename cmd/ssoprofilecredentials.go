@@ -44,27 +44,27 @@ var ssoProfileCredentialsCmd = &cobra.Command{
 var ssoProfileCredentialFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"add", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The InboundSamlSsoProfile that owns the IdpCredential(s). Format: inboundSamlSsoProfiles/{sso_profile_id}
 If you don't specify the "inboundSamlSsoProfiles/" prefix, GSM will automatically prepend it for you.`,
 		Required: []string{"add", "list"},
 	},
 	"pemFile": {
 		AvailableFor: []string{"add"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The file path to a PEM encoded x509 certificate containing the public key for verifying IdP signatures.`,
 		Required:     []string{"add"},
 	},
 	"name": {
 		AvailableFor: []string{"delete", "get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The resource name of the IdpCredential.
 Format: inboundSamlSsoProfiles/{sso_profile_id}/idpCredentials/{idp_credential_id}`,
 		Required: []string{"delete", "get"},
 	},
 	"fields": {
 		AvailableFor: []string{"add", "get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

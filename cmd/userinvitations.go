@@ -43,24 +43,24 @@ var userInvitationsCmd = &cobra.Command{
 var userInvitationFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"name": {
 		AvailableFor:   []string{"cancel", "get", "isInvitableUser", "send"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `UserInvitation name in the format customers/{customer}/userinvitations/{user_email_address}`,
 		Required:       []string{"cancel", "get", "isInvitableUser", "send"},
 		ExcludeFromAll: true,
 	},
 	"parent": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The customer ID of the Google Workspace or Cloud Identity account the UserInvitation resources are associated with.`,
 	},
 	"filter": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A query string for filtering UserInvitation results by their current state, in the format: "state=='invited'".`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The sort order of the list results.
 
 You can sort the results in descending order based on either email or last update timestamp but not both, using orderBy="email desc". Currently, sorting is supported for updateTime asc, updateTime desc, email asc, and email desc.
@@ -69,7 +69,7 @@ If not specified, results will be returned based on email asc order.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get", "list", "send"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

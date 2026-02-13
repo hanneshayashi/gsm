@@ -45,37 +45,37 @@ var spreadsheetsCmd = &cobra.Command{
 var spreadsheetFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"spreadsheetId": {
 		AvailableFor: []string{"batchUpdate", "get", "getByDateFilter"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The ID of the spreadsheet",
 		Required:     []string{"batchUpdate", "get", "getByDateFilter"},
 	},
 	"title": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  "The ID of the spreadsheet",
 		Required:     []string{"create"},
 	},
 	"csvFileToUpload": {
 		AvailableFor: []string{"batchUpdate", "create"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A list of CSV files that should be added to the spreadsheet as new sheets.
 Can be used multiple times in the form of "--csvFileToUpload "title=Some Title;path=./path/to/file.csv""
 Delimiter must be ","`,
 	},
 	"ranges": {
 		AvailableFor: []string{"get"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `The ranges to retrieve from the spreadsheet.`,
 	},
 	"includeGridData": {
 		AvailableFor: []string{"get"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description: `True if grid data should be returned.
 This parameter is ignored if a field mask was set in the request.`,
 	},
 	"fields": {
 		AvailableFor: []string{"batchUpdate", "create", "get", "getByDateFilter"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

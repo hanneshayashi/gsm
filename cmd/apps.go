@@ -43,32 +43,32 @@ Implements the API documented at https://developers.google.com/workspace/drive/a
 var appsFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"fields": {
 		AvailableFor: []string{"get", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
 	"appId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The ID of the app.`,
 	},
 	"appFilterExtensions": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A comma-separated list of file extensions to limit returned results.
 All results within the given app query scope which can open any of the given file extensions are included in the response.
 If appFilterMimeTypes are provided as well, the result is a union of the two resulting app lists.`,
 	},
 	"appFilterMimeTypes": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `A comma-separated list of file extensions to limit returned results.
 All results within the given app query scope which can open any of the given MIME types will be included in the response.
 If appFilterExtensions are provided as well, the result is a union of the two resulting app lists.`,
 	},
 	"languageCode": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `A language or locale code, as defined by BCP 47, with some extensions from Unicode's LDML format (http://www.unicode.org/reports/tr35/).`,
 	},
 }

@@ -43,59 +43,59 @@ var calendarResourcesCmd = &cobra.Command{
 var calendarResourceFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"calendarResourceId": {
 		AvailableFor:   []string{"delete", "get", "patch"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The unique ID of the calendar resource`,
 		Required:       []string{"delete", "get", "patch"},
 		ExcludeFromAll: true,
 	},
 	"customer": {
 		AvailableFor: []string{"delete", "get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The unique ID for the customer's Workspace account.
 As an account administrator, you can also use the my_customer alias to represent your account's customer ID.`,
-		Defaults: map[string]any{"delete": "my_customer", "get": "my_customer", "insert": "my_customer", "list": "my_customer", "patch": "my_customer"},
+		Defaults: map[string]gsmhelpers.FlagValue{"delete": gsmhelpers.StringVal("my_customer"), "get": gsmhelpers.StringVal("my_customer"), "insert": gsmhelpers.StringVal("my_customer"), "list": gsmhelpers.StringVal("my_customer"), "patch": gsmhelpers.StringVal("my_customer")},
 	},
 	"resourceId": {
 		AvailableFor:   []string{"insert"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The unique ID of the calendar resource`,
 		Required:       []string{"insert"},
 		ExcludeFromAll: true,
 	},
 	"resourceName": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The name of the calendar resource. For example, "Training Room 1A".`,
 		Required:     []string{"insert"},
 	},
 	"buildingId": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Unique ID for the building a resource is located in.`,
 	},
 	"capacity": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "int64",
+		Type:         gsmhelpers.FlagInt64,
 		Description:  `Capacity of a resource, number of seats in a room.`,
 	},
 	"featureInstances": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Instances of features for the calendar resource.`,
 	},
 	"floorName": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Name of the floor a resource is located on.`,
 	},
 	"floorSection": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Name of the section within a floor a resource is located in.`,
 	},
 	"resourceCategory": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The category of the calendar resource. Either CONFERENCE_ROOM or OTHER. Legacy data is set to CATEGORY_UNKNOWN.
 
 Acceptable values are:
@@ -105,22 +105,22 @@ OTHER`,
 	},
 	"resourceDescription": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Description of the resource, visible only to admins.`,
 	},
 	"resourceType": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The type of the calendar resource, intended for non-room resources.`,
 	},
 	"userVisibleDescription": {
 		AvailableFor: []string{"insert", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Description of the resource, visible to users and admins.`,
 	},
 	"orderBy": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Field(s) to sort results by in either ascending or descending order.
 Supported fields include resourceId, resourceName, capacity, buildingId, and floorName.
 If no order is specified, defaults to ascending.
@@ -129,7 +129,7 @@ For example buildingId, capacity desc would return results sorted first by build
 	},
 	"query": {
 		AvailableFor: []string{"list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `	String query used to filter results.
 Should be of the form "field operator value" where field can be any of supported fields and operators can be any of supported operations.
 Operators include '=' for exact match and ':' for prefix match or HAS match, depending on type of field.
@@ -144,7 +144,7 @@ Supported fields include generatedResourceName, resourceName, name, buildingId, 
 	},
 	"fields": {
 		AvailableFor: []string{"get", "insert", "list", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

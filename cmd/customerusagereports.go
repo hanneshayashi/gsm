@@ -43,20 +43,20 @@ var customerUsageReportsCmd = &cobra.Command{
 var customerUsageReportFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"date": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Represents the date the usage occurred.
 The timestamp is in the ISO 8601 format, yyyy-mm-dd.
 We recommend you use your account's time zone for this.`,
-		Defaults: map[string]any{"get": time.Now().Format("2006-01-02")},
+		Defaults: map[string]gsmhelpers.FlagValue{"get": gsmhelpers.StringVal(time.Now().Format("2006-01-02"))},
 	},
 	"customerId": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The unique ID of the customer to retrieve data for.`,
 	},
 	"parameters": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The parameters query string is a comma-separated list of event parameters that refine a report's results.
 The parameter is associated with a specific application.
 The application values for the Customers usage report include accounts, app_maker, apps_scripts, calendar, classroom, cros, docs, gmail, gplus, device_management, meet, and sites.
@@ -70,7 +70,7 @@ If no parameters are requested, all parameters are returned.`,
 	},
 	"fields": {
 		AvailableFor: []string{"get"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},

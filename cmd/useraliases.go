@@ -43,21 +43,21 @@ var userAliasesCmd = &cobra.Command{
 var userAliasFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"alias": {
 		AvailableFor:   []string{"delete", "insert"},
-		Type:           "string",
+		Type:           gsmhelpers.FlagString,
 		Description:    `The alias email address.`,
 		Required:       []string{"delete", "insert"},
 		ExcludeFromAll: true,
 	},
 	"userKey": {
 		AvailableFor: []string{"delete", "insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Identifies the user in the API request.
 The value can be the user's primary email address, alias email address, or unique user ID.`,
 		Required: []string{"delete", "insert", "list"},
 	},
 	"fields": {
 		AvailableFor: []string{"insert", "list"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 		Recursive: []string{"list"},

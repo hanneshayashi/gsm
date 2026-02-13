@@ -44,12 +44,12 @@ var chromePrintersCmd = &cobra.Command{
 var chromePrinterFlags map[string]*gsmhelpers.Flag = map[string]*gsmhelpers.Flag{
 	"parent": {
 		AvailableFor: []string{"batchCreate", "batchDelete", "create", "list", "listModels"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The name of the customer. Format: customers/{customer_id}`,
 	},
 	"printer": {
 		AvailableFor: []string{"batchCreate"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description: `A printer to create.
 If you want to place the printer under particular OU then populate orgUnitId filed.
 Otherwise the printer will be placed under root OU.
@@ -67,72 +67,72 @@ useDriverlessConfig  Editable. flag to use driverless configuration or not.
 	},
 	"printerIds": {
 		AvailableFor: []string{"batchDelete"},
-		Type:         "stringSlice",
+		Type:         gsmhelpers.FlagStringSlice,
 		Description:  `A list of printer ids that should be deleted. Max 100 at a time.`,
 		Required:     []string{"batchDelete"},
 	},
 	"displayName": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Editable. Name of printer.`,
 		Required:     []string{"create"},
 	},
 	"description": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Editable. Description of printer.`,
 	},
 	"makeAndModel": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Editable. Make and model of printer. e.g. Lexmark MS610de
 Value must be in format as seen in printers.listPrinterModels response.`,
 	},
 	"uri": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Editable. Printer URI.`,
 		Required:     []string{"create"},
 	},
 	"orgUnitId": {
 		AvailableFor: []string{"create"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Organization Unit`,
 		Required:     []string{"create"},
 	},
 	"useDriverlessConfig": {
 		AvailableFor: []string{"create", "patch"},
-		Type:         "bool",
+		Type:         gsmhelpers.FlagBool,
 		Description:  `Editable. flag to use driverless configuration or not. If it's set to be true, makeAndModel can be ignored`,
 	},
 	"name": {
 		AvailableFor: []string{"delete", "get", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `The name of the printer to be updated. Format: customers/{customer_id}/chrome/printers/{printer_id}`,
 		Required:     []string{"delete", "get", "patch"},
 	},
 	"filter": {
 		AvailableFor: []string{"list", "listModels"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description:  `Search query. Search syntax is shared between this api and Admin Console printers pages.`,
 	},
 	"updateMask": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The list of fields to be updated. Note, some of the fields are read only and cannot be updated. Values for not specified fields will be patched.
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
 	},
 	"clearMask": {
 		AvailableFor: []string{"patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `The list of fields to be cleared. Note, some of the fields are read only and cannot be updated. Values for not specified fields will be patched.
 
 A comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".`,
 	},
 	"fields": {
 		AvailableFor: []string{"batchCreate", "create", "get", "list", "listModels", "patch"},
-		Type:         "string",
+		Type:         gsmhelpers.FlagString,
 		Description: `Fields allows partial responses to be retrieved.
 See https://developers.google.com/gdata/docs/2.0/basics#PartialResponse for more information.`,
 	},
