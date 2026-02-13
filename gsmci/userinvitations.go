@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -69,7 +71,7 @@ func IsInvitableUser(name string) (bool, error) {
 }
 
 // ListUserInvitations retrieves a list of UserInvitation resources.
-func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-chan *ci.UserInvitation, <-chan error) {
+func ListUserInvitations(parent, filter, orderBy, fields string) iter.Seq2[*ci.UserInvitation, error] {
 	srv := getCustomersUserinvitationsService()
 	c := srv.List(parent).PageSize(200)
 	if fields != "" {
@@ -81,23 +83,19 @@ func ListUserInvitations(parent, filter, orderBy, fields string, cap int) (<-cha
 	if orderBy != "" {
 		c.OrderBy(orderBy)
 	}
-	ch := make(chan *ci.UserInvitation, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.UserInvitation, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListUserInvitationsResponse) error {
 			for i := range response.UserInvitations {
-				ch <- response.UserInvitations[i]
+				if !yield(response.UserInvitations[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // SendInvitation sends a UserInvitation to email.

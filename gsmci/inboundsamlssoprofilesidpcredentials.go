@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -68,27 +70,23 @@ func GetSsoProfileIdpCredential(parent, fields string) (*ci.IdpCredential, error
 }
 
 // ListSsoProfileIdpCredential returns a list of IdpCredentials in an InboundSamlSsoProfile.
-func ListSsoProfileIdpCredential(parent, fields string, cap int) (<-chan *ci.IdpCredential, <-chan error) {
+func ListSsoProfileIdpCredential(parent, fields string) iter.Seq2[*ci.IdpCredential, error] {
 	srv := getInboundSamlSsoProfilesIdpCredentialsService()
 	c := srv.List(parent)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *ci.IdpCredential, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.IdpCredential, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListIdpCredentialsResponse) error {
 			for i := range response.IdpCredentials {
-				ch <- response.IdpCredentials[i]
+				if !yield(response.IdpCredentials[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

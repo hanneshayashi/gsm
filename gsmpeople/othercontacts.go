@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -43,27 +45,23 @@ func CopyOtherContactToMyContactsGroup(resourceName, fields string, copyOtherCon
 
 // ListOtherContacts lists all "Other contacts", that is contacts that are not in a contact group.
 // "Other contacts" are typically auto created contacts from interactions.
-func ListOtherContacts(readMask, fields string, cap int) (<-chan *people.Person, <-chan error) {
+func ListOtherContacts(readMask, fields string) iter.Seq2[*people.Person, error] {
 	srv := getOtherContactsService()
 	c := srv.List().ReadMask(readMask).PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *people.Person, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*people.Person, error) bool) {
 		e := c.Pages(context.Background(), func(response *people.ListOtherContactsResponse) error {
 			for i := range response.OtherContacts {
-				ch <- response.OtherContacts[i]
+				if !yield(response.OtherContacts[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

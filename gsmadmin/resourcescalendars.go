@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func InsertCalendarResource(customer, fields string, calendarResource *admin.Cal
 }
 
 // ListCalendarResources retrieves a list of calendar resources for an account.
-func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-chan *admin.CalendarResource, <-chan error) {
+func ListCalendarResources(customer, orderBy, query, fields string) iter.Seq2[*admin.CalendarResource, error] {
 	srv := getResourcesCalendarsService()
 	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
@@ -79,23 +81,19 @@ func ListCalendarResources(customer, orderBy, query, fields string, cap int) (<-
 	if query != "" {
 		c = c.Query(query)
 	}
-	ch := make(chan *admin.CalendarResource, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.CalendarResource, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.CalendarResources) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchCalendarResource updates a calendar resource. This method supports patch semantics.

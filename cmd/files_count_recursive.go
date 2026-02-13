@@ -39,7 +39,7 @@ var filesCountRecursiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		files := gsmdrive.ListFilesRecursive(flags["folderId"].GetString(), "files(id,size,mimeType),nextPageToken", flags["excludeFolders"].GetStringSlice(), flags["includeRoot"].GetBool(), gsmhelpers.MaxThreads(flags["batchThreads"].GetInt()))
-		result := gsmdrive.CountFilesAndFolders(files)
+		result := gsmdrive.CountFilesAndFolders(gsmhelpers.ChanToIter(files, nil))
 		err := gsmhelpers.Output(result, "json", compressOutput)
 		if err != nil {
 			log.Fatalln(err)

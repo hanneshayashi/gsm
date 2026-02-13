@@ -18,36 +18,31 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrivelabels
 
 import (
+	"errors"
 	"context"
-
-	"github.com/hanneshayashi/gsm/gsmhelpers"
-
+	"iter"
 	"google.golang.org/api/drivelabels/v2"
 	"google.golang.org/api/googleapi"
 )
 
 // Lists the LabelLocks on a Label.
-func ListLabelLocks(parent, fields string, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2LabelLock, <-chan error) {
+func ListLabelLocks(parent, fields string) iter.Seq2[*drivelabels.GoogleAppsDriveLabelsV2LabelLock, error] {
 	srv := getLabelsLocksService()
 	c := srv.List(parent).PageSize(200)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drivelabels.GoogleAppsDriveLabelsV2LabelLock, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drivelabels.GoogleAppsDriveLabelsV2LabelLock, error) bool) {
 		e := c.Pages(context.Background(), func(response *drivelabels.GoogleAppsDriveLabelsV2ListLabelLocksResponse) error {
 			for i := range response.LabelLocks {
-				ch <- response.LabelLocks[i]
+				if !yield(response.LabelLocks[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

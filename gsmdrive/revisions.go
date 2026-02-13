@@ -18,10 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
 	"io"
 	"os"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -79,29 +81,25 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 }
 
 // ListRevisions lists a file's revisions.
-func ListRevisions(fileID, fields string, cap int) (<-chan *drive.Revision, <-chan error) {
+func ListRevisions(fileID, fields string) iter.Seq2[*drive.Revision, error] {
 	srv := getRevisionsService()
 	c := srv.List(fileID)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drive.Revision, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Revision, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.RevisionList) error {
 			for i := range response.Revisions {
-				ch <- response.Revisions[i]
+				if !yield(response.Revisions[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateRevision updates a revision with patch semantics.

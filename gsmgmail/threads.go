@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -60,7 +62,7 @@ func GetThread(userID, id, format, metadataHeaders, fields string) (*gmail.Threa
 }
 
 // ListThreads lists the threads in the user's mailbox.
-func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash bool, cap int) (<-chan *gmail.Thread, <-chan error) {
+func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash bool) iter.Seq2[*gmail.Thread, error] {
 	srv := getUsersThreadsService()
 	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash).MaxResults(10000)
 	if fields != "" {
@@ -72,23 +74,19 @@ func ListThreads(userID, q, fields string, labelIDs []string, includeSpamTrash b
 	if len(labelIDs) > 0 {
 		c = c.LabelIds(labelIDs...)
 	}
-	ch := make(chan *gmail.Thread, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmail.Thread, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmail.ListThreadsResponse) error {
 			for i := range response.Threads {
-				ch <- response.Threads[i]
+				if !yield(response.Threads[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ModifyThread modifies the labels applied to the thread. This applies to all messages in the thread.

@@ -54,14 +54,17 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for uk := range userKeysUnique {
-						result, er := gsmadmin.ListRoleAssignments(customer, "", uk, fields, threads)
 						r := resultStruct{UserKey: uk}
-						for i := range result {
+						var iterErr error
+						for i, err := range gsmadmin.ListRoleAssignments(customer, "", uk, fields) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.RoleAssignments = append(r.RoleAssignments, i)
 						}
-						e := <-er
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -72,24 +75,7 @@ var roleAssignmentsListRecursiveCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for r := range results {
-				final = append(final, r)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 		e := <-err
 		if e != nil {
 			log.Fatalf("Error listing role assignments: %v", e)

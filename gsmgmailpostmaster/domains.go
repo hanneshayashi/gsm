@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmailpostmaster
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -45,27 +47,23 @@ func GetDomain(name, fields string) (*gmailpostmastertools.Domain, error) {
 // ListDomains lists the domains that have been registered by the client.
 // The order of domains in the response is unspecified and non-deterministic.
 // Newly created domains will not necessarily be added to the end of this list.
-func ListDomains(fields string, cap int) (<-chan *gmailpostmastertools.Domain, <-chan error) {
+func ListDomains(fields string) iter.Seq2[*gmailpostmastertools.Domain, error] {
 	srv := getDomainsService()
 	c := srv.List()
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *gmailpostmastertools.Domain, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmailpostmastertools.Domain, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmailpostmastertools.ListDomainsResponse) error {
 			for i := range response.Domains {
-				ch <- response.Domains[i]
+				if !yield(response.Domains[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

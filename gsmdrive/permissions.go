@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -70,7 +72,7 @@ func GetPermission(fileID, permissionID, fields string, useDomainAdminAccess boo
 }
 
 // ListPermissions lists a file's or shared drive's permissions.
-func ListPermissions(fileID, includePermissionsForView, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Permission, <-chan error) {
+func ListPermissions(fileID, includePermissionsForView, fields string, useDomainAdminAccess bool) iter.Seq2[*drive.Permission, error] {
 	srv := getPermissionsService()
 	c := srv.List(fileID).SupportsAllDrives(true).UseDomainAdminAccess(useDomainAdminAccess)
 	if fields != "" {
@@ -79,23 +81,19 @@ func ListPermissions(fileID, includePermissionsForView, fields string, useDomain
 	if includePermissionsForView != "" {
 		c = c.IncludePermissionsForView(includePermissionsForView)
 	}
-	ch := make(chan *drive.Permission, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Permission, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.PermissionList) error {
 			for i := range response.Permissions {
-				ch <- response.Permissions[i]
+				if !yield(response.Permissions[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdatePermission updates a permission with patch semantics.

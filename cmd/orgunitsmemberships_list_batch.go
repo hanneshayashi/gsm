@@ -60,14 +60,17 @@ var orgUnitsMembershipsListBatchCmd = &cobra.Command{
 						parent := gsmhelpers.EnsurePrefix(m["parent"].GetString(), "orgUnits/")
 						filter := m["filter"].GetString()
 						customer := m["customer"].GetString()
-						result, err := gsmcibeta.ListOrgUnitMemberships(parent, customer, filter, m["fields"].GetString(), gsmhelpers.MaxThreads(0))
+						var iterErr error
 						r := resultStruct{Parent: parent, Filter: filter, Customer: customer}
-						for i := range result {
+						for i, err := range gsmcibeta.ListOrgUnitMemberships(parent, customer, filter, m["fields"].GetString()) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Memberships = append(r.Memberships, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -78,24 +81,7 @@ var orgUnitsMembershipsListBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

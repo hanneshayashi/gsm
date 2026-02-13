@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -45,7 +47,7 @@ func GetClientState(name, customer, fields string) (*ci.GoogleAppsCloudidentityD
 }
 
 // ListClientStates lists the client states for the given search query.
-func ListClientStates(parent, customer, filter, orderBy, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, <-chan error) {
+func ListClientStates(parent, customer, filter, orderBy, fields string) iter.Seq2[*ci.GoogleAppsCloudidentityDevicesV1ClientState, error] {
 	srv := getDevicesDeviceUsersClientStatesService()
 	c := srv.List(parent)
 	if fields != "" {
@@ -60,23 +62,19 @@ func ListClientStates(parent, customer, filter, orderBy, fields string, cap int)
 	if filter != "" {
 		c.Filter(filter)
 	}
-	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1ClientState, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.GoogleAppsCloudidentityDevicesV1ClientState, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListClientStatesResponse) error {
 			for i := range response.ClientStates {
-				ch <- response.ClientStates[i]
+				if !yield(response.ClientStates[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchClientState updates the client state for the device user

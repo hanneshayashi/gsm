@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,29 +69,25 @@ func GetReply(fileID, commentID, replyID, fields string, includeDeleted bool) (*
 }
 
 // ListReplies Lists a comment's replies.
-func ListReplies(fileID, commentID, fields string, includeDeleted bool, cap int) (<-chan *drive.Reply, <-chan error) {
+func ListReplies(fileID, commentID, fields string, includeDeleted bool) iter.Seq2[*drive.Reply, error] {
 	srv := getRepliesService()
 	c := srv.List(fileID, commentID).IncludeDeleted(includeDeleted)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drive.Reply, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Reply, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.ReplyList) error {
 			for i := range response.Replies {
-				ch <- response.Replies[i]
+				if !yield(response.Replies[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateReply updates a reply with patch semantics.

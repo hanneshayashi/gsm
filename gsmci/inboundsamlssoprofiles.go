@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func GetSsoProfile(name, fields string) (*ci.InboundSamlSsoProfile, error) {
 }
 
 // ListSsoProfiles retrieves a list of InboundSamlSsoProfile resources.
-func ListSsoProfiles(filter, fields string, cap int) (<-chan *ci.InboundSamlSsoProfile, <-chan error) {
+func ListSsoProfiles(filter, fields string) iter.Seq2[*ci.InboundSamlSsoProfile, error] {
 	srv := getInboundSamlSsoProfilesService()
 	c := srv.List().PageSize(100)
 	if fields != "" {
@@ -76,23 +78,19 @@ func ListSsoProfiles(filter, fields string, cap int) (<-chan *ci.InboundSamlSsoP
 	if filter != "" {
 		c.Filter(fields)
 	}
-	ch := make(chan *ci.InboundSamlSsoProfile, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.InboundSamlSsoProfile, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListInboundSamlSsoProfilesResponse) error {
 			for i := range response.InboundSamlSsoProfiles {
-				ch <- response.InboundSamlSsoProfiles[i]
+				if !yield(response.InboundSamlSsoProfiles[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchSsoProfile updates an InboundSamlSsoProfile.

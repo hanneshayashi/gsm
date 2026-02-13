@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -90,7 +92,7 @@ func InsertEvent(calendarID, sendUpdates, fields string, event *calendar.Event, 
 }
 
 // ListEventInstances returns instances of the specified recurring event.
-func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMin, fields string, maxAttendees int64, showDeleted bool, cap int) (<-chan *calendar.Event, <-chan error) {
+func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, timeMin, fields string, maxAttendees int64, showDeleted bool) iter.Seq2[*calendar.Event, error] {
 	srv := getEventsService()
 	c := srv.Instances(calendarID, eventID).ShowDeleted(showDeleted)
 	if fields != "" {
@@ -111,27 +113,23 @@ func ListEventInstances(calendarID, eventID, originalStart, timeZone, timeMax, t
 	if originalStart != "" {
 		c = c.OriginalStart(originalStart)
 	}
-	ch := make(chan *calendar.Event, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*calendar.Event, error) bool) {
 		e := c.Pages(context.Background(), func(response *calendar.Events) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ListEvents returns events on the specified calendar.
-func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, updatedMin, fields string, privateExtendedProperties, sharedExtendedProperties []string, maxAttendees int64, showDeleted, showHiddenInvitations, singleEvents bool, cap int) (<-chan *calendar.Event, <-chan error) {
+func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, updatedMin, fields string, privateExtendedProperties, sharedExtendedProperties []string, maxAttendees int64, showDeleted, showHiddenInvitations, singleEvents bool) iter.Seq2[*calendar.Event, error] {
 	srv := getEventsService()
 	c := srv.List(calendarID).ShowDeleted(showDeleted).ShowHiddenInvitations(showHiddenInvitations).SingleEvents(singleEvents).MaxResults(2500)
 	if fields != "" {
@@ -167,23 +165,19 @@ func ListEvents(calendarID, iCalUID, orderBy, q, timeZone, timeMax, timeMin, upd
 	if updatedMin != "" {
 		c = c.UpdatedMin(updatedMin)
 	}
-	ch := make(chan *calendar.Event, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*calendar.Event, error) bool) {
 		e := c.Pages(context.Background(), func(events *calendar.Events) error {
 			for i := range events.Items {
-				ch <- events.Items[i]
+				if !yield(events.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // MoveEvent moves an event to another calendar, i.e. changes an event's organizer.

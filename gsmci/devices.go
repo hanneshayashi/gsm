@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -95,7 +97,7 @@ func GetDevice(name, customer, fields string) (*ci.GoogleAppsCloudidentityDevice
 }
 
 // ListDevices lists/searches devices.
-func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1Device, <-chan error) {
+func ListDevices(customer, filter, orderBy, view, fields string) iter.Seq2[*ci.GoogleAppsCloudidentityDevicesV1Device, error] {
 	srv := getDevicesService()
 	c := srv.List()
 	if fields != "" {
@@ -113,23 +115,19 @@ func ListDevices(customer, filter, orderBy, view, fields string, cap int) (<-cha
 	if view != "" {
 		c.View(view)
 	}
-	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1Device, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.GoogleAppsCloudidentityDevicesV1Device, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListDevicesResponse) error {
 			for i := range response.Devices {
-				ch <- response.Devices[i]
+				if !yield(response.Devices[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // WipeDevice wipes all data on the specified device.

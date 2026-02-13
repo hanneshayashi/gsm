@@ -23,9 +23,9 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
+	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
-	"google.golang.org/api/drive/v3"
 )
 
 // revisionsGetBatchCmd represents the batch command
@@ -63,24 +63,7 @@ var revisionsGetBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*drive.Revision{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

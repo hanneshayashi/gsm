@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -56,7 +58,7 @@ func GetChromeOsDevice(customerID, deviceID, fields, projection string) (*admin.
 }
 
 // ListChromeOsDevices retrieves a paginated list of Chrome OS devices within an account.
-func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection string, cap int) (<-chan *admin.ChromeOsDevice, <-chan error) {
+func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection string) iter.Seq2[*admin.ChromeOsDevice, error] {
 	srv := getChromeosdevicesService()
 	c := srv.List(customerID).MaxResults(10000)
 	if fields != "" {
@@ -71,23 +73,19 @@ func ListChromeOsDevices(customerID, query, orgUnitPath, fields, projection stri
 	if orgUnitPath != "" {
 		c = c.OrgUnitPath(orgUnitPath)
 	}
-	ch := make(chan *admin.ChromeOsDevice, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.ChromeOsDevice, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.ChromeOsDevices) error {
 			for i := range response.Chromeosdevices {
-				ch <- response.Chromeosdevices[i]
+				if !yield(response.Chromeosdevices[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // MoveChromeOSDevicesToOU moves or inserts multiple Chrome OS devices to an organizational unit. You can move up to 50 devices at once.

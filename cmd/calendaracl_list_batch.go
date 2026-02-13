@@ -55,14 +55,17 @@ var calendarACLListBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						calendarID := m["calendarId"].GetString()
-						result, err := gsmcalendar.ListACLs(calendarID, m["fields"].GetString(), m["showDeleted"].GetBool(), cap)
+						var iterErr error
 						r := resultStruct{CalendarID: calendarID}
-						for i := range result {
+						for i, err := range gsmcalendar.ListACLs(calendarID, m["fields"].GetString(), m["showDeleted"].GetBool()) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Rules = append(r.Rules, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -73,24 +76,7 @@ var calendarACLListBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

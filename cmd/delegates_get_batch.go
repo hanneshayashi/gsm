@@ -64,24 +64,7 @@ Implements the API documented at https://developers.google.com/workspace/gmail/a
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*gmail.Delegate{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

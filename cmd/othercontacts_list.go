@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmpeople"
-	"google.golang.org/api/people/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -36,29 +33,7 @@ var otherContactsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmpeople.ListOtherContacts(flags["readMask"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*people.Person{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing other contacts: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmpeople.ListOtherContacts(flags["readMask"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

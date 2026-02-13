@@ -19,7 +19,9 @@ package gsmcibeta
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -27,33 +29,31 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+var errIterStopped = errors.New("iterator stopped")
+
 // ListOrgUnitMemberships lists OrgMembership resources in an OrgUnit treated as 'parent'.
-func ListOrgUnitMemberships(parent, customer, filter, fields string, cap int) (chan *cibeta.OrgMembership, chan error) {
-	srv := getOrgUnitsMembershipsService()
-	c := srv.List(parent).Customer(customer).PageSize(100)
-	if fields != "" {
-		c.Fields(googleapi.Field(fields))
-	}
-	if filter != "" {
-		c.Filter(filter)
-	}
-	ch := make(chan *cibeta.OrgMembership, cap)
-	err := make(chan error, 1)
-	go func() {
+func ListOrgUnitMemberships(parent, customer, filter, fields string) iter.Seq2[*cibeta.OrgMembership, error] {
+	return func(yield func(*cibeta.OrgMembership, error) bool) {
+		srv := getOrgUnitsMembershipsService()
+		c := srv.List(parent).Customer(customer).PageSize(100)
+		if fields != "" {
+			c.Fields(googleapi.Field(fields))
+		}
+		if filter != "" {
+			c.Filter(filter)
+		}
 		e := c.Pages(context.Background(), func(response *cibeta.ListOrgMembershipsResponse) error {
 			for i := range response.OrgMemberships {
-				ch <- response.OrgMemberships[i]
+				if !yield(response.OrgMemberships[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // MoveOrgUnitMembership moves an OrgMembership to a new OrgUnit.

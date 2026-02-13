@@ -50,14 +50,17 @@ var eventsInstancesBatchCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for m := range maps {
-						result, err := gsmcalendar.ListEventInstances(m["calendarId"].GetString(), m["eventId"].GetString(), m["originalStart"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["fields"].GetString(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool(), cap)
+						var iterErr error
 						r := []*calendar.Event{}
-						for i := range result {
+						for i, err := range gsmcalendar.ListEventInstances(m["calendarId"].GetString(), m["eventId"].GetString(), m["originalStart"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["fields"].GetString(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool()) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r = append(r, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -68,24 +71,7 @@ var eventsInstancesBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := [][]*calendar.Event{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

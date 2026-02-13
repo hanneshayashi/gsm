@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func GetComment(fileID, commentID, fields string, includeDeleted bool) (*drive.C
 }
 
 // ListComments lists a file's comments.
-func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool, cap int) (<-chan *drive.Comment, <-chan error) {
+func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool) iter.Seq2[*drive.Comment, error] {
 	srv := getCommentsService()
 	c := srv.List(fileID).IncludeDeleted(includeDeleted).PageSize(10000)
 	if fields != "" {
@@ -76,23 +78,19 @@ func ListComments(fileID, startModifiedTime, fields string, includeDeleted bool,
 	if startModifiedTime != "" {
 		c = c.StartModifiedTime(startModifiedTime)
 	}
-	ch := make(chan *drive.Comment, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Comment, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.CommentList) error {
 			for i := range response.Comments {
-				ch <- response.Comments[i]
+				if !yield(response.Comments[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateComment updates a comment with patch semantics.

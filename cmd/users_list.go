@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	admin "google.golang.org/api/admin/directory/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -35,29 +32,7 @@ var usersListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmadmin.ListUsers(flags["showDeleted"].GetBool(), flags["query"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString(), flags["viewType"].GetString(), flags["customFieldMask"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*admin.User{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing users: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmadmin.ListUsers(flags["showDeleted"].GetBool(), flags["query"].GetString(), flags["domain"].GetString(), flags["customer"].GetString(), flags["fields"].GetString(), flags["projection"].GetString(), flags["orderBy"].GetString(), flags["sortOrder"].GetString(), flags["viewType"].GetString(), flags["customFieldMask"].GetString()), streamOutput, compressOutput)
 	},
 }
 

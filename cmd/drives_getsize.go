@@ -39,12 +39,8 @@ var drivesGetSizeCmd = &cobra.Command{
 		if !flags["includeTrash"].GetBool() {
 			q = "trashed = false"
 		}
-		files, err := gsmdrive.ListFiles(q, flags["driveId"].GetString(), "drive", "", "", "drive", "files(mimeType,size),nextPageToken", true, gsmhelpers.MaxThreads(0))
+		files := gsmdrive.ListFiles(q, flags["driveId"].GetString(), "drive", "", "", "drive", "files(mimeType,size),nextPageToken", true)
 		result := gsmdrive.CountFilesAndFolders(files)
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error counting files: %v", e)
-		}
 		er := gsmhelpers.Output(result, "json", compressOutput)
 		if er != nil {
 			log.Fatalln(er)

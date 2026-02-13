@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmpeople"
-	"google.golang.org/api/people/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -37,29 +34,7 @@ Example:
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmpeople.ListDirectoryPeople(flags["readMask"].GetString(), flags["sources"].GetString(), flags["fields"].GetString(), flags["mergeSources"].GetStringSlice(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*people.Person{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing people: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmpeople.ListDirectoryPeople(flags["readMask"].GetString(), flags["sources"].GetString(), flags["fields"].GetString(), flags["mergeSources"].GetStringSlice()), streamOutput, compressOutput)
 	},
 }
 

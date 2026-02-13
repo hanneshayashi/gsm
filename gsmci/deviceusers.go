@@ -19,7 +19,9 @@ package gsmci
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -103,7 +105,7 @@ func GetDeviceUser(name, customer, fields string) (*ci.GoogleAppsCloudidentityDe
 }
 
 // ListDeviceUsers lists/searches DeviceUsers.
-func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) (<-chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, <-chan error) {
+func ListDeviceUsers(parent, customer, filter, orderBy, fields string) iter.Seq2[*ci.GoogleAppsCloudidentityDevicesV1DeviceUser, error] {
 	srv := getDevicesDeviceUsersService()
 	c := srv.List(parent)
 	if fields != "" {
@@ -118,23 +120,19 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 	if orderBy != "" {
 		c.OrderBy(orderBy)
 	}
-	ch := make(chan *ci.GoogleAppsCloudidentityDevicesV1DeviceUser, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.GoogleAppsCloudidentityDevicesV1DeviceUser, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1ListDeviceUsersResponse) error {
 			for i := range response.DeviceUsers {
-				ch <- response.DeviceUsers[i]
+				if !yield(response.DeviceUsers[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // LookupDeviceUsers looks up resource names of the DeviceUsers associated with the caller's credentials, as well as the properties provided in the request.
@@ -144,7 +142,7 @@ func ListDeviceUsers(parent, customer, filter, orderBy, fields string, cap int) 
 //   - iOS: No properties need to be passed, the caller's credentials are sufficient to identify the corresponding DeviceUser.
 //   - Android: Specifying the 'androidId' field is required.
 //   - Desktop: Specifying the 'rawResourceId' field is required.
-func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, cap int) (<-chan string, <-chan error) {
+func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string) iter.Seq2[string, error] {
 	srv := getDevicesDeviceUsersService()
 	c := srv.Lookup(parent)
 	if fields != "" {
@@ -159,23 +157,19 @@ func LookupDeviceUsers(parent, androidID, rawResourceID, userID, fields string, 
 	if userID != "" {
 		c.UserId(userID)
 	}
-	ch := make(chan string, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(string, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.GoogleAppsCloudidentityDevicesV1LookupSelfDeviceUsersResponse) error {
 			for i := range response.Names {
-				ch <- response.Names[i]
+				if !yield(response.Names[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield("", e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // WipeDeviceUser wipes the user's account on a device.

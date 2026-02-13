@@ -53,14 +53,17 @@ var filesListLabelsRecursiveCmd = &cobra.Command{
 				wg.Add(1)
 				go func() {
 					for file := range files {
-						result, err := gsmdrive.ListLabels(file.Id, fields, threads)
+						var iterErr error
 						r := resultStruct{FileID: file.Id}
-						for i := range result {
+						for i, err := range gsmdrive.ListLabels(file.Id, fields) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Labels = append(r.Labels, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -71,24 +74,7 @@ var filesListLabelsRecursiveCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for r := range results {
-				final = append(final, r)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

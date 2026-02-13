@@ -23,7 +23,6 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmgmail"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/gmail/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -43,29 +42,7 @@ var historyListCmd = &cobra.Command{
 				log.Fatalf("%s is not a valid history type", historyTypes[i])
 			}
 		}
-		result, err := gsmgmail.ListHistory(flags["userId"].GetString(), flags["labelId"].GetString(), flags["fields"].GetString(), flags["startHistoryId"].GetUint64(), historyTypes, gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*gmail.History{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing history: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmgmail.ListHistory(flags["userId"].GetString(), flags["labelId"].GetString(), flags["fields"].GetString(), flags["startHistoryId"].GetUint64(), historyTypes), streamOutput, compressOutput)
 	},
 }
 

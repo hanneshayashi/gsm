@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"errors"
 	"context"
 	"log"
 	"net/http"
@@ -26,6 +27,9 @@ import (
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
+
+// errIterStopped is a sentinel error used to signal early termination in iter.Seq2 iterators.
+var errIterStopped = errors.New("iteration stopped")
 
 var (
 	client                                  *http.Client

@@ -56,14 +56,17 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 				wg.Add(1)
 				go func() {
 					for file := range files {
-						result, err := gsmdrive.ListPermissions(file.Id, "", fields, useDomainAdminAccess, threads)
+						var iterErr error
 						r := resultStruct{FileID: file.Id}
-						for i := range result {
+						for i, err := range gsmdrive.ListPermissions(file.Id, "", fields, useDomainAdminAccess) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Permissions = append(r.Permissions, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -74,24 +77,7 @@ If you are not specifying a folder in a Shared Drive, you can simply use "gsm fi
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for r := range results {
-				final = append(final, r)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

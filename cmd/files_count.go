@@ -35,12 +35,8 @@ var filesCountCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		filesCh, err := gsmdrive.ListFiles(fmt.Sprintf("'%s' in parents", flags["folderId"].GetString()), "", "allDrives", "", "", "", "files(mimeType,size),nextPageToken", true, gsmhelpers.MaxThreads(0))
-		result := gsmdrive.CountFilesAndFolders(filesCh)
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing files: %v", e)
-		}
+		files := gsmdrive.ListFiles(fmt.Sprintf("'%s' in parents", flags["folderId"].GetString()), "", "allDrives", "", "", "", "files(mimeType,size),nextPageToken", true)
+		result := gsmdrive.CountFilesAndFolders(files)
 		er := gsmhelpers.Output(result, "json", compressOutput)
 		if er != nil {
 			log.Fatalln(er)

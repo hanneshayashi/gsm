@@ -18,8 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -41,29 +39,7 @@ Different platforms require different amounts of information from the caller to 
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmci.LookupDeviceUsers(flags["parent"].GetString(), flags["androidId"].GetString(), flags["rawResourceId"].GetString(), flags["userId"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []string{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error looking up device users: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmci.LookupDeviceUsers(flags["parent"].GetString(), flags["androidId"].GetString(), flags["rawResourceId"].GetString(), flags["userId"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

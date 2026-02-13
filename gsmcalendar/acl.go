@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,29 +69,25 @@ func InsertACL(calendarID, fields string, acl *calendar.AclRule, sendNotificatio
 }
 
 // ListACLs returns the rules in the access control list for the calendar.
-func ListACLs(calendarID, fields string, showDeleted bool, cap int) (<-chan *calendar.AclRule, <-chan error) {
+func ListACLs(calendarID, fields string, showDeleted bool) iter.Seq2[*calendar.AclRule, error] {
 	srv := getACLService()
 	c := srv.List(calendarID).ShowDeleted(showDeleted).MaxResults(250)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *calendar.AclRule, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*calendar.AclRule, error) bool) {
 		e := c.Pages(context.Background(), func(response *calendar.Acl) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchACL updates an access control rule. This method supports patch semantics.

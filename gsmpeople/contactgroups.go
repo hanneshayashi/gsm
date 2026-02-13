@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -88,29 +90,25 @@ func GetContactGroup(resourceName, fields string, maxMembers int64) (*people.Con
 
 // ListContactGroups lists all contact groups owned by the authenticated user.
 // Members of the contact groups are not populated.
-func ListContactGroups(fields string, cap int) (<-chan *people.ContactGroup, <-chan error) {
+func ListContactGroups(fields string) iter.Seq2[*people.ContactGroup, error] {
 	srv := getContactGroupsService()
 	c := srv.List().PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *people.ContactGroup, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*people.ContactGroup, error) bool) {
 		e := c.Pages(context.Background(), func(response *people.ListContactGroupsResponse) error {
 			for i := range response.ContactGroups {
-				ch <- response.ContactGroups[i]
+				if !yield(response.ContactGroups[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateContactGroup updates a new contact group owned by the authenticated user.

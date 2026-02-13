@@ -23,7 +23,6 @@ import (
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmci"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	ci "google.golang.org/api/cloudidentity/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -44,29 +43,7 @@ var userInvitationsListCmd = &cobra.Command{
 			}
 			parent = "customers/" + customerID
 		}
-		result, err := gsmci.ListUserInvitations(parent, flags["filter"].GetString(), flags["orderBy"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*ci.UserInvitation{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing user invitations: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmci.ListUserInvitations(parent, flags["filter"].GetString(), flags["orderBy"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

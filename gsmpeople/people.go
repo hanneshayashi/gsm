@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -115,7 +117,7 @@ func GetContactsBatch(resourceNames []string, personFields, sources, fields stri
 }
 
 // ListDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory.
-func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
+func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string) iter.Seq2[*people.Person, error] {
 	srv := getpService()
 	c := srv.ListDirectoryPeople().ReadMask(readMask).Sources(sources)
 	if mergeSources != nil {
@@ -124,27 +126,23 @@ func ListDirectoryPeople(readMask, sources, fields string, mergeSources []string
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *people.Person, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*people.Person, error) bool) {
 		e := c.Pages(context.Background(), func(response *people.ListDirectoryPeopleResponse) error {
 			for i := range response.People {
-				ch <- response.People[i]
+				if !yield(response.People[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // SearchDirectoryPeople provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.
-func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources []string, cap int) (<-chan *people.Person, <-chan error) {
+func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources []string) iter.Seq2[*people.Person, error] {
 	srv := getpService()
 	c := srv.SearchDirectoryPeople().ReadMask(readMask).Sources(sources).Query(query).PageSize(500)
 	if mergeSources != nil {
@@ -153,23 +151,19 @@ func SearchDirectoryPeople(readMask, sources, query, fields string, mergeSources
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *people.Person, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*people.Person, error) bool) {
 		e := c.Pages(context.Background(), func(response *people.SearchDirectoryPeopleResponse) error {
 			for i := range response.People {
-				ch <- response.People[i]
+				if !yield(response.People[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateContact updates a new contact and returns the person resource for that contact.

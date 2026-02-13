@@ -18,16 +18,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"errors"
 	"context"
+	"iter"
 
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
 
 // GetUserUsageReport Retrieves a report which is a collection of properties and statistics for a set of users with the account.
 // For more information, see the User Usage Report guide. For more information about the user report's parameters, see the Users Usage parameters reference guides.
-func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameters, groupIDFilter, fields string, cap int) (<-chan *reports.UsageReport, <-chan error) {
+func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameters, groupIDFilter, fields string) iter.Seq2[*reports.UsageReport, error] {
 	srv := getUserUsageReportsService()
 	c := srv.Get(userKey, date)
 	if customerID != "" {
@@ -48,21 +49,17 @@ func GetUserUsageReport(userKey, date, customerID, filters, orgUnitID, parameter
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *reports.UsageReport, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*reports.UsageReport, error) bool) {
 		e := c.Pages(context.Background(), func(response *reports.UsageReports) error {
 			for i := range response.UsageReports {
-				ch <- response.UsageReports[i]
+				if !yield(response.UsageReports[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -112,7 +114,7 @@ func InsertMessage(userID, internalDateSource, fields string, message *gmail.Mes
 }
 
 // ListMessages lists the messages in the user's mailbox.
-func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool, cap int) (<-chan *gmail.Message, <-chan error) {
+func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash bool) iter.Seq2[*gmail.Message, error] {
 	srv := getUsersMessagesService()
 	c := srv.List(userID).MaxResults(10000).IncludeSpamTrash(includeSpamTrash)
 	if fields != "" {
@@ -124,23 +126,19 @@ func ListMessages(userID, q, fields string, labelIds []string, includeSpamTrash 
 	if q != "" {
 		c = c.Q(q)
 	}
-	ch := make(chan *gmail.Message, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmail.Message, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmail.ListMessagesResponse) error {
 			for i := range response.Messages {
-				ch <- response.Messages[i]
+				if !yield(response.Messages[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ModifyMessage modifies the labels on the specified message.

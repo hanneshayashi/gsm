@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func InsertGroup(group *admin.Group, fields string) (*admin.Group, error) {
 }
 
 // ListGroups retrieve all groups of a domain or of a user given a userKey (paginated)
-func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-chan *admin.Group, <-chan error) {
+func ListGroups(filter, userKey, domain, customer, fields string) iter.Seq2[*admin.Group, error] {
 	srv := getGroupsService()
 	c := srv.List().MaxResults(200)
 	if fields != "" {
@@ -84,23 +86,19 @@ func ListGroups(filter, userKey, domain, customer, fields string, cap int) (<-ch
 	if domain != "" {
 		c = c.Domain(domain)
 	}
-	ch := make(chan *admin.Group, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.Group, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.Groups) error {
 			for i := range response.Groups {
-				ch <- response.Groups[i]
+				if !yield(response.Groups[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchGroup updates a group's properties. This method supports patch semantics.

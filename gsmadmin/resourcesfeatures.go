@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,29 +69,25 @@ func InsertFeature(customer, fields string, feature *admin.Feature) (*admin.Feat
 }
 
 // ListFeatures retrieves a list of features for an account.
-func ListFeatures(customer, fields string, cap int) (<-chan *admin.Feature, <-chan error) {
+func ListFeatures(customer, fields string) iter.Seq2[*admin.Feature, error] {
 	srv := getResourcesFeaturesService()
 	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *admin.Feature, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.Feature, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.Features) error {
 			for i := range response.Features {
-				ch <- response.Features[i]
+				if !yield(response.Features[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchFeature updates a feature. This method supports patch semantics.

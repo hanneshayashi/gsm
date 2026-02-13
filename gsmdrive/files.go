@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
 	"io"
@@ -25,6 +26,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -239,7 +241,7 @@ func GetFile(fileID, fields, includePermissionsForView string) (*drive.File, err
 // ListFiles lists or searches files.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-files.
-func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool, cap int) (<-chan *drive.File, <-chan error) {
+func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, fields string, includeItemsFromAllDrives bool) iter.Seq2[*drive.File, error] {
 	srv := getFilesService()
 	c := srv.List().SupportsAllDrives(true).IncludeItemsFromAllDrives(includeItemsFromAllDrives).PageSize(1000)
 	if q != "" {
@@ -263,23 +265,19 @@ func ListFiles(q, driveID, corpora, includePermissionsForView, orderBy, spaces, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drive.File, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.File, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.FileList) error {
 			for i := range response.Files {
-				ch <- response.Files[i]
+				if !yield(response.Files[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UpdateFile updates a file's metadata and/or content. This method supports patch semantics.
@@ -309,29 +307,25 @@ func UpdateFile(fileID, addParents, removeParents, includePermissionsForView, oc
 }
 
 // ListLabels lists the labels on a file.
-func ListLabels(fileID, fields string, cap int) (<-chan *drive.Label, <-chan error) {
+func ListLabels(fileID, fields string) iter.Seq2[*drive.Label, error] {
 	srv := getFilesService()
 	c := srv.ListLabels(fileID).MaxResults(100)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drive.Label, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Label, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.LabelList) error {
 			for i := range response.Labels {
-				ch <- response.Labels[i]
+				if !yield(response.Labels[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ModifyLabels modifies the set of labels on a file.

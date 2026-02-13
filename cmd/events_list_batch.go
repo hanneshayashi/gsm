@@ -55,14 +55,17 @@ var eventsListBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						calendarID := m["calendarId"].GetString()
-						result, err := gsmcalendar.ListEvents(calendarID, m["iCalUID"].GetString(), m["orderBy"].GetString(), m["q"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["updatedMin"].GetString(), m["fields"].GetString(), m["privateExtendedProperty"].GetStringSlice(), m["sharedExtendedProperty"].GetStringSlice(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool(), m["showHiddenInvitations"].GetBool(), m["singleEvents"].GetBool(), cap)
+						var iterErr error
 						r := resultStruct{CalendarID: calendarID}
-						for i := range result {
+						for i, err := range gsmcalendar.ListEvents(calendarID, m["iCalUID"].GetString(), m["orderBy"].GetString(), m["q"].GetString(), m["timeZone"].GetString(), m["timeMax"].GetString(), m["timeMin"].GetString(), m["updatedMin"].GetString(), m["fields"].GetString(), m["privateExtendedProperty"].GetStringSlice(), m["sharedExtendedProperty"].GetStringSlice(), m["maxAttendees"].GetInt64(), m["showDeleted"].GetBool(), m["showHiddenInvitations"].GetBool(), m["singleEvents"].GetBool()) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Events = append(r.Events, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -73,24 +76,7 @@ var eventsListBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

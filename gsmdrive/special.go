@@ -19,6 +19,7 @@ package gsmdrive
 
 import (
 	"fmt"
+	"iter"
 	"log"
 	"strings"
 	"sync"
@@ -110,26 +111,22 @@ func ListFilesRecursive(id, fields string, excludeFolders []string, includeRoot 
 		for i := 0; i < threads; i++ {
 			go func() {
 				for id := range folders {
-					result, err := ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true, threads)
-					go func() {
-						for f := range result {
-							if isFolder(f) {
-								if !gsmhelpers.Contains(f.Id, excludeFolders) {
-									wg.Add(1)
-									files <- f
-									folders <- f.Id
-								}
-							} else {
+					for f, err := range ListFiles(fmt.Sprintf("'%s' in parents and trashed = false", id), "", "allDrives", "", "", "", fields, true) {
+						if err != nil {
+							log.Println(err)
+							continue
+						}
+						if isFolder(f) {
+							if !gsmhelpers.Contains(f.Id, excludeFolders) {
+								wg.Add(1)
 								files <- f
+								folders <- f.Id
 							}
+						} else {
+							files <- f
 						}
-						wg.Done()
-					}()
-					go func() {
-						for e := range err {
-							log.Println(e)
-						}
-					}()
+					}
+					wg.Done()
 				}
 			}()
 		}
@@ -171,38 +168,34 @@ func GetPermissionID(flags map[string]*gsmhelpers.Value) (string, error) {
 	}
 	if flags["emailAddress"].IsSet() {
 		emailAddress := strings.ToLower(flags["emailAddress"].GetString())
-		permissions, err := ListPermissions(fileID, "", "permissions(emailAddress,id)", flags["useDomainAdminAccess"].GetBool(), gsmhelpers.MaxThreads(0))
-		pFound := false
-		for p := range permissions {
+		permissionFound := false
+		for p, err := range ListPermissions(fileID, "", "permissions(emailAddress,id)", flags["useDomainAdminAccess"].GetBool()) {
+			if err != nil {
+				return "", err
+			}
 			if strings.ToLower(p.EmailAddress) == emailAddress {
 				permissionID = p.Id
-				pFound = true
+				permissionFound = true
 				break
 			}
 		}
-		e := <-err
-		if e != nil {
-			return "", e
-		}
-		if !pFound {
+		if !permissionFound {
 			return "", fmt.Errorf("can't find a matching rule for the specified trustee")
 		}
 	} else {
 		domain := strings.ToLower(flags["domain"].GetString())
-		permissions, err := ListPermissions(fileID, "", "permissions(domain,id)", flags["useDomainAdminAccess"].GetBool(), gsmhelpers.MaxThreads(0))
-		pFound := false
-		for p := range permissions {
+		permissionFound := false
+		for p, err := range ListPermissions(fileID, "", "permissions(domain,id)", flags["useDomainAdminAccess"].GetBool()) {
+			if err != nil {
+				return "", err
+			}
 			if strings.ToLower(p.Domain) == domain {
 				permissionID = p.Id
-				pFound = true
+				permissionFound = true
 				break
 			}
 		}
-		e := <-err
-		if e != nil {
-			return "", e
-		}
-		if !pFound {
+		if !permissionFound {
 			return "", fmt.Errorf("can't find a matching rule for the specified trustee")
 		}
 	}
@@ -221,10 +214,14 @@ func GetFolder(folderID string) (*drive.File, error) {
 	return folder, nil
 }
 
-// CountFilesAndFolders returns the number of files in a channel and their size
-func CountFilesAndFolders(filesCh <-chan *drive.File) (folderSize *FolderSize) {
+// CountFilesAndFolders returns the number of files in an iterator and their size
+func CountFilesAndFolders(files iter.Seq2[*drive.File, error]) (folderSize *FolderSize) {
 	folderSize = &FolderSize{}
-	for f := range filesCh {
+	for f, err := range files {
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 		if isFolder(f) {
 			folderSize.Folders++
 		} else {

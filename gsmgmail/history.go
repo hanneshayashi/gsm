@@ -18,16 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"errors"
 	"context"
-
-	"github.com/hanneshayashi/gsm/gsmhelpers"
-
+	"iter"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/googleapi"
 )
 
 // ListHistory lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId).
-func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyTypes []string, cap int) (<-chan *gmail.History, <-chan error) {
+func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyTypes []string) iter.Seq2[*gmail.History, error] {
 	srv := getUsersHistoryService()
 	c := srv.List(userID).StartHistoryId(startHistoryID).MaxResults(10000)
 	if fields != "" {
@@ -39,21 +38,17 @@ func ListHistory(userID, labelID, fields string, startHistoryID uint64, historyT
 	if historyTypes != nil {
 		c = c.HistoryTypes(historyTypes...)
 	}
-	ch := make(chan *gmail.History, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmail.History, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmail.ListHistoryResponse) error {
 			for i := range response.History {
-				ch <- response.History[i]
+				if !yield(response.History[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

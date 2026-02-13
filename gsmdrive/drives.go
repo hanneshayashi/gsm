@@ -18,9 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
 	"time"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -120,7 +122,7 @@ func HideDrive(driveID, fields string) (*drive.Drive, error) {
 // ListDrives lists the user's shared drives.
 // This method accepts the q parameter, which is a search query combining one or more search terms.
 // For more information, see https://developers.google.com/drive/api/v3/search-shareddrives.
-func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-chan *drive.Drive, <-chan error) {
+func ListDrives(filter, fields string, useDomainAdminAccess bool) iter.Seq2[*drive.Drive, error] {
 	srv := getDrivesService()
 	c := srv.List().UseDomainAdminAccess(useDomainAdminAccess).PageSize(100)
 	if fields != "" {
@@ -129,23 +131,19 @@ func ListDrives(filter, fields string, useDomainAdminAccess bool, cap int) (<-ch
 	if filter != "" {
 		c = c.Q(filter)
 	}
-	ch := make(chan *drive.Drive, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.Drive, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.DriveList) error {
 			for i := range response.Drives {
-				ch <- response.Drives[i]
+				if !yield(response.Drives[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // UnhideDrive restores a shared drive to the default view.

@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -92,7 +94,7 @@ func LookupGroup(email string) (string, error) {
 }
 
 // ListGroups retrieves a list of groups
-func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
+func ListGroups(parent, view, fields string) iter.Seq2[*ci.Group, error] {
 	srv := getGroupsService()
 	c := srv.List().Parent(parent).PageSize(500)
 	if fields != "" {
@@ -101,27 +103,23 @@ func ListGroups(parent, view, fields string, cap int) (<-chan *ci.Group, <-chan 
 	if view != "" {
 		c.View(view)
 	}
-	ch := make(chan *ci.Group, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.Group, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListGroupsResponse) error {
 			for i := range response.Groups {
-				ch <- response.Groups[i]
+				if !yield(response.Groups[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // SearchGroups searches for Groups matching a specified query.
-func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan error) {
+func SearchGroups(query, view, fields string) iter.Seq2[*ci.Group, error] {
 	srv := getGroupsService()
 	c := srv.Search().Query(query).PageSize(500)
 	if fields != "" {
@@ -130,23 +128,19 @@ func SearchGroups(query, view, fields string, cap int) (<-chan *ci.Group, <-chan
 	if view != "" {
 		c.View(view)
 	}
-	ch := make(chan *ci.Group, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.Group, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.SearchGroupsResponse) error {
 			for i := range response.Groups {
-				ch <- response.Groups[i]
+				if !yield(response.Groups[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // GetSecuritySettings returns the security settings of a group.

@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmdrive"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/drive/v3"
 
 	"github.com/spf13/cobra"
 )
@@ -35,29 +32,7 @@ var accessProposalsListCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmdrive.ListAccessProposals(flags["fileId"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*drive.AccessProposal{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing access proposals: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmdrive.ListAccessProposals(flags["fileId"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

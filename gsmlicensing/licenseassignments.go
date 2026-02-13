@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmlicensing
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,55 +69,47 @@ func InsertLicenseAssignment(productID, skuID, fields string, licenseAssignmentI
 }
 
 // ListLicenseAssignmentsForProduct list all users assigned licenses for a specific product SKU.
-func ListLicenseAssignmentsForProduct(productID, customerID, fields string, cap int) (<-chan *licensing.LicenseAssignment, <-chan error) {
+func ListLicenseAssignmentsForProduct(productID, customerID, fields string) iter.Seq2[*licensing.LicenseAssignment, error] {
 	srv := getLicenseAssignmentsService()
 	c := srv.ListForProduct(productID, customerID).MaxResults(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *licensing.LicenseAssignment, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*licensing.LicenseAssignment, error) bool) {
 		e := c.Pages(context.Background(), func(response *licensing.LicenseAssignmentList) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ListLicenseAssignmentsForProductAndSku list all users assigned licenses for a specific product SKU.
-func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields string, cap int) (<-chan *licensing.LicenseAssignment, <-chan error) {
+func ListLicenseAssignmentsForProductAndSku(productID, skuID, customerID, fields string) iter.Seq2[*licensing.LicenseAssignment, error] {
 	srv := getLicenseAssignmentsService()
 	c := srv.ListForProductAndSku(productID, skuID, customerID).MaxResults(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *licensing.LicenseAssignment, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*licensing.LicenseAssignment, error) bool) {
 		e := c.Pages(context.Background(), func(response *licensing.LicenseAssignmentList) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchLicenseAssignment reassign a user's product SKU with a different SKU in the same product.

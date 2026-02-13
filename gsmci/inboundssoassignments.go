@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func GetSsoAssignment(name, fields string) (*ci.InboundSsoAssignment, error) {
 }
 
 // ListSsoAssignment lists the InboundSsoAssignments for a Customer.
-func ListSsoAssignment(filter, fields string, cap int) (<-chan *ci.InboundSsoAssignment, <-chan error) {
+func ListSsoAssignment(filter, fields string) iter.Seq2[*ci.InboundSsoAssignment, error] {
 	srv := getInboundSsoAssignmentsService()
 	c := srv.List().PageSize(100)
 	if fields != "" {
@@ -76,23 +78,19 @@ func ListSsoAssignment(filter, fields string, cap int) (<-chan *ci.InboundSsoAss
 	if filter != "" {
 		c.Filter(fields)
 	}
-	ch := make(chan *ci.InboundSsoAssignment, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.InboundSsoAssignment, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListInboundSsoAssignmentsResponse) error {
 			for i := range response.InboundSsoAssignments {
-				ch <- response.InboundSsoAssignments[i]
+				if !yield(response.InboundSsoAssignments[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchSsoAssignment patches an InboundSsoAssignment for users and devices in a Customer under a given Group or OrgUnit.

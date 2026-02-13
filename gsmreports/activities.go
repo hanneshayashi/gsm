@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"errors"
 	"context"
+	"iter"
 
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -28,7 +29,7 @@ import (
 // ListActivities retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application.
 // For more information, see the guides for administrator and Google Drive activity reports.
 // For more information about the activity report's parameters, see the activity parameters reference guides.
-func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTime, eventName, filters, groupIDFilter, orgUnitID, startTime, fields string, cap int) (<-chan *reports.Activity, <-chan error) {
+func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTime, eventName, filters, groupIDFilter, orgUnitID, startTime, fields string) iter.Seq2[*reports.Activity, error] {
 	srv := getActivitiesService()
 	c := srv.List(userKey, applicationName).MaxResults(1000)
 	if actorIPAddress != "" {
@@ -58,21 +59,17 @@ func ListActivities(userKey, applicationName, actorIPAddress, customerID, endTim
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *reports.Activity, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*reports.Activity, error) bool) {
 		e := c.Pages(context.Background(), func(response *reports.Activities) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

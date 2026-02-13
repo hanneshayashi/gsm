@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmcalendar
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -42,27 +44,23 @@ func GetSetting(setting, fields string) (*calendar.Setting, error) {
 }
 
 // ListSettings returns all user settings for the authenticated user.
-func ListSettings(fields string, cap int) (<-chan *calendar.Setting, <-chan error) {
+func ListSettings(fields string) iter.Seq2[*calendar.Setting, error] {
 	srv := getSettingsService()
 	c := srv.List().MaxResults(250)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *calendar.Setting, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*calendar.Setting, error) bool) {
 		e := c.Pages(context.Background(), func(response *calendar.Settings) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

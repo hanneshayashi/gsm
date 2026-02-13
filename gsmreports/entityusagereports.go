@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmreports
 
 import (
+	"errors"
 	"context"
+	"iter"
 
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 	reports "google.golang.org/api/admin/reports/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -28,7 +29,7 @@ import (
 // GetEntityUsageReport retrieves a report which is a collection of properties and statistics for entities used by users within the account.
 // For more information, see the Entities Usage Report guide.
 // For more information about the entities report's parameters, see the Entities Usage parameters reference guides.
-func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, parameters, fields string, cap int) (<-chan *reports.UsageReport, <-chan error) {
+func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, parameters, fields string) iter.Seq2[*reports.UsageReport, error] {
 	srv := getEntityUsageReportsService()
 	c := srv.Get(entityType, entityKey, date)
 	if customerID != "" {
@@ -43,21 +44,17 @@ func GetEntityUsageReport(entityType, entityKey, date, customerID, filters, para
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *reports.UsageReport, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*reports.UsageReport, error) bool) {
 		e := c.Pages(context.Background(), func(response *reports.UsageReports) error {
 			for i := range response.UsageReports {
-				ch <- response.UsageReports[i]
+				if !yield(response.UsageReports[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmcalendar"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/calendar/v3"
 
 	"github.com/spf13/cobra"
 )
@@ -35,29 +32,7 @@ var eventsInstancesCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmcalendar.ListEventInstances(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["originalStart"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["fields"].GetString(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*calendar.Event{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing event instances: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmcalendar.ListEventInstances(flags["calendarId"].GetString(), flags["eventId"].GetString(), flags["originalStart"].GetString(), flags["timeZone"].GetString(), flags["timeMax"].GetString(), flags["timeMin"].GetString(), flags["fields"].GetString(), flags["maxAttendees"].GetInt64(), flags["showDeleted"].GetBool()), streamOutput, compressOutput)
 	},
 }
 

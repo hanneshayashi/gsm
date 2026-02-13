@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmgmailpostmaster"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	"google.golang.org/api/gmailpostmastertools/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -37,29 +34,7 @@ Returns PERMISSION_DENIED if user does not have permission to access TrafficStat
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		parent := gsmhelpers.EnsurePrefix(flags["parent"].GetString(), "/domains")
-		result, err := gsmgmailpostmaster.ListTrafficStats(parent, flags["fields"].GetString(), flags["startDateDay"].GetInt64(), flags["startDateMonth"].GetInt64(), flags["startDateYear"].GetInt64(), flags["endDateDay"].GetInt64(), flags["endDateMonth"].GetInt64(), flags["endDateYear"].GetInt64(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*gmailpostmastertools.TrafficStats{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing traffic stats: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmgmailpostmaster.ListTrafficStats(parent, flags["fields"].GetString(), flags["startDateDay"].GetInt64(), flags["startDateMonth"].GetInt64(), flags["startDateYear"].GetInt64(), flags["endDateDay"].GetInt64(), flags["endDateMonth"].GetInt64(), flags["endDateYear"].GetInt64()), streamOutput, compressOutput)
 	},
 }
 

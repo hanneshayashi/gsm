@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -78,7 +80,7 @@ func InsertMember(groupKey, fields string, member *admin.Member) (*admin.Member,
 }
 
 // ListMembers retrieves a paginated list of all members in a group.
-func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, cap int) (<-chan *admin.Member, <-chan error) {
+func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool) iter.Seq2[*admin.Member, error] {
 	srv := getMembersService()
 	c := srv.List(groupKey).IncludeDerivedMembership(includeDerivedMembership).MaxResults(200)
 	if fields != "" {
@@ -87,23 +89,19 @@ func ListMembers(groupKey, roles, fields string, includeDerivedMembership bool, 
 	if roles != "" {
 		c = c.Roles(roles)
 	}
-	ch := make(chan *admin.Member, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.Member, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.Members) error {
 			for i := range response.Members {
-				ch <- response.Members[i]
+				if !yield(response.Members[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchMember updates the membership properties of a user in the specified group. This method supports patch semantics.

@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -76,7 +78,7 @@ func InsertUser(user *admin.User, fields string) (*admin.User, error) {
 }
 
 // ListUsers retrieves a paginated list of either deleted users or all users in a domain.
-func ListUsers(showDeleted bool, query, domain, customer, fields, projection, orderBy, sortOrder, viewType, customFieldMask string, cap int) (<-chan *admin.User, <-chan error) {
+func ListUsers(showDeleted bool, query, domain, customer, fields, projection, orderBy, sortOrder, viewType, customFieldMask string) iter.Seq2[*admin.User, error] {
 	srv := getUsersService()
 	c := srv.List().Customer(customer).MaxResults(500)
 	if fields != "" {
@@ -106,23 +108,19 @@ func ListUsers(showDeleted bool, query, domain, customer, fields, projection, or
 	if customFieldMask != "" {
 		c = c.CustomFieldMask(customFieldMask)
 	}
-	ch := make(chan *admin.User, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.User, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.Users) error {
 			for i := range response.Users {
-				ch <- response.Users[i]
+				if !yield(response.Users[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // MakeAdmin makes a user a super administrator.

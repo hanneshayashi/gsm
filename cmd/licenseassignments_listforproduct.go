@@ -18,12 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmlicensing"
-	"google.golang.org/api/licensing/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -37,29 +34,7 @@ var licenseAssignmentsListForProductCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
 		customerID := gsmadmin.GetCustomerID(flags["customerId"].GetString())
-		result, err := gsmlicensing.ListLicenseAssignmentsForProduct(flags["productId"].GetString(), customerID, flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*licensing.LicenseAssignment{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing license assignments for product: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmlicensing.ListLicenseAssignmentsForProduct(flags["productId"].GetString(), customerID, flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

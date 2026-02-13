@@ -22,7 +22,6 @@ import (
 
 	"github.com/hanneshayashi/gsm/gsmadmin"
 	"github.com/hanneshayashi/gsm/gsmhelpers"
-	admin "google.golang.org/api/admin/directory/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -43,29 +42,7 @@ var chromePrintersListModelsCmd = &cobra.Command{
 			}
 			parent = "customers/" + customerID
 		}
-		result, err := gsmadmin.ListPrinterModels(parent, flags["filter"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*admin.PrinterModel{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error listing Chrome printer models: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmadmin.ListPrinterModels(parent, flags["filter"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

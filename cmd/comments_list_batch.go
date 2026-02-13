@@ -55,14 +55,17 @@ var commentsListBatchCmd = &cobra.Command{
 				go func() {
 					for m := range maps {
 						fileID := m["fileId"].GetString()
-						result, err := gsmdrive.ListComments(fileID, m["startModifiedTime"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool(), cap)
+						var iterErr error
 						r := resultStruct{FileID: fileID}
-						for i := range result {
+						for i, err := range gsmdrive.ListComments(fileID, m["startModifiedTime"].GetString(), m["fields"].GetString(), m["includeDeleted"].GetBool()) {
+							if err != nil {
+								iterErr = err
+								break
+							}
 							r.Comments = append(r.Comments, i)
 						}
-						e := <-err
-						if e != nil {
-							log.Println(e)
+						if iterErr != nil {
+							log.Println(iterErr)
 						} else {
 							results <- r
 						}
@@ -73,24 +76,7 @@ var commentsListBatchCmd = &cobra.Command{
 			wg.Wait()
 			close(results)
 		}()
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for r := range results {
-				err := enc.Encode(r)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []resultStruct{}
-			for res := range results {
-				final = append(final, res)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.ChanToIter(results, nil), streamOutput, compressOutput)
 	},
 }
 

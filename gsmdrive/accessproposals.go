@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -43,29 +45,25 @@ func GetAccessProposal(filedId, proposalId, fields string) (*drive.AccessProposa
 
 // ListAccessProposals list the AccessProposals on a file.
 // Note: Only approvers are able to list AccessProposals on a file. If the user is not an approver, returns a 403.
-func ListAccessProposals(fileId, fields string, cap int) (<-chan *drive.AccessProposal, <-chan error) {
+func ListAccessProposals(fileId, fields string) iter.Seq2[*drive.AccessProposal, error] {
 	srv := getAccessProposalsService()
 	c := srv.List(fileId)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drive.AccessProposal, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drive.AccessProposal, error) bool) {
 		e := c.Pages(context.Background(), func(response *drive.ListAccessProposalsResponse) error {
 			for i := range response.AccessProposals {
-				ch <- response.AccessProposals[i]
+				if !yield(response.AccessProposals[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // ResolveAccessProposal is used to approve or deny an Access Proposal.

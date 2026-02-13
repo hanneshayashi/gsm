@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -67,7 +69,7 @@ func GetMobileDevice(customerID, resourceID, fields, projection string) (*admin.
 }
 
 // ListMobileDevices retrieves a paginated list of all mobile devices for an account.
-func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder string, cap int) (<-chan *admin.MobileDevice, <-chan error) {
+func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder string) iter.Seq2[*admin.MobileDevice, error] {
 	srv := getMobiledevicesService()
 	c := srv.List(customerID).MaxResults(100)
 	if fields != "" {
@@ -85,21 +87,17 @@ func ListMobileDevices(customerID, query, fields, projection, orderBy, sortOrder
 	if sortOrder != "" {
 		c = c.SortOrder(sortOrder)
 	}
-	ch := make(chan *admin.MobileDevice, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.MobileDevice, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.MobileDevices) error {
 			for i := range response.Mobiledevices {
-				ch <- response.Mobiledevices[i]
+				if !yield(response.Mobiledevices[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

@@ -18,9 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmail
 
 import (
+	"errors"
 	"context"
 	"fmt"
 	"io"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -74,7 +76,7 @@ func GetDraft(userID, id, format, fields string) (*gmail.Draft, error) {
 }
 
 // ListDrafts lists the drafts in the user's mailbox.
-func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-chan *gmail.Draft, <-chan error) {
+func ListDrafts(userID, q, fields string, includeSpamTrash bool) iter.Seq2[*gmail.Draft, error] {
 	srv := getUsersDraftsService()
 	c := srv.List(userID).IncludeSpamTrash(includeSpamTrash).MaxResults(10000)
 	if fields != "" {
@@ -83,23 +85,19 @@ func ListDrafts(userID, q, fields string, includeSpamTrash bool, cap int) (<-cha
 	if q != "" {
 		c = c.Q(q)
 	}
-	ch := make(chan *gmail.Draft, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmail.Draft, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmail.ListDraftsResponse) error {
 			for i := range response.Drafts {
-				ch <- response.Drafts[i]
+				if !yield(response.Drafts[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // SendDraft sends the specified, existing draft to the recipients in the To, Cc, and Bcc headers.

@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -70,28 +72,25 @@ func InsertBuilding(customer, coordinatesSource, fields string, building *admin.
 }
 
 // ListBuildings retrieves a list of buildings for an account.
-func ListBuildings(customer, fields string, cap int) (<-chan *admin.Building, <-chan error) {
+func ListBuildings(customer, fields string) iter.Seq2[*admin.Building, error] {
 	srv := getResourcesBuildingsService()
 	c := srv.List(customer).MaxResults(500)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *admin.Building, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.Building, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.Buildings) error {
 			for i := range response.Buildings {
-				ch <- response.Buildings[i]
+				if !yield(response.Buildings[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	return ch, err
+	}
 }
 
 // PatchBuilding updates a building. This method supports patch semantics.

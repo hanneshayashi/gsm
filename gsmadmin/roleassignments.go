@@ -18,9 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
 	"strconv"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -68,7 +70,7 @@ func InsertRoleAssignment(customer, fields string, roleAssignment *admin.RoleAss
 }
 
 // ListRoleAssignments retrieves a paginated list of all roleAssignments.
-func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-chan *admin.RoleAssignment, <-chan error) {
+func ListRoleAssignments(customer, roleID, userKey, fields string) iter.Seq2[*admin.RoleAssignment, error] {
 	srv := getRoleAssignmentsService()
 	c := srv.List(customer).MaxResults(200)
 	if fields != "" {
@@ -80,21 +82,17 @@ func ListRoleAssignments(customer, roleID, userKey, fields string, cap int) (<-c
 	if userKey != "" {
 		c = c.UserKey(userKey)
 	}
-	ch := make(chan *admin.RoleAssignment, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.RoleAssignment, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.RoleAssignments) error {
 			for i := range response.Items {
-				ch <- response.Items[i]
+				if !yield(response.Items[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

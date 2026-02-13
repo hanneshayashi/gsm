@@ -37,13 +37,16 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	wgOrgUnits.Add(1)
 	go func() {
 		for i := range orgUnits {
-			us, err := ListUsers(false, fmt.Sprintf("orgUnitPath=%s", orgUnits[i]), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "", threads)
-			for u := range us {
+			var iterErr error
+			for u, err := range ListUsers(false, fmt.Sprintf("orgUnitPath=%s", orgUnits[i]), "", "my_customer", "users(primaryEmail),nextPageToken", "", "", "", "", "") {
+				if err != nil {
+					iterErr = err
+					break
+				}
 				userKeys <- u.PrimaryEmail
 			}
-			e := <-err
-			if e != nil {
-				errChan <- e
+			if iterErr != nil {
+				errChan <- iterErr
 				break
 			}
 		}
@@ -52,15 +55,18 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 	wgGroups.Add(1)
 	go func() {
 		for i := range groupEmails {
-			mems, err := ListMembers(groupEmails[i], "", "members(email,type),nextPageToken", true, threads)
-			for m := range mems {
+			var iterErr error
+			for m, err := range ListMembers(groupEmails[i], "", "members(email,type),nextPageToken", true) {
+				if err != nil {
+					iterErr = err
+					break
+				}
 				if m.Type == "USER" {
 					userKeys <- m.Email
 				}
 			}
-			e := <-err
-			if e != nil {
-				errChan <- e
+			if iterErr != nil {
+				errChan <- iterErr
 				break
 			}
 		}
@@ -90,14 +96,12 @@ func GetUniqueUsersChannelRecursive(orgUnits, groupEmails []string, threads int)
 // GetMembersToSet compares the list of current members of a group to the specified emailAddresses.
 // The function will return a list of members to be added and / or removed.
 func GetMembersToSet(groupKey string, threads int, emailAddresses ...string) (<-chan string, <-chan string, error) {
-	currentMembers, err := ListMembers(groupKey, "", "members(email)", false, threads)
 	var cLower []string
-	for cm := range currentMembers {
+	for cm, err := range ListMembers(groupKey, "", "members(email)", false) {
+		if err != nil {
+			return nil, nil, err
+		}
 		cLower = append(cLower, strings.ToLower(cm.Email))
-	}
-	e := <-err
-	if e != nil {
-		return nil, nil, e
 	}
 	membersToAdd := make(chan string, threads)
 	membersToRemove := make(chan string, threads)

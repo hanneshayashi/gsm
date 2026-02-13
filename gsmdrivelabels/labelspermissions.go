@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrivelabels
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,29 +30,25 @@ import (
 )
 
 // Lists the LabelPermissions on a Label.
-func ListLabelPermissions(parent, fields string, useAdminAccess bool, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2LabelPermission, <-chan error) {
+func ListLabelPermissions(parent, fields string, useAdminAccess bool) iter.Seq2[*drivelabels.GoogleAppsDriveLabelsV2LabelPermission, error] {
 	srv := getLabelsPermissionsService()
 	c := srv.List(parent).PageSize(200).UseAdminAccess(useAdminAccess)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drivelabels.GoogleAppsDriveLabelsV2LabelPermission, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drivelabels.GoogleAppsDriveLabelsV2LabelPermission, error) bool) {
 		e := c.Pages(context.Background(), func(response *drivelabels.GoogleAppsDriveLabelsV2ListLabelPermissionsResponse) error {
 			for i := range response.LabelPermissions {
-				ch <- response.LabelPermissions[i]
+				if !yield(response.LabelPermissions[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // CreateLabelPermission updates a Label's permissions.

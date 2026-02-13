@@ -18,16 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmpeople
 
 import (
+	"errors"
 	"context"
-
-	"github.com/hanneshayashi/gsm/gsmhelpers"
-
+	"iter"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/people/v1"
 )
 
 // ListPeopleConnections provides a list of the authenticated user's contacts.
-func ListPeopleConnections(resourceName, personFields, sources, sortOrder, fields string, cap int) (<-chan *people.Person, <-chan error) {
+func ListPeopleConnections(resourceName, personFields, sources, sortOrder, fields string) iter.Seq2[*people.Person, error] {
 	srv := getPeopleConnectionsService()
 	c := srv.List(resourceName)
 	if personFields != "" {
@@ -42,21 +41,17 @@ func ListPeopleConnections(resourceName, personFields, sources, sortOrder, field
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *people.Person, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*people.Person, error) bool) {
 		e := c.Pages(context.Background(), func(response *people.ListConnectionsResponse) error {
 			for i := range response.Connections {
-				ch <- response.Connections[i]
+				if !yield(response.Connections[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

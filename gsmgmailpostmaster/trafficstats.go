@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmgmailpostmaster
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -44,7 +46,7 @@ func GetTrafficStats(name, fields string) (*gmailpostmastertools.TrafficStats, e
 
 // ListTrafficStats List traffic statistics for all available days.
 // Returns PERMISSION_DENIED if user does not have permission to access TrafficStats for the domain.
-func ListTrafficStats(parent, fields string, startDateDay, startDateMonth, startDateYear, endDateDay, endDateMonth, endDateYear int64, cap int) (<-chan *gmailpostmastertools.TrafficStats, <-chan error) {
+func ListTrafficStats(parent, fields string, startDateDay, startDateMonth, startDateYear, endDateDay, endDateMonth, endDateYear int64) iter.Seq2[*gmailpostmastertools.TrafficStats, error] {
 	srv := getDomainsTrafficStatsService()
 	c := srv.List(parent)
 	if startDateDay != 0 {
@@ -68,21 +70,17 @@ func ListTrafficStats(parent, fields string, startDateDay, startDateMonth, start
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *gmailpostmastertools.TrafficStats, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*gmailpostmastertools.TrafficStats, error) bool) {
 		e := c.Pages(context.Background(), func(response *gmailpostmastertools.ListTrafficStatsResponse) error {
 			for i := range response.TrafficStats {
-				ch <- response.TrafficStats[i]
+				if !yield(response.TrafficStats[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

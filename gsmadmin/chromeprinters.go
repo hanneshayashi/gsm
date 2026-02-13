@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmadmin
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -107,7 +109,7 @@ func GetPrinter(name, fields string) (*admin.Printer, error) {
 }
 
 // ListPrinters lists printers configs.
-func ListPrinters(parent, filter, fields string, cap int) (<-chan *admin.Printer, <-chan error) {
+func ListPrinters(parent, filter, fields string) iter.Seq2[*admin.Printer, error] {
 	srv := getCustomersChromePrintersService()
 	c := srv.List(parent).PageSize(1000)
 	if fields != "" {
@@ -116,26 +118,23 @@ func ListPrinters(parent, filter, fields string, cap int) (<-chan *admin.Printer
 	if filter != "" {
 		c = c.Filter(filter)
 	}
-	ch := make(chan *admin.Printer, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.Printer, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.ListPrintersResponse) error {
 			for i := range response.Printers {
-				ch <- response.Printers[i]
+				if !yield(response.Printers[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	return ch, err
+	}
 }
 
 // ListPrinterModels lists the supported printer models.
-func ListPrinterModels(parent, filter, fields string, cap int) (<-chan *admin.PrinterModel, <-chan error) {
+func ListPrinterModels(parent, filter, fields string) iter.Seq2[*admin.PrinterModel, error] {
 	srv := getCustomersChromePrintersService()
 	c := srv.ListPrinterModels(parent).PageSize(1000)
 	if fields != "" {
@@ -144,23 +143,19 @@ func ListPrinterModels(parent, filter, fields string, cap int) (<-chan *admin.Pr
 	if filter != "" {
 		c = c.Filter(filter)
 	}
-	ch := make(chan *admin.PrinterModel, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*admin.PrinterModel, error) bool) {
 		e := c.Pages(context.Background(), func(response *admin.ListPrinterModelsResponse) error {
 			for i := range response.PrinterModels {
-				ch <- response.PrinterModels[i]
+				if !yield(response.PrinterModels[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // PatchPrinter updates a Printer resource.

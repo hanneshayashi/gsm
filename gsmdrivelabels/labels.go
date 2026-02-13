@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrivelabels
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -192,7 +194,7 @@ func GetLabel(name, languageCode, view, fields string, useAdminAccess bool) (*dr
 }
 
 // ListLabels list labels.
-func ListLabels(languageCode, view, minimumRole, fields string, useAdminAccess, publishedOnly bool, cap int) (<-chan *drivelabels.GoogleAppsDriveLabelsV2Label, <-chan error) {
+func ListLabels(languageCode, view, minimumRole, fields string, useAdminAccess, publishedOnly bool) iter.Seq2[*drivelabels.GoogleAppsDriveLabelsV2Label, error] {
 	srv := getLabelsService()
 	c := srv.List().PublishedOnly(publishedOnly).UseAdminAccess(useAdminAccess)
 	if languageCode != "" {
@@ -207,21 +209,17 @@ func ListLabels(languageCode, view, minimumRole, fields string, useAdminAccess, 
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *drivelabels.GoogleAppsDriveLabelsV2Label, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*drivelabels.GoogleAppsDriveLabelsV2Label, error) bool) {
 		e := c.Pages(context.Background(), func(response *drivelabels.GoogleAppsDriveLabelsV2ListLabelsResponse) error {
 			for i := range response.Labels {
-				ch <- response.Labels[i]
+				if !yield(response.Labels[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }

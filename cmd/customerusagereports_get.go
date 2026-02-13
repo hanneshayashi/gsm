@@ -18,11 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"log"
-
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 	"github.com/hanneshayashi/gsm/gsmreports"
-	reports "google.golang.org/api/admin/reports/v1"
 
 	"github.com/spf13/cobra"
 )
@@ -37,29 +34,7 @@ For more information about the customer report's parameters, see the Customers U
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, _ []string) {
 		flags := gsmhelpers.FlagsToMap(cmd.Flags())
-		result, err := gsmreports.GetCustomerUsageReport(flags["date"].GetString(), flags["customerId"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString(), gsmhelpers.MaxThreads(0))
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err := enc.Encode(i)
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			final := []*reports.UsageReport{}
-			for i := range result {
-				final = append(final, i)
-			}
-			err := gsmhelpers.Output(final, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-		e := <-err
-		if e != nil {
-			log.Fatalf("Error getting Customer Usage Reports: %v", e)
-		}
+		gsmhelpers.StreamOrCollect(gsmreports.GetCustomerUsageReport(flags["date"].GetString(), flags["customerId"].GetString(), flags["parameters"].GetString(), flags["fields"].GetString()), streamOutput, compressOutput)
 	},
 }
 

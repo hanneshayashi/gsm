@@ -18,8 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmci
 
 import (
+	"errors"
 	"context"
 	"fmt"
+	"iter"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -28,7 +30,7 @@ import (
 )
 
 // ListMembers lists the members of a group
-func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <-chan error) {
+func ListMembers(parent, fields, view string) iter.Seq2[*ci.Membership, error] {
 	srv := getGroupsMembershipsService()
 	c := srv.List(parent).PageSize(500)
 	if fields != "" {
@@ -37,23 +39,19 @@ func ListMembers(parent, fields, view string, cap int) (<-chan *ci.Membership, <
 	if view != "" {
 		c.View(view)
 	}
-	ch := make(chan *ci.Membership, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.Membership, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.ListMembershipsResponse) error {
 			for i := range response.Memberships {
-				ch <- response.Memberships[i]
+				if !yield(response.Memberships[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // CheckTransitiveMembership checks a potential member for membership in a group.
@@ -148,53 +146,45 @@ func ModifyMembershipRoles(name, fields string, modifyMembershipRolesRequest *ci
 }
 
 // SearchTransitiveGroups searches transitive groups of a member.
-func SearchTransitiveGroups(parent, query, fields string, cap int) (<-chan *ci.GroupRelation, <-chan error) {
+func SearchTransitiveGroups(parent, query, fields string) iter.Seq2[*ci.GroupRelation, error] {
 	srv := getGroupsMembershipsService()
 	c := srv.SearchTransitiveGroups(parent).Query(query).PageSize(1000)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *ci.GroupRelation, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.GroupRelation, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.SearchTransitiveGroupsResponse) error {
 			for i := range response.Memberships {
-				ch <- response.Memberships[i]
+				if !yield(response.Memberships[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
 
 // SearchTransitiveMemberships search transitive memberships of a group.
-func SearchTransitiveMemberships(parent, fields string, cap int) (<-chan *ci.MemberRelation, <-chan error) {
+func SearchTransitiveMemberships(parent, fields string) iter.Seq2[*ci.MemberRelation, error] {
 	srv := getGroupsMembershipsService()
 	c := srv.SearchTransitiveMemberships(parent)
 	if fields != "" {
 		c.Fields(googleapi.Field(fields))
 	}
-	ch := make(chan *ci.MemberRelation, cap)
-	err := make(chan error, 1)
-	go func() {
+	return func(yield func(*ci.MemberRelation, error) bool) {
 		e := c.Pages(context.Background(), func(response *ci.SearchTransitiveMembershipsResponse) error {
 			for i := range response.Memberships {
-				ch <- response.Memberships[i]
+				if !yield(response.Memberships[i], nil) {
+					return errIterStopped
+				}
 			}
 			return nil
 		})
-		if e != nil {
-			err <- e
+		if e != nil && !errors.Is(e, errIterStopped) {
+			yield(nil, e)
 		}
-		close(ch)
-		close(err)
-	}()
-	gsmhelpers.Sleep()
-	return ch, err
+	}
 }
