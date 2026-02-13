@@ -11,13 +11,17 @@ linters:
     - misspell
     - bodyclose
 
-linters-settings:
-  gocritic:
-    disabled-checks:
-      - hugeParam  # Google API structs are large by nature
+  settings:
+    gocritic: {}  # hugeParam is disabled by default
+
+  exclusions:
+    rules:
+      # Close() in deferred calls is universally safe to ignore —
+      # errors are extremely rare and not actionable.
+      - linters:
+          - errcheck
+        source: "defer .+\\.Close\\(\\)"
 
 issues:
-  exclude-dirs:
-    - vendor
   max-issues-per-linter: 0
   max-same-issues: 0

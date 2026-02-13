@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const contactDelegateURL = `https://www.googleapis.com/admin/contacts/v1/users/%s/delegates`
@@ -45,11 +43,11 @@ func CreateContactDelegate(parent, email string) (*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer gsmhelpers.CloseLog(r.Body, "createContactDelegateBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
@@ -68,11 +66,11 @@ func DeleteContactDelegate(parent, email string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return false, err
 	}
-	defer gsmhelpers.CloseLog(r.Body, "deleteContactDelegateBody")
+	defer r.Body.Close()
 	if r.StatusCode != 200 {
 		return false, nil
 	}
@@ -85,11 +83,11 @@ func ListContactDelegates(parent string) ([]*ContactDelegate, error) {
 	if err != nil {
 		return nil, err
 	}
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer gsmhelpers.CloseLog(r.Body, "listContactDelegatesBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err

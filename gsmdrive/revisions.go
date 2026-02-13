@@ -18,12 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package gsmdrive
 
 import (
-	"errors"
 	"context"
+	"errors"
 	"fmt"
 	"io"
-	"os"
 	"iter"
+	"os"
 
 	"github.com/hanneshayashi/gsm/gsmhelpers"
 
@@ -66,11 +66,11 @@ func DownloadRevision(fileID, revisionID string, acknowledgeAbuse bool) (string,
 		return "", err
 	}
 	c := srv.Get(fileID, revisionID).AcknowledgeAbuse(acknowledgeAbuse)
-	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
+	r, err := c.Download()
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID, revisionID), err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "downloadRevisionBody")
+	defer r.Body.Close()
 	fileLocal, err := os.Create(file.OriginalFilename)
 	if err != nil {
 		return "", err

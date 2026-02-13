@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/hanneshayashi/gsm/gsmhelpers"
 )
 
 const feedURL = `https://www.google.com/m8/feeds/contacts/%s/full?v=3.0`
@@ -249,11 +247,11 @@ func makeListSharedContactsCallAndAppend(url string) ([]Entry, error) {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "sharedContactBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -294,11 +292,11 @@ func CreateSharedContact(domain string, person *Entry) (*Entry, error) {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "createSharedContactBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -319,11 +317,11 @@ func DeleteSharedContact(url string) ([]byte, error) {
 	}
 	req.Header.Add("GData-Version", "3.0")
 	req.Header.Add("If-Match", "*")
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "deleteSharedContactBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -338,11 +336,11 @@ func GetSharedContact(url string) (*Entry, error) {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	req.Header.Add("GData-Version", "3.0")
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "getShareContactBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -368,11 +366,11 @@ func UpdateSharedContact(url string, person *Entry) (*Entry, error) {
 	}
 	req.Header.Add("GData-Version", "3.0")
 	req.Header.Add("If-Match", "*")
-	r, err := client.Do(req) //nolint:bodyclose // closed via defer CloseLog
+	r, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "updateSharedContactBody")
+	defer r.Body.Close()
 	responseBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)

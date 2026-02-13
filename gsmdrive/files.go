@@ -150,11 +150,11 @@ func ExportFile(fileID, mimeType, localFilePath string) (string, error) {
 		return "", err
 	}
 	c := srv.Export(fileID, mimeType)
-	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
+	r, err := c.Download()
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "exportFileBody")
+	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
 		return "", err
@@ -198,11 +198,11 @@ func DownloadFile(fileID, localFilePath string, acknowledgeAbuse bool) (string, 
 		return "", err
 	}
 	c := srv.Get(fileID).SupportsAllDrives(true).AcknowledgeAbuse(acknowledgeAbuse)
-	r, err := c.Download() //nolint:bodyclose // closed via defer CloseLog
+	r, err := c.Download()
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", gsmhelpers.FormatErrorKey(fileID), err)
 	}
-	defer gsmhelpers.CloseLog(r.Body, "downloadFileBody")
+	defer r.Body.Close()
 	folder, fileName, err := getLocalFilePaths(localFilePath)
 	if err != nil {
 		return "", err
