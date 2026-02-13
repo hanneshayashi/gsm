@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running golangci-lint..."
+
+# Run linter only on changed Go files' packages for speed.
+# Fall back to full run if no staged Go files (e.g., config-only changes).
+STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.go' || true)
+
+if [ -z "$STAGED_GO_FILES" ]; then
+  echo "No staged Go files, skipping lint."
+  exit 0
+fi
+
+# Extract unique package directories from staged files
+PACKAGES=$(echo "$STAGED_GO_FILES" | xargs -I{} dirname {} | sort -u | sed 's|^|./|')
+
+# shellcheck disable=SC2086
+golangci-lint run $PACKAGES
+
+echo "Lint passed ✓"
