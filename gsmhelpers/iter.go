@@ -92,6 +92,19 @@ func ChanToIter[T any](ch <-chan T, errCh <-chan error) iter.Seq2[T, error] {
 	}
 }
 
+// SliceToIter adapts a slice into an iter.Seq2[T, error] with nil errors.
+// This allows non-paginated list results (which return a plain slice) to be
+// consumed by StreamOrCollect.
+func SliceToIter[T any](items []T) iter.Seq2[T, error] {
+	return func(yield func(T, error) bool) {
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
+}
+
 // StreamOrCollectJSON is a convenience wrapper that streams or collects
 // results from a channel directly, bridging via ChanToIter.
 func StreamOrCollectJSON[T any](ch <-chan T, errCh <-chan error, stream, compress bool) {

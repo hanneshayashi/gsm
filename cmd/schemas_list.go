@@ -38,20 +38,7 @@ var schemasListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing schemas: %v", err)
 		}
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err = enc.Encode(result[i])
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			err = gsmhelpers.Output(result, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.SliceToIter(result), streamOutput, compressOutput)
 	},
 }
 

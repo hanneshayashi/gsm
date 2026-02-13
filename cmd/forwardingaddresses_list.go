@@ -38,20 +38,7 @@ var forwardingAddressesListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error listing forwarding address for user %s: %v", flags["userId"].GetString(), err)
 		}
-		if streamOutput {
-			enc := gsmhelpers.GetJSONEncoder(false)
-			for i := range result {
-				err = enc.Encode(result[i])
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		} else {
-			err = gsmhelpers.Output(result, "json", compressOutput)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
+		gsmhelpers.StreamOrCollect(gsmhelpers.SliceToIter(result), streamOutput, compressOutput)
 	},
 }
 
